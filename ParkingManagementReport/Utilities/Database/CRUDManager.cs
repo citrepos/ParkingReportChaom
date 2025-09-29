@@ -82,9 +82,6 @@ namespace ParkingManagementReport.Utilities.Database
                 Map.Columns.Add(new DataColumn("ชื่อส่วนลด", typeof(string)));      // Proname
                 Map.Columns.Add(new DataColumn("รหัสส่วนลด", typeof(string)));     // Proid
                 Map.Columns.Add(new DataColumn("รหัสใบเสร็จ", typeof(string)));     // printno
-                
-                if(Configs.Reports.UseReportThanapoom) 
-                    Map.Columns.Add(new DataColumn("tnpt_id", typeof(int)));        // tnpt_id
 
                 if (Configs.Reports.UseReport21_2)
                     Map.Columns.Add(new DataColumn("Proprice", typeof(string)));
@@ -330,44 +327,11 @@ namespace ParkingManagementReport.Utilities.Database
 
                         double totalParkingPrice = 0;   // ค่าจอดทั้งหมด
                         double discount = 0;            // ส่วนลด
-                        double parkingPrice = 0;        // ชำระเงินเอง (ค่าจอดรถ)
                         double applicableChargeFee = 0; // ค่าบริการเรียกเก็บ
 
-                        if (Configs.Reports.UseReportThanapoom)
-                        {
-                            (totalParkingPrice, discount, applicableChargeFee) = GetApplicableChargesThanapoom(stringDW, notDay, i, dt);
-                            if (dt.Rows[i]["proid"].ToString() == "119")
-                            {
-                                parkingPrice = 0;
-                            }
-                            else
-                            {
-                                parkingPrice = totalParkingPrice - discount - applicableChargeFee;
-                            }
-
-                            /*
-                            if (double.TryParse(dt.Rows[i]["price"]?.ToString(), out double parkingPriceValue))
-                                parkingPrice = parkingPriceValue;
-
-                            if (parkingPrice > 0)
-                            {
-                                int lossCardPrice = Convert.ToInt32(dt.Rows[i]?["losscard"] ?? 0);
-                                int overDatePrice = Convert.ToInt32(dt.Rows[i]?["overdate"] ?? 0);
-                                int totalFine = lossCardPrice + overDatePrice;
-
-                                parkingPrice = Math.Max(totalFine - parkingPrice, 0);
-                            }
-                            */
-                        }
-                        else
-                        {
-                            /* Old (pre 29-07-2025) */
-                            if (double.TryParse(dt.Rows[i]["price"]?.ToString(), out double parsedPrice))
-                                parkingPrice = parsedPrice;
-                            (totalParkingPrice, applicableChargeFee) = GetParkingPriceAndFee(stringDW, notDay, i, dt);
-                            
-                            //totalParkingFee = Math.Max(0, totalParkingFee - discount); // ผิด
-                        }
+                        if (double.TryParse(dt.Rows[i]["price"]?.ToString(), out double parsedPrice))
+                            discount = parsedPrice;
+                        (totalParkingPrice, applicableChargeFee) = CalculationsManager.CalculateParkingPriceAndFee(stringDW, notDay, i, dt);
 
                         #region Set dr
                         dr["หมายเลขบัตร"] = dt.Rows[i]["no"]?.ToString();
@@ -382,10 +346,7 @@ namespace ParkingManagementReport.Utilities.Database
 
                         dr["ค่าจอดทั้งหมด"] = totalParkingPrice.ToString("F2");
                         dr["ส่วนลด"] = discount.ToString("F2");
-                        dr["ชำระเงินเอง"] = parkingPrice.ToString("F2");
                         dr["ค่าบริการเรียกเก็บ"] = applicableChargeFee.ToString("F2");
-                        if (Configs.Reports.UseReportThanapoom)  
-                            dr["tnpt_id"] = dt?.Rows?[i]?["tnpt_id_int"];
                         #endregion
 
                         if (paymentText == Constants.TextBased.PaymentStatusPaid)
@@ -442,7 +403,7 @@ namespace ParkingManagementReport.Utilities.Database
                 {
                     for (DateTime date = startDate.Date; date <= endDate.Date; date = date.AddDays(1))
                     {
-                        var (totalFee, totalCards, totalChargedCards) = CalculateDailySummary(usageData, paymentStatus, date, promo.Key);
+                        var (totalFee, totalCards, totalChargedCards) = CalculationsManager.CalculateDailySummary(usageData, paymentStatus, date, promo.Key);
 
                         DataRow row = resultTable.NewRow();
                         row["ชื่อตราประทับ"] = promo.Value;
@@ -571,6 +532,7 @@ namespace ParkingManagementReport.Utilities.Database
             return resultTable;
         }
         */
+        
         public static DataTable GetVehicleEarningSummary(string sqlQuery, DateTime startDate, DateTime endDate)
         {
             DataTable dtFromQuery = DbController.LoadData(sqlQuery);
@@ -849,378 +811,7 @@ namespace ParkingManagementReport.Utilities.Database
 
             return Map;
         }
-
         #endregion
-
-
-        #region HELPERS
-        private static (double parkingPrice, double feeCharge) GetParkingPriceAndFee(string dw, bool notDay, int iteration, DataTable dataTable)
-        {
-            string sqlQuery = "select * from prosetprice where PromotionID = " + dataTable.Rows[iteration]["proid"] + " ";
-
-            if (dw.Length > 1)
-                sqlQuery += " and dayweek like '%" + dw + "%'";
-
-            sqlQuery += " order by no";
-
-            DataTable dt2 = DbController.LoadData(sqlQuery);
-            if (dt2 != null && dt2.Rows.Count > 0)
-            {
-                AppGlobalVariables.IntTime = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntPriceMin = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntPriceHour = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntHourRound = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntExpense = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntOver = new int[dt2.Rows.Count];
-                for (int j = 0; j < dt2.Rows.Count; j++)
-                {
-                    if (j == 0) //Mac 2016/04/05
-                    {
-                        AppGlobalVariables.IntTime[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[3].ToString());
-                    }
-                    else
-                    {
-                        AppGlobalVariables.IntTime[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[3].ToString()) - Convert.ToInt32(dt2.Rows[j - 1].ItemArray[3].ToString());
-                    }
-                    AppGlobalVariables.IntPriceMin[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[4].ToString());  // นาทีละ(บาท)
-                    AppGlobalVariables.IntPriceHour[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[5].ToString()); // ชั่วโมงละ(บาท)
-                    AppGlobalVariables.IntHourRound[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[6].ToString()); // ปัดเศษ(นาที)
-                    AppGlobalVariables.IntExpense[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[7].ToString());   // เหมาจ่าย(บาท)
-                    AppGlobalVariables.IntOver[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[8].ToString());      // จอดเกินกำหนด(บาท)
-                }
-                //--------------------------------- //Mac 2017/12/06
-
-                //Mac 2022/07/29
-                int FlatRateM = 0;
-                int FlatRateP = 0;
-                int FlatRateX = 0;
-
-                if (Configs.UseFlatRateProSetPrice)
-                {
-                    try
-                    {
-                        FlatRateM = Convert.ToInt32(dt2.Rows[0]["flat_rate"].ToString().Split('|')[0]);
-                        FlatRateP = Convert.ToInt32(dt2.Rows[0]["flat_rate"].ToString().Split('|')[1]);
-                        FlatRateX = Convert.ToInt32(dt2.Rows[0]["flat_rate"].ToString().Split('|')[2]);
-                    }
-                    catch { }
-                }
-
-                int ZoneMin = 0;
-                int intParkingPrice = 0;
-                int intMin = 0;
-
-                //Mac 2022/07/26 ---------------
-                sqlQuery = "select * from prosetprice_zone where PromotionID = " + dataTable.Rows[iteration]["proid"] + " ";
-
-                if (dw.Length > 1)
-                    sqlQuery += " and dayweek like '%" + dw + "%'";
-
-                sqlQuery += " order by no";
-
-                DataTable dt4 = DbController.LoadData(sqlQuery);
-                //------------------------------
-
-                if (dt4 != null && dt4.Rows.Count > 0)
-                {
-                    AppGlobalVariables.IntTime2 = new int[dt4.Rows.Count];
-                    AppGlobalVariables.IntPriceMin2 = new int[dt4.Rows.Count];
-                    AppGlobalVariables.IntPriceHour2 = new int[dt4.Rows.Count];
-                    AppGlobalVariables.IntHourRound2 = new int[dt4.Rows.Count];
-                    AppGlobalVariables.IntExpense2 = new int[dt4.Rows.Count];
-                    AppGlobalVariables.IntOver2 = new int[dt4.Rows.Count];
-                    for (int y = 0; y < dt4.Rows.Count; y++)
-                    {
-                        if (y == 0)
-                        {
-                            AppGlobalVariables.IntTime2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[3].ToString());
-                        }
-                        else
-                        {
-                            AppGlobalVariables.IntTime2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[3].ToString()) - Convert.ToInt32(dt4.Rows[y - 1].ItemArray[3].ToString());
-                        }
-                        AppGlobalVariables.IntPriceMin2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[4].ToString());
-                        AppGlobalVariables.IntPriceHour2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[5].ToString());
-                        AppGlobalVariables.IntHourRound2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[6].ToString());
-                        AppGlobalVariables.IntExpense2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[7].ToString());
-                        AppGlobalVariables.IntOver2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[8].ToString());
-                    }
-                    string ZoneStart = dt4.Rows[0]["zone_start"].ToString();
-                    string ZoneStop = dt4.Rows[0]["zone_stop"].ToString();
-
-                    var CalPriceZone = (dynamic)null;
-                    DateTime dti = DateTime.Parse(dataTable.Rows[iteration]["datein"].ToString());
-                    DateTime dto = DateTime.Parse(dataTable.Rows[iteration]["dateout"].ToString());
-                    DateTime dtInOne;
-                    DateTime dtOutOne;
-                    TimeSpan diffInOut = DateTime.Parse(dto.ToShortDateString()) - DateTime.Parse(dti.ToShortDateString());
-
-                    bool boolNoRound = false; //Mac 2018/01/08
-                    boolNoRound = false; //Mac 2018/01/08
-                    for (int x = 0; x < diffInOut.Days + 1; x++)
-                    {
-                        if (diffInOut.Days == 0)
-                        {
-                            boolNoRound = true; //Mac 2018/01/08
-                            dtInOne = dti;
-                            dtOutOne = dto;
-                        }
-                        else if (x == 0)
-                        {
-                            dtInOne = dti;
-                            dtOutOne = DateTime.Parse(dti.ToShortDateString() + " 23:59:59");
-                        }
-                        else if (x == diffInOut.Days)
-                        {
-                            dtInOne = DateTime.Parse(dto.ToShortDateString() + " 00:00:00");
-                            dtOutOne = dto;
-                        }
-                        else
-                        {
-                            dtInOne = DateTime.Parse(dti.ToShortDateString() + " 00:00:00");
-                            dtOutOne = DateTime.Parse(dti.AddDays(1).ToShortDateString() + " 00:00:00");
-                        }
-
-                        CalPriceZone = CalculationsManager.CalPriceZoneOneDay(0, dtInOne.ToString(), dtOutOne.ToString(), ZoneStart, ZoneStop, 0, 0, 0, boolNoRound);
-                        ZoneMin += CalPriceZone.Key;
-                    }
-                }
-
-                int intFee;
-
-                if (ZoneMin > 0)
-                {
-                    intMin = Int32.Parse(dataTable.Rows[iteration]["tdf"].ToString()) - ZoneMin;
-                    intParkingPrice = CalculationsManager.CalPrice2(0, ZoneMin, notDay);
-                    intFee = CalculationsManager.CalPrice(0, intMin, notDay) + intParkingPrice;
-                }
-                else
-                {
-                    intFee = CalculationsManager.CalPrice(0, Int32.Parse(dataTable.Rows[iteration]["tdf"].ToString()), notDay);
-                }
-
-                if (Configs.UseFlatRateProSetPrice)
-                {
-                    intFee += CalculationsManager.CalFlatRate(DateTime.Parse(dataTable.Rows[iteration]["datein"].ToString()), DateTime.Parse(dataTable.Rows[iteration]["dateout"].ToString()), FlatRateM, FlatRateP, FlatRateX);
-                }
-
-                double parkingPrice = Convert.ToDouble(intParkingPrice); // dr["ค่าจอดทั้งหมด"]
-                double feeCharge = Convert.ToDouble(intFee); // dr["ค่าบริการเรียกเก็บ"]
-
-                return (parkingPrice, feeCharge);
-            }
-            return (0, 0);
-        }
-
-        private static (double parkingPrice, double discount, double feeCharge) GetApplicableChargesThanapoom(string dw, bool notDay, int iteration, DataTable dataTable)
-        {
-            int promotionId = Convert.ToInt16(dataTable.Rows[iteration]["proid"]);
-
-            string sqlQuery = $"select * from prosetprice where PromotionID = {promotionId} ";
-
-            if (dw.Length > 1)
-                sqlQuery += "and dayweek like '%" + dw + "%' ";
-
-            sqlQuery += "order by no";
-
-            int intMinute = Int32.Parse(dataTable.Rows[iteration]["tdf"].ToString());
-            int totalDiscountTimeMinute = 0;
-            int intFee = 0;
-            int intParkingPrice = 0;
-            int intDiscount = 0;
-
-            DataTable dt2 = DbController.LoadData(sqlQuery);
-            if (dt2 != null && dt2.Rows.Count > 0)
-            {
-                AppGlobalVariables.IntTime = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntPriceMin = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntPriceHour = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntHourRound = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntExpense = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntOver = new int[dt2.Rows.Count];
-                for (int j = 0; j < dt2.Rows.Count; j++)
-                {
-                    if (j == 0)
-                    {
-                        AppGlobalVariables.IntTime[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[3].ToString());
-                    }
-                    else
-                    {
-                        AppGlobalVariables.IntTime[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[3].ToString()) - Convert.ToInt32(dt2.Rows[j - 1].ItemArray[3].ToString());
-                    }
-                    AppGlobalVariables.IntPriceMin[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[4].ToString());  // นาทีละ(บาท)
-                    AppGlobalVariables.IntPriceHour[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[5].ToString()); // ชั่วโมงละ(บาท)
-                    AppGlobalVariables.IntHourRound[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[6].ToString()); // ปัดเศษ(นาที)
-                    AppGlobalVariables.IntExpense[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[7].ToString());   // เหมาจ่าย(บาท)
-                    AppGlobalVariables.IntOver[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[8].ToString());      // จอดเกินกำหนด(บาท)
-
-                    /* DISCOUNT */
-                    int startTime = Convert.ToInt32(dt2?.Rows[j]?.ItemArray[2]);
-                    int finishTime = Convert.ToInt32(dt2?.Rows[j]?.ItemArray[3]);
-                    int totalTimeMinute = finishTime - startTime + 1;
-                    totalDiscountTimeMinute += totalTimeMinute * (AppGlobalVariables.IntPriceHour[j] == 0 ? 1 : 0);
-                }
-
-                /* Old
-                AppGlobalVariables.IntTime2 = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntPriceMin2 = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntPriceHour2 = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntHourRound2 = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntExpense2 = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntOver2 = new int[dt2.Rows.Count];
-
-                AppGlobalVariables.IntTime2 = AppGlobalVariables.IntTime; // ช่วงเวลา อิงจากชุดแรก (ชุดส่วนลด)
-                AppGlobalVariables.IntPriceHour2[0] = 40; // อัตราค่าจอด ชั้วโมงแรก
-                AppGlobalVariables.IntPriceHour2[1] = 40; // อัตราค่าจอด ชั่วโมงถัดไป
-                AppGlobalVariables.IntHourRound2[0] = 16; // นาทีปัดขึ้น ชั่วโมงแรก
-                AppGlobalVariables.IntHourRound2[1] = 1;  // นาทีปัดขึ้น ชั่วโมงถัดไป
-
-                intParkingPrice = CalculationsManager.CalPrice2(0, intMinute, notDay);
-                หรือ
-                intParkingPrice = CalculationsManager.GetPriceThanapoom(intMinute);
-                */
-
-                intFee = CalculationsManager.CalPrice(0, intMinute, notDay);
-                intParkingPrice = CalculationsManager.GetPriceThanapoom(intMinute);
-                if (dataTable.Rows[iteration]["proid"].ToString() == "119")
-                {
-                    intDiscount = Math.Max(0, intParkingPrice - intFee);
-                }
-                else if (intParkingPrice <= 0)
-                {
-                    intDiscount = 0;
-                }
-                else
-                {
-                    intDiscount = CalculationsManager.GetDiscountThanapoom();
-                }
-
-                double parkingPrice = Convert.ToDouble(intParkingPrice); // dr["ค่าจอดทั้งหมด"]
-                double discount = Convert.ToDouble(intDiscount); // dr["ส่วนลด"]
-                double feeCharge = Convert.ToDouble(intFee); // dr["ค่าบริการเรียกเก็บ"]
-
-                return (parkingPrice, discount, feeCharge);
-            }
-            else
-            {
-                double freePromotionPrice = CalculationsManager.GetPriceThanapoom(intMinute);
-                double freeDiscountPrice = Math.Min(CalculationsManager.GetDiscountThanapoom(promotionId), freePromotionPrice);
-
-                return (freePromotionPrice, freeDiscountPrice, 0);
-            }
-        }
-
-        private static (decimal totalFee, int totalCards, int totalChargedCards) CalculateDailySummary(DataTable data, string paymentStatus, DateTime date, int? filterPromotionId = null)
-        {
-            decimal totalFee = 0;
-            int totalCards = 0;
-            int totalChargedCards = 0;
-
-            foreach (DataRow row in data.Rows)
-            {
-                if (!DateTime.TryParse(row["เวลาออก"]?.ToString(), out DateTime exitTime) || exitTime.Date != date)
-                    continue;
-
-                if (filterPromotionId.HasValue &&
-                    int.TryParse(row["รหัสส่วนลด"]?.ToString(), out int rowPromoId) &&
-                    rowPromoId != filterPromotionId.Value)
-                    continue;
-
-                if (paymentStatus != Constants.TextBased.All)
-                {
-                    if (paymentStatus == Constants.TextBased.PaymentStatusPaid)
-                    {
-                        if (decimal.TryParse(row["ค่าบริการเรียกเก็บ"]?.ToString(), out decimal fee))
-                        {
-                            totalFee += fee;
-                            if (fee > 0)
-                            {
-                                totalCards++;
-                                totalChargedCards++;
-                            }
-                        }
-                    }
-                    else if (paymentStatus == Constants.TextBased.PaymentStatusUnPaid)
-                    {
-                        if (decimal.TryParse(row["ค่าบริการเรียกเก็บ"]?.ToString(), out decimal fee))
-                        {
-                            if (fee <= 0)
-                            {
-                                totalCards++;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    totalCards++;
-
-                    if (decimal.TryParse(row["ค่าบริการเรียกเก็บ"]?.ToString(), out decimal fee))
-                    {
-                        totalFee += fee;
-                        if (fee > 0) totalChargedCards++;
-                    }
-                }
-            }
-
-            return (totalFee, totalCards, totalChargedCards);
-        }
-
-        internal static DataTable GetFeeAndVatSummaryFromMemberGroupPriceMonth(string sql, string promotionRangeFrom, string promotionRangeTo)
-        {
-            DataTable dataTable = DbController.LoadData(sql);
-
-            DataTable resultTable = new DataTable("");
-            resultTable.Columns.Add("ลำดับ", typeof(string));
-            //resultTable.Columns.Add("CIT Code", typeof(string));
-            resultTable.Columns.Add("WPT Code", typeof(string));
-            resultTable.Columns.Add("Customer", typeof(string));
-            resultTable.Columns.Add("ค่าบริการก่อน VAT", typeof(double));
-            resultTable.Columns.Add("VAT", typeof(double));
-            resultTable.Columns.Add("ค่าบริการทั้งหมด", typeof(double));
-
-            double sumBeforeVat = 0;
-            double sumVat = 0;
-            double sumTotalCharge = 0;
-
-            for (int i = 0; i < dataTable.Rows.Count; i++)
-            {
-                try
-                {
-                    string currentWptCode = dataTable.Rows[i]["WPT Code"].ToString();
-                    string currentCustomerName = dataTable.Rows[i]["บริษัท"].ToString();
-                    double currentPrice = double.TryParse(dataTable.Rows[i]["รวมค่าบัตรสมาชิก"]?.ToString(), out var price) ? price : 0;
-
-                    var (beforeVatCharge, vatCharge, totalCharge) = CalculationsManager.CalculatePriceSummaryAndVat(currentPrice);
-
-                    DataRow row = resultTable.NewRow();
-                    row["ลำดับ"] = (i + 1).ToString();
-                    //row["CIT Code"] = "";
-                    row["WPT Code"] = currentWptCode;
-                    row["Customer"] = TextFormatters.RemoveBracketFromName(currentCustomerName);
-                    row["ค่าบริการก่อน VAT"] = beforeVatCharge;
-                    row["VAT"] = vatCharge;
-                    row["ค่าบริการทั้งหมด"] = totalCharge;
-
-                    sumBeforeVat += beforeVatCharge;
-                    sumVat += vatCharge;
-                    sumTotalCharge += totalCharge;
-
-                    resultTable.Rows.Add(row);
-                }
-                catch { }
-            }
-
-            resultTable.Rows.Add("", "",
-                "รวม",
-                sumBeforeVat,
-                sumVat,
-                sumTotalCharge);
-
-            return resultTable;
-        }
-
-        #endregion HELPERS_END
     }
 }
 

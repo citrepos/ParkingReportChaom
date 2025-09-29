@@ -106,6 +106,12 @@
     <Compile Include="Common\AppGlobalVariables.cs" />
     <Compile Include="Common\Configs.cs" />
     <Compile Include="Common\Constants.cs" />
+    <Compile Include="Common\Enumerators.cs" />
+    <Compile Include="CrystalReports\Parking\CrystalReport1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CrystalReport1.rpt</DependentUpon>
+    </Compile>
     <Compile Include="CrystalReports\Report13NoRunning.cs">
       <DependentUpon>Report13NoRunning.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -1996,9 +2002,19 @@
       <SubType>Component</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="DataSetParking.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSetParking.xsd</DependentUpon>
+    </Compile>
     <Compile Include="dbForReport.Designer.cs">
       <DependentUpon>dbForReport.cs</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="dbForReport1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbForReport.xsd</DependentUpon>
     </Compile>
     <Compile Include="FormDatabase.cs">
       <SubType>Form</SubType>
@@ -2014,6 +2030,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Utilities\AccessManager.cs" />
+    <Compile Include="Utilities\CrystalReportHelper.cs" />
     <Compile Include="Utilities\Database\DbController.cs" />
     <Compile Include="dbForReport.cs">
       <DependentUpon>dbForReport.xsd</DependentUpon>
@@ -3408,6 +3425,10 @@
       <LastGenOutput>Report21_1_tnpt.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="CrystalReports\Parking\CrystalReport1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>CrystalReport1.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormDatabase.resx">
       <DependentUpon>FormDatabase.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -3435,6 +3456,17 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="App.config" />
+    <None Include="DataSetParking.xsc">
+      <DependentUpon>DataSetParking.xsd</DependentUpon>
+    </None>
+    <None Include="DataSetParking.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSetParking.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataSetParking.xss">
+      <DependentUpon>DataSetParking.xsd</DependentUpon>
+    </None>
     <None Include="dbForReport.xsc">
       <DependentUpon>dbForReport.xsd</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -3443,6 +3475,7 @@
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>dbForReport1.Designer.cs</LastGenOutput>
     </Content>
     <None Include="dbForReport.xss">
       <DependentUpon>dbForReport.xsd</DependentUpon>
@@ -3465,7 +3498,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="CrystalReports\Village\" />
+  </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>

@@ -5,8 +5,6 @@ namespace ParkingManagementReport.Common
 {
     internal class AppGlobalVariables
     {
-        //public static int selectedReportId { get; set; } = 0;
-        
         public static string IdText { get; set; }
         public static string IdTextUser { get; set; }
         public static string ConditionText { get; set; }

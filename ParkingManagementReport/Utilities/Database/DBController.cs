@@ -22,9 +22,9 @@ namespace ParkingManagementReport.Utilities.Database
 
         public static DataTable LoadData(string sql, bool isLocal = false)
         {
-            DataTable dt = new DataTable();
+            DataTable dataTable = new DataTable();
             DataSet ds = new DataSet();
-            var connection = isLocal ? localConnection : remoteConnection;
+            MySqlConnection connection = isLocal ? localConnection : remoteConnection;
 
             try
             {
@@ -33,13 +33,13 @@ namespace ParkingManagementReport.Utilities.Database
                 {
                     da.SelectCommand.CommandTimeout = 1000;
                     da.Fill(ds, "Table");
-                    dt = ds.Tables["Table"];
+                    dataTable = ds.Tables["Table"];
                 }
                 connection.Close();
             }
             catch { }
 
-            return dt;
+            return dataTable;
         }
        
         public static string SaveData(string sql, bool isLocal = false)

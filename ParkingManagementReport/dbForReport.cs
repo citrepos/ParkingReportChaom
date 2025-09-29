@@ -3,8 +3,6 @@
 }
 namespace ParkingManagementReport
 {
-
-
     public partial class dbForReport
     {
         partial class tnpt_card_sorted_company_summaryDataTable
