@@ -30,7 +30,6 @@ namespace ParkingManagementReport.Utilities
             AppGlobalVariables.CarTypesById = new Dictionary<int, string>();
             AppGlobalVariables.DispensersById = new Dictionary<int, string>();
             AppGlobalVariables.PromotionNamesById = new Dictionary<int, string>();
-            AppGlobalVariables.VendorGroupMonthsById = new Dictionary<int, string>();
             AppGlobalVariables.UsersById = new Dictionary<int, string>();
             AppGlobalVariables.ReportsById = new Dictionary<int, string>();
             AppGlobalVariables.ParamsLookup = new Dictionary<string, string>();
@@ -87,7 +86,6 @@ namespace ParkingManagementReport.Utilities
             SetOnlinePaymentType();
 
             SetParkingFreeMinutes();
-
         }
 
         public static void SaveConfigsToDb()
@@ -346,13 +344,8 @@ namespace ParkingManagementReport.Utilities
             if (dictionary != null && !dictionary.ContainsKey(Constants.TextBased.All))
                 dictionary.Add(Constants.TextBased.All, 0);
 
-            if (comboBox != null)
-            {
-                if (!comboBox.Items.Contains(Constants.TextBased.All))
-                    comboBox.Items.Add(Constants.TextBased.All);
-
-                comboBox.Text = Constants.TextBased.All;
-            }
+            if (!comboBox.Items.Contains(Constants.TextBased.All))
+                comboBox.Items.Add(Constants.TextBased.All);
 
             var dt = DbController.LoadData(query);
             if (dt.Rows.Count > 0)
@@ -367,33 +360,13 @@ namespace ParkingManagementReport.Utilities
                         dictionary.Add(displayText, id);
                     }
 
-                    if (comboBox != null && !comboBox.Items.Contains(displayText))
-                    {
-                        comboBox.Items.Add(displayText);
-                    }
+                    comboBox.Items.Add(displayText);
                 }
             }
 
+            comboBox.Text = Constants.TextBased.All;
         }
 
-        public static void LoadDataToIntStringDictionary(string query, Dictionary<int, string> dictionary)
-        {
-            DataTable dt = DbController.LoadData(query);
-
-            if (dt.Rows.Count > 0)
-            {
-                foreach (DataRow row in dt.Rows)
-                {
-                    int currentKey = Convert.ToInt16(row[0]);
-
-                    if (dictionary != null && !dictionary.ContainsKey(currentKey))
-                    {
-                        string value = row[1]?.ToString();
-                        dictionary.Add(currentKey, value);
-                    }
-                }
-            }
-        }
 
         public static void LoadDispensers()
         {
@@ -708,6 +681,7 @@ namespace ParkingManagementReport.Utilities
                 ["report_pdfonly"] = v => Configs.UsePDFOnly = v,
                 ["report_datestring"] = v => Configs.Reports.UseReportDateString = v,
                 ["use_report_hour_use"] = v => Configs.Reports.UseReportHourUse = v,
+                ["use_report_thanapoom"] = v => Configs.Reports.UseReportThanapoom = v,
                 
                 // Report logo flags
                 ["use_report1logo"] = v => Configs.Reports.UseReport1logo = v,

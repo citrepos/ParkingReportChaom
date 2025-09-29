@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using ParkingManagementReport.Common;
 using ParkingManagementReport.Utilities.Formatters;
-
-using Constants = ParkingManagementReport.Common.Constants;
-using DataTable = System.Data.DataTable;
 
 namespace ParkingManagementReport.Utilities.Database
 {
@@ -84,6 +83,9 @@ namespace ParkingManagementReport.Utilities.Database
                 Map.Columns.Add(new DataColumn("รหัสส่วนลด", typeof(string)));     // Proid
                 Map.Columns.Add(new DataColumn("รหัสใบเสร็จ", typeof(string)));     // printno
                 
+                if(Configs.Reports.UseReportThanapoom) 
+                    Map.Columns.Add(new DataColumn("tnpt_id", typeof(int)));        // tnpt_id
+
                 if (Configs.Reports.UseReport21_2)
                     Map.Columns.Add(new DataColumn("Proprice", typeof(string)));
 
@@ -331,12 +333,41 @@ namespace ParkingManagementReport.Utilities.Database
                         double parkingPrice = 0;        // ชำระเงินเอง (ค่าจอดรถ)
                         double applicableChargeFee = 0; // ค่าบริการเรียกเก็บ
 
-                        /* Old (pre 29-07-2025) */
-                        if (double.TryParse(dt.Rows[i]["price"]?.ToString(), out double parsedPrice))
-                            parkingPrice = parsedPrice;
-                        (totalParkingPrice, applicableChargeFee) = GetParkingPriceAndFee(stringDW, notDay, i, dt);
+                        if (Configs.Reports.UseReportThanapoom)
+                        {
+                            (totalParkingPrice, discount, applicableChargeFee) = GetApplicableChargesThanapoom(stringDW, notDay, i, dt);
+                            if (dt.Rows[i]["proid"].ToString() == "119")
+                            {
+                                parkingPrice = 0;
+                            }
+                            else
+                            {
+                                parkingPrice = totalParkingPrice - discount - applicableChargeFee;
+                            }
 
-                        //totalParkingFee = Math.Max(0, totalParkingFee - discount); // ผิด
+                            /*
+                            if (double.TryParse(dt.Rows[i]["price"]?.ToString(), out double parkingPriceValue))
+                                parkingPrice = parkingPriceValue;
+
+                            if (parkingPrice > 0)
+                            {
+                                int lossCardPrice = Convert.ToInt32(dt.Rows[i]?["losscard"] ?? 0);
+                                int overDatePrice = Convert.ToInt32(dt.Rows[i]?["overdate"] ?? 0);
+                                int totalFine = lossCardPrice + overDatePrice;
+
+                                parkingPrice = Math.Max(totalFine - parkingPrice, 0);
+                            }
+                            */
+                        }
+                        else
+                        {
+                            /* Old (pre 29-07-2025) */
+                            if (double.TryParse(dt.Rows[i]["price"]?.ToString(), out double parsedPrice))
+                                parkingPrice = parsedPrice;
+                            (totalParkingPrice, applicableChargeFee) = GetParkingPriceAndFee(stringDW, notDay, i, dt);
+                            
+                            //totalParkingFee = Math.Max(0, totalParkingFee - discount); // ผิด
+                        }
 
                         #region Set dr
                         dr["หมายเลขบัตร"] = dt.Rows[i]["no"]?.ToString();
@@ -353,6 +384,8 @@ namespace ParkingManagementReport.Utilities.Database
                         dr["ส่วนลด"] = discount.ToString("F2");
                         dr["ชำระเงินเอง"] = parkingPrice.ToString("F2");
                         dr["ค่าบริการเรียกเก็บ"] = applicableChargeFee.ToString("F2");
+                        if (Configs.Reports.UseReportThanapoom)  
+                            dr["tnpt_id"] = dt?.Rows?[i]?["tnpt_id_int"];
                         #endregion
 
                         if (paymentText == Constants.TextBased.PaymentStatusPaid)
@@ -382,6 +415,7 @@ namespace ParkingManagementReport.Utilities.Database
             DateTime endDate)
         {
             DataTable resultTable = new DataTable("");
+
             resultTable.Columns.Add("ชื่อตราประทับ", typeof(string));
             resultTable.Columns.Add("วันที่", typeof(string));
             resultTable.Columns.Add("จำนวนเงิน", typeof(string));
@@ -431,124 +465,6 @@ namespace ParkingManagementReport.Utilities.Database
 
             return resultTable;
         }
-
-
-        public static DataTable GetSummarizedDailyPromotionUsage(DataTable usageData)
-        {
-            DataTable summarizedDataTable = new DataTable("summarizedDataTable");
-            summarizedDataTable.Columns.Add("ลำดับ", typeof(string));
-            summarizedDataTable.Columns.Add("WPT Code", typeof(string));
-            summarizedDataTable.Columns.Add("Customer", typeof(string));
-            summarizedDataTable.Columns.Add("ค่าบริการก่อน VAT", typeof(double));
-            summarizedDataTable.Columns.Add("VAT", typeof(double));
-            summarizedDataTable.Columns.Add("ค่าบริการทั้งหมด", typeof(double));
-
-            int iter = 1;
-            double sumBeforeVat = 0;
-            double sumVat = 0;
-            double sumTotalCharge = 0;
-
-            Dictionary<int, double> sums = new Dictionary<int, double>();
-            foreach (DataRow row in usageData.Rows)
-            {
-                int tnptId = Convert.ToInt32(row["tnpt_id"]);
-                double fee = Convert.ToDouble(row["ค่าบริการเรียกเก็บ"]);
-
-                if (!sums.ContainsKey(tnptId))
-                    sums[tnptId] = 0;
-
-                sums[tnptId] += fee;
-            }
-
-            foreach (var kvp in sums)
-            {
-                Console.WriteLine($"tnpt_id: {kvp.Key}, Sum ค่าบริการเรียกเก็บ: {kvp.Value}");
-
-                double currentPrice = kvp.Value;
-                var (beforeVatCharge, vatCharge, totalCharge) = CalculationsManager.CalculateVatFromFullPrice(currentPrice);
-                string wptCode = kvp.Key.ToString();
-                string companyName = AppGlobalVariables.VendorGroupMonthsById[kvp.Key];
-                //string companyName = AppGlobalVariables.MemberGroupMonthsToId.FirstOrDefault(x => x.Value == kvp.Key).Key;
-                //companyName = TextFormatters.RemoveBracketFromName(companyName);
-
-                DataRow row = summarizedDataTable.NewRow();
-                row["ลำดับ"] = iter;
-                row["WPT Code"] = wptCode;
-                row["Customer"] = companyName;
-                row["ค่าบริการก่อน VAT"] = beforeVatCharge;
-                row["VAT"] = vatCharge;
-                row["ค่าบริการทั้งหมด"] = totalCharge;
-
-                iter++;
-                sumBeforeVat += beforeVatCharge;
-                sumVat += vatCharge;
-                sumTotalCharge += totalCharge;
-
-                summarizedDataTable.Rows.Add(row);
-            }
-
-            summarizedDataTable.Rows.Add("", "",
-                    "รวม",
-                sumBeforeVat,
-                sumVat,
-                sumTotalCharge);
-
-            return summarizedDataTable;
-        }
-
-        internal static DataTable GetFeeAndVatSummaryFromMemberGroupPriceMonth(string sql)
-        {
-            DataTable dataTable = DbController.LoadData(sql);
-
-            DataTable resultTable = new DataTable("");
-            resultTable.Columns.Add("ลำดับ", typeof(string));
-            resultTable.Columns.Add("WPT Code", typeof(string));
-            resultTable.Columns.Add("Customer", typeof(string));
-            resultTable.Columns.Add("ค่าบริการก่อน VAT", typeof(double));
-            resultTable.Columns.Add("VAT", typeof(double));
-            resultTable.Columns.Add("ค่าบริการทั้งหมด", typeof(double));
-
-            double sumBeforeVat = 0;
-            double sumVat = 0;
-            double sumTotalCharge = 0;
-
-            for (int i = 0; i < dataTable.Rows.Count; i++)
-            {
-                try
-                {
-                    string itemIndexText = $"{i + 1}";
-                    string currentWptCode = dataTable.Rows[i]["WPT Code"].ToString();
-                    string currentCustomerName = dataTable.Rows[i]["บริษัท"].ToString();
-                    double currentPrice = double.TryParse(dataTable.Rows[i]["รวมค่าบัตรสมาชิก"]?.ToString(), out var price) ? price : 0;
-
-                    var (beforeVatCharge, vatCharge, totalCharge) = CalculationsManager.CalculatePriceSummaryAndVat(currentPrice);
-
-                    DataRow row = resultTable.NewRow();
-                    row["ลำดับ"] = itemIndexText;
-                    row["WPT Code"] = currentWptCode;
-                    row["Customer"] = TextFormatters.RemoveBracketFromName(currentCustomerName);
-                    row["ค่าบริการก่อน VAT"] = beforeVatCharge;
-                    row["VAT"] = vatCharge;
-                    row["ค่าบริการทั้งหมด"] = totalCharge;
-
-                    sumBeforeVat += beforeVatCharge;
-                    sumVat += vatCharge;
-                    sumTotalCharge += totalCharge;
-
-                    resultTable.Rows.Add(row);
-                }
-                catch { }
-            }
-
-            resultTable.Rows.Add("", "",
-                "รวม",
-                sumBeforeVat,
-                sumVat,
-                sumTotalCharge);
-
-            return resultTable;
-        }
-
 
         /* public static DataTable GetBillingFeeAndVatSummary(DataTable usageData,string promotionRangeFrom, string promotionRangeTo, string paymentStatus)
         {
@@ -655,7 +571,6 @@ namespace ParkingManagementReport.Utilities.Database
             return resultTable;
         }
         */
-
         public static DataTable GetVehicleEarningSummary(string sqlQuery, DateTime startDate, DateTime endDate)
         {
             DataTable dtFromQuery = DbController.LoadData(sqlQuery);
@@ -1250,6 +1165,61 @@ namespace ParkingManagementReport.Utilities.Database
 
             return (totalFee, totalCards, totalChargedCards);
         }
+
+        internal static DataTable GetFeeAndVatSummaryFromMemberGroupPriceMonth(string sql, string promotionRangeFrom, string promotionRangeTo)
+        {
+            DataTable dataTable = DbController.LoadData(sql);
+
+            DataTable resultTable = new DataTable("");
+            resultTable.Columns.Add("ลำดับ", typeof(string));
+            //resultTable.Columns.Add("CIT Code", typeof(string));
+            resultTable.Columns.Add("WPT Code", typeof(string));
+            resultTable.Columns.Add("Customer", typeof(string));
+            resultTable.Columns.Add("ค่าบริการก่อน VAT", typeof(double));
+            resultTable.Columns.Add("VAT", typeof(double));
+            resultTable.Columns.Add("ค่าบริการทั้งหมด", typeof(double));
+
+            double sumBeforeVat = 0;
+            double sumVat = 0;
+            double sumTotalCharge = 0;
+
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                try
+                {
+                    string currentWptCode = dataTable.Rows[i]["WPT Code"].ToString();
+                    string currentCustomerName = dataTable.Rows[i]["บริษัท"].ToString();
+                    double currentPrice = double.TryParse(dataTable.Rows[i]["รวมค่าบัตรสมาชิก"]?.ToString(), out var price) ? price : 0;
+
+                    var (beforeVatCharge, vatCharge, totalCharge) = CalculationsManager.CalculatePriceSummaryAndVat(currentPrice);
+
+                    DataRow row = resultTable.NewRow();
+                    row["ลำดับ"] = (i + 1).ToString();
+                    //row["CIT Code"] = "";
+                    row["WPT Code"] = currentWptCode;
+                    row["Customer"] = TextFormatters.RemoveBracketFromName(currentCustomerName);
+                    row["ค่าบริการก่อน VAT"] = beforeVatCharge;
+                    row["VAT"] = vatCharge;
+                    row["ค่าบริการทั้งหมด"] = totalCharge;
+
+                    sumBeforeVat += beforeVatCharge;
+                    sumVat += vatCharge;
+                    sumTotalCharge += totalCharge;
+
+                    resultTable.Rows.Add(row);
+                }
+                catch { }
+            }
+
+            resultTable.Rows.Add("", "",
+                "รวม",
+                sumBeforeVat,
+                sumVat,
+                sumTotalCharge);
+
+            return resultTable;
+        }
+
         #endregion HELPERS_END
     }
 }

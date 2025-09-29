@@ -113,13 +113,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="CrystalReports\Report164.cs">
-      <DependentUpon>Report164.rpt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <SubType>Component</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="CrystalReports\Report1NoOfficer.cs">
       <DependentUpon>Report1NoOfficer.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -3415,11 +3408,6 @@
       <LastGenOutput>Report21_1_tnpt.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CrystalReports\Report164.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Report164.cs</LastGenOutput>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="FormDatabase.resx">
       <DependentUpon>FormDatabase.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -3455,7 +3443,6 @@
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LastGenOutput>dbForReport1.Designer.cs</LastGenOutput>
     </Content>
     <None Include="dbForReport.xss">
       <DependentUpon>dbForReport.xsd</DependentUpon>

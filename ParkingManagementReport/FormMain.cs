@@ -70,8 +70,7 @@ namespace ParkingManagementReport
 
             /*FOR TEST
             StartDatePicker.Value = new DateTime(day: 01, month: 4, year: 2025);
-            EndDatePicker.Value = new DateTime(day: 15, month: 4, year: 2025);
-            */
+            EndDatePicker.Value = new DateTime(day: 15, month: 4, year: 2025);*/
         }
 
         #region INIT
@@ -110,7 +109,7 @@ namespace ParkingManagementReport
             Constants.TextBased.PaymentChannelPromptPay,
             Constants.TextBased.PaymentChannelTrueMoney,
             Constants.TextBased.PaymentChannelCash,
-            Constants.TextBased.PaymentChannelEdc
+            Constants.TextBased.PaymentChannelEDC
             });
 
             MemberCardTypeComboBox.Items.AddRange(new object[] {
@@ -292,7 +291,6 @@ namespace ParkingManagementReport
 
             PaymentStatusComboBox.Items.Clear();
             PaymentStatusComboBox.Text = Constants.TextBased.All;
-
             //CRUDManager.LoadComboBoxDataFromQuery(
             //    PaymentStatusComboBox,
             //    "SELECT name, id FROM cardtype WHERE name IS NOT NULL AND LENGTH(TRIM(name)) > 0 ORDER BY id",
@@ -322,10 +320,6 @@ namespace ParkingManagementReport
                 MemberNameComboBox,
                 "SELECT name FROM member ORDER BY name",
                 null);
-
-            ConfigsManager.LoadDataToIntStringDictionary(
-                "SELECT id, vendor_name FROM vendor_group ORDER BY id",
-                AppGlobalVariables.VendorGroupMonthsById);
         }
 
         private void ConfigureUp2UPanelSettings()
@@ -1123,7 +1117,10 @@ namespace ParkingManagementReport
                     PdfExportButton.Enabled = true;
                     ExcelExportButton.Enabled = true;
 
-                    ResultGridView.DataSource = dt;
+                    if (Configs.Reports.UseReportThanapoom)
+                        ResultGridView.DataSource = dt = DataTableManager.EditedThanapoomDataTable(dt, selectedReportId);
+                    else 
+                        ResultGridView.DataSource = dt;
 
                     ResultGridView.AutoResizeColumns();
 
@@ -1696,8 +1693,29 @@ namespace ParkingManagementReport
                                 break;
 
                             case 5:
-                                goto case 0;
+                                if (Configs.Reports.UseReportThanapoom)
+                                {
+                                    rpt.Load(path + "\\CrystalReports\\Report1NoOfficer.rpt");
+                                    rpt.SetDataSource(dt);
 
+                                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                                    if (dtMap.Rows.Count > 0)
+                                    {
+                                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                                        if (Configs.Reports.UseReport1logo)
+                                        {
+                                            rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                                            rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
+                                            rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                        }
+                                    }
+                                    PrimaryCrystalReportViewer.ReportSource = rpt;
+                                    PrimaryCrystalReportViewer.Refresh(); ;
+                                }
+                                else
+                                    goto case 0;
+
+                                break;
 
                             case 7:
                                 DataTable Map2 = new DataTable("myMember");  //*** DataTable Map DataSet.xsd ***//
@@ -4835,19 +4853,46 @@ namespace ParkingManagementReport
                                 PrimaryCrystalReportViewer.Refresh();
                                 break;
 
-                            case 161:  // 34.สรุปค่าบริการรายเดือน Member รถยนต์
-                                rpt.Load(path + "\\CrystalReports\\Report162.rpt");
-                                rpt.SetDataSource(dt);
-                                if (dtMap.Rows.Count > 0)
-                                    rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                            case 161:
+                                if (Configs.Reports.UseReportThanapoom)
+                                {
+                                    DataTable mappedTable = CRUDManager.GetFeeAndVatSummaryFromMemberGroupPriceMonth(
+                                        sql, 
+                                        PromotionIdFrom.Text, 
+                                        PromotionIdTo.Text);
 
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                                PrimaryCrystalReportViewer.ReportSource = rpt;
-                                PrimaryCrystalReportViewer.Refresh();
+                                    ResultGridView.DataSource = mappedTable;
+
+                                    var numericStyle = new DataGridViewCellStyle
+                                    {
+                                        Alignment = DataGridViewContentAlignment.MiddleRight,
+                                        Format = "N2"
+                                    };
+
+                                    for (int colIndex = mappedTable.Columns.Count - 3; colIndex < mappedTable.Columns.Count; colIndex++)
+                                    {
+                                        ResultGridView.Columns[colIndex].DefaultCellStyle = numericStyle;
+                                        ResultGridView.Columns[colIndex].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+                                    }
+
+                                    Cursor = Cursors.Default;
+                                    return;
+                                }
+                                else
+                                {
+                                    rpt.Load(path + "\\CrystalReports\\Report162.rpt");
+                                    rpt.SetDataSource(dt);
+                                    if (dtMap.Rows.Count > 0)
+                                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+
+                                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                                    PrimaryCrystalReportViewer.ReportSource = rpt;
+                                    PrimaryCrystalReportViewer.Refresh();
+                                }
                                 break;
 
-                            case 163:
-                                rpt.Load(path + "\\CrystalReports\\Report164.rpt");
+                            case 162:
+                                rpt.Load(path + "\\CrystalReports\\Report163.rpt");
                                 rpt.SetDataSource(dt);
                                 if (dtMap.Rows.Count > 0)
                                     rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
@@ -6330,7 +6375,6 @@ namespace ParkingManagementReport
                 this.ResultGridView.TopLeftHeaderCell.Value = "";
             }
         }
-
         private string SetReportHeader()
         {
             string startDateLong = StartDatePicker.Value.ToLongDateString();
@@ -6362,7 +6406,7 @@ namespace ParkingManagementReport
                 case 48 when !Configs.IsSwitch:  // Note: 'when' clause is available in C# 7.0+
                     return $"รายงานภาษีขายค่าปรับประจำวัน จากวันที่ {startDateLong} เวลา {startTimeLong} ถึงวันที่ {endDateLong} เวลา {endTimeLong}";
 
-                case 163:
+                case 162:
                     string paymentChannelText = PaymentChannelComboBox.Text == Constants.TextBased.All ? "ทั้งหมด" : PaymentChannelComboBox.Text;
                     return $"{reportName}: {paymentChannelText} จากวันที่ {startDateLong} เวลา {startTimeLong} ถึงวันที่ {endDateLong} เวลา {endTimeLong}";
 
@@ -6739,17 +6783,7 @@ namespace ParkingManagementReport
             else
                 ParkingTimeComparisonPanel.Visible = false;
 
-            /* if(selectedReportId == 162 && Configs.Reports.UseReportThanapoom)
-            {
-                ViewBlockerPanel.Location = new Point(9, 48);
-                ViewBlockerPanel.Width = 1115;
-                ViewBlockerPanel.Height = 138;
-                ViewBlockerPanel.Visible = true;
-            }
-            else */
-            ViewBlockerPanel.Visible = false;
-
-            if (selectedReportId == 163 || selectedReportId == 48 || selectedReportId == 49) //Mac 2025/03/07
+            if (selectedReportId == 162 || selectedReportId == 48 || selectedReportId == 49) //Mac 2025/03/07
             {
                 label42.Visible = true;
                 PaymentChannelComboBox.Visible = true;
@@ -7022,8 +7056,8 @@ namespace ParkingManagementReport
             );
 
             if (selectedReportId == 16 || selectedReportId == 17 || selectedReportId == 18 || selectedReportId == 19 || selectedReportId == 20 || selectedReportId == 21
-                || selectedReportId == 164)
-                FuckingShit(selectedReportId, sql);
+                || selectedReportId == 163)
+                FunckingShit(selectedReportId, sql);
             else
             {
                 ReportHeaderLabel.Text = AppGlobalVariables.Printings.Header = SetReportHeader().Replace("รายงานรายงาน", "รายงาน");
@@ -7094,7 +7128,7 @@ namespace ParkingManagementReport
         }
         #endregion
 
-        private void FuckingShit(int selectedReportId, string sql)
+        private void FunckingShit(int selectedReportId, string sql)
         {
             string startDate = StartDatePicker.Value.ToString("yyyy-MM-dd");
             string endDate = EndDatePicker.Value.ToString("yyyy-MM-dd");
@@ -8662,6 +8696,10 @@ namespace ParkingManagementReport
                                         Configs.IsSwitch = true;
                                     }
                                 }
+                                else if (Configs.Reports.UseReportThanapoom)
+                                {
+                                    rpt.Load(path + "\\CrystalReports\\Report21_1_tnpt.rpt");
+                                }
                                 else
                                     rpt.Load(path + "\\CrystalReports\\Report21_1.rpt");
                             }
@@ -8728,7 +8766,7 @@ namespace ParkingManagementReport
                                 TextObject txtReportHeader = rpt.ReportDefinition.ReportObjects["text7"] as TextObject;
                                 txtReportHeader.Text = "บัตรจอดรถ";
                             }
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
+                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'"; //Mac 2020/08/27
                             rpt.SetParameterValue("DateSearch", StartDatePicker.Text + " " + StartTimePicker.Text);
                             rpt.SetParameterValue("DateSearch2", EndDatePicker.Text + " " + EndTimePicker.Text);
 
@@ -8753,17 +8791,18 @@ namespace ParkingManagementReport
                     try
                     {
                         PrimaryTabControl.SelectTab(1);
-
+                        //////////////////////////////////////////////////////
                         string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                         path = path.Replace("\\bin\\Debug", "");
                         ReportDocument rpt = new ReportDocument();
                         rpt.Load(path + "\\CrystalReports\\Report22.rpt");
+                        //////////////////////////////////////////////////////
                         rpt.SetDataSource(mappedTable);
 
                         string start_date = StartDatePicker.Value.ToString("yyyy-MM-dd");
                         string end_date = EndDatePicker.Value.ToString("yyyy-MM-dd");
 
-                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
+                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปการใช้ตราประทับ'";
                         rpt.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(end_date)}'";
                         rpt.DataDefinition.FormulaFields["ReportSearchDate"].Text = $"'{start_date} ถึง {end_date}'";
                         rpt.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
@@ -8777,7 +8816,7 @@ namespace ParkingManagementReport
                     Cursor = Cursors.Default;
                     return;
 
-                case 164: // 37.รายงานสรุปจำนวนรถและรายได้
+                case 163:
                     try
                     {
                         string start_date = StartDatePicker.Value.ToString("yyyy-MM-dd");
@@ -8790,7 +8829,7 @@ namespace ParkingManagementReport
                         rpt.Load(path + "\\CrystalReports\\TnptVehicleEarningSummary.rpt");
                         rpt.SetDataSource(dataTable);
 
-                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปจำนวนรถและรายได้'";
                         rpt.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
                         rpt.DataDefinition.FormulaFields["PrintedPersonnel"].Text = $"'Printed By: {AppGlobalVariables.OperatingUser.Name}'";
                         rpt.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(EndDatePicker.Value.ToString("yyyy-MM-dd"))}'";

@@ -47,7 +47,6 @@ namespace ParkingManagementReport.Common
         public static Dictionary<int, string> PromotionNamesById { get; set; }
         public static Dictionary<int, string> UsersById { get; set; }
         public static Dictionary<int, string> ReportsById { get; set; }
-        public static Dictionary<int, string> VendorGroupMonthsById { get; set; }
         public static Dictionary<string, string> ParamsLookup { get; set; }
         public static Dictionary<string, string> MemberStatusesLookup { get; set; }
         public static Dictionary<string, int> MemberGroupsToId { get; set; }
