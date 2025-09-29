@@ -8,7 +8,6 @@ namespace ParkingManagementReport.Common
 {
     internal class Configs
     {
-        internal static bool UseSumPrice;
         #region GENERIC
         public static int PriceCardLoss { get; internal set; }
         public static int NoCar { get; internal set; }
@@ -175,6 +174,7 @@ namespace ParkingManagementReport.Common
             public static bool UseReport3logo { get; internal set; }
             public static bool UseReportDateString { get; internal set; }
             public static bool UseReportHourUse { get; internal set; }
+            public static bool UseReportThanapoom { get; internal set; }
 
             public static bool Report3Decimal { get; internal set; }
             public static bool ReportPriceSplitLosscard { get; internal set; }

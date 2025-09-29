@@ -16,14 +16,14 @@ namespace ParkingManagementReport.CrystalReports {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class Report22 : ReportClass {
+    public class TnptCardSortedCompanySummary : ReportClass {
         
-        public Report22() {
+        public TnptCardSortedCompanySummary() {
         }
         
         public override string ResourceName {
             get {
-                return "Report22.rpt";
+                return "TnptCardSortedCompanySummary.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace ParkingManagementReport.CrystalReports {
         
         public override string FullResourceName {
             get {
-                return "ParkingManagementReport.CrystalReports.Report22.rpt";
+                return "ParkingManagementReport.CrystalReports.TnptCardSortedCompanySummary.rpt";
             }
             set {
                 // Do nothing
@@ -66,7 +66,7 @@ namespace ParkingManagementReport.CrystalReports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupHeaderSection1 {
+        public CrystalDecisions.CrystalReports.Engine.Section Section3 {
             get {
                 return this.ReportDefinition.Sections[2];
             }
@@ -74,7 +74,7 @@ namespace ParkingManagementReport.CrystalReports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section3 {
+        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
             get {
                 return this.ReportDefinition.Sections[3];
             }
@@ -82,33 +82,17 @@ namespace ParkingManagementReport.CrystalReports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection1 {
-            get {
-                return this.ReportDefinition.Sections[4];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
-            get {
-                return this.ReportDefinition.Sections[5];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public CrystalDecisions.CrystalReports.Engine.Section Section5 {
             get {
-                return this.ReportDefinition.Sections[6];
+                return this.ReportDefinition.Sections[4];
             }
         }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedReport22 : Component, ICachedReport {
+    public class CachedTnptCardSortedCompanySummary : Component, ICachedReport {
         
-        public CachedReport22() {
+        public CachedTnptCardSortedCompanySummary() {
         }
         
         [Browsable(false)]
@@ -145,7 +129,7 @@ namespace ParkingManagementReport.CrystalReports {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            Report22 rpt = new Report22();
+            TnptCardSortedCompanySummary rpt = new TnptCardSortedCompanySummary();
             rpt.Site = this.Site;
             return rpt;
         }

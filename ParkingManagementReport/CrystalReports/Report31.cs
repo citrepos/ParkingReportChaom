@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ParkingReportThanapoom.CrystalReports {
+namespace ParkingManagementReport.CrystalReports {
     using System;
     using System.ComponentModel;
     using CrystalDecisions.Shared;
@@ -41,7 +41,7 @@ namespace ParkingReportThanapoom.CrystalReports {
         
         public override string FullResourceName {
             get {
-                return "ParkingReportThanapoom.CrystalReports.Report31.rpt";
+                return "ParkingManagementReport.CrystalReports.Report31.rpt";
             }
             set {
                 // Do nothing

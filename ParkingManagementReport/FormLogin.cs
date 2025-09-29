@@ -1,42 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using ParkingManagementReport.Common;
+using ParkingManagementReport.Utilities.Database;
+using ParkingManagementReport.Utilities;
+using ParkingManagementReport.Utilities.Hardwares;
 
 namespace ParkingManagementReport
 {
     public partial class FormLogin : Form
     {
+        MifareReader mfReader;
+
         public FormLogin()
         {
             InitializeComponent();
-        }
 
-        private void Login()
-        {
-            if (txtUserName.Text == "" || txtPassword.Text == "")
-                return;
-            else
-            {
-                FormMain.pm.Login(txtUserName.Text, txtPassword.Text, "", false);
-                FormMain.pm.LoadOnlinePaymentType();
-            }
-
-            if (FormMain.pm.user.LoginReady)
-            {
-                Close();
-            }
-            else
-            {
-                txtPassword.Clear();
-                txtUserName.Text = "";
-                txtUserName.Focus();
-            }
+            mfReader = new MifareReader(false);
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -44,51 +26,49 @@ namespace ParkingManagementReport
             Close();
         }
 
+        #region WINDOW_HANDLER
         private void FormLogin_Load(object sender, EventArgs e)
         {
             this.TopMost = true;
-            if (FormMain.pm.UseMifare)
+            if (Configs.UseMifare)
             {
-                tmMFCheck.Enabled = true;
+                MifareCheckTimer.Enabled = true;
             }
 
-            txtUserName.Focus();
+            UsernameTextBox.Focus();
             this.KeyPreview = true;
-            //Mac 2015/07/29 -----------------------------
             if (!File.Exists(@"C:\Windows\carpark\conDatabase.txt"))
             {
                 this.Height = 211;
             }
             else
             {
+                AppGlobalVariables.Database.LookupList = new System.Collections.Generic.Dictionary<string, string>();
                 string strFile = @"C:\Windows\carpark\conDatabase.txt";
                 FileStream MyFileStream = new FileStream(strFile, FileMode.Open, FileAccess.Read, FileShare.Read);
-                StreamReader sr = new StreamReader(MyFileStream, System.Text.Encoding.UTF8, true);
+                StreamReader streamReader = new StreamReader(MyFileStream, Encoding.UTF8, true);
                 String line = "";
                 string[] str;
 
-                while ((line = sr.ReadLine()) != null)
+                while ((line = streamReader.ReadLine()) != null)
                 {
                     if (line.Trim().Length > 0)
                     {
-                        //line = sr.ReadLine();
                         str = line.Split(',');
-                        FormMain.pm.DicDatabase.Add(str[1], str[0]);
-                        //DicPromotionIns.Add(Int32.Parse(str[0]), str[1]);
+                        AppGlobalVariables.Database.LookupList.Add(str[1], str[0]);
                         cobDatabase.Items.Add(str[1]);
                     }
                 }
-                sr.Close();
+                streamReader.Close();
                 MyFileStream.Close();
                 if (cobDatabase.Items.Count > 0)
                     cobDatabase.SelectedIndex = 0;
             }
-            //--------------------------------------------
         }
 
         private void FormLogin_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!FormMain.pm.user.LoginReady)
+            if (!AppGlobalVariables.OperatingUser.LoginReady)
             {
                 if (MessageBox.Show("ต้องการออกจากโปรแกรม", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 {
@@ -96,29 +76,31 @@ namespace ParkingManagementReport
                 }
                 else
                 {
-                    FormMain.pm.user.LoginReady = true;
-                    Environment.Exit(0); //Mac 2015/07/29
-                    //Application.Exit();
+                    AppGlobalVariables.OperatingUser.LoginReady = true;
+                    Environment.Exit(0);
                 }
             }
         }
+        #endregion WINDOW_HANDLER_END
 
-        String strID = "";
 
+
+        #region UI_EVENT_HANDLER
         private void FormLogin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
             {
-                if (strID.Length >= 10)
+                if (UsernameTextBox.Text.Length >= 25)
                 {
-                    //FormMain.pm.UseLogOut = false;
-                    FormMain.pm.Login("", "", strID, false);
-                    if (FormMain.pm.user.LoginReady)
+                    AccessManager.Login("", "", UsernameTextBox.Text, false);
+                    if (AppGlobalVariables.OperatingUser.LoginReady)
                     {
                         Close();
                     }
-                    strID = "";
+                    UsernameTextBox.Text = "";
                 }
+                else
+                    HandleLogin();
             }
             else
             {
@@ -127,7 +109,7 @@ namespace ParkingManagementReport
                 {
                     try
                     {
-                        strID += strKey.Substring(1, 1);
+                        UsernameTextBox.Text += strKey.Substring(1, 1);
                     }
                     catch (Exception)
                     {
@@ -135,118 +117,39 @@ namespace ParkingManagementReport
                 }
             }
         }
-
-        private void tmMFCheck_Tick(object sender, EventArgs e)
-        {
-            if (FormMain.pm.user.LoginReady)
-                return;
-            if (FormMain.pm.mifaV.chkCard())
-            {
-                tmMFCheck.Enabled = false;
-                strID = FormMain.pm.mifaV.Init1();
-                if (strID != "")
-                {
-                    FormMain.pm.mifaV.setLED(1);
-                    if (FormMain.pm.print.MFPassiveInProx) //Mac 2015/06/13
-                    {
-                        strID = strID.Substring(4, 2) + strID.Substring(2, 2) + strID.Substring(0, 2);
-                    }
-                    uint intID = Convert.ToUInt32(strID, 16);
-                    strID = "";
-                    //FormMain.pm.UseLogOut = true;
-                    FormMain.pm.Login("", "", intID.ToString(), false);
-                    FormMain.pm.mifaV.setSound(8);
-                    //FormMain.pm.mifa.WaitCardOut();
-                    //System.Threading.Thread.Sleep(50);
-                    FormMain.pm.mifaV.setLED(2);
-                    if (FormMain.pm.user.LoginReady)
-                    {
-                        Close();
-                    }
-                    else
-                    {
-                        tmMFCheck.Enabled = true;
-                    }
-                }
-                else
-                {
-                    tmMFCheck.Enabled = true;
-                }
-            }
-            //else
-            //{
-            //    FormMain.pm.mifa.setLED(2);
-            //}
-        }
-
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            //Mac 2015/07/29 -----------
-            if (cobDatabase.Text.Length > 0)
-            {
-                //FormMain.pm.ServerIP = FormMain.pm.DicDatabase[cobDatabase.Text];
-                FormMain.pm.ServerIP = FormMain.pm.DicDatabase[cobDatabase.Text].Split('|')[0]; //Mac 2016/11/10
-                try
-                {
-                    FormMain.pm.DatabaseName = FormMain.pm.DicDatabase[cobDatabase.Text].Split('|')[1]; //Mac 2016/11/10
-                    if (FormMain.pm.DatabaseName.Trim().Length == 0)
-                        FormMain.pm.DatabaseName = "carpark2";
-                }
-                catch { FormMain.pm.DatabaseName = "carpark2"; }
-            }
-            /*if (!FormMain.pm.DBConnect(FormMain.pm.ServerIP))
-            {
-                MessageBox.Show("Can not connect database IP : " + FormMain.pm.ServerIP, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }*/
-            //Mac 2016/11/10
-            if (!FormMain.pm.DBConnect(FormMain.pm.ServerIP, FormMain.pm.DatabaseName))
-            {
-                MessageBox.Show("Can not connect database IP : " + FormMain.pm.ServerIP + " | database name : " + FormMain.pm.DatabaseName, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            //--------------------------
-
-            Login();
+            HandleLogin();
         }
 
         private void txtUserName_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
-                txtPassword.Focus();
+                UserPasswordTextBox.Focus();
         }
 
-        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
+        private void UserPasswordTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
             {
-                //Mac 2015/07/29 -----------
                 if (cobDatabase.Text.Length > 0)
                 {
-                    //FormMain.pm.ServerIP = FormMain.pm.DicDatabase[cobDatabase.Text];
-                    FormMain.pm.ServerIP = FormMain.pm.DicDatabase[cobDatabase.Text].Split('|')[0]; //Mac 2016/11/10
+                    Configs.ServerIP = AppGlobalVariables.Database.LookupList[cobDatabase.Text].Split('|')[0];
                     try
                     {
-                        FormMain.pm.DatabaseName = FormMain.pm.DicDatabase[cobDatabase.Text].Split('|')[1]; //Mac 2016/11/10
-                        if (FormMain.pm.DatabaseName.Trim().Length == 0)
-                            FormMain.pm.DatabaseName = "carpark2";
+                        AppGlobalVariables.Database.Name = AppGlobalVariables.Database.LookupList[cobDatabase.Text].Split('|')[1];
+                        if (AppGlobalVariables.Database.Name.Trim().Length == 0)
+                            AppGlobalVariables.Database.Name = "carpark2";
                     }
-                    catch { FormMain.pm.DatabaseName = "carpark2"; }
+                    catch { AppGlobalVariables.Database.Name = "carpark2"; }
                 }
-                /*if (!FormMain.pm.DBConnect(FormMain.pm.ServerIP))
+                if (!DbController.Connect(Configs.ServerIP, AppGlobalVariables.Database.Name))
                 {
-                    MessageBox.Show("Can not connect database IP : " + FormMain.pm.ServerIP, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }*/
-                //Mac 2016/11/10
-                if (!FormMain.pm.DBConnect(FormMain.pm.ServerIP, FormMain.pm.DatabaseName))
-                {
-                    MessageBox.Show("Can not connect database IP : " + FormMain.pm.ServerIP + " | database name : " + FormMain.pm.DatabaseName, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Can not connect database IP : " + Configs.ServerIP + " | database name : " + AppGlobalVariables.Database.Name, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                //--------------------------
 
-                Login();
+                HandleLogin();
             }
         }
 
@@ -255,12 +158,112 @@ namespace ParkingManagementReport
             FormDatabase frm = new FormDatabase();
             frm.ShowDialog();
             cobDatabase.Items.Clear();
-            foreach (var kvp in FormMain.pm.DicDatabase.ToArray())
+            foreach (var kvp in AppGlobalVariables.Database.LookupList.ToArray())
             {
                 cobDatabase.Items.Add(kvp.Key);
             }
             if (cobDatabase.Items.Count > 0)
                 cobDatabase.SelectedIndex = 0;
         }
+
+        private void MifareCheckTimer_Tick(object sender, EventArgs e)
+        {
+            if (AppGlobalVariables.OperatingUser.LoginReady)
+                return;
+            if (mfReader.CheckCard())
+            {
+
+
+                MifareCheckTimer.Enabled = false;
+                UsernameTextBox.Text = mfReader.Init1();
+                if (UsernameTextBox.Text != "")
+                {
+                    mfReader.SetLED(1);
+                    if (Configs.Hardwares.IsMFPassiveInProx)
+                    {
+                        UsernameTextBox.Text = UsernameTextBox.Text.Substring(4, 2) + UsernameTextBox.Text.Substring(2, 2) + UsernameTextBox.Text.Substring(0, 2);
+                    }
+                    uint intID = Convert.ToUInt32(UsernameTextBox.Text, 16);
+                    UsernameTextBox.Text = "";
+                    AccessManager.Login("", "", intID.ToString(), false);
+                    mfReader.SetSound(8);
+                    mfReader.SetLED(2);
+                    if (AppGlobalVariables.OperatingUser.LoginReady)
+                    {
+                        Close();
+                    }
+                    else
+                    {
+                        MifareCheckTimer.Enabled = true;
+                    }
+                }
+                else
+                {
+                    MifareCheckTimer.Enabled = true;
+                }
+            }
+        }
+
+        #endregion UI_EVENT_HANDLER_END
+
+        #region PROCESS
+        private void HandleLogin()
+        {
+            if (cobDatabase.Text.Length > 0)
+            {
+                Configs.ServerIP = AppGlobalVariables.Database.LookupList[cobDatabase.Text].Split('|')[0];
+                try
+                {
+                    AppGlobalVariables.Database.Name = AppGlobalVariables.Database.LookupList[cobDatabase.Text].Split('|')[1];
+
+                    if (AppGlobalVariables.Database.Name.Trim().Length == 0)
+                        AppGlobalVariables.Database.Name = "carpark2";
+
+                    if (AppGlobalVariables.Database.Name.Trim().Contains("_m") || AppGlobalVariables.Database.Name.Trim().ToLower().Contains("moto"))
+                    {
+                        AppGlobalVariables.Database.VehicleTypeTh = "รถจักรยานยนต์";
+                        AppGlobalVariables.Database.VehicleTypeEn = "Motorcycle";
+                    }
+                    else
+                    {
+                        AppGlobalVariables.Database.VehicleTypeTh = "รถยนต์";
+                        AppGlobalVariables.Database.VehicleTypeEn = "Car";
+                    }
+                }
+                catch
+                {
+                    AppGlobalVariables.Database.Name = "carpark2";
+                    AppGlobalVariables.Database.VehicleTypeTh = "รถยนต์";
+                    AppGlobalVariables.Database.VehicleTypeEn = "Car";
+                }
+            }
+            if (!DbController.Connect(Configs.ServerIP, AppGlobalVariables.Database.Name))
+            {
+                MessageBox.Show("Can not connect database IP : " + Configs.ServerIP + " | database name : " + AppGlobalVariables.Database.Name, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DoLogin();
+        }
+
+        private void DoLogin()
+        {
+            if (UsernameTextBox.Text == "" || UserPasswordTextBox.Text == "")
+                return;
+            else
+                AccessManager.Login(UsernameTextBox.Text, UserPasswordTextBox.Text, "", false);
+
+            if (AppGlobalVariables.OperatingUser.LoginReady)
+            {
+                Close();
+            }
+            else
+            {
+                UserPasswordTextBox.Clear();
+                UsernameTextBox.Text = "";
+                UsernameTextBox.Focus();
+            }
+        }
+        #endregion PROCESS_END
     }
 }

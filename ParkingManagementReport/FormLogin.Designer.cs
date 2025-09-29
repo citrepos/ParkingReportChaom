@@ -34,11 +34,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lbUsername = new System.Windows.Forms.Label();
             this.lbPassword = new System.Windows.Forms.Label();
-            this.txtUserName = new System.Windows.Forms.TextBox();
-            this.txtPassword = new System.Windows.Forms.TextBox();
+            this.UsernameTextBox = new System.Windows.Forms.TextBox();
+            this.UserPasswordTextBox = new System.Windows.Forms.TextBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
-            this.tmMFCheck = new System.Windows.Forms.Timer(this.components);
+            this.MifareCheckTimer = new System.Windows.Forms.Timer(this.components);
             this.btnAddDatabase = new System.Windows.Forms.Button();
             this.cobDatabase = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -83,23 +83,23 @@
             this.lbPassword.Text = "&Password";
             this.lbPassword.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // txtUserName
+            // UsernameTextBox
             // 
-            this.txtUserName.AcceptsReturn = true;
-            this.txtUserName.Location = new System.Drawing.Point(231, 43);
-            this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size(127, 20);
-            this.txtUserName.TabIndex = 4;
-            this.txtUserName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserName_KeyDown);
+            this.UsernameTextBox.AcceptsReturn = true;
+            this.UsernameTextBox.Location = new System.Drawing.Point(231, 43);
+            this.UsernameTextBox.Name = "UsernameTextBox";
+            this.UsernameTextBox.Size = new System.Drawing.Size(127, 20);
+            this.UsernameTextBox.TabIndex = 4;
+            this.UsernameTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUserName_KeyDown);
             // 
-            // txtPassword
+            // UserPasswordTextBox
             // 
-            this.txtPassword.Location = new System.Drawing.Point(231, 80);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(127, 20);
-            this.txtPassword.TabIndex = 5;
-            this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyDown);
+            this.UserPasswordTextBox.Location = new System.Drawing.Point(231, 80);
+            this.UserPasswordTextBox.Name = "UserPasswordTextBox";
+            this.UserPasswordTextBox.PasswordChar = '*';
+            this.UserPasswordTextBox.Size = new System.Drawing.Size(127, 20);
+            this.UserPasswordTextBox.TabIndex = 5;
+            this.UserPasswordTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UserPasswordTextBox_KeyDown);
             // 
             // btnLogin
             // 
@@ -122,10 +122,10 @@
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
-            // tmMFCheck
+            // MifareCheckTimer
             // 
-            this.tmMFCheck.Interval = 1000;
-            this.tmMFCheck.Tick += new System.EventHandler(this.tmMFCheck_Tick);
+            this.MifareCheckTimer.Interval = 1000;
+            this.MifareCheckTimer.Tick += new System.EventHandler(this.MifareCheckTimer_Tick);
             // 
             // btnAddDatabase
             // 
@@ -167,8 +167,8 @@
             this.Controls.Add(this.btnAddDatabase);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnLogin);
-            this.Controls.Add(this.txtPassword);
-            this.Controls.Add(this.txtUserName);
+            this.Controls.Add(this.UserPasswordTextBox);
+            this.Controls.Add(this.UsernameTextBox);
             this.Controls.Add(this.lbPassword);
             this.Controls.Add(this.lbUsername);
             this.Controls.Add(this.label1);
@@ -195,11 +195,11 @@
         private System.Windows.Forms.Label label1;
         internal System.Windows.Forms.Label lbUsername;
         internal System.Windows.Forms.Label lbPassword;
-        internal System.Windows.Forms.TextBox txtUserName;
-        internal System.Windows.Forms.TextBox txtPassword;
+        internal System.Windows.Forms.TextBox UsernameTextBox;
+        internal System.Windows.Forms.TextBox UserPasswordTextBox;
         internal System.Windows.Forms.Button btnLogin;
         internal System.Windows.Forms.Button btnExit;
-        private System.Windows.Forms.Timer tmMFCheck;
+        private System.Windows.Forms.Timer MifareCheckTimer;
         private System.Windows.Forms.Button btnAddDatabase;
         private System.Windows.Forms.ComboBox cobDatabase;
         private System.Windows.Forms.Label label2;

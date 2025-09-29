@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDatabase));
             this.cobDB = new System.Windows.Forms.ComboBox();
-            this.txtNameDB = new System.Windows.Forms.TextBox();
+            this.UserFullNameTextBoxDB = new System.Windows.Forms.TextBox();
             this.txtIPDB = new System.Windows.Forms.TextBox();
             this.btnAddDB = new System.Windows.Forms.Button();
             this.btnDeleteDB = new System.Windows.Forms.Button();
@@ -53,13 +53,13 @@
             this.cobDB.TabIndex = 0;
             this.cobDB.DropDownClosed += new System.EventHandler(this.cobDB_DropDownClosed);
             // 
-            // txtNameDB
+            // UserFullNameTextBoxDB
             // 
-            this.txtNameDB.Location = new System.Drawing.Point(103, 84);
-            this.txtNameDB.Margin = new System.Windows.Forms.Padding(4);
-            this.txtNameDB.Name = "txtNameDB";
-            this.txtNameDB.Size = new System.Drawing.Size(221, 22);
-            this.txtNameDB.TabIndex = 1;
+            this.UserFullNameTextBoxDB.Location = new System.Drawing.Point(103, 84);
+            this.UserFullNameTextBoxDB.Margin = new System.Windows.Forms.Padding(4);
+            this.UserFullNameTextBoxDB.Name = "UserFullNameTextBoxDB";
+            this.UserFullNameTextBoxDB.Size = new System.Drawing.Size(221, 22);
+            this.UserFullNameTextBoxDB.TabIndex = 1;
             // 
             // txtIPDB
             // 
@@ -165,7 +165,7 @@
             this.Controls.Add(this.btnDeleteDB);
             this.Controls.Add(this.btnAddDB);
             this.Controls.Add(this.txtIPDB);
-            this.Controls.Add(this.txtNameDB);
+            this.Controls.Add(this.UserFullNameTextBoxDB);
             this.Controls.Add(this.cobDB);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -184,7 +184,7 @@
         #endregion
 
         private System.Windows.Forms.ComboBox cobDB;
-        private System.Windows.Forms.TextBox txtNameDB;
+        private System.Windows.Forms.TextBox UserFullNameTextBoxDB;
         private System.Windows.Forms.TextBox txtIPDB;
         private System.Windows.Forms.Button btnAddDB;
         private System.Windows.Forms.Button btnDeleteDB;

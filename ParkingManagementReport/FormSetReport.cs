@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using ParkingManagementReport.Common;
+using ParkingManagementReport.Utilities.Database;
 
 namespace ParkingManagementReport
 {
@@ -31,7 +33,7 @@ namespace ParkingManagementReport
             string sql = "SELECT id as ลำดับที่, name as ชื่อโปรโมชั่น,"
                 + " minute as นาทีส่วนลด, price as 'ราคาส่วนเกินต่อ 1 ชั่วโมง(บาท)'"
                 + " FROM promotion";
-            DataTable dt = FormMain.pm.LoadData(sql);
+            DataTable dt = DbController.LoadData(sql);
             dataGridView2.DataSource = dt;
             int widthColumn = dataGridView2.Width / dataGridView2.Columns.Count;
             for (int i = 0; i < dataGridView2.Columns.Count; i++)
@@ -65,17 +67,14 @@ namespace ParkingManagementReport
                         + " FlatPay as 'เหมาจ่าย(บาท)', "
                         + " MoreOne as 'จอดเกินกำหนด(บาท)', "
                         + " LoseCard as 'บัตรหาย(บาท)' ";
-                        /*+ " from prosetprice "
-                        + " WHERE PromotionID = " + reportId;*/
 
-                        //if (FormMain.pm.print.ReportProsetPriceDayWeek) //Mac 2019/05/27
-                        if (FormMain.pm.print.ReportProsetPriceDayWeek || FormMain.pm.print.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+                        if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
                             sql += ", DayWeek as 'วันในสัปดาห์' ";
 
                         sql += " from prosetprice ";
                         sql += " WHERE PromotionID = " + reportId;
 
-                DataTable dt = FormMain.pm.LoadData(sql);
+                DataTable dt = DbController.LoadData(sql);
 
                 dataGridView1.DataSource = dt;
                 int widthColumn = dataGridView1.Width / dataGridView1.Columns.Count;
@@ -121,8 +120,8 @@ namespace ParkingManagementReport
                 txtFatPay.Text = dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString();
                 txtMoreOne.Text = dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString();
                 txtLossCard.Text = dataGridView1.Rows[e.RowIndex].Cells[8].Value.ToString();
-                //if (FormMain.pm.print.ReportProsetPriceDayWeek) //Mac 2019/05/27
-                if (FormMain.pm.print.ReportProsetPriceDayWeek || FormMain.pm.print.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+                //if (Configs.Reports.ReportProsetPriceDayWeek) //Mac 2019/05/27
+                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
                     txtDayWeek.Text = dataGridView1.Rows[e.RowIndex].Cells[9].Value.ToString();
             }
             label1.Text = "แก้ไขข้อมูล";
@@ -150,14 +149,14 @@ namespace ParkingManagementReport
                 sql += "MoreOne = '" + txtMoreOne.Text + "',";
                 sql += "FlatPay = '" + txtFatPay.Text + "',";
                 sql += "MinuteToHour = '" + txtMinuteToHour.Text + "' ";
-                //if (FormMain.pm.print.ReportProsetPriceDayWeek) //Mac 2019/05/27
-                if (FormMain.pm.print.ReportProsetPriceDayWeek || FormMain.pm.print.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+                //if (Configs.Reports.ReportProsetPriceDayWeek) //Mac 2019/05/27
+                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
                     sql += ", DayWeek = '" + txtDayWeek.Text + "' ";
                 sql += " WHERE PromotionID = " + reportId;
                 sql += " AND no = " + no;
                 if (no != "")
                 {
-                    if (FormMain.pm.SaveData(sql) == "")
+                    if (DbController.SaveData(sql) == "")
                     {
                         if (txtFinishTime.Text != "1440") //Mac 2019/05/27
                         {
@@ -165,7 +164,7 @@ namespace ParkingManagementReport
                             sql += "StartTime = '" + (Int32.Parse(txtFinishTime.Text) + 1) + "'";
                             sql += " WHERE PromotionID = " + reportId;
                             sql += " AND no = " + (Int32.Parse(no) + 1);
-                            FormMain.pm.SaveData(sql);
+                            DbController.SaveData(sql);
                         }
 
                         /*txtStartTime.Text = txtFinishTime.Text = txtPayHour.Text = txtPayMinute.Text = txtLossCard.Text
@@ -188,8 +187,8 @@ namespace ParkingManagementReport
                 sql += "(";*/
                 //Mac 2019/05/27
                 string sql = "INSERT INTO prosetprice (PromotionID,no,StartTime,FinishTime,PayMinute,PayHour,MinuteToHour,FlatPay,MoreOne,LoseCard";
-                //if (FormMain.pm.print.ReportProsetPriceDayWeek)
-                if (FormMain.pm.print.ReportProsetPriceDayWeek || FormMain.pm.print.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+                //if (Configs.Reports.ReportProsetPriceDayWeek)
+                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
                     sql += ", DayWeek";
                 sql += ")VALUES (";
                 sql += "'" + reportId + "',";
@@ -202,13 +201,13 @@ namespace ParkingManagementReport
                 sql += "'" + txtFatPay.Text + "',";
                 sql += "'" + txtMoreOne.Text + "',";
                 sql += "'" + txtLossCard.Text + "'";
-                //if (FormMain.pm.print.ReportProsetPriceDayWeek) //Mac 2019/05/27
-                if (FormMain.pm.print.ReportProsetPriceDayWeek || FormMain.pm.print.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+                //if (Configs.Reports.ReportProsetPriceDayWeek) //Mac 2019/05/27
+                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
                     sql += ", '" + txtDayWeek.Text + "'";
                 sql += ")";
 
                 no = "";
-                if (FormMain.pm.SaveData(sql) == "")
+                if (DbController.SaveData(sql) == "")
                 {
                     MessageBox.Show("บันทึกสำเร็จ");
                 }
@@ -227,14 +226,14 @@ namespace ParkingManagementReport
                    + " LoseCard as 'บัตรหาย(บาท)' ";
                    /*+ " from prosetprice "
                    + " WHERE PromotionID = " + reportId;*/
-            //if (FormMain.pm.print.ReportProsetPriceDayWeek) //Mac 2019/05/27
-            if (FormMain.pm.print.ReportProsetPriceDayWeek || FormMain.pm.print.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+            //if (Configs.Reports.ReportProsetPriceDayWeek) //Mac 2019/05/27
+            if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
                 sqld += ", DayWeek as 'วันในสัปดาห์' ";
 
             sqld += " from prosetprice ";
             sqld += " WHERE PromotionID = " + reportId;
 
-            DataTable dt = FormMain.pm.LoadData(sqld);
+            DataTable dt = DbController.LoadData(sqld);
 
             dataGridView1.DataSource = dt;
             int widthColumn = dataGridView1.Width / dataGridView1.Columns.Count;
@@ -270,7 +269,7 @@ namespace ParkingManagementReport
                 label1.Text = "เพิ่มข้อมูล";
                 label1.ForeColor = Color.Green;
                 string sql = "SELECT MAX(no) FROM prosetprice where promotionId = "+reportId;
-                DataTable dt = FormMain.pm.LoadData(sql);
+                DataTable dt = DbController.LoadData(sql);
                 noAdd = dt.Rows[0].ItemArray[0].ToString();
                 txtFatPay.Enabled = true;
                 txtFinishTime.Enabled = true;
@@ -289,7 +288,7 @@ namespace ParkingManagementReport
                 else 
                 {
                     sql = "SELECT FinishTime FROM prosetprice WHERE promotionId = "+reportId +" AND no = "+noAdd;
-                    dt = FormMain.pm.LoadData(sql);
+                    dt = DbController.LoadData(sql);
                     txtStartTime.Text = (Int32.Parse(dt.Rows[0].ItemArray[0].ToString()) + 1).ToString() ;
                     txtFinishTime.Text = (Int32.Parse(dt.Rows[0].ItemArray[0].ToString()) + 2).ToString();
                     no = (Int32.Parse(noAdd) + 1).ToString();

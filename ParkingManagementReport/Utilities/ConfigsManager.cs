@@ -574,7 +574,6 @@ namespace ParkingManagementReport.Utilities
             SetBoolConfig(paramsLookup, "not_slipprice", value => Configs.UseSlipRecord = value);
             SetBoolConfig(paramsLookup, "asiatriq_price", value => Configs.UseAsiaTriqPrice = value);
             SetBoolConfig(paramsLookup, "group_price", value => Configs.UseGroupPrice = value);
-            SetBoolConfig(paramsLookup, "sum_price", value => Configs.UseSumPrice = value);
             SetBoolConfig(paramsLookup, "printin", value => Configs.IsPrintCarIn = value);
             SetBoolConfig(paramsLookup, "cardloss_price", value => Configs.UseCardLossPrice = value);
             SetBoolConfig(paramsLookup, "use_calvat_from_total", value => Configs.UseCalVatFromTotal = value);
@@ -708,6 +707,7 @@ namespace ParkingManagementReport.Utilities
                 ["report_pdfonly"] = v => Configs.UsePDFOnly = v,
                 ["report_datestring"] = v => Configs.Reports.UseReportDateString = v,
                 ["use_report_hour_use"] = v => Configs.Reports.UseReportHourUse = v,
+                ["use_report_thanapoom"] = v => Configs.Reports.UseReportThanapoom = v,
                 
                 // Report logo flags
                 ["use_report1logo"] = v => Configs.Reports.UseReport1logo = v,
@@ -824,6 +824,18 @@ namespace ParkingManagementReport.Utilities
             string txt = s + "\r\n";
 
             return txt;
+        }
+
+        internal static void UpdateEmptyTnptIdBackToDb()
+        {
+            string query = "UPDATE promotion\r\nSET tnpt_id = LPAD(groupro, 3, '0')\r\nWHERE (tnpt_id IS NULL OR tnpt_id = '')\r\n  AND groupro IS NOT NULL;";
+
+            string result = DbController.SaveData(query);
+
+            if (string.IsNullOrEmpty(result))
+                Console.WriteLine("Update successful");
+            else
+                Console.WriteLine("Error: " + result);
         }
     }
 }

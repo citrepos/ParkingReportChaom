@@ -84,6 +84,9 @@ namespace ParkingManagementReport.Utilities.Database
                 Map.Columns.Add(new DataColumn("รหัสส่วนลด", typeof(string)));     // Proid
                 Map.Columns.Add(new DataColumn("รหัสใบเสร็จ", typeof(string)));     // printno
                 
+                if(Configs.Reports.UseReportThanapoom) 
+                    Map.Columns.Add(new DataColumn("tnpt_id", typeof(int)));        // tnpt_id
+
                 if (Configs.Reports.UseReport21_2)
                     Map.Columns.Add(new DataColumn("Proprice", typeof(string)));
 
@@ -331,12 +334,41 @@ namespace ParkingManagementReport.Utilities.Database
                         double parkingPrice = 0;        // ชำระเงินเอง (ค่าจอดรถ)
                         double applicableChargeFee = 0; // ค่าบริการเรียกเก็บ
 
-                        /* Old (pre 29-07-2025) */
-                        if (double.TryParse(dt.Rows[i]["price"]?.ToString(), out double parsedPrice))
-                            parkingPrice = parsedPrice;
-                        (totalParkingPrice, applicableChargeFee) = GetParkingPriceAndFee(stringDW, notDay, i, dt);
+                        if (Configs.Reports.UseReportThanapoom)
+                        {
+                            (totalParkingPrice, discount, applicableChargeFee) = GetApplicableChargesThanapoom(stringDW, notDay, i, dt);
+                            if (dt.Rows[i]["proid"].ToString() == "119")
+                            {
+                                parkingPrice = 0;
+                            }
+                            else
+                            {
+                                parkingPrice = totalParkingPrice - discount - applicableChargeFee;
+                            }
 
-                        //totalParkingFee = Math.Max(0, totalParkingFee - discount); // ผิด
+                            /*
+                            if (double.TryParse(dt.Rows[i]["price"]?.ToString(), out double parkingPriceValue))
+                                parkingPrice = parkingPriceValue;
+
+                            if (parkingPrice > 0)
+                            {
+                                int lossCardPrice = Convert.ToInt32(dt.Rows[i]?["losscard"] ?? 0);
+                                int overDatePrice = Convert.ToInt32(dt.Rows[i]?["overdate"] ?? 0);
+                                int totalFine = lossCardPrice + overDatePrice;
+
+                                parkingPrice = Math.Max(totalFine - parkingPrice, 0);
+                            }
+                            */
+                        }
+                        else
+                        {
+                            /* Old (pre 29-07-2025) */
+                            if (double.TryParse(dt.Rows[i]["price"]?.ToString(), out double parsedPrice))
+                                parkingPrice = parsedPrice;
+                            (totalParkingPrice, applicableChargeFee) = GetParkingPriceAndFee(stringDW, notDay, i, dt);
+                            
+                            //totalParkingFee = Math.Max(0, totalParkingFee - discount); // ผิด
+                        }
 
                         #region Set dr
                         dr["หมายเลขบัตร"] = dt.Rows[i]["no"]?.ToString();
@@ -353,6 +385,8 @@ namespace ParkingManagementReport.Utilities.Database
                         dr["ส่วนลด"] = discount.ToString("F2");
                         dr["ชำระเงินเอง"] = parkingPrice.ToString("F2");
                         dr["ค่าบริการเรียกเก็บ"] = applicableChargeFee.ToString("F2");
+                        if (Configs.Reports.UseReportThanapoom)  
+                            dr["tnpt_id"] = dt?.Rows?[i]?["tnpt_id_int"];
                         #endregion
 
                         if (paymentText == Constants.TextBased.PaymentStatusPaid)

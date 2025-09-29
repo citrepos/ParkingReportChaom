@@ -31,101 +31,106 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.label1 = new System.Windows.Forms.Label();
-            this.comReport = new System.Windows.Forms.ComboBox();
+            this.ReportComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cobChannel = new System.Windows.Forms.ComboBox();
+            this.ViewBlockerPanel = new System.Windows.Forms.Panel();
+            this.PromotionIdRangePanel = new System.Windows.Forms.Panel();
+            this.label44 = new System.Windows.Forms.Label();
+            this.label43 = new System.Windows.Forms.Label();
+            this.PromotionIdTo = new System.Windows.Forms.TextBox();
+            this.PromotionIdFrom = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.PaymentChannelComboBox = new System.Windows.Forms.ComboBox();
             this.label42 = new System.Windows.Forms.Label();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.chkBetween = new System.Windows.Forms.CheckBox();
+            this.ParkingTimeComparisonPanel = new System.Windows.Forms.Panel();
+            this.ParkingBetweenCheckBox = new System.Windows.Forms.CheckBox();
             this.label41 = new System.Windows.Forms.Label();
-            this.txtBetweenMin2 = new System.Windows.Forms.TextBox();
+            this.ParkingBetweenToTextBox = new System.Windows.Forms.TextBox();
             this.label40 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
             this.label38 = new System.Windows.Forms.Label();
-            this.txtBetweenMin1 = new System.Windows.Forms.TextBox();
-            this.txtLessMin = new System.Windows.Forms.TextBox();
-            this.txtGreaterMin = new System.Windows.Forms.TextBox();
+            this.ParkingBetweenFromTextBox = new System.Windows.Forms.TextBox();
+            this.ParkingLesserTextBox = new System.Windows.Forms.TextBox();
+            this.ParkingGreaterTextBox = new System.Windows.Forms.TextBox();
             this.label37 = new System.Windows.Forms.Label();
-            this.chkLess = new System.Windows.Forms.CheckBox();
-            this.chkGreater = new System.Windows.Forms.CheckBox();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.chkDateExpire = new System.Windows.Forms.CheckBox();
-            this.chkDateRegis = new System.Windows.Forms.CheckBox();
+            this.ParkingLesserCheckBox = new System.Windows.Forms.CheckBox();
+            this.ParkingGreaterCheckBox = new System.Windows.Forms.CheckBox();
+            this.PaymentChannelPanel = new System.Windows.Forms.Panel();
+            this.ExpirationDateCheckBox = new System.Windows.Forms.CheckBox();
+            this.RegistrationDateCheckBox = new System.Windows.Forms.CheckBox();
             this.label36 = new System.Windows.Forms.Label();
-            this.txtNameCard = new System.Windows.Forms.TextBox();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.txtAdd = new System.Windows.Forms.TextBox();
+            this.NameOnCardTextBox = new System.Windows.Forms.TextBox();
+            this.AddressPanel = new System.Windows.Forms.Panel();
+            this.AddressTextBox = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.AdditionalMemberInfoPanel = new System.Windows.Forms.Panel();
             this.label35 = new System.Windows.Forms.Label();
-            this.cobCardMem = new System.Windows.Forms.ComboBox();
+            this.MemberCardTypeComboBox = new System.Windows.Forms.ComboBox();
             this.label33 = new System.Windows.Forms.Label();
-            this.cobRenewMem = new System.Windows.Forms.ComboBox();
+            this.MemberRenewalTypeComboBox = new System.Windows.Forms.ComboBox();
             this.label32 = new System.Windows.Forms.Label();
-            this.cobStatusMem = new System.Windows.Forms.ComboBox();
+            this.MemberProcessStateComboBox = new System.Windows.Forms.ComboBox();
             this.label31 = new System.Windows.Forms.Label();
-            this.cobGuardhouse = new System.Windows.Forms.ComboBox();
+            this.GuardhouseComboBox = new System.Windows.Forms.ComboBox();
             this.label30 = new System.Windows.Forms.Label();
-            this.txtRecordNo = new System.Windows.Forms.TextBox();
-            this.panel2Up2U = new System.Windows.Forms.Panel();
-            this.cobBirthdayMonth = new System.Windows.Forms.ComboBox();
-            this.chkNoExpire = new System.Windows.Forms.CheckBox();
-            this.dtpExpireStop = new System.Windows.Forms.DateTimePicker();
+            this.RecordNumberTextBox = new System.Windows.Forms.TextBox();
+            this.MemberParkingUp2UPanel = new System.Windows.Forms.Panel();
+            this.IgnoreExpirationDateCheckBox = new System.Windows.Forms.CheckBox();
+            this.MemberExpirationEndDatePicker = new System.Windows.Forms.DateTimePicker();
             this.label24 = new System.Windows.Forms.Label();
-            this.dtpExpireStart = new System.Windows.Forms.DateTimePicker();
+            this.MemberExpirationStartDatePicker = new System.Windows.Forms.DateTimePicker();
             this.label29 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
-            this.txtCountINStart2 = new System.Windows.Forms.TextBox();
+            this.MemberParkingCountEndTextBox = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
-            this.txtCountINStart = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.cobStatus = new System.Windows.Forms.ComboBox();
+            this.MemberParkingCountStartTextBox = new System.Windows.Forms.TextBox();
+            this.MemberStatusComboBox = new System.Windows.Forms.ComboBox();
             this.label25 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
-            this.txtMemID = new System.Windows.Forms.TextBox();
-            this.cobMemgroup = new System.Windows.Forms.ComboBox();
+            this.MemberIdTextBox = new System.Windows.Forms.TextBox();
+            this.MemberGroupComboBox = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
-            this.comMemName = new System.Windows.Forms.ComboBox();
+            this.MemberNameComboBox = new System.Windows.Forms.ComboBox();
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
-            this.comMemGroupMonth = new System.Windows.Forms.ComboBox();
+            this.MemberGroupMonthComboBox = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.txtUp2UCartype = new System.Windows.Forms.TextBox();
+            this.CarTypeUp2UPanel = new System.Windows.Forms.Panel();
+            this.Up2UCarTypeTextBox = new System.Windows.Forms.TextBox();
             this.lbUp2UCartype = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.txtUp2UStickerNo = new System.Windows.Forms.TextBox();
+            this.StickerUp2UPanel = new System.Windows.Forms.Panel();
+            this.Up2UStickerNumberTextBox = new System.Windows.Forms.TextBox();
             this.lbUp2UStickerNo = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.txtUp2UIDStaff = new System.Windows.Forms.TextBox();
+            this.UserUp2UPanel = new System.Windows.Forms.Panel();
+            this.Up2UStaffIdTextBox = new System.Windows.Forms.TextBox();
             this.lbUp2UIDStaff = new System.Windows.Forms.Label();
-            this.txtUp2UName = new System.Windows.Forms.TextBox();
+            this.Up2UNameTextBox = new System.Windows.Forms.TextBox();
             this.lbUp2UName = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.txtCardID = new System.Windows.Forms.TextBox();
+            this.CardIdTextBox = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
-            this.comTypeMem = new System.Windows.Forms.ComboBox();
-            this.comPay = new System.Windows.Forms.ComboBox();
+            this.MemberTypeComboBox = new System.Windows.Forms.ComboBox();
+            this.PaymentStatusComboBox = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
-            this.btnSearch = new System.Windows.Forms.Button();
-            this.comPromotion = new System.Windows.Forms.ComboBox();
+            this.SearchButton = new System.Windows.Forms.Button();
+            this.PromotionComboBox = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.txtLicense = new System.Windows.Forms.TextBox();
+            this.LicensePlateTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.comType = new System.Windows.Forms.ComboBox();
+            this.CarTypeComboBox = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.comUser = new System.Windows.Forms.ComboBox();
+            this.UserComboBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.timeFinish = new System.Windows.Forms.DateTimePicker();
-            this.dateFinish = new System.Windows.Forms.DateTimePicker();
+            this.EndTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.EndDatePicker = new System.Windows.Forms.DateTimePicker();
             this.label3 = new System.Windows.Forms.Label();
-            this.timeStart = new System.Windows.Forms.DateTimePicker();
-            this.dateStart = new System.Windows.Forms.DateTimePicker();
+            this.StartTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.StartDatePicker = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
-            this.btnSetReport = new System.Windows.Forms.Button();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.SetReportConditionButton = new System.Windows.Forms.Button();
+            this.PrimaryTabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.btnUpdateReport = new System.Windows.Forms.Button();
+            this.UpdateReportButton = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lbPic5 = new System.Windows.Forms.Label();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
@@ -137,27 +142,27 @@
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.btnPdf = new System.Windows.Forms.Button();
-            this.btnExcel = new System.Windows.Forms.Button();
-            this.lbHead = new System.Windows.Forms.Label();
-            this.dgvResult = new System.Windows.Forms.DataGridView();
+            this.PdfExportButton = new System.Windows.Forms.Button();
+            this.ExcelExportButton = new System.Windows.Forms.Button();
+            this.ReportHeaderLabel = new System.Windows.Forms.Label();
+            this.ResultGridView = new System.Windows.Forms.DataGridView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.crvResult = new CrystalDecisions.Windows.Forms.CrystalReportViewer();
+            this.PrimaryCrystalReportViewer = new CrystalDecisions.Windows.Forms.CrystalReportViewer();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.dgvUser = new System.Windows.Forms.DataGridView();
+            this.UserGridView = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.listName = new System.Windows.Forms.ListBox();
-            this.listUser = new System.Windows.Forms.ListBox();
-            this.btnClear = new System.Windows.Forms.Button();
-            this.btnManageSave = new System.Windows.Forms.Button();
-            this.txtGroup = new System.Windows.Forms.TextBox();
-            this.txtTel = new System.Windows.Forms.TextBox();
-            this.txtAddress = new System.Windows.Forms.TextBox();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.txtPassword = new System.Windows.Forms.TextBox();
-            this.txtUsername = new System.Windows.Forms.TextBox();
-            this.txtLevel = new System.Windows.Forms.TextBox();
-            this.txtCard = new System.Windows.Forms.TextBox();
+            this.UserNameListBox = new System.Windows.Forms.ListBox();
+            this.UserListBox = new System.Windows.Forms.ListBox();
+            this.ManageUserClearButton = new System.Windows.Forms.Button();
+            this.ManageUserSaveButton = new System.Windows.Forms.Button();
+            this.UserGroupTextBox = new System.Windows.Forms.TextBox();
+            this.UserTelTextBox = new System.Windows.Forms.TextBox();
+            this.UserAddressTextBox = new System.Windows.Forms.TextBox();
+            this.UserFullNameTextBox = new System.Windows.Forms.TextBox();
+            this.UserPasswordTextBox = new System.Windows.Forms.TextBox();
+            this.UsernameTextBox = new System.Windows.Forms.TextBox();
+            this.UserLevelTextBox = new System.Windows.Forms.TextBox();
+            this.UserCardNumberTextBox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -167,19 +172,20 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.optionBox = new System.Windows.Forms.GroupBox();
-            this.btnManage = new System.Windows.Forms.Button();
-            this.btnPermission = new System.Windows.Forms.Button();
-            this.tmMFCheck = new System.Windows.Forms.Timer(this.components);
+            this.ManageUserButton = new System.Windows.Forms.Button();
+            this.ManagePermissionButton = new System.Windows.Forms.Button();
+            this.MifareCheckTimer = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
-            this.panel7.SuspendLayout();
-            this.panel6.SuspendLayout();
-            this.panel5.SuspendLayout();
-            this.panel4.SuspendLayout();
-            this.panel2Up2U.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.PromotionIdRangePanel.SuspendLayout();
+            this.ParkingTimeComparisonPanel.SuspendLayout();
+            this.PaymentChannelPanel.SuspendLayout();
+            this.AddressPanel.SuspendLayout();
+            this.AdditionalMemberInfoPanel.SuspendLayout();
+            this.MemberParkingUp2UPanel.SuspendLayout();
+            this.CarTypeUp2UPanel.SuspendLayout();
+            this.StickerUp2UPanel.SuspendLayout();
+            this.UserUp2UPanel.SuspendLayout();
+            this.PrimaryTabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
@@ -187,10 +193,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ResultGridView)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvUser)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.UserGridView)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.optionBox.SuspendLayout();
             this.SuspendLayout();
@@ -204,60 +210,63 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "เลือกรายงาน";
             // 
-            // comReport
+            // ReportComboBox
             // 
-            this.comReport.FormattingEnabled = true;
-            this.comReport.Location = new System.Drawing.Point(9, 24);
-            this.comReport.Name = "comReport";
-            this.comReport.Size = new System.Drawing.Size(333, 21);
-            this.comReport.TabIndex = 2;
-            this.comReport.SelectedIndexChanged += new System.EventHandler(this.comReport_SelectedIndexChanged);
+            this.ReportComboBox.FormattingEnabled = true;
+            this.ReportComboBox.Location = new System.Drawing.Point(9, 24);
+            this.ReportComboBox.Name = "ReportComboBox";
+            this.ReportComboBox.Size = new System.Drawing.Size(333, 21);
+            this.ReportComboBox.TabIndex = 2;
+            this.ReportComboBox.SelectedIndexChanged += new System.EventHandler(this.ReportComboBox_SelectedIndexChanged);
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.cobChannel);
+            this.groupBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.groupBox1.Controls.Add(this.ViewBlockerPanel);
+            this.groupBox1.Controls.Add(this.PromotionIdRangePanel);
+            this.groupBox1.Controls.Add(this.PaymentChannelComboBox);
             this.groupBox1.Controls.Add(this.label42);
-            this.groupBox1.Controls.Add(this.panel7);
-            this.groupBox1.Controls.Add(this.panel6);
+            this.groupBox1.Controls.Add(this.ParkingTimeComparisonPanel);
+            this.groupBox1.Controls.Add(this.PaymentChannelPanel);
             this.groupBox1.Controls.Add(this.label36);
-            this.groupBox1.Controls.Add(this.txtNameCard);
-            this.groupBox1.Controls.Add(this.panel5);
-            this.groupBox1.Controls.Add(this.panel4);
+            this.groupBox1.Controls.Add(this.NameOnCardTextBox);
+            this.groupBox1.Controls.Add(this.AddressPanel);
+            this.groupBox1.Controls.Add(this.AdditionalMemberInfoPanel);
             this.groupBox1.Controls.Add(this.label31);
-            this.groupBox1.Controls.Add(this.cobGuardhouse);
+            this.groupBox1.Controls.Add(this.GuardhouseComboBox);
             this.groupBox1.Controls.Add(this.label30);
-            this.groupBox1.Controls.Add(this.txtRecordNo);
-            this.groupBox1.Controls.Add(this.panel2Up2U);
-            this.groupBox1.Controls.Add(this.comMemName);
+            this.groupBox1.Controls.Add(this.RecordNumberTextBox);
+            this.groupBox1.Controls.Add(this.MemberParkingUp2UPanel);
+            this.groupBox1.Controls.Add(this.MemberNameComboBox);
             this.groupBox1.Controls.Add(this.label21);
             this.groupBox1.Controls.Add(this.label20);
-            this.groupBox1.Controls.Add(this.comMemGroupMonth);
+            this.groupBox1.Controls.Add(this.MemberGroupMonthComboBox);
             this.groupBox1.Controls.Add(this.label19);
-            this.groupBox1.Controls.Add(this.panel3);
-            this.groupBox1.Controls.Add(this.panel2);
-            this.groupBox1.Controls.Add(this.panel1);
+            this.groupBox1.Controls.Add(this.CarTypeUp2UPanel);
+            this.groupBox1.Controls.Add(this.StickerUp2UPanel);
+            this.groupBox1.Controls.Add(this.UserUp2UPanel);
             this.groupBox1.Controls.Add(this.label18);
-            this.groupBox1.Controls.Add(this.txtCardID);
+            this.groupBox1.Controls.Add(this.CardIdTextBox);
             this.groupBox1.Controls.Add(this.label17);
-            this.groupBox1.Controls.Add(this.comTypeMem);
-            this.groupBox1.Controls.Add(this.comPay);
+            this.groupBox1.Controls.Add(this.MemberTypeComboBox);
+            this.groupBox1.Controls.Add(this.PaymentStatusComboBox);
             this.groupBox1.Controls.Add(this.label16);
-            this.groupBox1.Controls.Add(this.btnSearch);
-            this.groupBox1.Controls.Add(this.comPromotion);
+            this.groupBox1.Controls.Add(this.SearchButton);
+            this.groupBox1.Controls.Add(this.PromotionComboBox);
             this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.txtLicense);
+            this.groupBox1.Controls.Add(this.LicensePlateTextBox);
             this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.comType);
+            this.groupBox1.Controls.Add(this.CarTypeComboBox);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.comUser);
+            this.groupBox1.Controls.Add(this.UserComboBox);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.timeFinish);
-            this.groupBox1.Controls.Add(this.dateFinish);
+            this.groupBox1.Controls.Add(this.EndTimePicker);
+            this.groupBox1.Controls.Add(this.EndDatePicker);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.timeStart);
-            this.groupBox1.Controls.Add(this.dateStart);
+            this.groupBox1.Controls.Add(this.StartTimePicker);
+            this.groupBox1.Controls.Add(this.StartDatePicker);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.comReport);
+            this.groupBox1.Controls.Add(this.ReportComboBox);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, -3);
             this.groupBox1.Name = "groupBox1";
@@ -265,20 +274,83 @@
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             // 
-            // cobChannel
+            // ViewBlockerPanel
             // 
-            this.cobChannel.FormattingEnabled = true;
-            this.cobChannel.Items.AddRange(new object[] {
-            "ALL",
-            "PromptPay",
-            "TrueMoney",
-            "เงินสด",
-            "EDC"});
-            this.cobChannel.Location = new System.Drawing.Point(848, 24);
-            this.cobChannel.Name = "cobChannel";
-            this.cobChannel.Size = new System.Drawing.Size(150, 21);
-            this.cobChannel.TabIndex = 50;
-            this.cobChannel.Visible = false;
+            this.ViewBlockerPanel.Location = new System.Drawing.Point(593, 130);
+            this.ViewBlockerPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.ViewBlockerPanel.Name = "ViewBlockerPanel";
+            this.ViewBlockerPanel.Size = new System.Drawing.Size(511, 47);
+            this.ViewBlockerPanel.TabIndex = 52;
+            this.ViewBlockerPanel.Visible = false;
+            // 
+            // PromotionIdRangePanel
+            // 
+            this.PromotionIdRangePanel.Controls.Add(this.label44);
+            this.PromotionIdRangePanel.Controls.Add(this.label43);
+            this.PromotionIdRangePanel.Controls.Add(this.PromotionIdTo);
+            this.PromotionIdRangePanel.Controls.Add(this.PromotionIdFrom);
+            this.PromotionIdRangePanel.Controls.Add(this.label26);
+            this.PromotionIdRangePanel.Location = new System.Drawing.Point(347, 130);
+            this.PromotionIdRangePanel.Name = "PromotionIdRangePanel";
+            this.PromotionIdRangePanel.Size = new System.Drawing.Size(243, 46);
+            this.PromotionIdRangePanel.TabIndex = 51;
+            this.PromotionIdRangePanel.Visible = false;
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(162, 26);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(34, 13);
+            this.label44.TabIndex = 28;
+            this.label44.Text = "สิ้นสุด";
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(56, 26);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(40, 13);
+            this.label43.TabIndex = 27;
+            this.label43.Text = "เริ่มต้น";
+            // 
+            // PromotionIdTo
+            // 
+            this.PromotionIdTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.PromotionIdTo.Location = new System.Drawing.Point(116, 23);
+            this.PromotionIdTo.Margin = new System.Windows.Forms.Padding(2);
+            this.PromotionIdTo.Name = "PromotionIdTo";
+            this.PromotionIdTo.Size = new System.Drawing.Size(45, 18);
+            this.PromotionIdTo.TabIndex = 26;
+            this.PromotionIdTo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // PromotionIdFrom
+            // 
+            this.PromotionIdFrom.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.PromotionIdFrom.Location = new System.Drawing.Point(6, 23);
+            this.PromotionIdFrom.Margin = new System.Windows.Forms.Padding(2);
+            this.PromotionIdFrom.Name = "PromotionIdFrom";
+            this.PromotionIdFrom.Size = new System.Drawing.Size(45, 18);
+            this.PromotionIdFrom.TabIndex = 25;
+            this.PromotionIdFrom.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(3, 5);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(95, 13);
+            this.label26.TabIndex = 24;
+            this.label26.Text = "หมายเลขโปรโมชั่น";
+            // 
+            // PaymentChannelComboBox
+            // 
+            this.PaymentChannelComboBox.FormattingEnabled = true;
+            this.PaymentChannelComboBox.Location = new System.Drawing.Point(848, 24);
+            this.PaymentChannelComboBox.Name = "PaymentChannelComboBox";
+            this.PaymentChannelComboBox.Size = new System.Drawing.Size(150, 21);
+            this.PaymentChannelComboBox.TabIndex = 50;
+            this.PaymentChannelComboBox.Visible = false;
             // 
             // label42
             // 
@@ -290,66 +362,66 @@
             this.label42.Text = "ช่องทางการชำระเงิน";
             this.label42.Visible = false;
             // 
-            // panel7
+            // ParkingTimeComparisonPanel
             // 
-            this.panel7.Controls.Add(this.chkBetween);
-            this.panel7.Controls.Add(this.label41);
-            this.panel7.Controls.Add(this.txtBetweenMin2);
-            this.panel7.Controls.Add(this.label40);
-            this.panel7.Controls.Add(this.label39);
-            this.panel7.Controls.Add(this.label38);
-            this.panel7.Controls.Add(this.txtBetweenMin1);
-            this.panel7.Controls.Add(this.txtLessMin);
-            this.panel7.Controls.Add(this.txtGreaterMin);
-            this.panel7.Controls.Add(this.label37);
-            this.panel7.Controls.Add(this.chkLess);
-            this.panel7.Controls.Add(this.chkGreater);
-            this.panel7.Location = new System.Drawing.Point(10, 130);
-            this.panel7.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(332, 52);
-            this.panel7.TabIndex = 48;
-            this.panel7.Visible = false;
+            this.ParkingTimeComparisonPanel.Controls.Add(this.ParkingBetweenCheckBox);
+            this.ParkingTimeComparisonPanel.Controls.Add(this.label41);
+            this.ParkingTimeComparisonPanel.Controls.Add(this.ParkingBetweenToTextBox);
+            this.ParkingTimeComparisonPanel.Controls.Add(this.label40);
+            this.ParkingTimeComparisonPanel.Controls.Add(this.label39);
+            this.ParkingTimeComparisonPanel.Controls.Add(this.label38);
+            this.ParkingTimeComparisonPanel.Controls.Add(this.ParkingBetweenFromTextBox);
+            this.ParkingTimeComparisonPanel.Controls.Add(this.ParkingLesserTextBox);
+            this.ParkingTimeComparisonPanel.Controls.Add(this.ParkingGreaterTextBox);
+            this.ParkingTimeComparisonPanel.Controls.Add(this.label37);
+            this.ParkingTimeComparisonPanel.Controls.Add(this.ParkingLesserCheckBox);
+            this.ParkingTimeComparisonPanel.Controls.Add(this.ParkingGreaterCheckBox);
+            this.ParkingTimeComparisonPanel.Location = new System.Drawing.Point(10, 130);
+            this.ParkingTimeComparisonPanel.Margin = new System.Windows.Forms.Padding(2);
+            this.ParkingTimeComparisonPanel.Name = "ParkingTimeComparisonPanel";
+            this.ParkingTimeComparisonPanel.Size = new System.Drawing.Size(332, 52);
+            this.ParkingTimeComparisonPanel.TabIndex = 48;
+            this.ParkingTimeComparisonPanel.Visible = false;
             // 
-            // chkBetween
+            // ParkingBetweenCheckBox
             // 
-            this.chkBetween.AutoSize = true;
-            this.chkBetween.Location = new System.Drawing.Point(56, 34);
-            this.chkBetween.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.chkBetween.Name = "chkBetween";
-            this.chkBetween.Size = new System.Drawing.Size(68, 17);
-            this.chkBetween.TabIndex = 2;
-            this.chkBetween.Text = "Between";
-            this.chkBetween.UseVisualStyleBackColor = true;
-            this.chkBetween.CheckedChanged += new System.EventHandler(this.chkBetween_CheckedChanged);
+            this.ParkingBetweenCheckBox.AutoSize = true;
+            this.ParkingBetweenCheckBox.Location = new System.Drawing.Point(56, 34);
+            this.ParkingBetweenCheckBox.Margin = new System.Windows.Forms.Padding(2);
+            this.ParkingBetweenCheckBox.Name = "ParkingBetweenCheckBox";
+            this.ParkingBetweenCheckBox.Size = new System.Drawing.Size(68, 17);
+            this.ParkingBetweenCheckBox.TabIndex = 2;
+            this.ParkingBetweenCheckBox.Text = "Between";
+            this.ParkingBetweenCheckBox.UseVisualStyleBackColor = true;
+            this.ParkingBetweenCheckBox.CheckedChanged += new System.EventHandler(this.ParkingBetweenCheckBox_CheckedChanged);
             // 
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(305, 34);
+            this.label41.Location = new System.Drawing.Point(302, 34);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(27, 13);
             this.label41.TabIndex = 24;
             this.label41.Text = "นาที";
             // 
-            // txtBetweenMin2
+            // ParkingBetweenToTextBox
             // 
-            this.txtBetweenMin2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.txtBetweenMin2.Location = new System.Drawing.Point(256, 34);
-            this.txtBetweenMin2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtBetweenMin2.Name = "txtBetweenMin2";
-            this.txtBetweenMin2.Size = new System.Drawing.Size(45, 18);
-            this.txtBetweenMin2.TabIndex = 23;
-            this.txtBetweenMin2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.ParkingBetweenToTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.ParkingBetweenToTextBox.Location = new System.Drawing.Point(254, 34);
+            this.ParkingBetweenToTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.ParkingBetweenToTextBox.Name = "ParkingBetweenToTextBox";
+            this.ParkingBetweenToTextBox.Size = new System.Drawing.Size(45, 18);
+            this.ParkingBetweenToTextBox.TabIndex = 23;
+            this.ParkingBetweenToTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label40
             // 
             this.label40.AutoSize = true;
             this.label40.Location = new System.Drawing.Point(179, 34);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(72, 13);
+            this.label40.Size = new System.Drawing.Size(69, 13);
             this.label40.TabIndex = 22;
-            this.label40.Text = "นาที           ถึง";
+            this.label40.Text = "นาที          ถึง";
             // 
             // label39
             // 
@@ -369,35 +441,35 @@
             this.label38.TabIndex = 20;
             this.label38.Text = "นาที";
             // 
-            // txtBetweenMin1
+            // ParkingBetweenFromTextBox
             // 
-            this.txtBetweenMin1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.txtBetweenMin1.Location = new System.Drawing.Point(130, 34);
-            this.txtBetweenMin1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtBetweenMin1.Name = "txtBetweenMin1";
-            this.txtBetweenMin1.Size = new System.Drawing.Size(45, 18);
-            this.txtBetweenMin1.TabIndex = 19;
-            this.txtBetweenMin1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.ParkingBetweenFromTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.ParkingBetweenFromTextBox.Location = new System.Drawing.Point(130, 34);
+            this.ParkingBetweenFromTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.ParkingBetweenFromTextBox.Name = "ParkingBetweenFromTextBox";
+            this.ParkingBetweenFromTextBox.Size = new System.Drawing.Size(45, 18);
+            this.ParkingBetweenFromTextBox.TabIndex = 19;
+            this.ParkingBetweenFromTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // txtLessMin
+            // ParkingLesserTextBox
             // 
-            this.txtLessMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.txtLessMin.Location = new System.Drawing.Point(130, 18);
-            this.txtLessMin.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtLessMin.Name = "txtLessMin";
-            this.txtLessMin.Size = new System.Drawing.Size(45, 18);
-            this.txtLessMin.TabIndex = 18;
-            this.txtLessMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.ParkingLesserTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.ParkingLesserTextBox.Location = new System.Drawing.Point(130, 18);
+            this.ParkingLesserTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.ParkingLesserTextBox.Name = "ParkingLesserTextBox";
+            this.ParkingLesserTextBox.Size = new System.Drawing.Size(45, 18);
+            this.ParkingLesserTextBox.TabIndex = 18;
+            this.ParkingLesserTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // txtGreaterMin
+            // ParkingGreaterTextBox
             // 
-            this.txtGreaterMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.txtGreaterMin.Location = new System.Drawing.Point(130, 2);
-            this.txtGreaterMin.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtGreaterMin.Name = "txtGreaterMin";
-            this.txtGreaterMin.Size = new System.Drawing.Size(45, 18);
-            this.txtGreaterMin.TabIndex = 17;
-            this.txtGreaterMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.ParkingGreaterTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.ParkingGreaterTextBox.Location = new System.Drawing.Point(130, 2);
+            this.ParkingGreaterTextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.ParkingGreaterTextBox.Name = "ParkingGreaterTextBox";
+            this.ParkingGreaterTextBox.Size = new System.Drawing.Size(45, 18);
+            this.ParkingGreaterTextBox.TabIndex = 17;
+            this.ParkingGreaterTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label37
             // 
@@ -408,64 +480,64 @@
             this.label37.TabIndex = 16;
             this.label37.Text = "รถที่จอด";
             // 
-            // chkLess
+            // ParkingLesserCheckBox
             // 
-            this.chkLess.AutoSize = true;
-            this.chkLess.Location = new System.Drawing.Point(56, 18);
-            this.chkLess.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.chkLess.Name = "chkLess";
-            this.chkLess.Size = new System.Drawing.Size(32, 17);
-            this.chkLess.TabIndex = 1;
-            this.chkLess.Text = "<";
-            this.chkLess.UseVisualStyleBackColor = true;
-            this.chkLess.CheckedChanged += new System.EventHandler(this.chkLess_CheckedChanged);
+            this.ParkingLesserCheckBox.AutoSize = true;
+            this.ParkingLesserCheckBox.Location = new System.Drawing.Point(56, 18);
+            this.ParkingLesserCheckBox.Margin = new System.Windows.Forms.Padding(2);
+            this.ParkingLesserCheckBox.Name = "ParkingLesserCheckBox";
+            this.ParkingLesserCheckBox.Size = new System.Drawing.Size(32, 17);
+            this.ParkingLesserCheckBox.TabIndex = 1;
+            this.ParkingLesserCheckBox.Text = "<";
+            this.ParkingLesserCheckBox.UseVisualStyleBackColor = true;
+            this.ParkingLesserCheckBox.CheckedChanged += new System.EventHandler(this.ParkingLesserCheckBox_CheckedChanged);
             // 
-            // chkGreater
+            // ParkingGreaterCheckBox
             // 
-            this.chkGreater.AutoSize = true;
-            this.chkGreater.Location = new System.Drawing.Point(56, 2);
-            this.chkGreater.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.chkGreater.Name = "chkGreater";
-            this.chkGreater.Size = new System.Drawing.Size(32, 17);
-            this.chkGreater.TabIndex = 0;
-            this.chkGreater.Text = ">";
-            this.chkGreater.UseVisualStyleBackColor = true;
-            this.chkGreater.CheckedChanged += new System.EventHandler(this.chkGreater_CheckedChanged);
+            this.ParkingGreaterCheckBox.AutoSize = true;
+            this.ParkingGreaterCheckBox.Location = new System.Drawing.Point(56, 2);
+            this.ParkingGreaterCheckBox.Margin = new System.Windows.Forms.Padding(2);
+            this.ParkingGreaterCheckBox.Name = "ParkingGreaterCheckBox";
+            this.ParkingGreaterCheckBox.Size = new System.Drawing.Size(32, 17);
+            this.ParkingGreaterCheckBox.TabIndex = 0;
+            this.ParkingGreaterCheckBox.Text = ">";
+            this.ParkingGreaterCheckBox.UseVisualStyleBackColor = true;
+            this.ParkingGreaterCheckBox.CheckedChanged += new System.EventHandler(this.ParkingGreaterCheckBox_CheckedChanged);
             // 
-            // panel6
+            // PaymentChannelPanel
             // 
-            this.panel6.Controls.Add(this.chkDateExpire);
-            this.panel6.Controls.Add(this.chkDateRegis);
-            this.panel6.Location = new System.Drawing.Point(841, 7);
-            this.panel6.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(166, 43);
-            this.panel6.TabIndex = 47;
-            this.panel6.Visible = false;
+            this.PaymentChannelPanel.Controls.Add(this.ExpirationDateCheckBox);
+            this.PaymentChannelPanel.Controls.Add(this.RegistrationDateCheckBox);
+            this.PaymentChannelPanel.Location = new System.Drawing.Point(841, 7);
+            this.PaymentChannelPanel.Margin = new System.Windows.Forms.Padding(2);
+            this.PaymentChannelPanel.Name = "PaymentChannelPanel";
+            this.PaymentChannelPanel.Size = new System.Drawing.Size(166, 43);
+            this.PaymentChannelPanel.TabIndex = 47;
+            this.PaymentChannelPanel.Visible = false;
             // 
-            // chkDateExpire
+            // ExpirationDateCheckBox
             // 
-            this.chkDateExpire.AutoSize = true;
-            this.chkDateExpire.Location = new System.Drawing.Point(86, 19);
-            this.chkDateExpire.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.chkDateExpire.Name = "chkDateExpire";
-            this.chkDateExpire.Size = new System.Drawing.Size(86, 17);
-            this.chkDateExpire.TabIndex = 1;
-            this.chkDateExpire.Text = "วันที่หมดอายุ";
-            this.chkDateExpire.UseVisualStyleBackColor = true;
-            this.chkDateExpire.CheckedChanged += new System.EventHandler(this.chkDateExpire_CheckedChanged);
+            this.ExpirationDateCheckBox.AutoSize = true;
+            this.ExpirationDateCheckBox.Location = new System.Drawing.Point(86, 19);
+            this.ExpirationDateCheckBox.Margin = new System.Windows.Forms.Padding(2);
+            this.ExpirationDateCheckBox.Name = "ExpirationDateCheckBox";
+            this.ExpirationDateCheckBox.Size = new System.Drawing.Size(86, 17);
+            this.ExpirationDateCheckBox.TabIndex = 1;
+            this.ExpirationDateCheckBox.Text = "วันที่หมดอายุ";
+            this.ExpirationDateCheckBox.UseVisualStyleBackColor = true;
+            this.ExpirationDateCheckBox.CheckedChanged += new System.EventHandler(this.ExpirationDateCheckBox_CheckedChanged);
             // 
-            // chkDateRegis
+            // RegistrationDateCheckBox
             // 
-            this.chkDateRegis.AutoSize = true;
-            this.chkDateRegis.Location = new System.Drawing.Point(5, 19);
-            this.chkDateRegis.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.chkDateRegis.Name = "chkDateRegis";
-            this.chkDateRegis.Size = new System.Drawing.Size(73, 17);
-            this.chkDateRegis.TabIndex = 0;
-            this.chkDateRegis.Text = "วันที่สมัคร";
-            this.chkDateRegis.UseVisualStyleBackColor = true;
-            this.chkDateRegis.CheckedChanged += new System.EventHandler(this.chkDateRegis_CheckedChanged);
+            this.RegistrationDateCheckBox.AutoSize = true;
+            this.RegistrationDateCheckBox.Location = new System.Drawing.Point(5, 19);
+            this.RegistrationDateCheckBox.Margin = new System.Windows.Forms.Padding(2);
+            this.RegistrationDateCheckBox.Name = "RegistrationDateCheckBox";
+            this.RegistrationDateCheckBox.Size = new System.Drawing.Size(73, 17);
+            this.RegistrationDateCheckBox.TabIndex = 0;
+            this.RegistrationDateCheckBox.Text = "วันที่สมัคร";
+            this.RegistrationDateCheckBox.UseVisualStyleBackColor = true;
+            this.RegistrationDateCheckBox.CheckedChanged += new System.EventHandler(this.RegistrationDateCheckBox_CheckedChanged);
             // 
             // label36
             // 
@@ -476,29 +548,29 @@
             this.label36.TabIndex = 46;
             this.label36.Text = "หมายเลขบนบัตร";
             // 
-            // txtNameCard
+            // NameOnCardTextBox
             // 
-            this.txtNameCard.Location = new System.Drawing.Point(684, 64);
-            this.txtNameCard.Name = "txtNameCard";
-            this.txtNameCard.Size = new System.Drawing.Size(84, 20);
-            this.txtNameCard.TabIndex = 45;
+            this.NameOnCardTextBox.Location = new System.Drawing.Point(684, 64);
+            this.NameOnCardTextBox.Name = "NameOnCardTextBox";
+            this.NameOnCardTextBox.Size = new System.Drawing.Size(84, 20);
+            this.NameOnCardTextBox.TabIndex = 45;
             // 
-            // panel5
+            // AddressPanel
             // 
-            this.panel5.Controls.Add(this.txtAdd);
-            this.panel5.Controls.Add(this.label34);
-            this.panel5.Location = new System.Drawing.Point(966, 85);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(138, 46);
-            this.panel5.TabIndex = 44;
-            this.panel5.Visible = false;
+            this.AddressPanel.Controls.Add(this.AddressTextBox);
+            this.AddressPanel.Controls.Add(this.label34);
+            this.AddressPanel.Location = new System.Drawing.Point(966, 85);
+            this.AddressPanel.Name = "AddressPanel";
+            this.AddressPanel.Size = new System.Drawing.Size(138, 46);
+            this.AddressPanel.TabIndex = 44;
+            this.AddressPanel.Visible = false;
             // 
-            // txtAdd
+            // AddressTextBox
             // 
-            this.txtAdd.Location = new System.Drawing.Point(4, 20);
-            this.txtAdd.Name = "txtAdd";
-            this.txtAdd.Size = new System.Drawing.Size(130, 20);
-            this.txtAdd.TabIndex = 33;
+            this.AddressTextBox.Location = new System.Drawing.Point(4, 20);
+            this.AddressTextBox.Name = "AddressTextBox";
+            this.AddressTextBox.Size = new System.Drawing.Size(130, 20);
+            this.AddressTextBox.TabIndex = 33;
             // 
             // label34
             // 
@@ -509,20 +581,20 @@
             this.label34.TabIndex = 32;
             this.label34.Text = "ที่อยู่";
             // 
-            // panel4
+            // AdditionalMemberInfoPanel
             // 
-            this.panel4.Controls.Add(this.label35);
-            this.panel4.Controls.Add(this.cobCardMem);
-            this.panel4.Controls.Add(this.label33);
-            this.panel4.Controls.Add(this.cobRenewMem);
-            this.panel4.Controls.Add(this.label32);
-            this.panel4.Controls.Add(this.cobStatusMem);
-            this.panel4.Location = new System.Drawing.Point(593, 85);
-            this.panel4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(374, 46);
-            this.panel4.TabIndex = 43;
-            this.panel4.Visible = false;
+            this.AdditionalMemberInfoPanel.Controls.Add(this.label35);
+            this.AdditionalMemberInfoPanel.Controls.Add(this.MemberCardTypeComboBox);
+            this.AdditionalMemberInfoPanel.Controls.Add(this.label33);
+            this.AdditionalMemberInfoPanel.Controls.Add(this.MemberRenewalTypeComboBox);
+            this.AdditionalMemberInfoPanel.Controls.Add(this.label32);
+            this.AdditionalMemberInfoPanel.Controls.Add(this.MemberProcessStateComboBox);
+            this.AdditionalMemberInfoPanel.Location = new System.Drawing.Point(593, 85);
+            this.AdditionalMemberInfoPanel.Margin = new System.Windows.Forms.Padding(2);
+            this.AdditionalMemberInfoPanel.Name = "AdditionalMemberInfoPanel";
+            this.AdditionalMemberInfoPanel.Size = new System.Drawing.Size(374, 46);
+            this.AdditionalMemberInfoPanel.TabIndex = 43;
+            this.AdditionalMemberInfoPanel.Visible = false;
             // 
             // label35
             // 
@@ -533,17 +605,13 @@
             this.label35.TabIndex = 42;
             this.label35.Text = "ประเภทของรายได้";
             // 
-            // cobCardMem
+            // MemberCardTypeComboBox
             // 
-            this.cobCardMem.FormattingEnabled = true;
-            this.cobCardMem.Items.AddRange(new object[] {
-            "ALL",
-            "ค่าบัตรสมาชิก",
-            "ไม่ใช่ค่าบัตรสมาชิก"});
-            this.cobCardMem.Location = new System.Drawing.Point(248, 20);
-            this.cobCardMem.Name = "cobCardMem";
-            this.cobCardMem.Size = new System.Drawing.Size(120, 21);
-            this.cobCardMem.TabIndex = 41;
+            this.MemberCardTypeComboBox.FormattingEnabled = true;
+            this.MemberCardTypeComboBox.Location = new System.Drawing.Point(248, 20);
+            this.MemberCardTypeComboBox.Name = "MemberCardTypeComboBox";
+            this.MemberCardTypeComboBox.Size = new System.Drawing.Size(120, 21);
+            this.MemberCardTypeComboBox.TabIndex = 41;
             // 
             // label33
             // 
@@ -554,15 +622,13 @@
             this.label33.TabIndex = 40;
             this.label33.Text = "ประเภทการต่ออายุ";
             // 
-            // cobRenewMem
+            // MemberRenewalTypeComboBox
             // 
-            this.cobRenewMem.FormattingEnabled = true;
-            this.cobRenewMem.Items.AddRange(new object[] {
-            "ALL"});
-            this.cobRenewMem.Location = new System.Drawing.Point(3, 20);
-            this.cobRenewMem.Name = "cobRenewMem";
-            this.cobRenewMem.Size = new System.Drawing.Size(111, 21);
-            this.cobRenewMem.TabIndex = 39;
+            this.MemberRenewalTypeComboBox.FormattingEnabled = true;
+            this.MemberRenewalTypeComboBox.Location = new System.Drawing.Point(3, 20);
+            this.MemberRenewalTypeComboBox.Name = "MemberRenewalTypeComboBox";
+            this.MemberRenewalTypeComboBox.Size = new System.Drawing.Size(111, 21);
+            this.MemberRenewalTypeComboBox.TabIndex = 39;
             // 
             // label32
             // 
@@ -573,17 +639,13 @@
             this.label32.TabIndex = 38;
             this.label32.Text = "สถานะการทำรายการ";
             // 
-            // cobStatusMem
+            // MemberProcessStateComboBox
             // 
-            this.cobStatusMem.FormattingEnabled = true;
-            this.cobStatusMem.Items.AddRange(new object[] {
-            "ALL",
-            "สร้างใหม่",
-            "อัพเดต"});
-            this.cobStatusMem.Location = new System.Drawing.Point(122, 20);
-            this.cobStatusMem.Name = "cobStatusMem";
-            this.cobStatusMem.Size = new System.Drawing.Size(121, 21);
-            this.cobStatusMem.TabIndex = 37;
+            this.MemberProcessStateComboBox.FormattingEnabled = true;
+            this.MemberProcessStateComboBox.Location = new System.Drawing.Point(122, 20);
+            this.MemberProcessStateComboBox.Name = "MemberProcessStateComboBox";
+            this.MemberProcessStateComboBox.Size = new System.Drawing.Size(121, 21);
+            this.MemberProcessStateComboBox.TabIndex = 37;
             // 
             // label31
             // 
@@ -595,16 +657,14 @@
             this.label31.Text = "ป้อม";
             this.label31.Visible = false;
             // 
-            // cobGuardhouse
+            // GuardhouseComboBox
             // 
-            this.cobGuardhouse.FormattingEnabled = true;
-            this.cobGuardhouse.Items.AddRange(new object[] {
-            "ALL"});
-            this.cobGuardhouse.Location = new System.Drawing.Point(909, 64);
-            this.cobGuardhouse.Name = "cobGuardhouse";
-            this.cobGuardhouse.Size = new System.Drawing.Size(107, 21);
-            this.cobGuardhouse.TabIndex = 41;
-            this.cobGuardhouse.Visible = false;
+            this.GuardhouseComboBox.FormattingEnabled = true;
+            this.GuardhouseComboBox.Location = new System.Drawing.Point(909, 64);
+            this.GuardhouseComboBox.Name = "GuardhouseComboBox";
+            this.GuardhouseComboBox.Size = new System.Drawing.Size(107, 21);
+            this.GuardhouseComboBox.TabIndex = 41;
+            this.GuardhouseComboBox.Visible = false;
             // 
             // label30
             // 
@@ -616,81 +676,56 @@
             this.label30.Text = "ลำดับ";
             this.label30.Visible = false;
             // 
-            // txtRecordNo
+            // RecordNumberTextBox
             // 
-            this.txtRecordNo.Location = new System.Drawing.Point(1014, 24);
-            this.txtRecordNo.Name = "txtRecordNo";
-            this.txtRecordNo.Size = new System.Drawing.Size(107, 20);
-            this.txtRecordNo.TabIndex = 39;
-            this.txtRecordNo.Visible = false;
+            this.RecordNumberTextBox.Location = new System.Drawing.Point(1014, 24);
+            this.RecordNumberTextBox.Name = "RecordNumberTextBox";
+            this.RecordNumberTextBox.Size = new System.Drawing.Size(107, 20);
+            this.RecordNumberTextBox.TabIndex = 39;
+            this.RecordNumberTextBox.Visible = false;
             // 
-            // panel2Up2U
+            // MemberParkingUp2UPanel
             // 
-            this.panel2Up2U.Controls.Add(this.cobBirthdayMonth);
-            this.panel2Up2U.Controls.Add(this.chkNoExpire);
-            this.panel2Up2U.Controls.Add(this.dtpExpireStop);
-            this.panel2Up2U.Controls.Add(this.label24);
-            this.panel2Up2U.Controls.Add(this.dtpExpireStart);
-            this.panel2Up2U.Controls.Add(this.label29);
-            this.panel2Up2U.Controls.Add(this.label28);
-            this.panel2Up2U.Controls.Add(this.txtCountINStart2);
-            this.panel2Up2U.Controls.Add(this.label27);
-            this.panel2Up2U.Controls.Add(this.txtCountINStart);
-            this.panel2Up2U.Controls.Add(this.label26);
-            this.panel2Up2U.Controls.Add(this.cobStatus);
-            this.panel2Up2U.Controls.Add(this.label25);
-            this.panel2Up2U.Controls.Add(this.label23);
-            this.panel2Up2U.Controls.Add(this.txtMemID);
-            this.panel2Up2U.Controls.Add(this.cobMemgroup);
-            this.panel2Up2U.Controls.Add(this.label22);
-            this.panel2Up2U.Location = new System.Drawing.Point(1194, 112);
-            this.panel2Up2U.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.panel2Up2U.Name = "panel2Up2U";
-            this.panel2Up2U.Size = new System.Drawing.Size(1061, 63);
-            this.panel2Up2U.TabIndex = 6;
-            this.panel2Up2U.Visible = false;
+            this.MemberParkingUp2UPanel.Controls.Add(this.IgnoreExpirationDateCheckBox);
+            this.MemberParkingUp2UPanel.Controls.Add(this.MemberExpirationEndDatePicker);
+            this.MemberParkingUp2UPanel.Controls.Add(this.label24);
+            this.MemberParkingUp2UPanel.Controls.Add(this.MemberExpirationStartDatePicker);
+            this.MemberParkingUp2UPanel.Controls.Add(this.label29);
+            this.MemberParkingUp2UPanel.Controls.Add(this.label28);
+            this.MemberParkingUp2UPanel.Controls.Add(this.MemberParkingCountEndTextBox);
+            this.MemberParkingUp2UPanel.Controls.Add(this.label27);
+            this.MemberParkingUp2UPanel.Controls.Add(this.MemberParkingCountStartTextBox);
+            this.MemberParkingUp2UPanel.Controls.Add(this.MemberStatusComboBox);
+            this.MemberParkingUp2UPanel.Controls.Add(this.label25);
+            this.MemberParkingUp2UPanel.Controls.Add(this.label23);
+            this.MemberParkingUp2UPanel.Controls.Add(this.MemberIdTextBox);
+            this.MemberParkingUp2UPanel.Controls.Add(this.MemberGroupComboBox);
+            this.MemberParkingUp2UPanel.Controls.Add(this.label22);
+            this.MemberParkingUp2UPanel.Location = new System.Drawing.Point(1194, 102);
+            this.MemberParkingUp2UPanel.Margin = new System.Windows.Forms.Padding(2);
+            this.MemberParkingUp2UPanel.Name = "MemberParkingUp2UPanel";
+            this.MemberParkingUp2UPanel.Size = new System.Drawing.Size(1061, 63);
+            this.MemberParkingUp2UPanel.TabIndex = 6;
+            this.MemberParkingUp2UPanel.Visible = false;
             // 
-            // cobBirthdayMonth
+            // IgnoreExpirationDateCheckBox
             // 
-            this.cobBirthdayMonth.FormattingEnabled = true;
-            this.cobBirthdayMonth.Items.AddRange(new object[] {
-            "ทั้งหมด",
-            "ไม่มี",
-            "มกราคม",
-            "กุมภาพันธ์",
-            "มีนาคม",
-            "เมษายน",
-            "พฤษภาคม",
-            "มิถุนายน",
-            "กรกฎาคม",
-            "สิงหาคม",
-            "กันยายน",
-            "ตุลาคม",
-            "พฤศจิกายน",
-            "ธันวาคม"});
-            this.cobBirthdayMonth.Location = new System.Drawing.Point(328, 25);
-            this.cobBirthdayMonth.Name = "cobBirthdayMonth";
-            this.cobBirthdayMonth.Size = new System.Drawing.Size(127, 21);
-            this.cobBirthdayMonth.TabIndex = 43;
+            this.IgnoreExpirationDateCheckBox.AutoSize = true;
+            this.IgnoreExpirationDateCheckBox.Location = new System.Drawing.Point(704, 7);
+            this.IgnoreExpirationDateCheckBox.Margin = new System.Windows.Forms.Padding(2);
+            this.IgnoreExpirationDateCheckBox.Name = "IgnoreExpirationDateCheckBox";
+            this.IgnoreExpirationDateCheckBox.Size = new System.Drawing.Size(59, 17);
+            this.IgnoreExpirationDateCheckBox.TabIndex = 41;
+            this.IgnoreExpirationDateCheckBox.Text = "ทั้งหมด";
+            this.IgnoreExpirationDateCheckBox.UseVisualStyleBackColor = true;
+            this.IgnoreExpirationDateCheckBox.CheckedChanged += new System.EventHandler(this.IgnoreExpirationDateCheckBox_CheckedChanged);
             // 
-            // chkNoExpire
+            // MemberExpirationEndDatePicker
             // 
-            this.chkNoExpire.AutoSize = true;
-            this.chkNoExpire.Location = new System.Drawing.Point(704, 7);
-            this.chkNoExpire.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.chkNoExpire.Name = "chkNoExpire";
-            this.chkNoExpire.Size = new System.Drawing.Size(59, 17);
-            this.chkNoExpire.TabIndex = 41;
-            this.chkNoExpire.Text = "ทั้งหมด";
-            this.chkNoExpire.UseVisualStyleBackColor = true;
-            this.chkNoExpire.CheckedChanged += new System.EventHandler(this.chkNoExpire_CheckedChanged);
-            // 
-            // dtpExpireStop
-            // 
-            this.dtpExpireStop.Location = new System.Drawing.Point(795, 24);
-            this.dtpExpireStop.Name = "dtpExpireStop";
-            this.dtpExpireStop.Size = new System.Drawing.Size(122, 20);
-            this.dtpExpireStop.TabIndex = 40;
+            this.MemberExpirationEndDatePicker.Location = new System.Drawing.Point(795, 24);
+            this.MemberExpirationEndDatePicker.Name = "MemberExpirationEndDatePicker";
+            this.MemberExpirationEndDatePicker.Size = new System.Drawing.Size(122, 20);
+            this.MemberExpirationEndDatePicker.TabIndex = 40;
             // 
             // label24
             // 
@@ -701,12 +736,12 @@
             this.label24.TabIndex = 39;
             this.label24.Text = "ถึง";
             // 
-            // dtpExpireStart
+            // MemberExpirationStartDatePicker
             // 
-            this.dtpExpireStart.Location = new System.Drawing.Point(634, 24);
-            this.dtpExpireStart.Name = "dtpExpireStart";
-            this.dtpExpireStart.Size = new System.Drawing.Size(122, 20);
-            this.dtpExpireStart.TabIndex = 38;
+            this.MemberExpirationStartDatePicker.Location = new System.Drawing.Point(634, 24);
+            this.MemberExpirationStartDatePicker.Name = "MemberExpirationStartDatePicker";
+            this.MemberExpirationStartDatePicker.Size = new System.Drawing.Size(122, 20);
+            this.MemberExpirationStartDatePicker.TabIndex = 38;
             // 
             // label29
             // 
@@ -726,12 +761,12 @@
             this.label28.TabIndex = 36;
             this.label28.Text = "ถึง";
             // 
-            // txtCountINStart2
+            // MemberParkingCountEndTextBox
             // 
-            this.txtCountINStart2.Location = new System.Drawing.Point(561, 25);
-            this.txtCountINStart2.Name = "txtCountINStart2";
-            this.txtCountINStart2.Size = new System.Drawing.Size(45, 20);
-            this.txtCountINStart2.TabIndex = 35;
+            this.MemberParkingCountEndTextBox.Location = new System.Drawing.Point(561, 25);
+            this.MemberParkingCountEndTextBox.Name = "MemberParkingCountEndTextBox";
+            this.MemberParkingCountEndTextBox.Size = new System.Drawing.Size(45, 20);
+            this.MemberParkingCountEndTextBox.TabIndex = 35;
             // 
             // label27
             // 
@@ -742,34 +777,20 @@
             this.label27.TabIndex = 34;
             this.label27.Text = "จำนวนครั้งที่เข้าจอด";
             // 
-            // txtCountINStart
+            // MemberParkingCountStartTextBox
             // 
-            this.txtCountINStart.Location = new System.Drawing.Point(482, 25);
-            this.txtCountINStart.Name = "txtCountINStart";
-            this.txtCountINStart.Size = new System.Drawing.Size(45, 20);
-            this.txtCountINStart.TabIndex = 33;
+            this.MemberParkingCountStartTextBox.Location = new System.Drawing.Point(482, 25);
+            this.MemberParkingCountStartTextBox.Name = "MemberParkingCountStartTextBox";
+            this.MemberParkingCountStartTextBox.Size = new System.Drawing.Size(45, 20);
+            this.MemberParkingCountStartTextBox.TabIndex = 33;
             // 
-            // label26
+            // MemberStatusComboBox
             // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(326, 9);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(52, 13);
-            this.label26.TabIndex = 31;
-            this.label26.Text = "เดือนเกิด";
-            // 
-            // cobStatus
-            // 
-            this.cobStatus.FormattingEnabled = true;
-            this.cobStatus.Items.AddRange(new object[] {
-            "ALL",
-            "ใช้งาน",
-            "ยกเลิก",
-            "บัตรหาย"});
-            this.cobStatus.Location = new System.Drawing.Point(232, 25);
-            this.cobStatus.Name = "cobStatus";
-            this.cobStatus.Size = new System.Drawing.Size(71, 21);
-            this.cobStatus.TabIndex = 30;
+            this.MemberStatusComboBox.FormattingEnabled = true;
+            this.MemberStatusComboBox.Location = new System.Drawing.Point(232, 25);
+            this.MemberStatusComboBox.Name = "MemberStatusComboBox";
+            this.MemberStatusComboBox.Size = new System.Drawing.Size(71, 21);
+            this.MemberStatusComboBox.TabIndex = 30;
             // 
             // label25
             // 
@@ -789,22 +810,20 @@
             this.label23.TabIndex = 26;
             this.label23.Text = "เลขสมาชิก";
             // 
-            // txtMemID
+            // MemberIdTextBox
             // 
-            this.txtMemID.Location = new System.Drawing.Point(100, 25);
-            this.txtMemID.Name = "txtMemID";
-            this.txtMemID.Size = new System.Drawing.Size(107, 20);
-            this.txtMemID.TabIndex = 25;
+            this.MemberIdTextBox.Location = new System.Drawing.Point(100, 25);
+            this.MemberIdTextBox.Name = "MemberIdTextBox";
+            this.MemberIdTextBox.Size = new System.Drawing.Size(107, 20);
+            this.MemberIdTextBox.TabIndex = 25;
             // 
-            // cobMemgroup
+            // MemberGroupComboBox
             // 
-            this.cobMemgroup.FormattingEnabled = true;
-            this.cobMemgroup.Items.AddRange(new object[] {
-            "ALL"});
-            this.cobMemgroup.Location = new System.Drawing.Point(8, 25);
-            this.cobMemgroup.Name = "cobMemgroup";
-            this.cobMemgroup.Size = new System.Drawing.Size(71, 21);
-            this.cobMemgroup.TabIndex = 14;
+            this.MemberGroupComboBox.FormattingEnabled = true;
+            this.MemberGroupComboBox.Location = new System.Drawing.Point(8, 25);
+            this.MemberGroupComboBox.Name = "MemberGroupComboBox";
+            this.MemberGroupComboBox.Size = new System.Drawing.Size(71, 21);
+            this.MemberGroupComboBox.TabIndex = 14;
             // 
             // label22
             // 
@@ -815,16 +834,14 @@
             this.label22.TabIndex = 13;
             this.label22.Text = "กลุ่ม";
             // 
-            // comMemName
+            // MemberNameComboBox
             // 
-            this.comMemName.FormattingEnabled = true;
-            this.comMemName.Items.AddRange(new object[] {
-            "ALL"});
-            this.comMemName.Location = new System.Drawing.Point(348, 105);
-            this.comMemName.Name = "comMemName";
-            this.comMemName.Size = new System.Drawing.Size(241, 21);
-            this.comMemName.TabIndex = 38;
-            this.comMemName.Visible = false;
+            this.MemberNameComboBox.FormattingEnabled = true;
+            this.MemberNameComboBox.Location = new System.Drawing.Point(348, 105);
+            this.MemberNameComboBox.Name = "MemberNameComboBox";
+            this.MemberNameComboBox.Size = new System.Drawing.Size(241, 21);
+            this.MemberNameComboBox.TabIndex = 38;
+            this.MemberNameComboBox.Visible = false;
             // 
             // label21
             // 
@@ -846,16 +863,14 @@
             this.label20.Text = "ชำระเงิน";
             this.label20.Visible = false;
             // 
-            // comMemGroupMonth
+            // MemberGroupMonthComboBox
             // 
-            this.comMemGroupMonth.FormattingEnabled = true;
-            this.comMemGroupMonth.Items.AddRange(new object[] {
-            "ALL"});
-            this.comMemGroupMonth.Location = new System.Drawing.Point(10, 105);
-            this.comMemGroupMonth.Name = "comMemGroupMonth";
-            this.comMemGroupMonth.Size = new System.Drawing.Size(175, 21);
-            this.comMemGroupMonth.TabIndex = 35;
-            this.comMemGroupMonth.Visible = false;
+            this.MemberGroupMonthComboBox.FormattingEnabled = true;
+            this.MemberGroupMonthComboBox.Location = new System.Drawing.Point(10, 105);
+            this.MemberGroupMonthComboBox.Name = "MemberGroupMonthComboBox";
+            this.MemberGroupMonthComboBox.Size = new System.Drawing.Size(175, 21);
+            this.MemberGroupMonthComboBox.TabIndex = 35;
+            this.MemberGroupMonthComboBox.Visible = false;
             // 
             // label19
             // 
@@ -867,22 +882,22 @@
             this.label19.Text = "กลุ่มจ่ายรายเดือน/กลุ่มโปร";
             this.label19.Visible = false;
             // 
-            // panel3
+            // CarTypeUp2UPanel
             // 
-            this.panel3.Controls.Add(this.txtUp2UCartype);
-            this.panel3.Controls.Add(this.lbUp2UCartype);
-            this.panel3.Location = new System.Drawing.Point(1194, 63);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(153, 68);
-            this.panel3.TabIndex = 33;
-            this.panel3.Visible = false;
+            this.CarTypeUp2UPanel.Controls.Add(this.Up2UCarTypeTextBox);
+            this.CarTypeUp2UPanel.Controls.Add(this.lbUp2UCartype);
+            this.CarTypeUp2UPanel.Location = new System.Drawing.Point(1194, 63);
+            this.CarTypeUp2UPanel.Name = "CarTypeUp2UPanel";
+            this.CarTypeUp2UPanel.Size = new System.Drawing.Size(153, 68);
+            this.CarTypeUp2UPanel.TabIndex = 33;
+            this.CarTypeUp2UPanel.Visible = false;
             // 
-            // txtUp2UCartype
+            // Up2UCarTypeTextBox
             // 
-            this.txtUp2UCartype.Location = new System.Drawing.Point(13, 32);
-            this.txtUp2UCartype.Name = "txtUp2UCartype";
-            this.txtUp2UCartype.Size = new System.Drawing.Size(107, 20);
-            this.txtUp2UCartype.TabIndex = 33;
+            this.Up2UCarTypeTextBox.Location = new System.Drawing.Point(13, 32);
+            this.Up2UCarTypeTextBox.Name = "Up2UCarTypeTextBox";
+            this.Up2UCarTypeTextBox.Size = new System.Drawing.Size(107, 20);
+            this.Up2UCarTypeTextBox.TabIndex = 33;
             // 
             // lbUp2UCartype
             // 
@@ -893,22 +908,22 @@
             this.lbUp2UCartype.TabIndex = 32;
             this.lbUp2UCartype.Text = "ประเภทรถ";
             // 
-            // panel2
+            // StickerUp2UPanel
             // 
-            this.panel2.Controls.Add(this.txtUp2UStickerNo);
-            this.panel2.Controls.Add(this.lbUp2UStickerNo);
-            this.panel2.Location = new System.Drawing.Point(1194, 7);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(131, 68);
-            this.panel2.TabIndex = 32;
-            this.panel2.Visible = false;
+            this.StickerUp2UPanel.Controls.Add(this.Up2UStickerNumberTextBox);
+            this.StickerUp2UPanel.Controls.Add(this.lbUp2UStickerNo);
+            this.StickerUp2UPanel.Location = new System.Drawing.Point(1194, 7);
+            this.StickerUp2UPanel.Name = "StickerUp2UPanel";
+            this.StickerUp2UPanel.Size = new System.Drawing.Size(131, 68);
+            this.StickerUp2UPanel.TabIndex = 32;
+            this.StickerUp2UPanel.Visible = false;
             // 
-            // txtUp2UStickerNo
+            // Up2UStickerNumberTextBox
             // 
-            this.txtUp2UStickerNo.Location = new System.Drawing.Point(13, 32);
-            this.txtUp2UStickerNo.Name = "txtUp2UStickerNo";
-            this.txtUp2UStickerNo.Size = new System.Drawing.Size(107, 20);
-            this.txtUp2UStickerNo.TabIndex = 31;
+            this.Up2UStickerNumberTextBox.Location = new System.Drawing.Point(13, 32);
+            this.Up2UStickerNumberTextBox.Name = "Up2UStickerNumberTextBox";
+            this.Up2UStickerNumberTextBox.Size = new System.Drawing.Size(107, 20);
+            this.Up2UStickerNumberTextBox.TabIndex = 31;
             // 
             // lbUp2UStickerNo
             // 
@@ -919,24 +934,24 @@
             this.lbUp2UStickerNo.TabIndex = 30;
             this.lbUp2UStickerNo.Text = "สติ๊กเกอร์";
             // 
-            // panel1
+            // UserUp2UPanel
             // 
-            this.panel1.Controls.Add(this.txtUp2UIDStaff);
-            this.panel1.Controls.Add(this.lbUp2UIDStaff);
-            this.panel1.Controls.Add(this.txtUp2UName);
-            this.panel1.Controls.Add(this.lbUp2UName);
-            this.panel1.Location = new System.Drawing.Point(1172, 24);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(368, 68);
-            this.panel1.TabIndex = 6;
-            this.panel1.Visible = false;
+            this.UserUp2UPanel.Controls.Add(this.Up2UStaffIdTextBox);
+            this.UserUp2UPanel.Controls.Add(this.lbUp2UIDStaff);
+            this.UserUp2UPanel.Controls.Add(this.Up2UNameTextBox);
+            this.UserUp2UPanel.Controls.Add(this.lbUp2UName);
+            this.UserUp2UPanel.Location = new System.Drawing.Point(1172, 24);
+            this.UserUp2UPanel.Name = "UserUp2UPanel";
+            this.UserUp2UPanel.Size = new System.Drawing.Size(368, 68);
+            this.UserUp2UPanel.TabIndex = 6;
+            this.UserUp2UPanel.Visible = false;
             // 
-            // txtUp2UIDStaff
+            // Up2UStaffIdTextBox
             // 
-            this.txtUp2UIDStaff.Location = new System.Drawing.Point(245, 32);
-            this.txtUp2UIDStaff.Name = "txtUp2UIDStaff";
-            this.txtUp2UIDStaff.Size = new System.Drawing.Size(107, 20);
-            this.txtUp2UIDStaff.TabIndex = 37;
+            this.Up2UStaffIdTextBox.Location = new System.Drawing.Point(245, 32);
+            this.Up2UStaffIdTextBox.Name = "Up2UStaffIdTextBox";
+            this.Up2UStaffIdTextBox.Size = new System.Drawing.Size(107, 20);
+            this.Up2UStaffIdTextBox.TabIndex = 37;
             // 
             // lbUp2UIDStaff
             // 
@@ -947,12 +962,12 @@
             this.lbUp2UIDStaff.TabIndex = 36;
             this.lbUp2UIDStaff.Text = "รหัสพนักงาน";
             // 
-            // txtUp2UName
+            // Up2UNameTextBox
             // 
-            this.txtUp2UName.Location = new System.Drawing.Point(7, 32);
-            this.txtUp2UName.Name = "txtUp2UName";
-            this.txtUp2UName.Size = new System.Drawing.Size(213, 20);
-            this.txtUp2UName.TabIndex = 35;
+            this.Up2UNameTextBox.Location = new System.Drawing.Point(7, 32);
+            this.Up2UNameTextBox.Name = "Up2UNameTextBox";
+            this.Up2UNameTextBox.Size = new System.Drawing.Size(213, 20);
+            this.Up2UNameTextBox.TabIndex = 35;
             // 
             // lbUp2UName
             // 
@@ -972,12 +987,12 @@
             this.label18.TabIndex = 24;
             this.label18.Text = "หมายเลขบัตร";
             // 
-            // txtCardID
+            // CardIdTextBox
             // 
-            this.txtCardID.Location = new System.Drawing.Point(595, 64);
-            this.txtCardID.Name = "txtCardID";
-            this.txtCardID.Size = new System.Drawing.Size(84, 20);
-            this.txtCardID.TabIndex = 23;
+            this.CardIdTextBox.Location = new System.Drawing.Point(595, 64);
+            this.CardIdTextBox.Name = "CardIdTextBox";
+            this.CardIdTextBox.Size = new System.Drawing.Size(84, 20);
+            this.CardIdTextBox.TabIndex = 23;
             // 
             // label17
             // 
@@ -989,29 +1004,23 @@
             this.label17.Text = "ประเภท Member";
             this.label17.Visible = false;
             // 
-            // comTypeMem
+            // MemberTypeComboBox
             // 
-            this.comTypeMem.FormattingEnabled = true;
-            this.comTypeMem.Items.AddRange(new object[] {
-            "ALL"});
-            this.comTypeMem.Location = new System.Drawing.Point(774, 64);
-            this.comTypeMem.Name = "comTypeMem";
-            this.comTypeMem.Size = new System.Drawing.Size(130, 21);
-            this.comTypeMem.TabIndex = 21;
-            this.comTypeMem.Visible = false;
+            this.MemberTypeComboBox.FormattingEnabled = true;
+            this.MemberTypeComboBox.Location = new System.Drawing.Point(774, 64);
+            this.MemberTypeComboBox.Name = "MemberTypeComboBox";
+            this.MemberTypeComboBox.Size = new System.Drawing.Size(130, 21);
+            this.MemberTypeComboBox.TabIndex = 21;
+            this.MemberTypeComboBox.Visible = false;
             // 
-            // comPay
+            // PaymentStatusComboBox
             // 
-            this.comPay.FormattingEnabled = true;
-            this.comPay.Items.AddRange(new object[] {
-            "ALL",
-            "ชำระเงิน",
-            "ไม่ชำระเงิน"});
-            this.comPay.Location = new System.Drawing.Point(192, 105);
-            this.comPay.Name = "comPay";
-            this.comPay.Size = new System.Drawing.Size(150, 21);
-            this.comPay.TabIndex = 20;
-            this.comPay.Visible = false;
+            this.PaymentStatusComboBox.FormattingEnabled = true;
+            this.PaymentStatusComboBox.Location = new System.Drawing.Point(192, 105);
+            this.PaymentStatusComboBox.Name = "PaymentStatusComboBox";
+            this.PaymentStatusComboBox.Size = new System.Drawing.Size(150, 21);
+            this.PaymentStatusComboBox.TabIndex = 20;
+            this.PaymentStatusComboBox.Visible = false;
             // 
             // label16
             // 
@@ -1023,23 +1032,23 @@
             this.label16.Text = "การชำระเงิน";
             this.label16.Visible = false;
             // 
-            // btnSearch
+            // SearchButton
             // 
-            this.btnSearch.Location = new System.Drawing.Point(1127, 150);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(87, 29);
-            this.btnSearch.TabIndex = 17;
-            this.btnSearch.Text = "Search";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            this.SearchButton.Location = new System.Drawing.Point(1127, 150);
+            this.SearchButton.Name = "SearchButton";
+            this.SearchButton.Size = new System.Drawing.Size(87, 29);
+            this.SearchButton.TabIndex = 17;
+            this.SearchButton.Text = "Search";
+            this.SearchButton.UseVisualStyleBackColor = true;
+            this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
-            // comPromotion
+            // PromotionComboBox
             // 
-            this.comPromotion.FormattingEnabled = true;
-            this.comPromotion.Location = new System.Drawing.Point(460, 64);
-            this.comPromotion.Name = "comPromotion";
-            this.comPromotion.Size = new System.Drawing.Size(129, 21);
-            this.comPromotion.TabIndex = 16;
+            this.PromotionComboBox.FormattingEnabled = true;
+            this.PromotionComboBox.Location = new System.Drawing.Point(460, 64);
+            this.PromotionComboBox.Name = "PromotionComboBox";
+            this.PromotionComboBox.Size = new System.Drawing.Size(129, 21);
+            this.PromotionComboBox.TabIndex = 16;
             // 
             // label7
             // 
@@ -1050,12 +1059,12 @@
             this.label7.TabIndex = 15;
             this.label7.Text = "โปรโมชั่น";
             // 
-            // txtLicense
+            // LicensePlateTextBox
             // 
-            this.txtLicense.Location = new System.Drawing.Point(347, 64);
-            this.txtLicense.Name = "txtLicense";
-            this.txtLicense.Size = new System.Drawing.Size(107, 20);
-            this.txtLicense.TabIndex = 14;
+            this.LicensePlateTextBox.Location = new System.Drawing.Point(347, 64);
+            this.LicensePlateTextBox.Name = "LicensePlateTextBox";
+            this.LicensePlateTextBox.Size = new System.Drawing.Size(107, 20);
+            this.LicensePlateTextBox.TabIndex = 14;
             // 
             // label6
             // 
@@ -1066,17 +1075,13 @@
             this.label6.TabIndex = 13;
             this.label6.Text = "ทะเบียน";
             // 
-            // comType
+            // CarTypeComboBox
             // 
-            this.comType.FormattingEnabled = true;
-            this.comType.Items.AddRange(new object[] {
-            "ALL",
-            "Visitor",
-            "Member"});
-            this.comType.Location = new System.Drawing.Point(192, 64);
-            this.comType.Name = "comType";
-            this.comType.Size = new System.Drawing.Size(150, 21);
-            this.comType.TabIndex = 12;
+            this.CarTypeComboBox.FormattingEnabled = true;
+            this.CarTypeComboBox.Location = new System.Drawing.Point(192, 64);
+            this.CarTypeComboBox.Name = "CarTypeComboBox";
+            this.CarTypeComboBox.Size = new System.Drawing.Size(150, 21);
+            this.CarTypeComboBox.TabIndex = 12;
             // 
             // label5
             // 
@@ -1087,13 +1092,13 @@
             this.label5.TabIndex = 11;
             this.label5.Text = "ประเภท";
             // 
-            // comUser
+            // UserComboBox
             // 
-            this.comUser.FormattingEnabled = true;
-            this.comUser.Location = new System.Drawing.Point(9, 64);
-            this.comUser.Name = "comUser";
-            this.comUser.Size = new System.Drawing.Size(176, 21);
-            this.comUser.TabIndex = 10;
+            this.UserComboBox.FormattingEnabled = true;
+            this.UserComboBox.Location = new System.Drawing.Point(9, 64);
+            this.UserComboBox.Name = "UserComboBox";
+            this.UserComboBox.Size = new System.Drawing.Size(176, 21);
+            this.UserComboBox.TabIndex = 10;
             // 
             // label4
             // 
@@ -1104,22 +1109,22 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "เจ้าหน้าที่";
             // 
-            // timeFinish
+            // EndTimePicker
             // 
-            this.timeFinish.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.timeFinish.Location = new System.Drawing.Point(760, 24);
-            this.timeFinish.Name = "timeFinish";
-            this.timeFinish.ShowUpDown = true;
-            this.timeFinish.Size = new System.Drawing.Size(76, 20);
-            this.timeFinish.TabIndex = 8;
-            this.timeFinish.Value = new System.DateTime(2015, 1, 31, 14, 14, 58, 0);
+            this.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.EndTimePicker.Location = new System.Drawing.Point(760, 24);
+            this.EndTimePicker.Name = "EndTimePicker";
+            this.EndTimePicker.ShowUpDown = true;
+            this.EndTimePicker.Size = new System.Drawing.Size(76, 20);
+            this.EndTimePicker.TabIndex = 8;
+            this.EndTimePicker.Value = new System.DateTime(2015, 1, 31, 14, 14, 58, 0);
             // 
-            // dateFinish
+            // EndDatePicker
             // 
-            this.dateFinish.Location = new System.Drawing.Point(596, 24);
-            this.dateFinish.Name = "dateFinish";
-            this.dateFinish.Size = new System.Drawing.Size(159, 20);
-            this.dateFinish.TabIndex = 7;
+            this.EndDatePicker.Location = new System.Drawing.Point(596, 24);
+            this.EndDatePicker.Name = "EndDatePicker";
+            this.EndDatePicker.Size = new System.Drawing.Size(159, 20);
+            this.EndDatePicker.TabIndex = 7;
             // 
             // label3
             // 
@@ -1130,22 +1135,22 @@
             this.label3.TabIndex = 6;
             this.label3.Text = "ถึง";
             // 
-            // timeStart
+            // StartTimePicker
             // 
-            this.timeStart.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.timeStart.Location = new System.Drawing.Point(513, 24);
-            this.timeStart.Name = "timeStart";
-            this.timeStart.ShowUpDown = true;
-            this.timeStart.Size = new System.Drawing.Size(76, 20);
-            this.timeStart.TabIndex = 5;
-            this.timeStart.Value = new System.DateTime(2015, 1, 31, 14, 14, 54, 0);
+            this.StartTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.StartTimePicker.Location = new System.Drawing.Point(513, 24);
+            this.StartTimePicker.Name = "StartTimePicker";
+            this.StartTimePicker.ShowUpDown = true;
+            this.StartTimePicker.Size = new System.Drawing.Size(76, 20);
+            this.StartTimePicker.TabIndex = 5;
+            this.StartTimePicker.Value = new System.DateTime(2015, 1, 31, 14, 14, 54, 0);
             // 
-            // dateStart
+            // StartDatePicker
             // 
-            this.dateStart.Location = new System.Drawing.Point(348, 24);
-            this.dateStart.Name = "dateStart";
-            this.dateStart.Size = new System.Drawing.Size(159, 20);
-            this.dateStart.TabIndex = 4;
+            this.StartDatePicker.Location = new System.Drawing.Point(348, 24);
+            this.StartDatePicker.Name = "StartDatePicker";
+            this.StartDatePicker.Size = new System.Drawing.Size(159, 20);
+            this.StartDatePicker.TabIndex = 4;
             // 
             // label2
             // 
@@ -1156,52 +1161,52 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "จาก";
             // 
-            // btnSetReport
+            // SetReportConditionButton
             // 
-            this.btnSetReport.Location = new System.Drawing.Point(11, 126);
-            this.btnSetReport.Name = "btnSetReport";
-            this.btnSetReport.Size = new System.Drawing.Size(72, 23);
-            this.btnSetReport.TabIndex = 18;
-            this.btnSetReport.Text = "ตั้งเงื่อนไข";
-            this.btnSetReport.UseVisualStyleBackColor = true;
-            this.btnSetReport.Click += new System.EventHandler(this.btnSetReport_Click);
+            this.SetReportConditionButton.Location = new System.Drawing.Point(11, 126);
+            this.SetReportConditionButton.Name = "SetReportConditionButton";
+            this.SetReportConditionButton.Size = new System.Drawing.Size(72, 23);
+            this.SetReportConditionButton.TabIndex = 18;
+            this.SetReportConditionButton.Text = "ตั้งเงื่อนไข";
+            this.SetReportConditionButton.UseVisualStyleBackColor = true;
+            this.SetReportConditionButton.Click += new System.EventHandler(this.SetReportConditionButton_Click);
             // 
-            // tabControl1
+            // PrimaryTabControl
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Location = new System.Drawing.Point(12, 183);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1325, 505);
-            this.tabControl1.TabIndex = 4;
+            this.PrimaryTabControl.Controls.Add(this.tabPage1);
+            this.PrimaryTabControl.Controls.Add(this.tabPage2);
+            this.PrimaryTabControl.Controls.Add(this.tabPage3);
+            this.PrimaryTabControl.Location = new System.Drawing.Point(12, 183);
+            this.PrimaryTabControl.Name = "PrimaryTabControl";
+            this.PrimaryTabControl.SelectedIndex = 0;
+            this.PrimaryTabControl.Size = new System.Drawing.Size(1325, 505);
+            this.PrimaryTabControl.TabIndex = 4;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.btnUpdateReport);
+            this.tabPage1.Controls.Add(this.UpdateReportButton);
             this.tabPage1.Controls.Add(this.groupBox3);
-            this.tabPage1.Controls.Add(this.btnPdf);
-            this.tabPage1.Controls.Add(this.btnExcel);
-            this.tabPage1.Controls.Add(this.lbHead);
-            this.tabPage1.Controls.Add(this.dgvResult);
+            this.tabPage1.Controls.Add(this.PdfExportButton);
+            this.tabPage1.Controls.Add(this.ExcelExportButton);
+            this.tabPage1.Controls.Add(this.ReportHeaderLabel);
+            this.tabPage1.Controls.Add(this.ResultGridView);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(1317, 479);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "ตาราง";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // btnUpdateReport
+            // UpdateReportButton
             // 
-            this.btnUpdateReport.Location = new System.Drawing.Point(998, 5);
-            this.btnUpdateReport.Name = "btnUpdateReport";
-            this.btnUpdateReport.Size = new System.Drawing.Size(75, 23);
-            this.btnUpdateReport.TabIndex = 9;
-            this.btnUpdateReport.Text = "Update";
-            this.btnUpdateReport.UseVisualStyleBackColor = true;
-            this.btnUpdateReport.Click += new System.EventHandler(this.btnUpdateReport_Click);
+            this.UpdateReportButton.Location = new System.Drawing.Point(998, 5);
+            this.UpdateReportButton.Name = "UpdateReportButton";
+            this.UpdateReportButton.Size = new System.Drawing.Size(75, 23);
+            this.UpdateReportButton.TabIndex = 9;
+            this.UpdateReportButton.Text = "Update";
+            this.UpdateReportButton.UseVisualStyleBackColor = true;
+            this.UpdateReportButton.Click += new System.EventHandler(this.UpdateReportButton_Click);
             // 
             // groupBox3
             // 
@@ -1316,109 +1321,106 @@
             this.pictureBox3.TabIndex = 6;
             this.pictureBox3.TabStop = false;
             // 
-            // btnPdf
+            // PdfExportButton
             // 
-            this.btnPdf.Location = new System.Drawing.Point(1083, 5);
-            this.btnPdf.Name = "btnPdf";
-            this.btnPdf.Size = new System.Drawing.Size(113, 23);
-            this.btnPdf.TabIndex = 3;
-            this.btnPdf.Text = "Export to PDF";
-            this.btnPdf.UseVisualStyleBackColor = true;
-            this.btnPdf.Click += new System.EventHandler(this.btnPdf_Click);
+            this.PdfExportButton.Location = new System.Drawing.Point(1083, 5);
+            this.PdfExportButton.Name = "PdfExportButton";
+            this.PdfExportButton.Size = new System.Drawing.Size(113, 23);
+            this.PdfExportButton.TabIndex = 3;
+            this.PdfExportButton.Text = "Export to PDF";
+            this.PdfExportButton.UseVisualStyleBackColor = true;
+            this.PdfExportButton.Click += new System.EventHandler(this.PdfExportButton_Click);
             // 
-            // btnExcel
+            // ExcelExportButton
             // 
-            this.btnExcel.Location = new System.Drawing.Point(1202, 5);
-            this.btnExcel.Name = "btnExcel";
-            this.btnExcel.Size = new System.Drawing.Size(109, 23);
-            this.btnExcel.TabIndex = 2;
-            this.btnExcel.Text = "Export to Excel";
-            this.btnExcel.UseVisualStyleBackColor = true;
-            this.btnExcel.Click += new System.EventHandler(this.btnExcel_Click);
+            this.ExcelExportButton.Location = new System.Drawing.Point(1202, 5);
+            this.ExcelExportButton.Name = "ExcelExportButton";
+            this.ExcelExportButton.Size = new System.Drawing.Size(109, 23);
+            this.ExcelExportButton.TabIndex = 2;
+            this.ExcelExportButton.Text = "Export to Excel";
+            this.ExcelExportButton.UseVisualStyleBackColor = true;
+            this.ExcelExportButton.Click += new System.EventHandler(this.ExcelExportButton_Click);
             // 
-            // lbHead
+            // ReportHeaderLabel
             // 
-            this.lbHead.AutoSize = true;
-            this.lbHead.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
-            this.lbHead.Location = new System.Drawing.Point(15, 12);
-            this.lbHead.Name = "lbHead";
-            this.lbHead.Size = new System.Drawing.Size(64, 16);
-            this.lbHead.TabIndex = 1;
-            this.lbHead.Text = "เลือกรายงาน";
+            this.ReportHeaderLabel.AutoSize = true;
+            this.ReportHeaderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
+            this.ReportHeaderLabel.Location = new System.Drawing.Point(15, 12);
+            this.ReportHeaderLabel.Name = "ReportHeaderLabel";
+            this.ReportHeaderLabel.Size = new System.Drawing.Size(63, 16);
+            this.ReportHeaderLabel.TabIndex = 1;
+            this.ReportHeaderLabel.Text = "เลือกรายงาน";
             // 
-            // dgvResult
+            // ResultGridView
             // 
-            this.dgvResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvResult.Location = new System.Drawing.Point(6, 31);
-            this.dgvResult.Name = "dgvResult";
-            this.dgvResult.Size = new System.Drawing.Size(1305, 442);
-            this.dgvResult.TabIndex = 1;
-            this.dgvResult.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvResult_CellClick);
-            this.dgvResult.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvResult_CellContentClick);
-            this.dgvResult.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvResult_ColumnHeaderMouseClick);
+            this.ResultGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ResultGridView.Location = new System.Drawing.Point(6, 31);
+            this.ResultGridView.Name = "ResultGridView";
+            this.ResultGridView.Size = new System.Drawing.Size(1305, 442);
+            this.ResultGridView.TabIndex = 1;
+            this.ResultGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ResultGridView_CellClick);
+            this.ResultGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ResultGridView_CellContentClick);
+            this.ResultGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ResultGridView_ColumnHeaderMouseClick);
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.crvResult);
+            this.tabPage2.Controls.Add(this.PrimaryCrystalReportViewer);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(1317, 479);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "หน้ากระดาษ";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // crvResult
+            // PrimaryCrystalReportViewer
             // 
-            this.crvResult.ActiveViewIndex = -1;
-            this.crvResult.AutoScroll = true;
-            this.crvResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.crvResult.CachedPageNumberPerDoc = 10;
-            this.crvResult.Cursor = System.Windows.Forms.Cursors.Default;
-            this.crvResult.EnableDrillDown = false;
-            this.crvResult.Location = new System.Drawing.Point(3, 3);
-            this.crvResult.Name = "crvResult";
-            this.crvResult.Size = new System.Drawing.Size(1311, 476);
-            this.crvResult.TabIndex = 0;
-            this.crvResult.ToolPanelView = CrystalDecisions.Windows.Forms.ToolPanelViewType.None;
+            this.PrimaryCrystalReportViewer.ActiveViewIndex = -1;
+            this.PrimaryCrystalReportViewer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PrimaryCrystalReportViewer.Cursor = System.Windows.Forms.Cursors.Default;
+            this.PrimaryCrystalReportViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PrimaryCrystalReportViewer.Location = new System.Drawing.Point(3, 3);
+            this.PrimaryCrystalReportViewer.Name = "PrimaryCrystalReportViewer";
+            this.PrimaryCrystalReportViewer.Size = new System.Drawing.Size(1311, 473);
+            this.PrimaryCrystalReportViewer.TabIndex = 0;
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.dgvUser);
+            this.tabPage3.Controls.Add(this.UserGridView);
             this.tabPage3.Controls.Add(this.groupBox2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(1317, 479);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "จัดการผู้ใช้";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // dgvUser
+            // UserGridView
             // 
-            this.dgvUser.AllowUserToAddRows = false;
-            this.dgvUser.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvUser.Location = new System.Drawing.Point(19, 35);
-            this.dgvUser.Name = "dgvUser";
-            this.dgvUser.ReadOnly = true;
-            this.dgvUser.Size = new System.Drawing.Size(694, 428);
-            this.dgvUser.TabIndex = 10;
-            this.dgvUser.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUser_CellClick);
+            this.UserGridView.AllowUserToAddRows = false;
+            this.UserGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.UserGridView.Location = new System.Drawing.Point(19, 35);
+            this.UserGridView.Name = "UserGridView";
+            this.UserGridView.ReadOnly = true;
+            this.UserGridView.Size = new System.Drawing.Size(694, 428);
+            this.UserGridView.TabIndex = 10;
+            this.UserGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.UserGridView_CellClick);
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.listName);
-            this.groupBox2.Controls.Add(this.listUser);
-            this.groupBox2.Controls.Add(this.btnClear);
-            this.groupBox2.Controls.Add(this.btnManageSave);
-            this.groupBox2.Controls.Add(this.txtGroup);
-            this.groupBox2.Controls.Add(this.txtTel);
-            this.groupBox2.Controls.Add(this.txtAddress);
-            this.groupBox2.Controls.Add(this.txtName);
-            this.groupBox2.Controls.Add(this.txtPassword);
-            this.groupBox2.Controls.Add(this.txtUsername);
-            this.groupBox2.Controls.Add(this.txtLevel);
-            this.groupBox2.Controls.Add(this.txtCard);
+            this.groupBox2.Controls.Add(this.UserNameListBox);
+            this.groupBox2.Controls.Add(this.UserListBox);
+            this.groupBox2.Controls.Add(this.ManageUserClearButton);
+            this.groupBox2.Controls.Add(this.ManageUserSaveButton);
+            this.groupBox2.Controls.Add(this.UserGroupTextBox);
+            this.groupBox2.Controls.Add(this.UserTelTextBox);
+            this.groupBox2.Controls.Add(this.UserAddressTextBox);
+            this.groupBox2.Controls.Add(this.UserFullNameTextBox);
+            this.groupBox2.Controls.Add(this.UserPasswordTextBox);
+            this.groupBox2.Controls.Add(this.UsernameTextBox);
+            this.groupBox2.Controls.Add(this.UserLevelTextBox);
+            this.groupBox2.Controls.Add(this.UserCardNumberTextBox);
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label15);
             this.groupBox2.Controls.Add(this.label9);
@@ -1433,106 +1435,106 @@
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             // 
-            // listName
+            // UserNameListBox
             // 
-            this.listName.FormattingEnabled = true;
-            this.listName.Location = new System.Drawing.Point(244, 219);
-            this.listName.Name = "listName";
-            this.listName.Size = new System.Drawing.Size(207, 121);
-            this.listName.TabIndex = 20;
-            this.listName.Visible = false;
-            this.listName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listName_KeyDown);
+            this.UserNameListBox.FormattingEnabled = true;
+            this.UserNameListBox.Location = new System.Drawing.Point(244, 219);
+            this.UserNameListBox.Name = "UserNameListBox";
+            this.UserNameListBox.Size = new System.Drawing.Size(207, 121);
+            this.UserNameListBox.TabIndex = 20;
+            this.UserNameListBox.Visible = false;
+            this.UserNameListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UserNameListBox_KeyDown);
             // 
-            // listUser
+            // UserListBox
             // 
-            this.listUser.FormattingEnabled = true;
-            this.listUser.Location = new System.Drawing.Point(249, 129);
-            this.listUser.Name = "listUser";
-            this.listUser.Size = new System.Drawing.Size(162, 134);
-            this.listUser.TabIndex = 19;
-            this.listUser.Visible = false;
-            this.listUser.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listUser_KeyDown);
+            this.UserListBox.FormattingEnabled = true;
+            this.UserListBox.Location = new System.Drawing.Point(249, 129);
+            this.UserListBox.Name = "UserListBox";
+            this.UserListBox.Size = new System.Drawing.Size(162, 134);
+            this.UserListBox.TabIndex = 19;
+            this.UserListBox.Visible = false;
+            this.UserListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UserListBox_KeyDown);
             // 
-            // btnClear
+            // ManageUserClearButton
             // 
-            this.btnClear.Location = new System.Drawing.Point(291, 399);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(75, 23);
-            this.btnClear.TabIndex = 18;
-            this.btnClear.Text = "เคลีย";
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            this.ManageUserClearButton.Location = new System.Drawing.Point(291, 399);
+            this.ManageUserClearButton.Name = "ManageUserClearButton";
+            this.ManageUserClearButton.Size = new System.Drawing.Size(75, 23);
+            this.ManageUserClearButton.TabIndex = 18;
+            this.ManageUserClearButton.Text = "เคลีย";
+            this.ManageUserClearButton.UseVisualStyleBackColor = true;
+            this.ManageUserClearButton.Click += new System.EventHandler(this.ManageUserClearButton_Click);
             // 
-            // btnManageSave
+            // ManageUserSaveButton
             // 
-            this.btnManageSave.Location = new System.Drawing.Point(152, 399);
-            this.btnManageSave.Name = "btnManageSave";
-            this.btnManageSave.Size = new System.Drawing.Size(75, 23);
-            this.btnManageSave.TabIndex = 17;
-            this.btnManageSave.Text = "บันทึก";
-            this.btnManageSave.UseVisualStyleBackColor = true;
-            this.btnManageSave.Click += new System.EventHandler(this.btnManageSave_Click);
+            this.ManageUserSaveButton.Location = new System.Drawing.Point(152, 399);
+            this.ManageUserSaveButton.Name = "ManageUserSaveButton";
+            this.ManageUserSaveButton.Size = new System.Drawing.Size(75, 23);
+            this.ManageUserSaveButton.TabIndex = 17;
+            this.ManageUserSaveButton.Text = "บันทึก";
+            this.ManageUserSaveButton.UseVisualStyleBackColor = true;
+            this.ManageUserSaveButton.Click += new System.EventHandler(this.ManageUserSaveButton_Click);
             // 
-            // txtGroup
+            // UserGroupTextBox
             // 
-            this.txtGroup.Location = new System.Drawing.Point(182, 363);
-            this.txtGroup.Name = "txtGroup";
-            this.txtGroup.Size = new System.Drawing.Size(58, 20);
-            this.txtGroup.TabIndex = 16;
+            this.UserGroupTextBox.Location = new System.Drawing.Point(182, 363);
+            this.UserGroupTextBox.Name = "UserGroupTextBox";
+            this.UserGroupTextBox.Size = new System.Drawing.Size(58, 20);
+            this.UserGroupTextBox.TabIndex = 16;
             // 
-            // txtTel
+            // UserTelTextBox
             // 
-            this.txtTel.Location = new System.Drawing.Point(182, 320);
-            this.txtTel.Name = "txtTel";
-            this.txtTel.Size = new System.Drawing.Size(170, 20);
-            this.txtTel.TabIndex = 15;
+            this.UserTelTextBox.Location = new System.Drawing.Point(182, 320);
+            this.UserTelTextBox.Name = "UserTelTextBox";
+            this.UserTelTextBox.Size = new System.Drawing.Size(170, 20);
+            this.UserTelTextBox.TabIndex = 15;
             // 
-            // txtAddress
+            // UserAddressTextBox
             // 
-            this.txtAddress.Location = new System.Drawing.Point(182, 247);
-            this.txtAddress.Multiline = true;
-            this.txtAddress.Name = "txtAddress";
-            this.txtAddress.Size = new System.Drawing.Size(170, 53);
-            this.txtAddress.TabIndex = 14;
+            this.UserAddressTextBox.Location = new System.Drawing.Point(182, 247);
+            this.UserAddressTextBox.Multiline = true;
+            this.UserAddressTextBox.Name = "UserAddressTextBox";
+            this.UserAddressTextBox.Size = new System.Drawing.Size(170, 53);
+            this.UserAddressTextBox.TabIndex = 14;
             // 
-            // txtName
+            // UserFullNameTextBox
             // 
-            this.txtName.Location = new System.Drawing.Point(182, 200);
-            this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(212, 20);
-            this.txtName.TabIndex = 13;
-            this.txtName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtName_KeyDown);
-            this.txtName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtName_KeyUp);
+            this.UserFullNameTextBox.Location = new System.Drawing.Point(182, 200);
+            this.UserFullNameTextBox.Name = "UserFullNameTextBox";
+            this.UserFullNameTextBox.Size = new System.Drawing.Size(212, 20);
+            this.UserFullNameTextBox.TabIndex = 13;
+            this.UserFullNameTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UserFullNameTextBox_KeyDown);
+            this.UserFullNameTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.UserFullNameTextBox_KeyUp);
             // 
-            // txtPassword
+            // UserPasswordTextBox
             // 
-            this.txtPassword.Location = new System.Drawing.Point(182, 157);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(170, 20);
-            this.txtPassword.TabIndex = 12;
+            this.UserPasswordTextBox.Location = new System.Drawing.Point(182, 157);
+            this.UserPasswordTextBox.Name = "UserPasswordTextBox";
+            this.UserPasswordTextBox.Size = new System.Drawing.Size(170, 20);
+            this.UserPasswordTextBox.TabIndex = 12;
             // 
-            // txtUsername
+            // UsernameTextBox
             // 
-            this.txtUsername.Location = new System.Drawing.Point(182, 112);
-            this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(170, 20);
-            this.txtUsername.TabIndex = 11;
-            this.txtUsername.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtUsername_KeyDown);
-            this.txtUsername.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtUsername_KeyUp);
+            this.UsernameTextBox.Location = new System.Drawing.Point(182, 112);
+            this.UsernameTextBox.Name = "UsernameTextBox";
+            this.UsernameTextBox.Size = new System.Drawing.Size(170, 20);
+            this.UsernameTextBox.TabIndex = 11;
+            this.UsernameTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.UsernameTextBox_KeyDown);
+            this.UsernameTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.UsernameTextBox_KeyUp);
             // 
-            // txtLevel
+            // UserLevelTextBox
             // 
-            this.txtLevel.Location = new System.Drawing.Point(182, 68);
-            this.txtLevel.Name = "txtLevel";
-            this.txtLevel.Size = new System.Drawing.Size(58, 20);
-            this.txtLevel.TabIndex = 10;
+            this.UserLevelTextBox.Location = new System.Drawing.Point(182, 68);
+            this.UserLevelTextBox.Name = "UserLevelTextBox";
+            this.UserLevelTextBox.Size = new System.Drawing.Size(58, 20);
+            this.UserLevelTextBox.TabIndex = 10;
             // 
-            // txtCard
+            // UserCardNumberTextBox
             // 
-            this.txtCard.Location = new System.Drawing.Point(182, 32);
-            this.txtCard.Name = "txtCard";
-            this.txtCard.Size = new System.Drawing.Size(170, 20);
-            this.txtCard.TabIndex = 9;
+            this.UserCardNumberTextBox.Location = new System.Drawing.Point(182, 32);
+            this.UserCardNumberTextBox.Name = "UserCardNumberTextBox";
+            this.UserCardNumberTextBox.Size = new System.Drawing.Size(170, 20);
+            this.UserCardNumberTextBox.TabIndex = 9;
             // 
             // label8
             // 
@@ -1608,9 +1610,9 @@
             // 
             // optionBox
             // 
-            this.optionBox.Controls.Add(this.btnManage);
-            this.optionBox.Controls.Add(this.btnPermission);
-            this.optionBox.Controls.Add(this.btnSetReport);
+            this.optionBox.Controls.Add(this.ManageUserButton);
+            this.optionBox.Controls.Add(this.ManagePermissionButton);
+            this.optionBox.Controls.Add(this.SetReportConditionButton);
             this.optionBox.Location = new System.Drawing.Point(1244, 11);
             this.optionBox.Name = "optionBox";
             this.optionBox.Size = new System.Drawing.Size(93, 172);
@@ -1619,31 +1621,31 @@
             this.optionBox.Text = "ตัวเลือกเพิ่มเติม";
             this.optionBox.Visible = false;
             // 
-            // btnManage
+            // ManageUserButton
             // 
-            this.btnManage.Location = new System.Drawing.Point(11, 76);
-            this.btnManage.Name = "btnManage";
-            this.btnManage.Size = new System.Drawing.Size(72, 23);
-            this.btnManage.TabIndex = 1;
-            this.btnManage.Text = "จัดการผู้ใช้";
-            this.btnManage.UseVisualStyleBackColor = true;
-            this.btnManage.Visible = false;
-            this.btnManage.Click += new System.EventHandler(this.btnManage_Click);
+            this.ManageUserButton.Location = new System.Drawing.Point(11, 76);
+            this.ManageUserButton.Name = "ManageUserButton";
+            this.ManageUserButton.Size = new System.Drawing.Size(72, 23);
+            this.ManageUserButton.TabIndex = 1;
+            this.ManageUserButton.Text = "จัดการผู้ใช้";
+            this.ManageUserButton.UseVisualStyleBackColor = true;
+            this.ManageUserButton.Visible = false;
+            this.ManageUserButton.Click += new System.EventHandler(this.ManageUserButton_Click);
             // 
-            // btnPermission
+            // ManagePermissionButton
             // 
-            this.btnPermission.Location = new System.Drawing.Point(11, 31);
-            this.btnPermission.Name = "btnPermission";
-            this.btnPermission.Size = new System.Drawing.Size(72, 23);
-            this.btnPermission.TabIndex = 0;
-            this.btnPermission.Text = "จัดการสิทธิ์";
-            this.btnPermission.UseVisualStyleBackColor = true;
-            this.btnPermission.Click += new System.EventHandler(this.button1_Click);
+            this.ManagePermissionButton.Location = new System.Drawing.Point(11, 31);
+            this.ManagePermissionButton.Name = "ManagePermissionButton";
+            this.ManagePermissionButton.Size = new System.Drawing.Size(72, 23);
+            this.ManagePermissionButton.TabIndex = 0;
+            this.ManagePermissionButton.Text = "จัดการสิทธิ์";
+            this.ManagePermissionButton.UseVisualStyleBackColor = true;
+            this.ManagePermissionButton.Click += new System.EventHandler(this.button1_Click);
             // 
-            // tmMFCheck
+            // MifareCheckTimer
             // 
-            this.tmMFCheck.Interval = 1000;
-            this.tmMFCheck.Tick += new System.EventHandler(this.tmMFCheck_Tick);
+            this.MifareCheckTimer.Interval = 1000;
+            this.MifareCheckTimer.Tick += new System.EventHandler(this.MifareCheckTimer_Tick);
             // 
             // FormMain
             // 
@@ -1651,7 +1653,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1349, 694);
             this.Controls.Add(this.optionBox);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.PrimaryTabControl);
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
@@ -1661,23 +1663,25 @@
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.panel7.ResumeLayout(false);
-            this.panel7.PerformLayout();
-            this.panel6.ResumeLayout(false);
-            this.panel6.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
-            this.panel2Up2U.ResumeLayout(false);
-            this.panel2Up2U.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
+            this.PromotionIdRangePanel.ResumeLayout(false);
+            this.PromotionIdRangePanel.PerformLayout();
+            this.ParkingTimeComparisonPanel.ResumeLayout(false);
+            this.ParkingTimeComparisonPanel.PerformLayout();
+            this.PaymentChannelPanel.ResumeLayout(false);
+            this.PaymentChannelPanel.PerformLayout();
+            this.AddressPanel.ResumeLayout(false);
+            this.AddressPanel.PerformLayout();
+            this.AdditionalMemberInfoPanel.ResumeLayout(false);
+            this.AdditionalMemberInfoPanel.PerformLayout();
+            this.MemberParkingUp2UPanel.ResumeLayout(false);
+            this.MemberParkingUp2UPanel.PerformLayout();
+            this.CarTypeUp2UPanel.ResumeLayout(false);
+            this.CarTypeUp2UPanel.PerformLayout();
+            this.StickerUp2UPanel.ResumeLayout(false);
+            this.StickerUp2UPanel.PerformLayout();
+            this.UserUp2UPanel.ResumeLayout(false);
+            this.UserUp2UPanel.PerformLayout();
+            this.PrimaryTabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -1687,10 +1691,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvResult)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ResultGridView)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvUser)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.UserGridView)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.optionBox.ResumeLayout(false);
@@ -1701,31 +1705,31 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comReport;
+        private System.Windows.Forms.ComboBox ReportComboBox;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.DateTimePicker timeStart;
-        private System.Windows.Forms.DateTimePicker dateStart;
+        private System.Windows.Forms.DateTimePicker StartTimePicker;
+        private System.Windows.Forms.DateTimePicker StartDatePicker;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comPromotion;
+        private System.Windows.Forms.ComboBox PromotionComboBox;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txtLicense;
+        private System.Windows.Forms.TextBox LicensePlateTextBox;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox comType;
+        private System.Windows.Forms.ComboBox CarTypeComboBox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox comUser;
+        private System.Windows.Forms.ComboBox UserComboBox;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DateTimePicker timeFinish;
-        private System.Windows.Forms.DateTimePicker dateFinish;
+        private System.Windows.Forms.DateTimePicker EndTimePicker;
+        private System.Windows.Forms.DateTimePicker EndDatePicker;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.Button SearchButton;
+        private System.Windows.Forms.TabControl PrimaryTabControl;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.DataGridView dgvResult;
+        private System.Windows.Forms.DataGridView ResultGridView;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox optionBox;
-        private System.Windows.Forms.Button btnPdf;
-        private System.Windows.Forms.Button btnExcel;
-        private System.Windows.Forms.Label lbHead;
+        private System.Windows.Forms.Button PdfExportButton;
+        private System.Windows.Forms.Button ExcelExportButton;
+        private System.Windows.Forms.Label ReportHeaderLabel;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.PictureBox pictureBox2;
@@ -1735,8 +1739,8 @@
         private System.Windows.Forms.Label lbPic3;
         private System.Windows.Forms.Label lbPic2;
         private System.Windows.Forms.Label lbPic1;
-        private System.Windows.Forms.Button btnManage;
-        private System.Windows.Forms.Button btnPermission;
+        private System.Windows.Forms.Button ManageUserButton;
+        private System.Windows.Forms.Button ManagePermissionButton;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
@@ -1746,101 +1750,104 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.DataGridView dgvUser;
+        private System.Windows.Forms.DataGridView UserGridView;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox txtGroup;
-        private System.Windows.Forms.TextBox txtTel;
-        private System.Windows.Forms.TextBox txtAddress;
-        private System.Windows.Forms.TextBox txtName;
-        private System.Windows.Forms.TextBox txtPassword;
-        private System.Windows.Forms.TextBox txtUsername;
-        private System.Windows.Forms.TextBox txtLevel;
-        private System.Windows.Forms.TextBox txtCard;
-        private System.Windows.Forms.Button btnManageSave;
-        private System.Windows.Forms.Button btnClear;
-        private System.Windows.Forms.ListBox listUser;
-        private System.Windows.Forms.ListBox listName;
+        private System.Windows.Forms.TextBox UserGroupTextBox;
+        private System.Windows.Forms.TextBox UserTelTextBox;
+        private System.Windows.Forms.TextBox UserAddressTextBox;
+        private System.Windows.Forms.TextBox UserFullNameTextBox;
+        private System.Windows.Forms.TextBox UserPasswordTextBox;
+        private System.Windows.Forms.TextBox UsernameTextBox;
+        private System.Windows.Forms.TextBox UserLevelTextBox;
+        private System.Windows.Forms.TextBox UserCardNumberTextBox;
+        private System.Windows.Forms.Button ManageUserSaveButton;
+        private System.Windows.Forms.Button ManageUserClearButton;
+        private System.Windows.Forms.ListBox UserListBox;
+        private System.Windows.Forms.ListBox UserNameListBox;
         private System.Windows.Forms.Label lbPic5;
         private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.Button btnSetReport;
-        private System.Windows.Forms.ComboBox comPay;
+        private System.Windows.Forms.Button SetReportConditionButton;
+        private System.Windows.Forms.ComboBox PaymentStatusComboBox;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Button btnUpdateReport;
-        private System.Windows.Forms.ComboBox comTypeMem;
+        private System.Windows.Forms.Button UpdateReportButton;
+        private System.Windows.Forms.ComboBox MemberTypeComboBox;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TextBox txtCardID;
+        private System.Windows.Forms.TextBox CardIdTextBox;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Timer tmMFCheck;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.TextBox txtUp2UCartype;
+        private System.Windows.Forms.Timer MifareCheckTimer;
+        private System.Windows.Forms.Panel CarTypeUp2UPanel;
+        private System.Windows.Forms.TextBox Up2UCarTypeTextBox;
         private System.Windows.Forms.Label lbUp2UCartype;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.TextBox txtUp2UStickerNo;
+        private System.Windows.Forms.Panel StickerUp2UPanel;
+        private System.Windows.Forms.TextBox Up2UStickerNumberTextBox;
         private System.Windows.Forms.Label lbUp2UStickerNo;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TextBox txtUp2UIDStaff;
+        private System.Windows.Forms.Panel UserUp2UPanel;
+        private System.Windows.Forms.TextBox Up2UStaffIdTextBox;
         private System.Windows.Forms.Label lbUp2UIDStaff;
-        private System.Windows.Forms.TextBox txtUp2UName;
+        private System.Windows.Forms.TextBox Up2UNameTextBox;
         private System.Windows.Forms.Label lbUp2UName;
-        private System.Windows.Forms.ComboBox comMemGroupMonth;
+        private System.Windows.Forms.ComboBox MemberGroupMonthComboBox;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.ComboBox comMemName;
+        private System.Windows.Forms.ComboBox MemberNameComboBox;
         private System.Windows.Forms.Label label21;
-        private CrystalDecisions.Windows.Forms.CrystalReportViewer crvResult;
-        private System.Windows.Forms.Panel panel2Up2U;
-        private System.Windows.Forms.ComboBox cobMemgroup;
+        private System.Windows.Forms.Panel MemberParkingUp2UPanel;
+        private System.Windows.Forms.ComboBox MemberGroupComboBox;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.TextBox txtMemID;
+        private System.Windows.Forms.TextBox MemberIdTextBox;
         private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.TextBox txtCountINStart2;
+        private System.Windows.Forms.TextBox MemberParkingCountEndTextBox;
         private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.TextBox txtCountINStart;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.ComboBox cobStatus;
+        private System.Windows.Forms.TextBox MemberParkingCountStartTextBox;
+        private System.Windows.Forms.ComboBox MemberStatusComboBox;
         private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.CheckBox chkNoExpire;
-        private System.Windows.Forms.DateTimePicker dtpExpireStop;
+        private System.Windows.Forms.CheckBox IgnoreExpirationDateCheckBox;
+        private System.Windows.Forms.DateTimePicker MemberExpirationEndDatePicker;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.DateTimePicker dtpExpireStart;
+        private System.Windows.Forms.DateTimePicker MemberExpirationStartDatePicker;
         private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.ComboBox cobBirthdayMonth;
         private System.Windows.Forms.Label label30;
-        private System.Windows.Forms.TextBox txtRecordNo;
+        private System.Windows.Forms.TextBox RecordNumberTextBox;
         private System.Windows.Forms.Label label31;
-        private System.Windows.Forms.ComboBox cobGuardhouse;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.ComboBox GuardhouseComboBox;
+        private System.Windows.Forms.Panel AdditionalMemberInfoPanel;
         private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.ComboBox cobRenewMem;
+        private System.Windows.Forms.ComboBox MemberRenewalTypeComboBox;
         private System.Windows.Forms.Label label32;
-        private System.Windows.Forms.ComboBox cobStatusMem;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.TextBox txtAdd;
+        private System.Windows.Forms.ComboBox MemberProcessStateComboBox;
+        private System.Windows.Forms.Panel AddressPanel;
+        private System.Windows.Forms.TextBox AddressTextBox;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.ComboBox cobCardMem;
+        private System.Windows.Forms.ComboBox MemberCardTypeComboBox;
         private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.TextBox txtNameCard;
-        private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.CheckBox chkDateExpire;
-        private System.Windows.Forms.CheckBox chkDateRegis;
-        private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.CheckBox chkBetween;
-        private System.Windows.Forms.CheckBox chkLess;
-        private System.Windows.Forms.CheckBox chkGreater;
+        private System.Windows.Forms.TextBox NameOnCardTextBox;
+        private System.Windows.Forms.Panel PaymentChannelPanel;
+        private System.Windows.Forms.CheckBox ExpirationDateCheckBox;
+        private System.Windows.Forms.CheckBox RegistrationDateCheckBox;
+        private System.Windows.Forms.Panel ParkingTimeComparisonPanel;
+        private System.Windows.Forms.CheckBox ParkingBetweenCheckBox;
+        private System.Windows.Forms.CheckBox ParkingLesserCheckBox;
+        private System.Windows.Forms.CheckBox ParkingGreaterCheckBox;
         private System.Windows.Forms.Label label37;
-        private System.Windows.Forms.TextBox txtBetweenMin1;
-        private System.Windows.Forms.TextBox txtLessMin;
-        private System.Windows.Forms.TextBox txtGreaterMin;
+        private System.Windows.Forms.TextBox ParkingBetweenFromTextBox;
+        private System.Windows.Forms.TextBox ParkingLesserTextBox;
+        private System.Windows.Forms.TextBox ParkingGreaterTextBox;
         private System.Windows.Forms.Label label41;
-        private System.Windows.Forms.TextBox txtBetweenMin2;
+        private System.Windows.Forms.TextBox ParkingBetweenToTextBox;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Label label38;
-        private System.Windows.Forms.ComboBox cobChannel;
+        private System.Windows.Forms.ComboBox PaymentChannelComboBox;
         private System.Windows.Forms.Label label42;
-
-
+        private CrystalDecisions.Windows.Forms.CrystalReportViewer PrimaryCrystalReportViewer;
+        private System.Windows.Forms.Panel PromotionIdRangePanel;
+        private System.Windows.Forms.TextBox PromotionIdTo;
+        private System.Windows.Forms.TextBox PromotionIdFrom;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.Panel ViewBlockerPanel;
     }
 }
