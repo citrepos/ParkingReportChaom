@@ -166,18 +166,6 @@ namespace ParkingManagementReport {
         
         private report163DataTable tablereport163;
         
-        private report21DataTable tablereport21;
-        
-        private report22DataTable tablereport22;
-        
-        private tnpt_vehicle_earning_summaryDataTable tabletnpt_vehicle_earning_summary;
-        
-        private tnpt_card_sorted_company_summaryDataTable tabletnpt_card_sorted_company_summary;
-        
-        private tnpt_company_billing_summaryDataTable tabletnpt_company_billing_summary;
-        
-        private report21tnptDataTable tablereport21tnpt;
-        
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -418,24 +406,6 @@ namespace ParkingManagementReport {
                 }
                 if ((ds.Tables["report163"] != null)) {
                     base.Tables.Add(new report163DataTable(ds.Tables["report163"]));
-                }
-                if ((ds.Tables["report21"] != null)) {
-                    base.Tables.Add(new report21DataTable(ds.Tables["report21"]));
-                }
-                if ((ds.Tables["report22"] != null)) {
-                    base.Tables.Add(new report22DataTable(ds.Tables["report22"]));
-                }
-                if ((ds.Tables["tnpt_vehicle_earning_summary"] != null)) {
-                    base.Tables.Add(new tnpt_vehicle_earning_summaryDataTable(ds.Tables["tnpt_vehicle_earning_summary"]));
-                }
-                if ((ds.Tables["tnpt_card_sorted_company_summary"] != null)) {
-                    base.Tables.Add(new tnpt_card_sorted_company_summaryDataTable(ds.Tables["tnpt_card_sorted_company_summary"]));
-                }
-                if ((ds.Tables["tnpt_company_billing_summary"] != null)) {
-                    base.Tables.Add(new tnpt_company_billing_summaryDataTable(ds.Tables["tnpt_company_billing_summary"]));
-                }
-                if ((ds.Tables["report21tnpt"] != null)) {
-                    base.Tables.Add(new report21tnptDataTable(ds.Tables["report21tnpt"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -1167,66 +1137,6 @@ namespace ParkingManagementReport {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        [global::System.ComponentModel.Browsable(false)]
-        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public report21DataTable report21 {
-            get {
-                return this.tablereport21;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        [global::System.ComponentModel.Browsable(false)]
-        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public report22DataTable report22 {
-            get {
-                return this.tablereport22;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        [global::System.ComponentModel.Browsable(false)]
-        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public tnpt_vehicle_earning_summaryDataTable tnpt_vehicle_earning_summary {
-            get {
-                return this.tabletnpt_vehicle_earning_summary;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        [global::System.ComponentModel.Browsable(false)]
-        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public tnpt_card_sorted_company_summaryDataTable tnpt_card_sorted_company_summary {
-            get {
-                return this.tabletnpt_card_sorted_company_summary;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        [global::System.ComponentModel.Browsable(false)]
-        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public tnpt_company_billing_summaryDataTable tnpt_company_billing_summary {
-            get {
-                return this.tabletnpt_company_billing_summary;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        [global::System.ComponentModel.Browsable(false)]
-        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public report21tnptDataTable report21tnpt {
-            get {
-                return this.tablereport21tnpt;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.BrowsableAttribute(true)]
         [global::System.ComponentModel.DesignerSerializationVisibilityAttribute(global::System.ComponentModel.DesignerSerializationVisibility.Visible)]
         public override global::System.Data.SchemaSerializationMode SchemaSerializationMode {
@@ -1504,24 +1414,6 @@ namespace ParkingManagementReport {
                 }
                 if ((ds.Tables["report163"] != null)) {
                     base.Tables.Add(new report163DataTable(ds.Tables["report163"]));
-                }
-                if ((ds.Tables["report21"] != null)) {
-                    base.Tables.Add(new report21DataTable(ds.Tables["report21"]));
-                }
-                if ((ds.Tables["report22"] != null)) {
-                    base.Tables.Add(new report22DataTable(ds.Tables["report22"]));
-                }
-                if ((ds.Tables["tnpt_vehicle_earning_summary"] != null)) {
-                    base.Tables.Add(new tnpt_vehicle_earning_summaryDataTable(ds.Tables["tnpt_vehicle_earning_summary"]));
-                }
-                if ((ds.Tables["tnpt_card_sorted_company_summary"] != null)) {
-                    base.Tables.Add(new tnpt_card_sorted_company_summaryDataTable(ds.Tables["tnpt_card_sorted_company_summary"]));
-                }
-                if ((ds.Tables["tnpt_company_billing_summary"] != null)) {
-                    base.Tables.Add(new tnpt_company_billing_summaryDataTable(ds.Tables["tnpt_company_billing_summary"]));
-                }
-                if ((ds.Tables["report21tnpt"] != null)) {
-                    base.Tables.Add(new report21tnptDataTable(ds.Tables["report21tnpt"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -1982,42 +1874,6 @@ namespace ParkingManagementReport {
                     this.tablereport163.InitVars();
                 }
             }
-            this.tablereport21 = ((report21DataTable)(base.Tables["report21"]));
-            if ((initTable == true)) {
-                if ((this.tablereport21 != null)) {
-                    this.tablereport21.InitVars();
-                }
-            }
-            this.tablereport22 = ((report22DataTable)(base.Tables["report22"]));
-            if ((initTable == true)) {
-                if ((this.tablereport22 != null)) {
-                    this.tablereport22.InitVars();
-                }
-            }
-            this.tabletnpt_vehicle_earning_summary = ((tnpt_vehicle_earning_summaryDataTable)(base.Tables["tnpt_vehicle_earning_summary"]));
-            if ((initTable == true)) {
-                if ((this.tabletnpt_vehicle_earning_summary != null)) {
-                    this.tabletnpt_vehicle_earning_summary.InitVars();
-                }
-            }
-            this.tabletnpt_card_sorted_company_summary = ((tnpt_card_sorted_company_summaryDataTable)(base.Tables["tnpt_card_sorted_company_summary"]));
-            if ((initTable == true)) {
-                if ((this.tabletnpt_card_sorted_company_summary != null)) {
-                    this.tabletnpt_card_sorted_company_summary.InitVars();
-                }
-            }
-            this.tabletnpt_company_billing_summary = ((tnpt_company_billing_summaryDataTable)(base.Tables["tnpt_company_billing_summary"]));
-            if ((initTable == true)) {
-                if ((this.tabletnpt_company_billing_summary != null)) {
-                    this.tabletnpt_company_billing_summary.InitVars();
-                }
-            }
-            this.tablereport21tnpt = ((report21tnptDataTable)(base.Tables["report21tnpt"]));
-            if ((initTable == true)) {
-                if ((this.tablereport21tnpt != null)) {
-                    this.tablereport21tnpt.InitVars();
-                }
-            }
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2170,18 +2026,6 @@ namespace ParkingManagementReport {
             base.Tables.Add(this.tablereport162);
             this.tablereport163 = new report163DataTable();
             base.Tables.Add(this.tablereport163);
-            this.tablereport21 = new report21DataTable();
-            base.Tables.Add(this.tablereport21);
-            this.tablereport22 = new report22DataTable();
-            base.Tables.Add(this.tablereport22);
-            this.tabletnpt_vehicle_earning_summary = new tnpt_vehicle_earning_summaryDataTable();
-            base.Tables.Add(this.tabletnpt_vehicle_earning_summary);
-            this.tabletnpt_card_sorted_company_summary = new tnpt_card_sorted_company_summaryDataTable();
-            base.Tables.Add(this.tabletnpt_card_sorted_company_summary);
-            this.tabletnpt_company_billing_summary = new tnpt_company_billing_summaryDataTable();
-            base.Tables.Add(this.tabletnpt_company_billing_summary);
-            this.tablereport21tnpt = new report21tnptDataTable();
-            base.Tables.Add(this.tablereport21tnpt);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2612,42 +2456,6 @@ namespace ParkingManagementReport {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        private bool ShouldSerializereport21() {
-            return false;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        private bool ShouldSerializereport22() {
-            return false;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        private bool ShouldSerializetnpt_vehicle_earning_summary() {
-            return false;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        private bool ShouldSerializetnpt_card_sorted_company_summary() {
-            return false;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        private bool ShouldSerializetnpt_company_billing_summary() {
-            return false;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        private bool ShouldSerializereport21tnpt() {
-            return false;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void SchemaChanged(object sender, global::System.ComponentModel.CollectionChangeEventArgs e) {
             if ((e.Action == global::System.ComponentModel.CollectionChangeAction.Remove)) {
                 this.InitVars();
@@ -2913,24 +2721,6 @@ namespace ParkingManagementReport {
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public delegate void report163RowChangeEventHandler(object sender, report163RowChangeEvent e);
-        
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public delegate void report21RowChangeEventHandler(object sender, report21RowChangeEvent e);
-        
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public delegate void report22RowChangeEventHandler(object sender, report22RowChangeEvent e);
-        
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public delegate void tnpt_vehicle_earning_summaryRowChangeEventHandler(object sender, tnpt_vehicle_earning_summaryRowChangeEvent e);
-        
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public delegate void tnpt_card_sorted_company_summaryRowChangeEventHandler(object sender, tnpt_card_sorted_company_summaryRowChangeEvent e);
-        
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public delegate void tnpt_company_billing_summaryRowChangeEventHandler(object sender, tnpt_company_billing_summaryRowChangeEvent e);
-        
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public delegate void report21tnptRowChangeEventHandler(object sender, report21tnptRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
@@ -6488,6 +6278,10 @@ namespace ParkingManagementReport {
             
             private global::System.Data.DataColumn columnเครื่องรับเงิน_online;
             
+            private global::System.Data.DataColumn columnเจ้าหน้าที่ขาเข้า;
+            
+            private global::System.Data.DataColumn columnหมายเหตุ;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public report13DataTable() {
@@ -6715,6 +6509,22 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn เจ้าหน้าที่ขาเข้าColumn {
+                get {
+                    return this.columnเจ้าหน้าที่ขาเข้า;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn หมายเหตุColumn {
+                get {
+                    return this.columnหมายเหตุ;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -6774,7 +6584,9 @@ namespace ParkingManagementReport {
                         string Approve, 
                         string อ้างถึงเลขใบเสร็จ, 
                         string _ภาษี_7_, 
-                        string เครื่องรับเงิน_online) {
+                        string เครื่องรับเงิน_online, 
+                        string เจ้าหน้าที่ขาเข้า, 
+                        string หมายเหตุ) {
                 report13Row rowreport13Row = ((report13Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         _เลขที่ใบเสร็จ_ใบกำกับภาษี,
@@ -6800,7 +6612,9 @@ namespace ParkingManagementReport {
                         Approve,
                         อ้างถึงเลขใบเสร็จ,
                         _ภาษี_7_,
-                        เครื่องรับเงิน_online};
+                        เครื่องรับเงิน_online,
+                        เจ้าหน้าที่ขาเข้า,
+                        หมายเหตุ};
                 rowreport13Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowreport13Row);
                 return rowreport13Row;
@@ -6847,6 +6661,8 @@ namespace ParkingManagementReport {
                 this.columnอ้างถึงเลขใบเสร็จ = base.Columns["อ้างถึงเลขใบเสร็จ"];
                 this._columnภาษี_7_ = base.Columns["ภาษี 7%"];
                 this.columnเครื่องรับเงิน_online = base.Columns["เครื่องรับเงิน online"];
+                this.columnเจ้าหน้าที่ขาเข้า = base.Columns["เจ้าหน้าที่ขาเข้า"];
+                this.columnหมายเหตุ = base.Columns["หมายเหตุ"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -6914,6 +6730,10 @@ namespace ParkingManagementReport {
                 base.Columns.Add(this._columnภาษี_7_);
                 this.columnเครื่องรับเงิน_online = new global::System.Data.DataColumn("เครื่องรับเงิน online", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnเครื่องรับเงิน_online);
+                this.columnเจ้าหน้าที่ขาเข้า = new global::System.Data.DataColumn("เจ้าหน้าที่ขาเข้า", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnเจ้าหน้าที่ขาเข้า);
+                this.columnหมายเหตุ = new global::System.Data.DataColumn("หมายเหตุ", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnหมายเหตุ);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -12986,7 +12806,7 @@ namespace ParkingManagementReport {
             
             private global::System.Data.DataColumn columnเลขที่ใบกำกับภาษี;
             
-            private global::System.Data.DataColumn columnหมายเลขบัตร;
+            private global::System.Data.DataColumn columnเลขที่_Void;
             
             private global::System.Data.DataColumn columnประเภท;
             
@@ -13001,8 +12821,6 @@ namespace ParkingManagementReport {
             private global::System.Data.DataColumn columnผู้ทำรายการ_Void;
             
             private global::System.Data.DataColumn columnจำนวนเงิน;
-            
-            private global::System.Data.DataColumn columnหมายเหตุ;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
@@ -13047,9 +12865,9 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn หมายเลขบัตรColumn {
+            public global::System.Data.DataColumn เลขที่_VoidColumn {
                 get {
-                    return this.columnหมายเลขบัตร;
+                    return this.columnเลขที่_Void;
                 }
             }
             
@@ -13111,14 +12929,6 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn หมายเหตุColumn {
-                get {
-                    return this.columnหมายเหตุ;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -13154,19 +12964,18 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report33Row Addreport33Row(string เลขที่ใบกำกับภาษี, char หมายเลขบัตร, string ประเภท, string ทะเบียน, string เวลาเข้า, string เจ้าหน้าที่ขาออก, string เวลาออก, string ผู้ทำรายการ_Void, string จำนวนเงิน, string หมายเหตุ) {
+            public report33Row Addreport33Row(string เลขที่ใบกำกับภาษี, string เลขที่_Void, string ประเภท, string ทะเบียน, string เวลาเข้า, string เจ้าหน้าที่ขาออก, string เวลาออก, string ผู้ทำรายการ_Void, string จำนวนเงิน) {
                 report33Row rowreport33Row = ((report33Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         เลขที่ใบกำกับภาษี,
-                        หมายเลขบัตร,
+                        เลขที่_Void,
                         ประเภท,
                         ทะเบียน,
                         เวลาเข้า,
                         เจ้าหน้าที่ขาออก,
                         เวลาออก,
                         ผู้ทำรายการ_Void,
-                        จำนวนเงิน,
-                        หมายเหตุ};
+                        จำนวนเงิน};
                 rowreport33Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowreport33Row);
                 return rowreport33Row;
@@ -13190,7 +12999,7 @@ namespace ParkingManagementReport {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
                 this.columnเลขที่ใบกำกับภาษี = base.Columns["เลขที่ใบกำกับภาษี"];
-                this.columnหมายเลขบัตร = base.Columns["หมายเลขบัตร"];
+                this.columnเลขที่_Void = base.Columns["เลขที่ Void"];
                 this.columnประเภท = base.Columns["ประเภท"];
                 this.columnทะเบียน = base.Columns["ทะเบียน"];
                 this.columnเวลาเข้า = base.Columns["เวลาเข้า"];
@@ -13198,7 +13007,6 @@ namespace ParkingManagementReport {
                 this.columnเวลาออก = base.Columns["เวลาออก"];
                 this.columnผู้ทำรายการ_Void = base.Columns["ผู้ทำรายการ Void"];
                 this.columnจำนวนเงิน = base.Columns["จำนวนเงิน"];
-                this.columnหมายเหตุ = base.Columns["หมายเหตุ"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -13206,8 +13014,8 @@ namespace ParkingManagementReport {
             private void InitClass() {
                 this.columnเลขที่ใบกำกับภาษี = new global::System.Data.DataColumn("เลขที่ใบกำกับภาษี", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnเลขที่ใบกำกับภาษี);
-                this.columnหมายเลขบัตร = new global::System.Data.DataColumn("หมายเลขบัตร", typeof(char), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnหมายเลขบัตร);
+                this.columnเลขที่_Void = new global::System.Data.DataColumn("เลขที่ Void", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnเลขที่_Void);
                 this.columnประเภท = new global::System.Data.DataColumn("ประเภท", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnประเภท);
                 this.columnทะเบียน = new global::System.Data.DataColumn("ทะเบียน", typeof(string), null, global::System.Data.MappingType.Element);
@@ -13222,8 +13030,15 @@ namespace ParkingManagementReport {
                 base.Columns.Add(this.columnผู้ทำรายการ_Void);
                 this.columnจำนวนเงิน = new global::System.Data.DataColumn("จำนวนเงิน", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnจำนวนเงิน);
-                this.columnหมายเหตุ = new global::System.Data.DataColumn("หมายเหตุ", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnหมายเหตุ);
+                this.columnเลขที่ใบกำกับภาษี.Caption = "ผู้มาติดต่อ(เข้า)";
+                this.columnเลขที่_Void.Caption = "สมาชิก(เข้า)";
+                this.columnประเภท.Caption = "ผู้มาติดต่อ(ออก)";
+                this.columnทะเบียน.Caption = "ผู้มาติดต่อ(ออก)";
+                this.columnเวลาเข้า.Caption = "ผู้มาติดต่อ(ออก)";
+                this.columnเจ้าหน้าที่ขาออก.Caption = "สมาชิก(ออก)";
+                this.columnเวลาออก.Caption = "ผู้มาติดต่อ(เข้า)";
+                this.columnผู้ทำรายการ_Void.Caption = "ผู้มาติดต่อ(เข้า)";
+                this.columnจำนวนเงิน.Caption = "สมาชิก(เข้า)";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -14696,27 +14511,25 @@ namespace ParkingManagementReport {
             
             private global::System.Data.DataColumn columnบริษัท;
             
-            private global::System.Data.DataColumn columnเลขทะเบียนรถ1;
-            
-            private global::System.Data.DataColumn columnเลขทะเบียนรถ2;
-            
-            private global::System.Data.DataColumn columnเลขทะเบียนรถ3;
-            
-            private global::System.Data.DataColumn columnเลขทะเบียนรถ4;
-            
             private global::System.Data.DataColumn columnเลขที่บัตร;
             
-            private global::System.Data.DataColumn columnชื่อสมาชิก;
+            private global::System.Data.DataColumn columnทะเบียนรถ;
             
-            private global::System.Data.DataColumn columnชนิดสมาชิก;
+            private global::System.Data.DataColumn columnชื่อเจ้าของรถ;
             
-            private global::System.Data.DataColumn columnวันที่สมัคร;
+            private global::System.Data.DataColumn columnวันเริ่มต้น;
             
-            private global::System.Data.DataColumn columnวันที่หมดอายุ;
+            private global::System.Data.DataColumn columnวันหมดอายุ;
             
             private global::System.Data.DataColumn columnผู้เช่า;
             
-            private global::System.Data.DataColumn columnค่าบัตรสมาชิก;
+            private global::System.Data.DataColumn columnค่าเช่า;
+            
+            private global::System.Data.DataColumn columnรหัสบริษัท;
+            
+            private global::System.Data.DataColumn columnยี่ห้อรถ;
+            
+            private global::System.Data.DataColumn columnจำนวน;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
@@ -14761,38 +14574,6 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn เลขทะเบียนรถ1Column {
-                get {
-                    return this.columnเลขทะเบียนรถ1;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn เลขทะเบียนรถ2Column {
-                get {
-                    return this.columnเลขทะเบียนรถ2;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn เลขทะเบียนรถ3Column {
-                get {
-                    return this.columnเลขทะเบียนรถ3;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn เลขทะเบียนรถ4Column {
-                get {
-                    return this.columnเลขทะเบียนรถ4;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn เลขที่บัตรColumn {
                 get {
                     return this.columnเลขที่บัตร;
@@ -14801,33 +14582,33 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ชื่อสมาชิกColumn {
+            public global::System.Data.DataColumn ทะเบียนรถColumn {
                 get {
-                    return this.columnชื่อสมาชิก;
+                    return this.columnทะเบียนรถ;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ชนิดสมาชิกColumn {
+            public global::System.Data.DataColumn ชื่อเจ้าของรถColumn {
                 get {
-                    return this.columnชนิดสมาชิก;
+                    return this.columnชื่อเจ้าของรถ;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn วันที่สมัครColumn {
+            public global::System.Data.DataColumn วันเริ่มต้นColumn {
                 get {
-                    return this.columnวันที่สมัคร;
+                    return this.columnวันเริ่มต้น;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn วันที่หมดอายุColumn {
+            public global::System.Data.DataColumn วันหมดอายุColumn {
                 get {
-                    return this.columnวันที่หมดอายุ;
+                    return this.columnวันหมดอายุ;
                 }
             }
             
@@ -14841,9 +14622,33 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ค่าบัตรสมาชิกColumn {
+            public global::System.Data.DataColumn ค่าเช่าColumn {
                 get {
-                    return this.columnค่าบัตรสมาชิก;
+                    return this.columnค่าเช่า;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn รหัสบริษัทColumn {
+                get {
+                    return this.columnรหัสบริษัท;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn ยี่ห้อรถColumn {
+                get {
+                    return this.columnยี่ห้อรถ;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn จำนวนColumn {
+                get {
+                    return this.columnจำนวน;
                 }
             }
             
@@ -14884,21 +14689,20 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report47Row Addreport47Row(string บริษัท, string เลขทะเบียนรถ1, string เลขทะเบียนรถ2, string เลขทะเบียนรถ3, string เลขทะเบียนรถ4, string เลขที่บัตร, string ชื่อสมาชิก, string ชนิดสมาชิก, string วันที่สมัคร, string วันที่หมดอายุ, string ผู้เช่า, string ค่าบัตรสมาชิก) {
+            public report47Row Addreport47Row(string บริษัท, string เลขที่บัตร, string ทะเบียนรถ, string ชื่อเจ้าของรถ, string วันเริ่มต้น, string วันหมดอายุ, string ผู้เช่า, double ค่าเช่า, string รหัสบริษัท, string ยี่ห้อรถ, int จำนวน) {
                 report47Row rowreport47Row = ((report47Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         บริษัท,
-                        เลขทะเบียนรถ1,
-                        เลขทะเบียนรถ2,
-                        เลขทะเบียนรถ3,
-                        เลขทะเบียนรถ4,
                         เลขที่บัตร,
-                        ชื่อสมาชิก,
-                        ชนิดสมาชิก,
-                        วันที่สมัคร,
-                        วันที่หมดอายุ,
+                        ทะเบียนรถ,
+                        ชื่อเจ้าของรถ,
+                        วันเริ่มต้น,
+                        วันหมดอายุ,
                         ผู้เช่า,
-                        ค่าบัตรสมาชิก};
+                        ค่าเช่า,
+                        รหัสบริษัท,
+                        ยี่ห้อรถ,
+                        จำนวน};
                 rowreport47Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowreport47Row);
                 return rowreport47Row;
@@ -14922,17 +14726,16 @@ namespace ParkingManagementReport {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             internal void InitVars() {
                 this.columnบริษัท = base.Columns["บริษัท"];
-                this.columnเลขทะเบียนรถ1 = base.Columns["เลขทะเบียนรถ1"];
-                this.columnเลขทะเบียนรถ2 = base.Columns["เลขทะเบียนรถ2"];
-                this.columnเลขทะเบียนรถ3 = base.Columns["เลขทะเบียนรถ3"];
-                this.columnเลขทะเบียนรถ4 = base.Columns["เลขทะเบียนรถ4"];
                 this.columnเลขที่บัตร = base.Columns["เลขที่บัตร"];
-                this.columnชื่อสมาชิก = base.Columns["ชื่อสมาชิก"];
-                this.columnชนิดสมาชิก = base.Columns["ชนิดสมาชิก"];
-                this.columnวันที่สมัคร = base.Columns["วันที่สมัคร"];
-                this.columnวันที่หมดอายุ = base.Columns["วันที่หมดอายุ"];
+                this.columnทะเบียนรถ = base.Columns["ทะเบียนรถ"];
+                this.columnชื่อเจ้าของรถ = base.Columns["ชื่อเจ้าของรถ"];
+                this.columnวันเริ่มต้น = base.Columns["วันเริ่มต้น"];
+                this.columnวันหมดอายุ = base.Columns["วันหมดอายุ"];
                 this.columnผู้เช่า = base.Columns["ผู้เช่า"];
-                this.columnค่าบัตรสมาชิก = base.Columns["ค่าบัตรสมาชิก"];
+                this.columnค่าเช่า = base.Columns["ค่าเช่า"];
+                this.columnรหัสบริษัท = base.Columns["รหัสบริษัท"];
+                this.columnยี่ห้อรถ = base.Columns["ยี่ห้อรถ"];
+                this.columnจำนวน = base.Columns["จำนวน"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -14940,28 +14743,32 @@ namespace ParkingManagementReport {
             private void InitClass() {
                 this.columnบริษัท = new global::System.Data.DataColumn("บริษัท", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnบริษัท);
-                this.columnเลขทะเบียนรถ1 = new global::System.Data.DataColumn("เลขทะเบียนรถ1", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnเลขทะเบียนรถ1);
-                this.columnเลขทะเบียนรถ2 = new global::System.Data.DataColumn("เลขทะเบียนรถ2", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnเลขทะเบียนรถ2);
-                this.columnเลขทะเบียนรถ3 = new global::System.Data.DataColumn("เลขทะเบียนรถ3", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnเลขทะเบียนรถ3);
-                this.columnเลขทะเบียนรถ4 = new global::System.Data.DataColumn("เลขทะเบียนรถ4", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnเลขทะเบียนรถ4);
                 this.columnเลขที่บัตร = new global::System.Data.DataColumn("เลขที่บัตร", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnเลขที่บัตร);
-                this.columnชื่อสมาชิก = new global::System.Data.DataColumn("ชื่อสมาชิก", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnชื่อสมาชิก);
-                this.columnชนิดสมาชิก = new global::System.Data.DataColumn("ชนิดสมาชิก", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnชนิดสมาชิก);
-                this.columnวันที่สมัคร = new global::System.Data.DataColumn("วันที่สมัคร", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnวันที่สมัคร);
-                this.columnวันที่หมดอายุ = new global::System.Data.DataColumn("วันที่หมดอายุ", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnวันที่หมดอายุ);
+                this.columnทะเบียนรถ = new global::System.Data.DataColumn("ทะเบียนรถ", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnทะเบียนรถ);
+                this.columnชื่อเจ้าของรถ = new global::System.Data.DataColumn("ชื่อเจ้าของรถ", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnชื่อเจ้าของรถ);
+                this.columnวันเริ่มต้น = new global::System.Data.DataColumn("วันเริ่มต้น", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnวันเริ่มต้น);
+                this.columnวันหมดอายุ = new global::System.Data.DataColumn("วันหมดอายุ", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnวันหมดอายุ);
                 this.columnผู้เช่า = new global::System.Data.DataColumn("ผู้เช่า", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnผู้เช่า);
-                this.columnค่าบัตรสมาชิก = new global::System.Data.DataColumn("ค่าบัตรสมาชิก", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnค่าบัตรสมาชิก);
+                this.columnค่าเช่า = new global::System.Data.DataColumn("ค่าเช่า", typeof(double), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnค่าเช่า);
+                this.columnรหัสบริษัท = new global::System.Data.DataColumn("รหัสบริษัท", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnรหัสบริษัท);
+                this.columnยี่ห้อรถ = new global::System.Data.DataColumn("ยี่ห้อรถ", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnยี่ห้อรถ);
+                this.columnจำนวน = new global::System.Data.DataColumn("จำนวน", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnจำนวน);
+                this.columnเลขที่บัตร.Caption = "บริษัท";
+                this.columnทะเบียนรถ.Caption = "บริษัท";
+                this.columnชื่อเจ้าของรถ.Caption = "บริษัท";
+                this.columnวันเริ่มต้น.Caption = "บริษัท";
+                this.columnวันหมดอายุ.Caption = "บริษัท";
+                this.columnผู้เช่า.Caption = "บริษัท";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -15101,13 +14908,15 @@ namespace ParkingManagementReport {
             
             private global::System.Data.DataColumn columnรายการ;
             
+            private global::System.Data.DataColumn columnบัตรจอดรถ;
+            
             private global::System.Data.DataColumn columnค่าบริการ;
             
             private global::System.Data.DataColumn columnVAT;
             
             private global::System.Data.DataColumn columnจำนวนเงิน;
             
-            private global::System.Data.DataColumn columnหมายเลขบัตร;
+            private global::System.Data.DataColumn columnรวมเวลาจอด;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
@@ -15168,6 +14977,14 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn บัตรจอดรถColumn {
+                get {
+                    return this.columnบัตรจอดรถ;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public global::System.Data.DataColumn ค่าบริการColumn {
                 get {
                     return this.columnค่าบริการ;
@@ -15192,9 +15009,9 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn หมายเลขบัตรColumn {
+            public global::System.Data.DataColumn รวมเวลาจอดColumn {
                 get {
-                    return this.columnหมายเลขบัตร;
+                    return this.columnรวมเวลาจอด;
                 }
             }
             
@@ -15235,16 +15052,17 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report49Row Addreport49Row(string วันที่, string เลขที่ใบกำกับภาษี, string รายการ, decimal ค่าบริการ, string VAT, decimal จำนวนเงิน, string หมายเลขบัตร) {
+            public report49Row Addreport49Row(string วันที่, string เลขที่ใบกำกับภาษี, string รายการ, string บัตรจอดรถ, decimal ค่าบริการ, string VAT, decimal จำนวนเงิน, string รวมเวลาจอด) {
                 report49Row rowreport49Row = ((report49Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         วันที่,
                         เลขที่ใบกำกับภาษี,
                         รายการ,
+                        บัตรจอดรถ,
                         ค่าบริการ,
                         VAT,
                         จำนวนเงิน,
-                        หมายเลขบัตร};
+                        รวมเวลาจอด};
                 rowreport49Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowreport49Row);
                 return rowreport49Row;
@@ -15270,10 +15088,11 @@ namespace ParkingManagementReport {
                 this.columnวันที่ = base.Columns["วันที่"];
                 this.columnเลขที่ใบกำกับภาษี = base.Columns["เลขที่ใบกำกับภาษี"];
                 this.columnรายการ = base.Columns["รายการ"];
+                this.columnบัตรจอดรถ = base.Columns["บัตรจอดรถ"];
                 this.columnค่าบริการ = base.Columns["ค่าบริการ"];
                 this.columnVAT = base.Columns["VAT"];
                 this.columnจำนวนเงิน = base.Columns["จำนวนเงิน"];
-                this.columnหมายเลขบัตร = base.Columns["หมายเลขบัตร"];
+                this.columnรวมเวลาจอด = base.Columns["รวมเวลาจอด"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -15285,14 +15104,16 @@ namespace ParkingManagementReport {
                 base.Columns.Add(this.columnเลขที่ใบกำกับภาษี);
                 this.columnรายการ = new global::System.Data.DataColumn("รายการ", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnรายการ);
+                this.columnบัตรจอดรถ = new global::System.Data.DataColumn("บัตรจอดรถ", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnบัตรจอดรถ);
                 this.columnค่าบริการ = new global::System.Data.DataColumn("ค่าบริการ", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnค่าบริการ);
                 this.columnVAT = new global::System.Data.DataColumn("VAT", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnVAT);
                 this.columnจำนวนเงิน = new global::System.Data.DataColumn("จำนวนเงิน", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnจำนวนเงิน);
-                this.columnหมายเลขบัตร = new global::System.Data.DataColumn("หมายเลขบัตร", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnหมายเลขบัตร);
+                this.columnรวมเวลาจอด = new global::System.Data.DataColumn("รวมเวลาจอด", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnรวมเวลาจอด);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -29013,6 +28834,14 @@ namespace ParkingManagementReport {
             
             private global::System.Data.DataColumn columnmch_order_no;
             
+            private global::System.Data.DataColumn columnrabbit_ID;
+            
+            private global::System.Data.DataColumn columnBeam_ID;
+            
+            private global::System.Data.DataColumn columnQR_Code;
+            
+            private global::System.Data.DataColumn columnSCB_ID;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public report163DataTable() {
@@ -29136,6 +28965,38 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn rabbit_IDColumn {
+                get {
+                    return this.columnrabbit_ID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn Beam_IDColumn {
+                get {
+                    return this.columnBeam_ID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn QR_CodeColumn {
+                get {
+                    return this.columnQR_Code;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn SCB_IDColumn {
+                get {
+                    return this.columnSCB_ID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -29171,7 +29032,7 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report163Row Addreport163Row(string ลำดับ, string หมายเลขบัตร, string ทะเบียนรถ, string _วัน_เวลาเข้า, string _วัน_เวลาออก, string ใบกำกับภาษี, string รายได้, string เจ้าหน้าที่ขาออก, string ช่องทางการชำระเงิน, string ksher_order_no, string mch_order_no) {
+            public report163Row Addreport163Row(string ลำดับ, string หมายเลขบัตร, string ทะเบียนรถ, string _วัน_เวลาเข้า, string _วัน_เวลาออก, string ใบกำกับภาษี, string รายได้, string เจ้าหน้าที่ขาออก, string ช่องทางการชำระเงิน, string ksher_order_no, string mch_order_no, string rabbit_ID, string Beam_ID, string QR_Code, string SCB_ID) {
                 report163Row rowreport163Row = ((report163Row)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ลำดับ,
@@ -29184,7 +29045,11 @@ namespace ParkingManagementReport {
                         เจ้าหน้าที่ขาออก,
                         ช่องทางการชำระเงิน,
                         ksher_order_no,
-                        mch_order_no};
+                        mch_order_no,
+                        rabbit_ID,
+                        Beam_ID,
+                        QR_Code,
+                        SCB_ID};
                 rowreport163Row.ItemArray = columnValuesArray;
                 this.Rows.Add(rowreport163Row);
                 return rowreport163Row;
@@ -29218,6 +29083,10 @@ namespace ParkingManagementReport {
                 this.columnช่องทางการชำระเงิน = base.Columns["ช่องทางการชำระเงิน"];
                 this.columnksher_order_no = base.Columns["ksher order no"];
                 this.columnmch_order_no = base.Columns["mch order no"];
+                this.columnrabbit_ID = base.Columns["rabbit ID"];
+                this.columnBeam_ID = base.Columns["Beam ID"];
+                this.columnQR_Code = base.Columns["QR Code"];
+                this.columnSCB_ID = base.Columns["SCB ID"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -29249,6 +29118,14 @@ namespace ParkingManagementReport {
                 base.Columns.Add(this.columnksher_order_no);
                 this.columnmch_order_no = new global::System.Data.DataColumn("mch order no", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnmch_order_no);
+                this.columnrabbit_ID = new global::System.Data.DataColumn("rabbit ID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnrabbit_ID);
+                this.columnBeam_ID = new global::System.Data.DataColumn("Beam ID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnBeam_ID);
+                this.columnQR_Code = new global::System.Data.DataColumn("QR Code", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnQR_Code);
+                this.columnSCB_ID = new global::System.Data.DataColumn("SCB ID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSCB_ID);
                 this.columnรายได้.Caption = "จำนวนเดิม";
                 this.columnเจ้าหน้าที่ขาออก.Caption = "ปรับปรุงโดย";
             }
@@ -29337,2200 +29214,6 @@ namespace ParkingManagementReport {
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
                 attribute2.FixedValue = "report163DataTable";
-                type.Attributes.Add(attribute2);
-                type.Particle = sequence;
-                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
-                if (xs.Contains(dsSchema.TargetNamespace)) {
-                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
-                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
-                    try {
-                        global::System.Xml.Schema.XmlSchema schema = null;
-                        dsSchema.Write(s1);
-                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
-                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
-                            s2.SetLength(0);
-                            schema.Write(s2);
-                            if ((s1.Length == s2.Length)) {
-                                s1.Position = 0;
-                                s2.Position = 0;
-                                for (; ((s1.Position != s1.Length) 
-                                            && (s1.ReadByte() == s2.ReadByte())); ) {
-                                    ;
-                                }
-                                if ((s1.Position == s1.Length)) {
-                                    return type;
-                                }
-                            }
-                        }
-                    }
-                    finally {
-                        if ((s1 != null)) {
-                            s1.Close();
-                        }
-                        if ((s2 != null)) {
-                            s2.Close();
-                        }
-                    }
-                }
-                xs.Add(dsSchema);
-                return type;
-            }
-        }
-        
-        /// <summary>
-        ///Represents the strongly named DataTable class.
-        ///</summary>
-        [global::System.Serializable()]
-        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class report21DataTable : global::System.Data.TypedTableBase<report21Row> {
-            
-            private global::System.Data.DataColumn columnหมายเลขบัตร;
-            
-            private global::System.Data.DataColumn columnเลขทะเบียน;
-            
-            private global::System.Data.DataColumn columnเวลาเข้า;
-            
-            private global::System.Data.DataColumn columnเวลาออก;
-            
-            private global::System.Data.DataColumn _columnชม_ที่จอด;
-            
-            private global::System.Data.DataColumn _columnชม_ปัด;
-            
-            private global::System.Data.DataColumn columnค่าจอดทั้งหมด;
-            
-            private global::System.Data.DataColumn columnส่วนลด;
-            
-            private global::System.Data.DataColumn columnค่าบริการเรียกเก็บ;
-            
-            private global::System.Data.DataColumn columnชื่อส่วนลด;
-            
-            private global::System.Data.DataColumn columnรหัสส่วนลด;
-            
-            private global::System.Data.DataColumn columnชำระเงินเอง;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21DataTable() {
-                this.TableName = "report21";
-                this.BeginInit();
-                this.InitClass();
-                this.EndInit();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal report21DataTable(global::System.Data.DataTable table) {
-                this.TableName = table.TableName;
-                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
-                    this.CaseSensitive = table.CaseSensitive;
-                }
-                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
-                    this.Locale = table.Locale;
-                }
-                if ((table.Namespace != table.DataSet.Namespace)) {
-                    this.Namespace = table.Namespace;
-                }
-                this.Prefix = table.Prefix;
-                this.MinimumCapacity = table.MinimumCapacity;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected report21DataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
-                    base(info, context) {
-                this.InitVars();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn หมายเลขบัตรColumn {
-                get {
-                    return this.columnหมายเลขบัตร;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn เลขทะเบียนColumn {
-                get {
-                    return this.columnเลขทะเบียน;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn เวลาเข้าColumn {
-                get {
-                    return this.columnเวลาเข้า;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn เวลาออกColumn {
-                get {
-                    return this.columnเวลาออก;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _ชม_ที่จอดColumn {
-                get {
-                    return this._columnชม_ที่จอด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _ชม_ปัดColumn {
-                get {
-                    return this._columnชม_ปัด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ค่าจอดทั้งหมดColumn {
-                get {
-                    return this.columnค่าจอดทั้งหมด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ส่วนลดColumn {
-                get {
-                    return this.columnส่วนลด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ค่าบริการเรียกเก็บColumn {
-                get {
-                    return this.columnค่าบริการเรียกเก็บ;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ชื่อส่วนลดColumn {
-                get {
-                    return this.columnชื่อส่วนลด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn รหัสส่วนลดColumn {
-                get {
-                    return this.columnรหัสส่วนลด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ชำระเงินเองColumn {
-                get {
-                    return this.columnชำระเงินเอง;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            [global::System.ComponentModel.Browsable(false)]
-            public int Count {
-                get {
-                    return this.Rows.Count;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21Row this[int index] {
-                get {
-                    return ((report21Row)(this.Rows[index]));
-                }
-            }
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report21RowChangeEventHandler report21RowChanging;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report21RowChangeEventHandler report21RowChanged;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report21RowChangeEventHandler report21RowDeleting;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report21RowChangeEventHandler report21RowDeleted;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Addreport21Row(report21Row row) {
-                this.Rows.Add(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21Row Addreport21Row(string หมายเลขบัตร, string เลขทะเบียน, string เวลาเข้า, string เวลาออก, string _ชม_ที่จอด, string _ชม_ปัด, string ค่าจอดทั้งหมด, string ส่วนลด, string ค่าบริการเรียกเก็บ, string ชื่อส่วนลด, string รหัสส่วนลด, string ชำระเงินเอง) {
-                report21Row rowreport21Row = ((report21Row)(this.NewRow()));
-                object[] columnValuesArray = new object[] {
-                        หมายเลขบัตร,
-                        เลขทะเบียน,
-                        เวลาเข้า,
-                        เวลาออก,
-                        _ชม_ที่จอด,
-                        _ชม_ปัด,
-                        ค่าจอดทั้งหมด,
-                        ส่วนลด,
-                        ค่าบริการเรียกเก็บ,
-                        ชื่อส่วนลด,
-                        รหัสส่วนลด,
-                        ชำระเงินเอง};
-                rowreport21Row.ItemArray = columnValuesArray;
-                this.Rows.Add(rowreport21Row);
-                return rowreport21Row;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public override global::System.Data.DataTable Clone() {
-                report21DataTable cln = ((report21DataTable)(base.Clone()));
-                cln.InitVars();
-                return cln;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataTable CreateInstance() {
-                return new report21DataTable();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal void InitVars() {
-                this.columnหมายเลขบัตร = base.Columns["หมายเลขบัตร"];
-                this.columnเลขทะเบียน = base.Columns["เลขทะเบียน"];
-                this.columnเวลาเข้า = base.Columns["เวลาเข้า"];
-                this.columnเวลาออก = base.Columns["เวลาออก"];
-                this._columnชม_ที่จอด = base.Columns["ชม.ที่จอด"];
-                this._columnชม_ปัด = base.Columns["ชม.ปัด"];
-                this.columnค่าจอดทั้งหมด = base.Columns["ค่าจอดทั้งหมด"];
-                this.columnส่วนลด = base.Columns["ส่วนลด"];
-                this.columnค่าบริการเรียกเก็บ = base.Columns["ค่าบริการเรียกเก็บ"];
-                this.columnชื่อส่วนลด = base.Columns["ชื่อส่วนลด"];
-                this.columnรหัสส่วนลด = base.Columns["รหัสส่วนลด"];
-                this.columnชำระเงินเอง = base.Columns["ชำระเงินเอง"];
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            private void InitClass() {
-                this.columnหมายเลขบัตร = new global::System.Data.DataColumn("หมายเลขบัตร", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnหมายเลขบัตร);
-                this.columnเลขทะเบียน = new global::System.Data.DataColumn("เลขทะเบียน", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnเลขทะเบียน);
-                this.columnเวลาเข้า = new global::System.Data.DataColumn("เวลาเข้า", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnเวลาเข้า);
-                this.columnเวลาออก = new global::System.Data.DataColumn("เวลาออก", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnเวลาออก);
-                this._columnชม_ที่จอด = new global::System.Data.DataColumn("ชม.ที่จอด", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnชม_ที่จอด.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnชม_ที่จอด");
-                this._columnชม_ที่จอด.ExtendedProperties.Add("Generator_UserColumnName", "ชม.ที่จอด");
-                base.Columns.Add(this._columnชม_ที่จอด);
-                this._columnชม_ปัด = new global::System.Data.DataColumn("ชม.ปัด", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnชม_ปัด.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnชม_ปัด");
-                this._columnชม_ปัด.ExtendedProperties.Add("Generator_UserColumnName", "ชม.ปัด");
-                base.Columns.Add(this._columnชม_ปัด);
-                this.columnค่าจอดทั้งหมด = new global::System.Data.DataColumn("ค่าจอดทั้งหมด", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnค่าจอดทั้งหมด);
-                this.columnส่วนลด = new global::System.Data.DataColumn("ส่วนลด", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnส่วนลด);
-                this.columnค่าบริการเรียกเก็บ = new global::System.Data.DataColumn("ค่าบริการเรียกเก็บ", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnค่าบริการเรียกเก็บ);
-                this.columnชื่อส่วนลด = new global::System.Data.DataColumn("ชื่อส่วนลด", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnชื่อส่วนลด);
-                this.columnรหัสส่วนลด = new global::System.Data.DataColumn("รหัสส่วนลด", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnรหัสส่วนลด);
-                this.columnชำระเงินเอง = new global::System.Data.DataColumn("ชำระเงินเอง", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnชำระเงินเอง);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21Row Newreport21Row() {
-                return ((report21Row)(this.NewRow()));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new report21Row(builder);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Type GetRowType() {
-                return typeof(report21Row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanged(e);
-                if ((this.report21RowChanged != null)) {
-                    this.report21RowChanged(this, new report21RowChangeEvent(((report21Row)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanging(e);
-                if ((this.report21RowChanging != null)) {
-                    this.report21RowChanging(this, new report21RowChangeEvent(((report21Row)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleted(e);
-                if ((this.report21RowDeleted != null)) {
-                    this.report21RowDeleted(this, new report21RowChangeEvent(((report21Row)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleting(e);
-                if ((this.report21RowDeleting != null)) {
-                    this.report21RowDeleting(this, new report21RowChangeEvent(((report21Row)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Removereport21Row(report21Row row) {
-                this.Rows.Remove(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
-                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                dbForReport ds = new dbForReport();
-                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
-                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
-                any1.MinOccurs = new decimal(0);
-                any1.MaxOccurs = decimal.MaxValue;
-                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any1);
-                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
-                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
-                any2.MinOccurs = new decimal(1);
-                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any2);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute1.Name = "namespace";
-                attribute1.FixedValue = ds.Namespace;
-                type.Attributes.Add(attribute1);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "report21DataTable";
-                type.Attributes.Add(attribute2);
-                type.Particle = sequence;
-                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
-                if (xs.Contains(dsSchema.TargetNamespace)) {
-                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
-                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
-                    try {
-                        global::System.Xml.Schema.XmlSchema schema = null;
-                        dsSchema.Write(s1);
-                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
-                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
-                            s2.SetLength(0);
-                            schema.Write(s2);
-                            if ((s1.Length == s2.Length)) {
-                                s1.Position = 0;
-                                s2.Position = 0;
-                                for (; ((s1.Position != s1.Length) 
-                                            && (s1.ReadByte() == s2.ReadByte())); ) {
-                                    ;
-                                }
-                                if ((s1.Position == s1.Length)) {
-                                    return type;
-                                }
-                            }
-                        }
-                    }
-                    finally {
-                        if ((s1 != null)) {
-                            s1.Close();
-                        }
-                        if ((s2 != null)) {
-                            s2.Close();
-                        }
-                    }
-                }
-                xs.Add(dsSchema);
-                return type;
-            }
-        }
-        
-        /// <summary>
-        ///Represents the strongly named DataTable class.
-        ///</summary>
-        [global::System.Serializable()]
-        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class report22DataTable : global::System.Data.TypedTableBase<report22Row> {
-            
-            private global::System.Data.DataColumn columnวันที่;
-            
-            private global::System.Data.DataColumn columnจำนวนเงิน;
-            
-            private global::System.Data.DataColumn columnจำนวนบัตร;
-            
-            private global::System.Data.DataColumn _columnจำนวนบัตร_เก็บเงินได้_;
-            
-            private global::System.Data.DataColumn columnชื่อตราประทับ;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report22DataTable() {
-                this.TableName = "report22";
-                this.BeginInit();
-                this.InitClass();
-                this.EndInit();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal report22DataTable(global::System.Data.DataTable table) {
-                this.TableName = table.TableName;
-                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
-                    this.CaseSensitive = table.CaseSensitive;
-                }
-                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
-                    this.Locale = table.Locale;
-                }
-                if ((table.Namespace != table.DataSet.Namespace)) {
-                    this.Namespace = table.Namespace;
-                }
-                this.Prefix = table.Prefix;
-                this.MinimumCapacity = table.MinimumCapacity;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected report22DataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
-                    base(info, context) {
-                this.InitVars();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn วันที่Column {
-                get {
-                    return this.columnวันที่;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn จำนวนเงินColumn {
-                get {
-                    return this.columnจำนวนเงิน;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn จำนวนบัตรColumn {
-                get {
-                    return this.columnจำนวนบัตร;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _จำนวนบัตร_เก็บเงินได้_Column {
-                get {
-                    return this._columnจำนวนบัตร_เก็บเงินได้_;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ชื่อตราประทับColumn {
-                get {
-                    return this.columnชื่อตราประทับ;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            [global::System.ComponentModel.Browsable(false)]
-            public int Count {
-                get {
-                    return this.Rows.Count;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report22Row this[int index] {
-                get {
-                    return ((report22Row)(this.Rows[index]));
-                }
-            }
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report22RowChangeEventHandler report22RowChanging;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report22RowChangeEventHandler report22RowChanged;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report22RowChangeEventHandler report22RowDeleting;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report22RowChangeEventHandler report22RowDeleted;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Addreport22Row(report22Row row) {
-                this.Rows.Add(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report22Row Addreport22Row(string วันที่, string จำนวนเงิน, string จำนวนบัตร, string _จำนวนบัตร_เก็บเงินได้_, string ชื่อตราประทับ) {
-                report22Row rowreport22Row = ((report22Row)(this.NewRow()));
-                object[] columnValuesArray = new object[] {
-                        วันที่,
-                        จำนวนเงิน,
-                        จำนวนบัตร,
-                        _จำนวนบัตร_เก็บเงินได้_,
-                        ชื่อตราประทับ};
-                rowreport22Row.ItemArray = columnValuesArray;
-                this.Rows.Add(rowreport22Row);
-                return rowreport22Row;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public override global::System.Data.DataTable Clone() {
-                report22DataTable cln = ((report22DataTable)(base.Clone()));
-                cln.InitVars();
-                return cln;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataTable CreateInstance() {
-                return new report22DataTable();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal void InitVars() {
-                this.columnวันที่ = base.Columns["วันที่"];
-                this.columnจำนวนเงิน = base.Columns["จำนวนเงิน"];
-                this.columnจำนวนบัตร = base.Columns["จำนวนบัตร"];
-                this._columnจำนวนบัตร_เก็บเงินได้_ = base.Columns["จำนวนบัตร(เก็บเงินได้)"];
-                this.columnชื่อตราประทับ = base.Columns["ชื่อตราประทับ"];
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            private void InitClass() {
-                this.columnวันที่ = new global::System.Data.DataColumn("วันที่", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnวันที่);
-                this.columnจำนวนเงิน = new global::System.Data.DataColumn("จำนวนเงิน", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnจำนวนเงิน);
-                this.columnจำนวนบัตร = new global::System.Data.DataColumn("จำนวนบัตร", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnจำนวนบัตร);
-                this._columnจำนวนบัตร_เก็บเงินได้_ = new global::System.Data.DataColumn("จำนวนบัตร(เก็บเงินได้)", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnจำนวนบัตร_เก็บเงินได้_.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnจำนวนบัตร_เก็บเงินได้_");
-                this._columnจำนวนบัตร_เก็บเงินได้_.ExtendedProperties.Add("Generator_UserColumnName", "จำนวนบัตร(เก็บเงินได้)");
-                base.Columns.Add(this._columnจำนวนบัตร_เก็บเงินได้_);
-                this.columnชื่อตราประทับ = new global::System.Data.DataColumn("ชื่อตราประทับ", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnชื่อตราประทับ);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report22Row Newreport22Row() {
-                return ((report22Row)(this.NewRow()));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new report22Row(builder);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Type GetRowType() {
-                return typeof(report22Row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanged(e);
-                if ((this.report22RowChanged != null)) {
-                    this.report22RowChanged(this, new report22RowChangeEvent(((report22Row)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanging(e);
-                if ((this.report22RowChanging != null)) {
-                    this.report22RowChanging(this, new report22RowChangeEvent(((report22Row)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleted(e);
-                if ((this.report22RowDeleted != null)) {
-                    this.report22RowDeleted(this, new report22RowChangeEvent(((report22Row)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleting(e);
-                if ((this.report22RowDeleting != null)) {
-                    this.report22RowDeleting(this, new report22RowChangeEvent(((report22Row)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Removereport22Row(report22Row row) {
-                this.Rows.Remove(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
-                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                dbForReport ds = new dbForReport();
-                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
-                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
-                any1.MinOccurs = new decimal(0);
-                any1.MaxOccurs = decimal.MaxValue;
-                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any1);
-                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
-                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
-                any2.MinOccurs = new decimal(1);
-                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any2);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute1.Name = "namespace";
-                attribute1.FixedValue = ds.Namespace;
-                type.Attributes.Add(attribute1);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "report22DataTable";
-                type.Attributes.Add(attribute2);
-                type.Particle = sequence;
-                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
-                if (xs.Contains(dsSchema.TargetNamespace)) {
-                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
-                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
-                    try {
-                        global::System.Xml.Schema.XmlSchema schema = null;
-                        dsSchema.Write(s1);
-                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
-                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
-                            s2.SetLength(0);
-                            schema.Write(s2);
-                            if ((s1.Length == s2.Length)) {
-                                s1.Position = 0;
-                                s2.Position = 0;
-                                for (; ((s1.Position != s1.Length) 
-                                            && (s1.ReadByte() == s2.ReadByte())); ) {
-                                    ;
-                                }
-                                if ((s1.Position == s1.Length)) {
-                                    return type;
-                                }
-                            }
-                        }
-                    }
-                    finally {
-                        if ((s1 != null)) {
-                            s1.Close();
-                        }
-                        if ((s2 != null)) {
-                            s2.Close();
-                        }
-                    }
-                }
-                xs.Add(dsSchema);
-                return type;
-            }
-        }
-        
-        /// <summary>
-        ///Represents the strongly named DataTable class.
-        ///</summary>
-        [global::System.Serializable()]
-        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class tnpt_vehicle_earning_summaryDataTable : global::System.Data.TypedTableBase<tnpt_vehicle_earning_summaryRow> {
-            
-            private global::System.Data.DataColumn columnวันที่;
-            
-            private global::System.Data.DataColumn columnชนิดรถ;
-            
-            private global::System.Data.DataColumn _columnจำนวนรถเข้าออก_รถสมาชิก;
-            
-            private global::System.Data.DataColumn _columnจำนวนรถเข้าออก_รถผู้มาติดต่อ;
-            
-            private global::System.Data.DataColumn _columnจำนวนรถเข้าออก_จำนวนรวม;
-            
-            private global::System.Data.DataColumn _columnจำนวนรถที่เก็บเงินได้_รถสมาชิก;
-            
-            private global::System.Data.DataColumn _columnจำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อ;
-            
-            private global::System.Data.DataColumn _columnจำนวนรถที่เก็บเงินได้_จำนวนเงิน;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_vehicle_earning_summaryDataTable() {
-                this.TableName = "tnpt_vehicle_earning_summary";
-                this.BeginInit();
-                this.InitClass();
-                this.EndInit();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal tnpt_vehicle_earning_summaryDataTable(global::System.Data.DataTable table) {
-                this.TableName = table.TableName;
-                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
-                    this.CaseSensitive = table.CaseSensitive;
-                }
-                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
-                    this.Locale = table.Locale;
-                }
-                if ((table.Namespace != table.DataSet.Namespace)) {
-                    this.Namespace = table.Namespace;
-                }
-                this.Prefix = table.Prefix;
-                this.MinimumCapacity = table.MinimumCapacity;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected tnpt_vehicle_earning_summaryDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
-                    base(info, context) {
-                this.InitVars();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn วันที่Column {
-                get {
-                    return this.columnวันที่;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ชนิดรถColumn {
-                get {
-                    return this.columnชนิดรถ;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _จำนวนรถเข้าออก_รถสมาชิกColumn {
-                get {
-                    return this._columnจำนวนรถเข้าออก_รถสมาชิก;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _จำนวนรถเข้าออก_รถผู้มาติดต่อColumn {
-                get {
-                    return this._columnจำนวนรถเข้าออก_รถผู้มาติดต่อ;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _จำนวนรถเข้าออก_จำนวนรวมColumn {
-                get {
-                    return this._columnจำนวนรถเข้าออก_จำนวนรวม;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _จำนวนรถที่เก็บเงินได้_รถสมาชิกColumn {
-                get {
-                    return this._columnจำนวนรถที่เก็บเงินได้_รถสมาชิก;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _จำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อColumn {
-                get {
-                    return this._columnจำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อ;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _จำนวนรถที่เก็บเงินได้_จำนวนเงินColumn {
-                get {
-                    return this._columnจำนวนรถที่เก็บเงินได้_จำนวนเงิน;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            [global::System.ComponentModel.Browsable(false)]
-            public int Count {
-                get {
-                    return this.Rows.Count;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_vehicle_earning_summaryRow this[int index] {
-                get {
-                    return ((tnpt_vehicle_earning_summaryRow)(this.Rows[index]));
-                }
-            }
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_vehicle_earning_summaryRowChangeEventHandler tnpt_vehicle_earning_summaryRowChanging;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_vehicle_earning_summaryRowChangeEventHandler tnpt_vehicle_earning_summaryRowChanged;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_vehicle_earning_summaryRowChangeEventHandler tnpt_vehicle_earning_summaryRowDeleting;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_vehicle_earning_summaryRowChangeEventHandler tnpt_vehicle_earning_summaryRowDeleted;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Addtnpt_vehicle_earning_summaryRow(tnpt_vehicle_earning_summaryRow row) {
-                this.Rows.Add(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_vehicle_earning_summaryRow Addtnpt_vehicle_earning_summaryRow(string วันที่, string ชนิดรถ, string _จำนวนรถเข้าออก_รถสมาชิก, string _จำนวนรถเข้าออก_รถผู้มาติดต่อ, string _จำนวนรถเข้าออก_จำนวนรวม, string _จำนวนรถที่เก็บเงินได้_รถสมาชิก, string _จำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อ, string _จำนวนรถที่เก็บเงินได้_จำนวนเงิน) {
-                tnpt_vehicle_earning_summaryRow rowtnpt_vehicle_earning_summaryRow = ((tnpt_vehicle_earning_summaryRow)(this.NewRow()));
-                object[] columnValuesArray = new object[] {
-                        วันที่,
-                        ชนิดรถ,
-                        _จำนวนรถเข้าออก_รถสมาชิก,
-                        _จำนวนรถเข้าออก_รถผู้มาติดต่อ,
-                        _จำนวนรถเข้าออก_จำนวนรวม,
-                        _จำนวนรถที่เก็บเงินได้_รถสมาชิก,
-                        _จำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อ,
-                        _จำนวนรถที่เก็บเงินได้_จำนวนเงิน};
-                rowtnpt_vehicle_earning_summaryRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowtnpt_vehicle_earning_summaryRow);
-                return rowtnpt_vehicle_earning_summaryRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public override global::System.Data.DataTable Clone() {
-                tnpt_vehicle_earning_summaryDataTable cln = ((tnpt_vehicle_earning_summaryDataTable)(base.Clone()));
-                cln.InitVars();
-                return cln;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataTable CreateInstance() {
-                return new tnpt_vehicle_earning_summaryDataTable();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal void InitVars() {
-                this.columnวันที่ = base.Columns["วันที่"];
-                this.columnชนิดรถ = base.Columns["ชนิดรถ"];
-                this._columnจำนวนรถเข้าออก_รถสมาชิก = base.Columns["จำนวนรถเข้าออก-รถสมาชิก"];
-                this._columnจำนวนรถเข้าออก_รถผู้มาติดต่อ = base.Columns["จำนวนรถเข้าออก-รถผู้มาติดต่อ"];
-                this._columnจำนวนรถเข้าออก_จำนวนรวม = base.Columns["จำนวนรถเข้าออก-จำนวนรวม"];
-                this._columnจำนวนรถที่เก็บเงินได้_รถสมาชิก = base.Columns["จำนวนรถที่เก็บเงินได้-รถสมาชิก"];
-                this._columnจำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อ = base.Columns["จำนวนรถที่เก็บเงินได้-รถผู้มาติดต่อ"];
-                this._columnจำนวนรถที่เก็บเงินได้_จำนวนเงิน = base.Columns["จำนวนรถที่เก็บเงินได้-จำนวนเงิน"];
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            private void InitClass() {
-                this.columnวันที่ = new global::System.Data.DataColumn("วันที่", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnวันที่);
-                this.columnชนิดรถ = new global::System.Data.DataColumn("ชนิดรถ", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnชนิดรถ);
-                this._columnจำนวนรถเข้าออก_รถสมาชิก = new global::System.Data.DataColumn("จำนวนรถเข้าออก-รถสมาชิก", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnจำนวนรถเข้าออก_รถสมาชิก.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnจำนวนรถเข้าออก_รถสมาชิก");
-                this._columnจำนวนรถเข้าออก_รถสมาชิก.ExtendedProperties.Add("Generator_UserColumnName", "จำนวนรถเข้าออก-รถสมาชิก");
-                base.Columns.Add(this._columnจำนวนรถเข้าออก_รถสมาชิก);
-                this._columnจำนวนรถเข้าออก_รถผู้มาติดต่อ = new global::System.Data.DataColumn("จำนวนรถเข้าออก-รถผู้มาติดต่อ", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnจำนวนรถเข้าออก_รถผู้มาติดต่อ.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnจำนวนรถเข้าออก_รถผู้มาติดต่อ");
-                this._columnจำนวนรถเข้าออก_รถผู้มาติดต่อ.ExtendedProperties.Add("Generator_UserColumnName", "จำนวนรถเข้าออก-รถผู้มาติดต่อ");
-                base.Columns.Add(this._columnจำนวนรถเข้าออก_รถผู้มาติดต่อ);
-                this._columnจำนวนรถเข้าออก_จำนวนรวม = new global::System.Data.DataColumn("จำนวนรถเข้าออก-จำนวนรวม", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnจำนวนรถเข้าออก_จำนวนรวม.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnจำนวนรถเข้าออก_จำนวนรวม");
-                this._columnจำนวนรถเข้าออก_จำนวนรวม.ExtendedProperties.Add("Generator_UserColumnName", "จำนวนรถเข้าออก-จำนวนรวม");
-                base.Columns.Add(this._columnจำนวนรถเข้าออก_จำนวนรวม);
-                this._columnจำนวนรถที่เก็บเงินได้_รถสมาชิก = new global::System.Data.DataColumn("จำนวนรถที่เก็บเงินได้-รถสมาชิก", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnจำนวนรถที่เก็บเงินได้_รถสมาชิก.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnจำนวนรถที่เก็บเงินได้_รถสมาชิก");
-                this._columnจำนวนรถที่เก็บเงินได้_รถสมาชิก.ExtendedProperties.Add("Generator_UserColumnName", "จำนวนรถที่เก็บเงินได้-รถสมาชิก");
-                base.Columns.Add(this._columnจำนวนรถที่เก็บเงินได้_รถสมาชิก);
-                this._columnจำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อ = new global::System.Data.DataColumn("จำนวนรถที่เก็บเงินได้-รถผู้มาติดต่อ", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnจำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อ.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnจำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อ");
-                this._columnจำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อ.ExtendedProperties.Add("Generator_UserColumnName", "จำนวนรถที่เก็บเงินได้-รถผู้มาติดต่อ");
-                base.Columns.Add(this._columnจำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อ);
-                this._columnจำนวนรถที่เก็บเงินได้_จำนวนเงิน = new global::System.Data.DataColumn("จำนวนรถที่เก็บเงินได้-จำนวนเงิน", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnจำนวนรถที่เก็บเงินได้_จำนวนเงิน.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnจำนวนรถที่เก็บเงินได้_จำนวนเงิน");
-                this._columnจำนวนรถที่เก็บเงินได้_จำนวนเงิน.ExtendedProperties.Add("Generator_UserColumnName", "จำนวนรถที่เก็บเงินได้-จำนวนเงิน");
-                base.Columns.Add(this._columnจำนวนรถที่เก็บเงินได้_จำนวนเงิน);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_vehicle_earning_summaryRow Newtnpt_vehicle_earning_summaryRow() {
-                return ((tnpt_vehicle_earning_summaryRow)(this.NewRow()));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new tnpt_vehicle_earning_summaryRow(builder);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Type GetRowType() {
-                return typeof(tnpt_vehicle_earning_summaryRow);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanged(e);
-                if ((this.tnpt_vehicle_earning_summaryRowChanged != null)) {
-                    this.tnpt_vehicle_earning_summaryRowChanged(this, new tnpt_vehicle_earning_summaryRowChangeEvent(((tnpt_vehicle_earning_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanging(e);
-                if ((this.tnpt_vehicle_earning_summaryRowChanging != null)) {
-                    this.tnpt_vehicle_earning_summaryRowChanging(this, new tnpt_vehicle_earning_summaryRowChangeEvent(((tnpt_vehicle_earning_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleted(e);
-                if ((this.tnpt_vehicle_earning_summaryRowDeleted != null)) {
-                    this.tnpt_vehicle_earning_summaryRowDeleted(this, new tnpt_vehicle_earning_summaryRowChangeEvent(((tnpt_vehicle_earning_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleting(e);
-                if ((this.tnpt_vehicle_earning_summaryRowDeleting != null)) {
-                    this.tnpt_vehicle_earning_summaryRowDeleting(this, new tnpt_vehicle_earning_summaryRowChangeEvent(((tnpt_vehicle_earning_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Removetnpt_vehicle_earning_summaryRow(tnpt_vehicle_earning_summaryRow row) {
-                this.Rows.Remove(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
-                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                dbForReport ds = new dbForReport();
-                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
-                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
-                any1.MinOccurs = new decimal(0);
-                any1.MaxOccurs = decimal.MaxValue;
-                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any1);
-                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
-                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
-                any2.MinOccurs = new decimal(1);
-                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any2);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute1.Name = "namespace";
-                attribute1.FixedValue = ds.Namespace;
-                type.Attributes.Add(attribute1);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "tnpt_vehicle_earning_summaryDataTable";
-                type.Attributes.Add(attribute2);
-                type.Particle = sequence;
-                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
-                if (xs.Contains(dsSchema.TargetNamespace)) {
-                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
-                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
-                    try {
-                        global::System.Xml.Schema.XmlSchema schema = null;
-                        dsSchema.Write(s1);
-                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
-                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
-                            s2.SetLength(0);
-                            schema.Write(s2);
-                            if ((s1.Length == s2.Length)) {
-                                s1.Position = 0;
-                                s2.Position = 0;
-                                for (; ((s1.Position != s1.Length) 
-                                            && (s1.ReadByte() == s2.ReadByte())); ) {
-                                    ;
-                                }
-                                if ((s1.Position == s1.Length)) {
-                                    return type;
-                                }
-                            }
-                        }
-                    }
-                    finally {
-                        if ((s1 != null)) {
-                            s1.Close();
-                        }
-                        if ((s2 != null)) {
-                            s2.Close();
-                        }
-                    }
-                }
-                xs.Add(dsSchema);
-                return type;
-            }
-        }
-        
-        /// <summary>
-        ///Represents the strongly named DataTable class.
-        ///</summary>
-        [global::System.Serializable()]
-        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class tnpt_card_sorted_company_summaryDataTable : global::System.Data.TypedTableBase<tnpt_card_sorted_company_summaryRow> {
-            
-            private global::System.Data.DataColumn columnตราประทับ;
-            
-            private global::System.Data.DataColumn columnบริษัท;
-            
-            private global::System.Data.DataColumn columnสิทธิได้รับบัตรฟรี;
-            
-            private global::System.Data.DataColumn _columnจำนวนบัตร_ฟรีค่าเช่า_;
-            
-            private global::System.Data.DataColumn _columnจำนวนบัตร_เสียค่าเช่า_;
-            
-            private global::System.Data.DataColumn columnรวมค่าเช่า;
-            
-            private global::System.Data.DataColumn columnจำนวนบัตรรวม;
-            
-            private global::System.Data.DataColumn columnหมายเหตุ;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_card_sorted_company_summaryDataTable() {
-                this.TableName = "tnpt_card_sorted_company_summary";
-                this.BeginInit();
-                this.InitClass();
-                this.EndInit();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal tnpt_card_sorted_company_summaryDataTable(global::System.Data.DataTable table) {
-                this.TableName = table.TableName;
-                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
-                    this.CaseSensitive = table.CaseSensitive;
-                }
-                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
-                    this.Locale = table.Locale;
-                }
-                if ((table.Namespace != table.DataSet.Namespace)) {
-                    this.Namespace = table.Namespace;
-                }
-                this.Prefix = table.Prefix;
-                this.MinimumCapacity = table.MinimumCapacity;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected tnpt_card_sorted_company_summaryDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
-                    base(info, context) {
-                this.InitVars();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ตราประทับColumn {
-                get {
-                    return this.columnตราประทับ;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn บริษัทColumn {
-                get {
-                    return this.columnบริษัท;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn สิทธิได้รับบัตรฟรีColumn {
-                get {
-                    return this.columnสิทธิได้รับบัตรฟรี;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _จำนวนบัตร_ฟรีค่าเช่า_Column {
-                get {
-                    return this._columnจำนวนบัตร_ฟรีค่าเช่า_;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _จำนวนบัตร_เสียค่าเช่า_Column {
-                get {
-                    return this._columnจำนวนบัตร_เสียค่าเช่า_;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn รวมค่าเช่าColumn {
-                get {
-                    return this.columnรวมค่าเช่า;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn จำนวนบัตรรวมColumn {
-                get {
-                    return this.columnจำนวนบัตรรวม;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn หมายเหตุColumn {
-                get {
-                    return this.columnหมายเหตุ;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            [global::System.ComponentModel.Browsable(false)]
-            public int Count {
-                get {
-                    return this.Rows.Count;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_card_sorted_company_summaryRow this[int index] {
-                get {
-                    return ((tnpt_card_sorted_company_summaryRow)(this.Rows[index]));
-                }
-            }
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_card_sorted_company_summaryRowChangeEventHandler tnpt_card_sorted_company_summaryRowChanging;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_card_sorted_company_summaryRowChangeEventHandler tnpt_card_sorted_company_summaryRowChanged;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_card_sorted_company_summaryRowChangeEventHandler tnpt_card_sorted_company_summaryRowDeleting;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_card_sorted_company_summaryRowChangeEventHandler tnpt_card_sorted_company_summaryRowDeleted;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Addtnpt_card_sorted_company_summaryRow(tnpt_card_sorted_company_summaryRow row) {
-                this.Rows.Add(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_card_sorted_company_summaryRow Addtnpt_card_sorted_company_summaryRow(string ตราประทับ, string บริษัท, string สิทธิได้รับบัตรฟรี, string _จำนวนบัตร_ฟรีค่าเช่า_, string _จำนวนบัตร_เสียค่าเช่า_, string รวมค่าเช่า, string จำนวนบัตรรวม, string หมายเหตุ) {
-                tnpt_card_sorted_company_summaryRow rowtnpt_card_sorted_company_summaryRow = ((tnpt_card_sorted_company_summaryRow)(this.NewRow()));
-                object[] columnValuesArray = new object[] {
-                        ตราประทับ,
-                        บริษัท,
-                        สิทธิได้รับบัตรฟรี,
-                        _จำนวนบัตร_ฟรีค่าเช่า_,
-                        _จำนวนบัตร_เสียค่าเช่า_,
-                        รวมค่าเช่า,
-                        จำนวนบัตรรวม,
-                        หมายเหตุ};
-                rowtnpt_card_sorted_company_summaryRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowtnpt_card_sorted_company_summaryRow);
-                return rowtnpt_card_sorted_company_summaryRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public override global::System.Data.DataTable Clone() {
-                tnpt_card_sorted_company_summaryDataTable cln = ((tnpt_card_sorted_company_summaryDataTable)(base.Clone()));
-                cln.InitVars();
-                return cln;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataTable CreateInstance() {
-                return new tnpt_card_sorted_company_summaryDataTable();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal void InitVars() {
-                this.columnตราประทับ = base.Columns["ตราประทับ"];
-                this.columnบริษัท = base.Columns["บริษัท"];
-                this.columnสิทธิได้รับบัตรฟรี = base.Columns["สิทธิได้รับบัตรฟรี"];
-                this._columnจำนวนบัตร_ฟรีค่าเช่า_ = base.Columns["จำนวนบัตร(ฟรีค่าเช่า)"];
-                this._columnจำนวนบัตร_เสียค่าเช่า_ = base.Columns["จำนวนบัตร(เสียค่าเช่า)"];
-                this.columnรวมค่าเช่า = base.Columns["รวมค่าเช่า"];
-                this.columnจำนวนบัตรรวม = base.Columns["จำนวนบัตรรวม"];
-                this.columnหมายเหตุ = base.Columns["หมายเหตุ"];
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            private void InitClass() {
-                this.columnตราประทับ = new global::System.Data.DataColumn("ตราประทับ", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnตราประทับ);
-                this.columnบริษัท = new global::System.Data.DataColumn("บริษัท", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnบริษัท);
-                this.columnสิทธิได้รับบัตรฟรี = new global::System.Data.DataColumn("สิทธิได้รับบัตรฟรี", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnสิทธิได้รับบัตรฟรี);
-                this._columnจำนวนบัตร_ฟรีค่าเช่า_ = new global::System.Data.DataColumn("จำนวนบัตร(ฟรีค่าเช่า)", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnจำนวนบัตร_ฟรีค่าเช่า_.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnจำนวนบัตร_ฟรีค่าเช่า_");
-                this._columnจำนวนบัตร_ฟรีค่าเช่า_.ExtendedProperties.Add("Generator_UserColumnName", "จำนวนบัตร(ฟรีค่าเช่า)");
-                base.Columns.Add(this._columnจำนวนบัตร_ฟรีค่าเช่า_);
-                this._columnจำนวนบัตร_เสียค่าเช่า_ = new global::System.Data.DataColumn("จำนวนบัตร(เสียค่าเช่า)", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnจำนวนบัตร_เสียค่าเช่า_.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnจำนวนบัตร_เสียค่าเช่า_");
-                this._columnจำนวนบัตร_เสียค่าเช่า_.ExtendedProperties.Add("Generator_UserColumnName", "จำนวนบัตร(เสียค่าเช่า)");
-                base.Columns.Add(this._columnจำนวนบัตร_เสียค่าเช่า_);
-                this.columnรวมค่าเช่า = new global::System.Data.DataColumn("รวมค่าเช่า", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnรวมค่าเช่า);
-                this.columnจำนวนบัตรรวม = new global::System.Data.DataColumn("จำนวนบัตรรวม", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnจำนวนบัตรรวม);
-                this.columnหมายเหตุ = new global::System.Data.DataColumn("หมายเหตุ", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnหมายเหตุ);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_card_sorted_company_summaryRow Newtnpt_card_sorted_company_summaryRow() {
-                return ((tnpt_card_sorted_company_summaryRow)(this.NewRow()));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new tnpt_card_sorted_company_summaryRow(builder);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Type GetRowType() {
-                return typeof(tnpt_card_sorted_company_summaryRow);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanged(e);
-                if ((this.tnpt_card_sorted_company_summaryRowChanged != null)) {
-                    this.tnpt_card_sorted_company_summaryRowChanged(this, new tnpt_card_sorted_company_summaryRowChangeEvent(((tnpt_card_sorted_company_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanging(e);
-                if ((this.tnpt_card_sorted_company_summaryRowChanging != null)) {
-                    this.tnpt_card_sorted_company_summaryRowChanging(this, new tnpt_card_sorted_company_summaryRowChangeEvent(((tnpt_card_sorted_company_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleted(e);
-                if ((this.tnpt_card_sorted_company_summaryRowDeleted != null)) {
-                    this.tnpt_card_sorted_company_summaryRowDeleted(this, new tnpt_card_sorted_company_summaryRowChangeEvent(((tnpt_card_sorted_company_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleting(e);
-                if ((this.tnpt_card_sorted_company_summaryRowDeleting != null)) {
-                    this.tnpt_card_sorted_company_summaryRowDeleting(this, new tnpt_card_sorted_company_summaryRowChangeEvent(((tnpt_card_sorted_company_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Removetnpt_card_sorted_company_summaryRow(tnpt_card_sorted_company_summaryRow row) {
-                this.Rows.Remove(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
-                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                dbForReport ds = new dbForReport();
-                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
-                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
-                any1.MinOccurs = new decimal(0);
-                any1.MaxOccurs = decimal.MaxValue;
-                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any1);
-                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
-                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
-                any2.MinOccurs = new decimal(1);
-                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any2);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute1.Name = "namespace";
-                attribute1.FixedValue = ds.Namespace;
-                type.Attributes.Add(attribute1);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "tnpt_card_sorted_company_summaryDataTable";
-                type.Attributes.Add(attribute2);
-                type.Particle = sequence;
-                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
-                if (xs.Contains(dsSchema.TargetNamespace)) {
-                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
-                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
-                    try {
-                        global::System.Xml.Schema.XmlSchema schema = null;
-                        dsSchema.Write(s1);
-                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
-                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
-                            s2.SetLength(0);
-                            schema.Write(s2);
-                            if ((s1.Length == s2.Length)) {
-                                s1.Position = 0;
-                                s2.Position = 0;
-                                for (; ((s1.Position != s1.Length) 
-                                            && (s1.ReadByte() == s2.ReadByte())); ) {
-                                    ;
-                                }
-                                if ((s1.Position == s1.Length)) {
-                                    return type;
-                                }
-                            }
-                        }
-                    }
-                    finally {
-                        if ((s1 != null)) {
-                            s1.Close();
-                        }
-                        if ((s2 != null)) {
-                            s2.Close();
-                        }
-                    }
-                }
-                xs.Add(dsSchema);
-                return type;
-            }
-        }
-        
-        /// <summary>
-        ///Represents the strongly named DataTable class.
-        ///</summary>
-        [global::System.Serializable()]
-        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class tnpt_company_billing_summaryDataTable : global::System.Data.TypedTableBase<tnpt_company_billing_summaryRow> {
-            
-            private global::System.Data.DataColumn columnชื่อบริษัท;
-            
-            private global::System.Data.DataColumn columnประจำเดือน;
-            
-            private global::System.Data.DataColumn columnบิล;
-            
-            private global::System.Data.DataColumn columnรายละเอียด;
-            
-            private global::System.Data.DataColumn columnยอดรวมก่อน_VAT;
-            
-            private global::System.Data.DataColumn columnภาษี;
-            
-            private global::System.Data.DataColumn columnยอดรวม;
-            
-            private global::System.Data.DataColumn columnวันที่เริ่มต้น;
-            
-            private global::System.Data.DataColumn columnวันที่สิ้นสุด;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_company_billing_summaryDataTable() {
-                this.TableName = "tnpt_company_billing_summary";
-                this.BeginInit();
-                this.InitClass();
-                this.EndInit();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal tnpt_company_billing_summaryDataTable(global::System.Data.DataTable table) {
-                this.TableName = table.TableName;
-                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
-                    this.CaseSensitive = table.CaseSensitive;
-                }
-                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
-                    this.Locale = table.Locale;
-                }
-                if ((table.Namespace != table.DataSet.Namespace)) {
-                    this.Namespace = table.Namespace;
-                }
-                this.Prefix = table.Prefix;
-                this.MinimumCapacity = table.MinimumCapacity;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected tnpt_company_billing_summaryDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
-                    base(info, context) {
-                this.InitVars();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ชื่อบริษัทColumn {
-                get {
-                    return this.columnชื่อบริษัท;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ประจำเดือนColumn {
-                get {
-                    return this.columnประจำเดือน;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn บิลColumn {
-                get {
-                    return this.columnบิล;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn รายละเอียดColumn {
-                get {
-                    return this.columnรายละเอียด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ยอดรวมก่อน_VATColumn {
-                get {
-                    return this.columnยอดรวมก่อน_VAT;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ภาษีColumn {
-                get {
-                    return this.columnภาษี;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ยอดรวมColumn {
-                get {
-                    return this.columnยอดรวม;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn วันที่เริ่มต้นColumn {
-                get {
-                    return this.columnวันที่เริ่มต้น;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn วันที่สิ้นสุดColumn {
-                get {
-                    return this.columnวันที่สิ้นสุด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            [global::System.ComponentModel.Browsable(false)]
-            public int Count {
-                get {
-                    return this.Rows.Count;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_company_billing_summaryRow this[int index] {
-                get {
-                    return ((tnpt_company_billing_summaryRow)(this.Rows[index]));
-                }
-            }
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_company_billing_summaryRowChangeEventHandler tnpt_company_billing_summaryRowChanging;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_company_billing_summaryRowChangeEventHandler tnpt_company_billing_summaryRowChanged;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_company_billing_summaryRowChangeEventHandler tnpt_company_billing_summaryRowDeleting;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event tnpt_company_billing_summaryRowChangeEventHandler tnpt_company_billing_summaryRowDeleted;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Addtnpt_company_billing_summaryRow(tnpt_company_billing_summaryRow row) {
-                this.Rows.Add(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_company_billing_summaryRow Addtnpt_company_billing_summaryRow(string ชื่อบริษัท, string ประจำเดือน, string บิล, string รายละเอียด, string ยอดรวมก่อน_VAT, string ภาษี, string ยอดรวม, string วันที่เริ่มต้น, string วันที่สิ้นสุด) {
-                tnpt_company_billing_summaryRow rowtnpt_company_billing_summaryRow = ((tnpt_company_billing_summaryRow)(this.NewRow()));
-                object[] columnValuesArray = new object[] {
-                        ชื่อบริษัท,
-                        ประจำเดือน,
-                        บิล,
-                        รายละเอียด,
-                        ยอดรวมก่อน_VAT,
-                        ภาษี,
-                        ยอดรวม,
-                        วันที่เริ่มต้น,
-                        วันที่สิ้นสุด};
-                rowtnpt_company_billing_summaryRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowtnpt_company_billing_summaryRow);
-                return rowtnpt_company_billing_summaryRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public override global::System.Data.DataTable Clone() {
-                tnpt_company_billing_summaryDataTable cln = ((tnpt_company_billing_summaryDataTable)(base.Clone()));
-                cln.InitVars();
-                return cln;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataTable CreateInstance() {
-                return new tnpt_company_billing_summaryDataTable();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal void InitVars() {
-                this.columnชื่อบริษัท = base.Columns["ชื่อบริษัท"];
-                this.columnประจำเดือน = base.Columns["ประจำเดือน"];
-                this.columnบิล = base.Columns["บิล"];
-                this.columnรายละเอียด = base.Columns["รายละเอียด"];
-                this.columnยอดรวมก่อน_VAT = base.Columns["ยอดรวมก่อน VAT"];
-                this.columnภาษี = base.Columns["ภาษี"];
-                this.columnยอดรวม = base.Columns["ยอดรวม"];
-                this.columnวันที่เริ่มต้น = base.Columns["วันที่เริ่มต้น"];
-                this.columnวันที่สิ้นสุด = base.Columns["วันที่สิ้นสุด"];
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            private void InitClass() {
-                this.columnชื่อบริษัท = new global::System.Data.DataColumn("ชื่อบริษัท", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnชื่อบริษัท);
-                this.columnประจำเดือน = new global::System.Data.DataColumn("ประจำเดือน", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnประจำเดือน);
-                this.columnบิล = new global::System.Data.DataColumn("บิล", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnบิล);
-                this.columnรายละเอียด = new global::System.Data.DataColumn("รายละเอียด", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnรายละเอียด);
-                this.columnยอดรวมก่อน_VAT = new global::System.Data.DataColumn("ยอดรวมก่อน VAT", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnยอดรวมก่อน_VAT);
-                this.columnภาษี = new global::System.Data.DataColumn("ภาษี", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnภาษี);
-                this.columnยอดรวม = new global::System.Data.DataColumn("ยอดรวม", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnยอดรวม);
-                this.columnวันที่เริ่มต้น = new global::System.Data.DataColumn("วันที่เริ่มต้น", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnวันที่เริ่มต้น);
-                this.columnวันที่สิ้นสุด = new global::System.Data.DataColumn("วันที่สิ้นสุด", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnวันที่สิ้นสุด);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_company_billing_summaryRow Newtnpt_company_billing_summaryRow() {
-                return ((tnpt_company_billing_summaryRow)(this.NewRow()));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new tnpt_company_billing_summaryRow(builder);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Type GetRowType() {
-                return typeof(tnpt_company_billing_summaryRow);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanged(e);
-                if ((this.tnpt_company_billing_summaryRowChanged != null)) {
-                    this.tnpt_company_billing_summaryRowChanged(this, new tnpt_company_billing_summaryRowChangeEvent(((tnpt_company_billing_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanging(e);
-                if ((this.tnpt_company_billing_summaryRowChanging != null)) {
-                    this.tnpt_company_billing_summaryRowChanging(this, new tnpt_company_billing_summaryRowChangeEvent(((tnpt_company_billing_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleted(e);
-                if ((this.tnpt_company_billing_summaryRowDeleted != null)) {
-                    this.tnpt_company_billing_summaryRowDeleted(this, new tnpt_company_billing_summaryRowChangeEvent(((tnpt_company_billing_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleting(e);
-                if ((this.tnpt_company_billing_summaryRowDeleting != null)) {
-                    this.tnpt_company_billing_summaryRowDeleting(this, new tnpt_company_billing_summaryRowChangeEvent(((tnpt_company_billing_summaryRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Removetnpt_company_billing_summaryRow(tnpt_company_billing_summaryRow row) {
-                this.Rows.Remove(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
-                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                dbForReport ds = new dbForReport();
-                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
-                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
-                any1.MinOccurs = new decimal(0);
-                any1.MaxOccurs = decimal.MaxValue;
-                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any1);
-                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
-                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
-                any2.MinOccurs = new decimal(1);
-                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any2);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute1.Name = "namespace";
-                attribute1.FixedValue = ds.Namespace;
-                type.Attributes.Add(attribute1);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "tnpt_company_billing_summaryDataTable";
-                type.Attributes.Add(attribute2);
-                type.Particle = sequence;
-                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
-                if (xs.Contains(dsSchema.TargetNamespace)) {
-                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
-                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
-                    try {
-                        global::System.Xml.Schema.XmlSchema schema = null;
-                        dsSchema.Write(s1);
-                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
-                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
-                            s2.SetLength(0);
-                            schema.Write(s2);
-                            if ((s1.Length == s2.Length)) {
-                                s1.Position = 0;
-                                s2.Position = 0;
-                                for (; ((s1.Position != s1.Length) 
-                                            && (s1.ReadByte() == s2.ReadByte())); ) {
-                                    ;
-                                }
-                                if ((s1.Position == s1.Length)) {
-                                    return type;
-                                }
-                            }
-                        }
-                    }
-                    finally {
-                        if ((s1 != null)) {
-                            s1.Close();
-                        }
-                        if ((s2 != null)) {
-                            s2.Close();
-                        }
-                    }
-                }
-                xs.Add(dsSchema);
-                return type;
-            }
-        }
-        
-        /// <summary>
-        ///Represents the strongly named DataTable class.
-        ///</summary>
-        [global::System.Serializable()]
-        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class report21tnptDataTable : global::System.Data.TypedTableBase<report21tnptRow> {
-            
-            private global::System.Data.DataColumn columnหมายเลขบัตร;
-            
-            private global::System.Data.DataColumn columnเลขทะเบียน;
-            
-            private global::System.Data.DataColumn columnเวลาเข้า;
-            
-            private global::System.Data.DataColumn columnเวลาออก;
-            
-            private global::System.Data.DataColumn _columnชม_ที่จอด;
-            
-            private global::System.Data.DataColumn _columnชม_ปัด;
-            
-            private global::System.Data.DataColumn columnค่าจอดทั้งหมด;
-            
-            private global::System.Data.DataColumn columnส่วนลด;
-            
-            private global::System.Data.DataColumn columnค่าบริการเรียกเก็บ;
-            
-            private global::System.Data.DataColumn columnชื่อส่วนลด;
-            
-            private global::System.Data.DataColumn columnรหัสส่วนลด;
-            
-            private global::System.Data.DataColumn columnชำระเงินเอง;
-            
-            private global::System.Data.DataColumn columntnpt_id;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21tnptDataTable() {
-                this.TableName = "report21tnpt";
-                this.BeginInit();
-                this.InitClass();
-                this.EndInit();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal report21tnptDataTable(global::System.Data.DataTable table) {
-                this.TableName = table.TableName;
-                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
-                    this.CaseSensitive = table.CaseSensitive;
-                }
-                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
-                    this.Locale = table.Locale;
-                }
-                if ((table.Namespace != table.DataSet.Namespace)) {
-                    this.Namespace = table.Namespace;
-                }
-                this.Prefix = table.Prefix;
-                this.MinimumCapacity = table.MinimumCapacity;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected report21tnptDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
-                    base(info, context) {
-                this.InitVars();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn หมายเลขบัตรColumn {
-                get {
-                    return this.columnหมายเลขบัตร;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn เลขทะเบียนColumn {
-                get {
-                    return this.columnเลขทะเบียน;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn เวลาเข้าColumn {
-                get {
-                    return this.columnเวลาเข้า;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn เวลาออกColumn {
-                get {
-                    return this.columnเวลาออก;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _ชม_ที่จอดColumn {
-                get {
-                    return this._columnชม_ที่จอด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn _ชม_ปัดColumn {
-                get {
-                    return this._columnชม_ปัด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ค่าจอดทั้งหมดColumn {
-                get {
-                    return this.columnค่าจอดทั้งหมด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ส่วนลดColumn {
-                get {
-                    return this.columnส่วนลด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ค่าบริการเรียกเก็บColumn {
-                get {
-                    return this.columnค่าบริการเรียกเก็บ;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ชื่อส่วนลดColumn {
-                get {
-                    return this.columnชื่อส่วนลด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn รหัสส่วนลดColumn {
-                get {
-                    return this.columnรหัสส่วนลด;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn ชำระเงินเองColumn {
-                get {
-                    return this.columnชำระเงินเอง;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn tnpt_idColumn {
-                get {
-                    return this.columntnpt_id;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            [global::System.ComponentModel.Browsable(false)]
-            public int Count {
-                get {
-                    return this.Rows.Count;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21tnptRow this[int index] {
-                get {
-                    return ((report21tnptRow)(this.Rows[index]));
-                }
-            }
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report21tnptRowChangeEventHandler report21tnptRowChanging;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report21tnptRowChangeEventHandler report21tnptRowChanged;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report21tnptRowChangeEventHandler report21tnptRowDeleting;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public event report21tnptRowChangeEventHandler report21tnptRowDeleted;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Addreport21tnptRow(report21tnptRow row) {
-                this.Rows.Add(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21tnptRow Addreport21tnptRow(string หมายเลขบัตร, string เลขทะเบียน, string เวลาเข้า, string เวลาออก, string _ชม_ที่จอด, string _ชม_ปัด, string ค่าจอดทั้งหมด, string ส่วนลด, string ค่าบริการเรียกเก็บ, string ชื่อส่วนลด, string รหัสส่วนลด, string ชำระเงินเอง, short tnpt_id) {
-                report21tnptRow rowreport21tnptRow = ((report21tnptRow)(this.NewRow()));
-                object[] columnValuesArray = new object[] {
-                        หมายเลขบัตร,
-                        เลขทะเบียน,
-                        เวลาเข้า,
-                        เวลาออก,
-                        _ชม_ที่จอด,
-                        _ชม_ปัด,
-                        ค่าจอดทั้งหมด,
-                        ส่วนลด,
-                        ค่าบริการเรียกเก็บ,
-                        ชื่อส่วนลด,
-                        รหัสส่วนลด,
-                        ชำระเงินเอง,
-                        tnpt_id};
-                rowreport21tnptRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowreport21tnptRow);
-                return rowreport21tnptRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public override global::System.Data.DataTable Clone() {
-                report21tnptDataTable cln = ((report21tnptDataTable)(base.Clone()));
-                cln.InitVars();
-                return cln;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataTable CreateInstance() {
-                return new report21tnptDataTable();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal void InitVars() {
-                this.columnหมายเลขบัตร = base.Columns["หมายเลขบัตร"];
-                this.columnเลขทะเบียน = base.Columns["เลขทะเบียน"];
-                this.columnเวลาเข้า = base.Columns["เวลาเข้า"];
-                this.columnเวลาออก = base.Columns["เวลาออก"];
-                this._columnชม_ที่จอด = base.Columns["ชม.ที่จอด"];
-                this._columnชม_ปัด = base.Columns["ชม.ปัด"];
-                this.columnค่าจอดทั้งหมด = base.Columns["ค่าจอดทั้งหมด"];
-                this.columnส่วนลด = base.Columns["ส่วนลด"];
-                this.columnค่าบริการเรียกเก็บ = base.Columns["ค่าบริการเรียกเก็บ"];
-                this.columnชื่อส่วนลด = base.Columns["ชื่อส่วนลด"];
-                this.columnรหัสส่วนลด = base.Columns["รหัสส่วนลด"];
-                this.columnชำระเงินเอง = base.Columns["ชำระเงินเอง"];
-                this.columntnpt_id = base.Columns["tnpt_id"];
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            private void InitClass() {
-                this.columnหมายเลขบัตร = new global::System.Data.DataColumn("หมายเลขบัตร", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnหมายเลขบัตร);
-                this.columnเลขทะเบียน = new global::System.Data.DataColumn("เลขทะเบียน", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnเลขทะเบียน);
-                this.columnเวลาเข้า = new global::System.Data.DataColumn("เวลาเข้า", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnเวลาเข้า);
-                this.columnเวลาออก = new global::System.Data.DataColumn("เวลาออก", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnเวลาออก);
-                this._columnชม_ที่จอด = new global::System.Data.DataColumn("ชม.ที่จอด", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnชม_ที่จอด.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnชม_ที่จอด");
-                this._columnชม_ที่จอด.ExtendedProperties.Add("Generator_UserColumnName", "ชม.ที่จอด");
-                base.Columns.Add(this._columnชม_ที่จอด);
-                this._columnชม_ปัด = new global::System.Data.DataColumn("ชม.ปัด", typeof(string), null, global::System.Data.MappingType.Element);
-                this._columnชม_ปัด.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnชม_ปัด");
-                this._columnชม_ปัด.ExtendedProperties.Add("Generator_UserColumnName", "ชม.ปัด");
-                base.Columns.Add(this._columnชม_ปัด);
-                this.columnค่าจอดทั้งหมด = new global::System.Data.DataColumn("ค่าจอดทั้งหมด", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnค่าจอดทั้งหมด);
-                this.columnส่วนลด = new global::System.Data.DataColumn("ส่วนลด", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnส่วนลด);
-                this.columnค่าบริการเรียกเก็บ = new global::System.Data.DataColumn("ค่าบริการเรียกเก็บ", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnค่าบริการเรียกเก็บ);
-                this.columnชื่อส่วนลด = new global::System.Data.DataColumn("ชื่อส่วนลด", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnชื่อส่วนลด);
-                this.columnรหัสส่วนลด = new global::System.Data.DataColumn("รหัสส่วนลด", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnรหัสส่วนลด);
-                this.columnชำระเงินเอง = new global::System.Data.DataColumn("ชำระเงินเอง", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnชำระเงินเอง);
-                this.columntnpt_id = new global::System.Data.DataColumn("tnpt_id", typeof(short), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columntnpt_id);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21tnptRow Newreport21tnptRow() {
-                return ((report21tnptRow)(this.NewRow()));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new report21tnptRow(builder);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override global::System.Type GetRowType() {
-                return typeof(report21tnptRow);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanged(e);
-                if ((this.report21tnptRowChanged != null)) {
-                    this.report21tnptRowChanged(this, new report21tnptRowChangeEvent(((report21tnptRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanging(e);
-                if ((this.report21tnptRowChanging != null)) {
-                    this.report21tnptRowChanging(this, new report21tnptRowChangeEvent(((report21tnptRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleted(e);
-                if ((this.report21tnptRowDeleted != null)) {
-                    this.report21tnptRowDeleted(this, new report21tnptRowChangeEvent(((report21tnptRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleting(e);
-                if ((this.report21tnptRowDeleting != null)) {
-                    this.report21tnptRowDeleting(this, new report21tnptRowChangeEvent(((report21tnptRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Removereport21tnptRow(report21tnptRow row) {
-                this.Rows.Remove(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
-                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                dbForReport ds = new dbForReport();
-                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
-                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
-                any1.MinOccurs = new decimal(0);
-                any1.MaxOccurs = decimal.MaxValue;
-                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any1);
-                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
-                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
-                any2.MinOccurs = new decimal(1);
-                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any2);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute1.Name = "namespace";
-                attribute1.FixedValue = ds.Namespace;
-                type.Attributes.Add(attribute1);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "report21tnptDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -34852,6 +32535,38 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string เจ้าหน้าที่ขาเข้า {
+                get {
+                    try {
+                        return ((string)(this[this.tablereport13.เจ้าหน้าที่ขาเข้าColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'เจ้าหน้าที่ขาเข้า\' in table \'report13\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereport13.เจ้าหน้าที่ขาเข้าColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string หมายเหตุ {
+                get {
+                    try {
+                        return ((string)(this[this.tablereport13.หมายเหตุColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'หมายเหตุ\' in table \'report13\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereport13.หมายเหตุColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool Is_เลขที่ใบเสร็จ_ใบกำกับภาษีNull() {
                 return this.IsNull(this.tablereport13._เลขที่ใบเสร็จ_ใบกำกับภาษีColumn);
             }
@@ -35136,6 +32851,30 @@ namespace ParkingManagementReport {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void Setเครื่องรับเงิน_onlineNull() {
                 this[this.tablereport13.เครื่องรับเงิน_onlineColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool Isเจ้าหน้าที่ขาเข้าNull() {
+                return this.IsNull(this.tablereport13.เจ้าหน้าที่ขาเข้าColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void Setเจ้าหน้าที่ขาเข้าNull() {
+                this[this.tablereport13.เจ้าหน้าที่ขาเข้าColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsหมายเหตุNull() {
+                return this.IsNull(this.tablereport13.หมายเหตุColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetหมายเหตุNull() {
+                this[this.tablereport13.หมายเหตุColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -39695,17 +37434,17 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public char หมายเลขบัตร {
+            public string เลขที่_Void {
                 get {
                     try {
-                        return ((char)(this[this.tablereport33.หมายเลขบัตรColumn]));
+                        return ((string)(this[this.tablereport33.เลขที่_VoidColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'หมายเลขบัตร\' in table \'report33\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'เลขที่ Void\' in table \'report33\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablereport33.หมายเลขบัตรColumn] = value;
+                    this[this.tablereport33.เลขที่_VoidColumn] = value;
                 }
             }
             
@@ -39823,22 +37562,6 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string หมายเหตุ {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport33.หมายเหตุColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'หมายเหตุ\' in table \'report33\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport33.หมายเหตุColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool Isเลขที่ใบกำกับภาษีNull() {
                 return this.IsNull(this.tablereport33.เลขที่ใบกำกับภาษีColumn);
             }
@@ -39851,14 +37574,14 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsหมายเลขบัตรNull() {
-                return this.IsNull(this.tablereport33.หมายเลขบัตรColumn);
+            public bool Isเลขที่_VoidNull() {
+                return this.IsNull(this.tablereport33.เลขที่_VoidColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetหมายเลขบัตรNull() {
-                this[this.tablereport33.หมายเลขบัตรColumn] = global::System.Convert.DBNull;
+            public void Setเลขที่_VoidNull() {
+                this[this.tablereport33.เลขที่_VoidColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -39943,18 +37666,6 @@ namespace ParkingManagementReport {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public void SetจำนวนเงินNull() {
                 this[this.tablereport33.จำนวนเงินColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsหมายเหตุNull() {
-                return this.IsNull(this.tablereport33.หมายเหตุColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetหมายเหตุNull() {
-                this[this.tablereport33.หมายเหตุColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -40834,70 +38545,6 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string เลขทะเบียนรถ1 {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport47.เลขทะเบียนรถ1Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'เลขทะเบียนรถ1\' in table \'report47\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport47.เลขทะเบียนรถ1Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string เลขทะเบียนรถ2 {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport47.เลขทะเบียนรถ2Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'เลขทะเบียนรถ2\' in table \'report47\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport47.เลขทะเบียนรถ2Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string เลขทะเบียนรถ3 {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport47.เลขทะเบียนรถ3Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'เลขทะเบียนรถ3\' in table \'report47\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport47.เลขทะเบียนรถ3Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string เลขทะเบียนรถ4 {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport47.เลขทะเบียนรถ4Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'เลขทะเบียนรถ4\' in table \'report47\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport47.เลขทะเบียนรถ4Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public string เลขที่บัตร {
                 get {
                     try {
@@ -40914,65 +38561,65 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ชื่อสมาชิก {
+            public string ทะเบียนรถ {
                 get {
                     try {
-                        return ((string)(this[this.tablereport47.ชื่อสมาชิกColumn]));
+                        return ((string)(this[this.tablereport47.ทะเบียนรถColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชื่อสมาชิก\' in table \'report47\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'ทะเบียนรถ\' in table \'report47\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablereport47.ชื่อสมาชิกColumn] = value;
+                    this[this.tablereport47.ทะเบียนรถColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ชนิดสมาชิก {
+            public string ชื่อเจ้าของรถ {
                 get {
                     try {
-                        return ((string)(this[this.tablereport47.ชนิดสมาชิกColumn]));
+                        return ((string)(this[this.tablereport47.ชื่อเจ้าของรถColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชนิดสมาชิก\' in table \'report47\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'ชื่อเจ้าของรถ\' in table \'report47\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablereport47.ชนิดสมาชิกColumn] = value;
+                    this[this.tablereport47.ชื่อเจ้าของรถColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string วันที่สมัคร {
+            public string วันเริ่มต้น {
                 get {
                     try {
-                        return ((string)(this[this.tablereport47.วันที่สมัครColumn]));
+                        return ((string)(this[this.tablereport47.วันเริ่มต้นColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'วันที่สมัคร\' in table \'report47\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'วันเริ่มต้น\' in table \'report47\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablereport47.วันที่สมัครColumn] = value;
+                    this[this.tablereport47.วันเริ่มต้นColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string วันที่หมดอายุ {
+            public string วันหมดอายุ {
                 get {
                     try {
-                        return ((string)(this[this.tablereport47.วันที่หมดอายุColumn]));
+                        return ((string)(this[this.tablereport47.วันหมดอายุColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'วันที่หมดอายุ\' in table \'report47\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'วันหมดอายุ\' in table \'report47\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablereport47.วันที่หมดอายุColumn] = value;
+                    this[this.tablereport47.วันหมดอายุColumn] = value;
                 }
             }
             
@@ -40994,17 +38641,65 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ค่าบัตรสมาชิก {
+            public double ค่าเช่า {
                 get {
                     try {
-                        return ((string)(this[this.tablereport47.ค่าบัตรสมาชิกColumn]));
+                        return ((double)(this[this.tablereport47.ค่าเช่าColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ค่าบัตรสมาชิก\' in table \'report47\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'ค่าเช่า\' in table \'report47\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablereport47.ค่าบัตรสมาชิกColumn] = value;
+                    this[this.tablereport47.ค่าเช่าColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string รหัสบริษัท {
+                get {
+                    try {
+                        return ((string)(this[this.tablereport47.รหัสบริษัทColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'รหัสบริษัท\' in table \'report47\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereport47.รหัสบริษัทColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string ยี่ห้อรถ {
+                get {
+                    try {
+                        return ((string)(this[this.tablereport47.ยี่ห้อรถColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ยี่ห้อรถ\' in table \'report47\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereport47.ยี่ห้อรถColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public int จำนวน {
+                get {
+                    try {
+                        return ((int)(this[this.tablereport47.จำนวนColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวน\' in table \'report47\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereport47.จำนวนColumn] = value;
                 }
             }
             
@@ -41022,54 +38717,6 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isเลขทะเบียนรถ1Null() {
-                return this.IsNull(this.tablereport47.เลขทะเบียนรถ1Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setเลขทะเบียนรถ1Null() {
-                this[this.tablereport47.เลขทะเบียนรถ1Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isเลขทะเบียนรถ2Null() {
-                return this.IsNull(this.tablereport47.เลขทะเบียนรถ2Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setเลขทะเบียนรถ2Null() {
-                this[this.tablereport47.เลขทะเบียนรถ2Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isเลขทะเบียนรถ3Null() {
-                return this.IsNull(this.tablereport47.เลขทะเบียนรถ3Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setเลขทะเบียนรถ3Null() {
-                this[this.tablereport47.เลขทะเบียนรถ3Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isเลขทะเบียนรถ4Null() {
-                return this.IsNull(this.tablereport47.เลขทะเบียนรถ4Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setเลขทะเบียนรถ4Null() {
-                this[this.tablereport47.เลขทะเบียนรถ4Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool Isเลขที่บัตรNull() {
                 return this.IsNull(this.tablereport47.เลขที่บัตรColumn);
             }
@@ -41082,50 +38729,50 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isชื่อสมาชิกNull() {
-                return this.IsNull(this.tablereport47.ชื่อสมาชิกColumn);
+            public bool IsทะเบียนรถNull() {
+                return this.IsNull(this.tablereport47.ทะเบียนรถColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setชื่อสมาชิกNull() {
-                this[this.tablereport47.ชื่อสมาชิกColumn] = global::System.Convert.DBNull;
+            public void SetทะเบียนรถNull() {
+                this[this.tablereport47.ทะเบียนรถColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsชนิดสมาชิกNull() {
-                return this.IsNull(this.tablereport47.ชนิดสมาชิกColumn);
+            public bool Isชื่อเจ้าของรถNull() {
+                return this.IsNull(this.tablereport47.ชื่อเจ้าของรถColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetชนิดสมาชิกNull() {
-                this[this.tablereport47.ชนิดสมาชิกColumn] = global::System.Convert.DBNull;
+            public void Setชื่อเจ้าของรถNull() {
+                this[this.tablereport47.ชื่อเจ้าของรถColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isวันที่สมัครNull() {
-                return this.IsNull(this.tablereport47.วันที่สมัครColumn);
+            public bool Isวันเริ่มต้นNull() {
+                return this.IsNull(this.tablereport47.วันเริ่มต้นColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setวันที่สมัครNull() {
-                this[this.tablereport47.วันที่สมัครColumn] = global::System.Convert.DBNull;
+            public void Setวันเริ่มต้นNull() {
+                this[this.tablereport47.วันเริ่มต้นColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isวันที่หมดอายุNull() {
-                return this.IsNull(this.tablereport47.วันที่หมดอายุColumn);
+            public bool IsวันหมดอายุNull() {
+                return this.IsNull(this.tablereport47.วันหมดอายุColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setวันที่หมดอายุNull() {
-                this[this.tablereport47.วันที่หมดอายุColumn] = global::System.Convert.DBNull;
+            public void SetวันหมดอายุNull() {
+                this[this.tablereport47.วันหมดอายุColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -41142,14 +38789,50 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isค่าบัตรสมาชิกNull() {
-                return this.IsNull(this.tablereport47.ค่าบัตรสมาชิกColumn);
+            public bool Isค่าเช่าNull() {
+                return this.IsNull(this.tablereport47.ค่าเช่าColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setค่าบัตรสมาชิกNull() {
-                this[this.tablereport47.ค่าบัตรสมาชิกColumn] = global::System.Convert.DBNull;
+            public void Setค่าเช่าNull() {
+                this[this.tablereport47.ค่าเช่าColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsรหัสบริษัทNull() {
+                return this.IsNull(this.tablereport47.รหัสบริษัทColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetรหัสบริษัทNull() {
+                this[this.tablereport47.รหัสบริษัทColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool Isยี่ห้อรถNull() {
+                return this.IsNull(this.tablereport47.ยี่ห้อรถColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void Setยี่ห้อรถNull() {
+                this[this.tablereport47.ยี่ห้อรถColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsจำนวนNull() {
+                return this.IsNull(this.tablereport47.จำนวนColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetจำนวนNull() {
+                this[this.tablereport47.จำนวนColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -41217,6 +38900,22 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string บัตรจอดรถ {
+                get {
+                    try {
+                        return ((string)(this[this.tablereport49.บัตรจอดรถColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'บัตรจอดรถ\' in table \'report49\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereport49.บัตรจอดรถColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public decimal ค่าบริการ {
                 get {
                     try {
@@ -41265,17 +38964,17 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string หมายเลขบัตร {
+            public string รวมเวลาจอด {
                 get {
                     try {
-                        return ((string)(this[this.tablereport49.หมายเลขบัตรColumn]));
+                        return ((string)(this[this.tablereport49.รวมเวลาจอดColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'หมายเลขบัตร\' in table \'report49\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'รวมเวลาจอด\' in table \'report49\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tablereport49.หมายเลขบัตรColumn] = value;
+                    this[this.tablereport49.รวมเวลาจอดColumn] = value;
                 }
             }
             
@@ -41317,6 +39016,18 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsบัตรจอดรถNull() {
+                return this.IsNull(this.tablereport49.บัตรจอดรถColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetบัตรจอดรถNull() {
+                this[this.tablereport49.บัตรจอดรถColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool Isค่าบริการNull() {
                 return this.IsNull(this.tablereport49.ค่าบริการColumn);
             }
@@ -41353,14 +39064,14 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsหมายเลขบัตรNull() {
-                return this.IsNull(this.tablereport49.หมายเลขบัตรColumn);
+            public bool IsรวมเวลาจอดNull() {
+                return this.IsNull(this.tablereport49.รวมเวลาจอดColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetหมายเลขบัตรNull() {
-                this[this.tablereport49.หมายเลขบัตรColumn] = global::System.Convert.DBNull;
+            public void SetรวมเวลาจอดNull() {
+                this[this.tablereport49.รวมเวลาจอดColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -51465,6 +49176,70 @@ namespace ParkingManagementReport {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string rabbit_ID {
+                get {
+                    try {
+                        return ((string)(this[this.tablereport163.rabbit_IDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'rabbit ID\' in table \'report163\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereport163.rabbit_IDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string Beam_ID {
+                get {
+                    try {
+                        return ((string)(this[this.tablereport163.Beam_IDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Beam ID\' in table \'report163\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereport163.Beam_IDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string QR_Code {
+                get {
+                    try {
+                        return ((string)(this[this.tablereport163.QR_CodeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'QR Code\' in table \'report163\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereport163.QR_CodeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string SCB_ID {
+                get {
+                    try {
+                        return ((string)(this[this.tablereport163.SCB_IDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SCB ID\' in table \'report163\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereport163.SCB_IDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public bool IsลำดับNull() {
                 return this.IsNull(this.tablereport163.ลำดับColumn);
             }
@@ -51594,1655 +49369,53 @@ namespace ParkingManagementReport {
             public void Setmch_order_noNull() {
                 this[this.tablereport163.mch_order_noColumn] = global::System.Convert.DBNull;
             }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
-        public partial class report21Row : global::System.Data.DataRow {
             
-            private report21DataTable tablereport21;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal report21Row(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tablereport21 = ((report21DataTable)(this.Table));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string หมายเลขบัตร {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21.หมายเลขบัตรColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'หมายเลขบัตร\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21.หมายเลขบัตรColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string เลขทะเบียน {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21.เลขทะเบียนColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'เลขทะเบียน\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21.เลขทะเบียนColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string เวลาเข้า {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21.เวลาเข้าColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'เวลาเข้า\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21.เวลาเข้าColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string เวลาออก {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21.เวลาออกColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'เวลาออก\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21.เวลาออกColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _ชม_ที่จอด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21._ชม_ที่จอดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชม.ที่จอด\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21._ชม_ที่จอดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _ชม_ปัด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21._ชม_ปัดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชม.ปัด\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21._ชม_ปัดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ค่าจอดทั้งหมด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21.ค่าจอดทั้งหมดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ค่าจอดทั้งหมด\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21.ค่าจอดทั้งหมดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ส่วนลด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21.ส่วนลดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ส่วนลด\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21.ส่วนลดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ค่าบริการเรียกเก็บ {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21.ค่าบริการเรียกเก็บColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ค่าบริการเรียกเก็บ\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21.ค่าบริการเรียกเก็บColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ชื่อส่วนลด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21.ชื่อส่วนลดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชื่อส่วนลด\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21.ชื่อส่วนลดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string รหัสส่วนลด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21.รหัสส่วนลดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'รหัสส่วนลด\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21.รหัสส่วนลดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ชำระเงินเอง {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21.ชำระเงินเองColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชำระเงินเอง\' in table \'report21\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21.ชำระเงินเองColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsหมายเลขบัตรNull() {
-                return this.IsNull(this.tablereport21.หมายเลขบัตรColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetหมายเลขบัตรNull() {
-                this[this.tablereport21.หมายเลขบัตรColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsเลขทะเบียนNull() {
-                return this.IsNull(this.tablereport21.เลขทะเบียนColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetเลขทะเบียนNull() {
-                this[this.tablereport21.เลขทะเบียนColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isเวลาเข้าNull() {
-                return this.IsNull(this.tablereport21.เวลาเข้าColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setเวลาเข้าNull() {
-                this[this.tablereport21.เวลาเข้าColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsเวลาออกNull() {
-                return this.IsNull(this.tablereport21.เวลาออกColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetเวลาออกNull() {
-                this[this.tablereport21.เวลาออกColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_ชม_ที่จอดNull() {
-                return this.IsNull(this.tablereport21._ชม_ที่จอดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_ชม_ที่จอดNull() {
-                this[this.tablereport21._ชม_ที่จอดColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_ชม_ปัดNull() {
-                return this.IsNull(this.tablereport21._ชม_ปัดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_ชม_ปัดNull() {
-                this[this.tablereport21._ชม_ปัดColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isค่าจอดทั้งหมดNull() {
-                return this.IsNull(this.tablereport21.ค่าจอดทั้งหมดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setค่าจอดทั้งหมดNull() {
-                this[this.tablereport21.ค่าจอดทั้งหมดColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isส่วนลดNull() {
-                return this.IsNull(this.tablereport21.ส่วนลดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setส่วนลดNull() {
-                this[this.tablereport21.ส่วนลดColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isค่าบริการเรียกเก็บNull() {
-                return this.IsNull(this.tablereport21.ค่าบริการเรียกเก็บColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setค่าบริการเรียกเก็บNull() {
-                this[this.tablereport21.ค่าบริการเรียกเก็บColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isชื่อส่วนลดNull() {
-                return this.IsNull(this.tablereport21.ชื่อส่วนลดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setชื่อส่วนลดNull() {
-                this[this.tablereport21.ชื่อส่วนลดColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isรหัสส่วนลดNull() {
-                return this.IsNull(this.tablereport21.รหัสส่วนลดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setรหัสส่วนลดNull() {
-                this[this.tablereport21.รหัสส่วนลดColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsชำระเงินเองNull() {
-                return this.IsNull(this.tablereport21.ชำระเงินเองColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetชำระเงินเองNull() {
-                this[this.tablereport21.ชำระเงินเองColumn] = global::System.Convert.DBNull;
-            }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
-        public partial class report22Row : global::System.Data.DataRow {
-            
-            private report22DataTable tablereport22;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal report22Row(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tablereport22 = ((report22DataTable)(this.Table));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string วันที่ {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport22.วันที่Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'วันที่\' in table \'report22\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport22.วันที่Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string จำนวนเงิน {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport22.จำนวนเงินColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนเงิน\' in table \'report22\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport22.จำนวนเงินColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string จำนวนบัตร {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport22.จำนวนบัตรColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนบัตร\' in table \'report22\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport22.จำนวนบัตรColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _จำนวนบัตร_เก็บเงินได้_ {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport22._จำนวนบัตร_เก็บเงินได้_Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนบัตร(เก็บเงินได้)\' in table \'report22\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport22._จำนวนบัตร_เก็บเงินได้_Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ชื่อตราประทับ {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport22.ชื่อตราประทับColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชื่อตราประทับ\' in table \'report22\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport22.ชื่อตราประทับColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isวันที่Null() {
-                return this.IsNull(this.tablereport22.วันที่Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setวันที่Null() {
-                this[this.tablereport22.วันที่Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsจำนวนเงินNull() {
-                return this.IsNull(this.tablereport22.จำนวนเงินColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetจำนวนเงินNull() {
-                this[this.tablereport22.จำนวนเงินColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsจำนวนบัตรNull() {
-                return this.IsNull(this.tablereport22.จำนวนบัตรColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetจำนวนบัตรNull() {
-                this[this.tablereport22.จำนวนบัตรColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_จำนวนบัตร_เก็บเงินได้_Null() {
-                return this.IsNull(this.tablereport22._จำนวนบัตร_เก็บเงินได้_Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_จำนวนบัตร_เก็บเงินได้_Null() {
-                this[this.tablereport22._จำนวนบัตร_เก็บเงินได้_Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isชื่อตราประทับNull() {
-                return this.IsNull(this.tablereport22.ชื่อตราประทับColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setชื่อตราประทับNull() {
-                this[this.tablereport22.ชื่อตราประทับColumn] = global::System.Convert.DBNull;
-            }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
-        public partial class tnpt_vehicle_earning_summaryRow : global::System.Data.DataRow {
-            
-            private tnpt_vehicle_earning_summaryDataTable tabletnpt_vehicle_earning_summary;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal tnpt_vehicle_earning_summaryRow(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tabletnpt_vehicle_earning_summary = ((tnpt_vehicle_earning_summaryDataTable)(this.Table));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string วันที่ {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_vehicle_earning_summary.วันที่Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'วันที่\' in table \'tnpt_vehicle_earning_summary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_vehicle_earning_summary.วันที่Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ชนิดรถ {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_vehicle_earning_summary.ชนิดรถColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชนิดรถ\' in table \'tnpt_vehicle_earning_summary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_vehicle_earning_summary.ชนิดรถColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _จำนวนรถเข้าออก_รถสมาชิก {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_รถสมาชิกColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนรถเข้าออก-รถสมาชิก\' in table \'tnpt_vehicle_earning_sum" +
-                                "mary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_รถสมาชิกColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _จำนวนรถเข้าออก_รถผู้มาติดต่อ {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_รถผู้มาติดต่อColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนรถเข้าออก-รถผู้มาติดต่อ\' in table \'tnpt_vehicle_earnin" +
-                                "g_summary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_รถผู้มาติดต่อColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _จำนวนรถเข้าออก_จำนวนรวม {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_จำนวนรวมColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนรถเข้าออก-จำนวนรวม\' in table \'tnpt_vehicle_earning_sum" +
-                                "mary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_จำนวนรวมColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _จำนวนรถที่เก็บเงินได้_รถสมาชิก {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_รถสมาชิกColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนรถที่เก็บเงินได้-รถสมาชิก\' in table \'tnpt_vehicle_earn" +
-                                "ing_summary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_รถสมาชิกColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _จำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อ {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนรถที่เก็บเงินได้-รถผู้มาติดต่อ\' in table \'tnpt_vehicle" +
-                                "_earning_summary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _จำนวนรถที่เก็บเงินได้_จำนวนเงิน {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_จำนวนเงินColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนรถที่เก็บเงินได้-จำนวนเงิน\' in table \'tnpt_vehicle_ear" +
-                                "ning_summary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_จำนวนเงินColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isวันที่Null() {
-                return this.IsNull(this.tabletnpt_vehicle_earning_summary.วันที่Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setวันที่Null() {
-                this[this.tabletnpt_vehicle_earning_summary.วันที่Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsชนิดรถNull() {
-                return this.IsNull(this.tabletnpt_vehicle_earning_summary.ชนิดรถColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetชนิดรถNull() {
-                this[this.tabletnpt_vehicle_earning_summary.ชนิดรถColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_จำนวนรถเข้าออก_รถสมาชิกNull() {
-                return this.IsNull(this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_รถสมาชิกColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_จำนวนรถเข้าออก_รถสมาชิกNull() {
-                this[this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_รถสมาชิกColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_จำนวนรถเข้าออก_รถผู้มาติดต่อNull() {
-                return this.IsNull(this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_รถผู้มาติดต่อColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_จำนวนรถเข้าออก_รถผู้มาติดต่อNull() {
-                this[this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_รถผู้มาติดต่อColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_จำนวนรถเข้าออก_จำนวนรวมNull() {
-                return this.IsNull(this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_จำนวนรวมColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_จำนวนรถเข้าออก_จำนวนรวมNull() {
-                this[this.tabletnpt_vehicle_earning_summary._จำนวนรถเข้าออก_จำนวนรวมColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_จำนวนรถที่เก็บเงินได้_รถสมาชิกNull() {
-                return this.IsNull(this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_รถสมาชิกColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_จำนวนรถที่เก็บเงินได้_รถสมาชิกNull() {
-                this[this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_รถสมาชิกColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_จำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อNull() {
-                return this.IsNull(this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_จำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อNull() {
-                this[this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_รถผู้มาติดต่อColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_จำนวนรถที่เก็บเงินได้_จำนวนเงินNull() {
-                return this.IsNull(this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_จำนวนเงินColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_จำนวนรถที่เก็บเงินได้_จำนวนเงินNull() {
-                this[this.tabletnpt_vehicle_earning_summary._จำนวนรถที่เก็บเงินได้_จำนวนเงินColumn] = global::System.Convert.DBNull;
-            }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
-        public partial class tnpt_card_sorted_company_summaryRow : global::System.Data.DataRow {
-            
-            private tnpt_card_sorted_company_summaryDataTable tabletnpt_card_sorted_company_summary;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal tnpt_card_sorted_company_summaryRow(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tabletnpt_card_sorted_company_summary = ((tnpt_card_sorted_company_summaryDataTable)(this.Table));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ตราประทับ {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_card_sorted_company_summary.ตราประทับColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ตราประทับ\' in table \'tnpt_card_sorted_company_summary\' is D" +
-                                "BNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_card_sorted_company_summary.ตราประทับColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string บริษัท {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_card_sorted_company_summary.บริษัทColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'บริษัท\' in table \'tnpt_card_sorted_company_summary\' is DBNu" +
-                                "ll.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_card_sorted_company_summary.บริษัทColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string สิทธิได้รับบัตรฟรี {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_card_sorted_company_summary.สิทธิได้รับบัตรฟรีColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'สิทธิได้รับบัตรฟรี\' in table \'tnpt_card_sorted_company_summ" +
-                                "ary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_card_sorted_company_summary.สิทธิได้รับบัตรฟรีColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _จำนวนบัตร_ฟรีค่าเช่า_ {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_card_sorted_company_summary._จำนวนบัตร_ฟรีค่าเช่า_Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนบัตร(ฟรีค่าเช่า)\' in table \'tnpt_card_sorted_company_s" +
-                                "ummary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_card_sorted_company_summary._จำนวนบัตร_ฟรีค่าเช่า_Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _จำนวนบัตร_เสียค่าเช่า_ {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_card_sorted_company_summary._จำนวนบัตร_เสียค่าเช่า_Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนบัตร(เสียค่าเช่า)\' in table \'tnpt_card_sorted_company_" +
-                                "summary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_card_sorted_company_summary._จำนวนบัตร_เสียค่าเช่า_Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string รวมค่าเช่า {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_card_sorted_company_summary.รวมค่าเช่าColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'รวมค่าเช่า\' in table \'tnpt_card_sorted_company_summary\' is " +
-                                "DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_card_sorted_company_summary.รวมค่าเช่าColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string จำนวนบัตรรวม {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_card_sorted_company_summary.จำนวนบัตรรวมColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'จำนวนบัตรรวม\' in table \'tnpt_card_sorted_company_summary\' i" +
-                                "s DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_card_sorted_company_summary.จำนวนบัตรรวมColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string หมายเหตุ {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_card_sorted_company_summary.หมายเหตุColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'หมายเหตุ\' in table \'tnpt_card_sorted_company_summary\' is DB" +
-                                "Null.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_card_sorted_company_summary.หมายเหตุColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsตราประทับNull() {
-                return this.IsNull(this.tabletnpt_card_sorted_company_summary.ตราประทับColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetตราประทับNull() {
-                this[this.tabletnpt_card_sorted_company_summary.ตราประทับColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsบริษัทNull() {
-                return this.IsNull(this.tabletnpt_card_sorted_company_summary.บริษัทColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetบริษัทNull() {
-                this[this.tabletnpt_card_sorted_company_summary.บริษัทColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isสิทธิได้รับบัตรฟรีNull() {
-                return this.IsNull(this.tabletnpt_card_sorted_company_summary.สิทธิได้รับบัตรฟรีColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setสิทธิได้รับบัตรฟรีNull() {
-                this[this.tabletnpt_card_sorted_company_summary.สิทธิได้รับบัตรฟรีColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_จำนวนบัตร_ฟรีค่าเช่า_Null() {
-                return this.IsNull(this.tabletnpt_card_sorted_company_summary._จำนวนบัตร_ฟรีค่าเช่า_Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_จำนวนบัตร_ฟรีค่าเช่า_Null() {
-                this[this.tabletnpt_card_sorted_company_summary._จำนวนบัตร_ฟรีค่าเช่า_Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_จำนวนบัตร_เสียค่าเช่า_Null() {
-                return this.IsNull(this.tabletnpt_card_sorted_company_summary._จำนวนบัตร_เสียค่าเช่า_Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_จำนวนบัตร_เสียค่าเช่า_Null() {
-                this[this.tabletnpt_card_sorted_company_summary._จำนวนบัตร_เสียค่าเช่า_Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isรวมค่าเช่าNull() {
-                return this.IsNull(this.tabletnpt_card_sorted_company_summary.รวมค่าเช่าColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setรวมค่าเช่าNull() {
-                this[this.tabletnpt_card_sorted_company_summary.รวมค่าเช่าColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsจำนวนบัตรรวมNull() {
-                return this.IsNull(this.tabletnpt_card_sorted_company_summary.จำนวนบัตรรวมColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetจำนวนบัตรรวมNull() {
-                this[this.tabletnpt_card_sorted_company_summary.จำนวนบัตรรวมColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsหมายเหตุNull() {
-                return this.IsNull(this.tabletnpt_card_sorted_company_summary.หมายเหตุColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetหมายเหตุNull() {
-                this[this.tabletnpt_card_sorted_company_summary.หมายเหตุColumn] = global::System.Convert.DBNull;
-            }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
-        public partial class tnpt_company_billing_summaryRow : global::System.Data.DataRow {
-            
-            private tnpt_company_billing_summaryDataTable tabletnpt_company_billing_summary;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal tnpt_company_billing_summaryRow(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tabletnpt_company_billing_summary = ((tnpt_company_billing_summaryDataTable)(this.Table));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ชื่อบริษัท {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_company_billing_summary.ชื่อบริษัทColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชื่อบริษัท\' in table \'tnpt_company_billing_summary\' is DBNu" +
-                                "ll.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_company_billing_summary.ชื่อบริษัทColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ประจำเดือน {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_company_billing_summary.ประจำเดือนColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ประจำเดือน\' in table \'tnpt_company_billing_summary\' is DBNu" +
-                                "ll.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_company_billing_summary.ประจำเดือนColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string บิล {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_company_billing_summary.บิลColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'บิล\' in table \'tnpt_company_billing_summary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_company_billing_summary.บิลColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string รายละเอียด {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_company_billing_summary.รายละเอียดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'รายละเอียด\' in table \'tnpt_company_billing_summary\' is DBNu" +
-                                "ll.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_company_billing_summary.รายละเอียดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ยอดรวมก่อน_VAT {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_company_billing_summary.ยอดรวมก่อน_VATColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ยอดรวมก่อน VAT\' in table \'tnpt_company_billing_summary\' is " +
-                                "DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_company_billing_summary.ยอดรวมก่อน_VATColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ภาษี {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_company_billing_summary.ภาษีColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ภาษี\' in table \'tnpt_company_billing_summary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_company_billing_summary.ภาษีColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ยอดรวม {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_company_billing_summary.ยอดรวมColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ยอดรวม\' in table \'tnpt_company_billing_summary\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_company_billing_summary.ยอดรวมColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string วันที่เริ่มต้น {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_company_billing_summary.วันที่เริ่มต้นColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'วันที่เริ่มต้น\' in table \'tnpt_company_billing_summary\' is " +
-                                "DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_company_billing_summary.วันที่เริ่มต้นColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string วันที่สิ้นสุด {
-                get {
-                    try {
-                        return ((string)(this[this.tabletnpt_company_billing_summary.วันที่สิ้นสุดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'วันที่สิ้นสุด\' in table \'tnpt_company_billing_summary\' is D" +
-                                "BNull.", e);
-                    }
-                }
-                set {
-                    this[this.tabletnpt_company_billing_summary.วันที่สิ้นสุดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isชื่อบริษัทNull() {
-                return this.IsNull(this.tabletnpt_company_billing_summary.ชื่อบริษัทColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setชื่อบริษัทNull() {
-                this[this.tabletnpt_company_billing_summary.ชื่อบริษัทColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsประจำเดือนNull() {
-                return this.IsNull(this.tabletnpt_company_billing_summary.ประจำเดือนColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetประจำเดือนNull() {
-                this[this.tabletnpt_company_billing_summary.ประจำเดือนColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsบิลNull() {
-                return this.IsNull(this.tabletnpt_company_billing_summary.บิลColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetบิลNull() {
-                this[this.tabletnpt_company_billing_summary.บิลColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsรายละเอียดNull() {
-                return this.IsNull(this.tabletnpt_company_billing_summary.รายละเอียดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetรายละเอียดNull() {
-                this[this.tabletnpt_company_billing_summary.รายละเอียดColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isยอดรวมก่อน_VATNull() {
-                return this.IsNull(this.tabletnpt_company_billing_summary.ยอดรวมก่อน_VATColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setยอดรวมก่อน_VATNull() {
-                this[this.tabletnpt_company_billing_summary.ยอดรวมก่อน_VATColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsภาษีNull() {
-                return this.IsNull(this.tabletnpt_company_billing_summary.ภาษีColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetภาษีNull() {
-                this[this.tabletnpt_company_billing_summary.ภาษีColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsยอดรวมNull() {
-                return this.IsNull(this.tabletnpt_company_billing_summary.ยอดรวมColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetยอดรวมNull() {
-                this[this.tabletnpt_company_billing_summary.ยอดรวมColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isวันที่เริ่มต้นNull() {
-                return this.IsNull(this.tabletnpt_company_billing_summary.วันที่เริ่มต้นColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setวันที่เริ่มต้นNull() {
-                this[this.tabletnpt_company_billing_summary.วันที่เริ่มต้นColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isวันที่สิ้นสุดNull() {
-                return this.IsNull(this.tabletnpt_company_billing_summary.วันที่สิ้นสุดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setวันที่สิ้นสุดNull() {
-                this[this.tabletnpt_company_billing_summary.วันที่สิ้นสุดColumn] = global::System.Convert.DBNull;
-            }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
-        public partial class report21tnptRow : global::System.Data.DataRow {
-            
-            private report21tnptDataTable tablereport21tnpt;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            internal report21tnptRow(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tablereport21tnpt = ((report21tnptDataTable)(this.Table));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string หมายเลขบัตร {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt.หมายเลขบัตรColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'หมายเลขบัตร\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt.หมายเลขบัตรColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string เลขทะเบียน {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt.เลขทะเบียนColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'เลขทะเบียน\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt.เลขทะเบียนColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string เวลาเข้า {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt.เวลาเข้าColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'เวลาเข้า\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt.เวลาเข้าColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string เวลาออก {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt.เวลาออกColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'เวลาออก\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt.เวลาออกColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _ชม_ที่จอด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt._ชม_ที่จอดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชม.ที่จอด\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt._ชม_ที่จอดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string _ชม_ปัด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt._ชม_ปัดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชม.ปัด\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt._ชม_ปัดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ค่าจอดทั้งหมด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt.ค่าจอดทั้งหมดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ค่าจอดทั้งหมด\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt.ค่าจอดทั้งหมดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ส่วนลด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt.ส่วนลดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ส่วนลด\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt.ส่วนลดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ค่าบริการเรียกเก็บ {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt.ค่าบริการเรียกเก็บColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ค่าบริการเรียกเก็บ\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt.ค่าบริการเรียกเก็บColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ชื่อส่วนลด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt.ชื่อส่วนลดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชื่อส่วนลด\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt.ชื่อส่วนลดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string รหัสส่วนลด {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt.รหัสส่วนลดColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'รหัสส่วนลด\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt.รหัสส่วนลดColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string ชำระเงินเอง {
-                get {
-                    try {
-                        return ((string)(this[this.tablereport21tnpt.ชำระเงินเองColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ชำระเงินเอง\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt.ชำระเงินเองColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public short tnpt_id {
-                get {
-                    try {
-                        return ((short)(this[this.tablereport21tnpt.tnpt_idColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'tnpt_id\' in table \'report21tnpt\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tablereport21tnpt.tnpt_idColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsหมายเลขบัตรNull() {
-                return this.IsNull(this.tablereport21tnpt.หมายเลขบัตรColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetหมายเลขบัตรNull() {
-                this[this.tablereport21tnpt.หมายเลขบัตรColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsเลขทะเบียนNull() {
-                return this.IsNull(this.tablereport21tnpt.เลขทะเบียนColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetเลขทะเบียนNull() {
-                this[this.tablereport21tnpt.เลขทะเบียนColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isเวลาเข้าNull() {
-                return this.IsNull(this.tablereport21tnpt.เวลาเข้าColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setเวลาเข้าNull() {
-                this[this.tablereport21tnpt.เวลาเข้าColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsเวลาออกNull() {
-                return this.IsNull(this.tablereport21tnpt.เวลาออกColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetเวลาออกNull() {
-                this[this.tablereport21tnpt.เวลาออกColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_ชม_ที่จอดNull() {
-                return this.IsNull(this.tablereport21tnpt._ชม_ที่จอดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_ชม_ที่จอดNull() {
-                this[this.tablereport21tnpt._ชม_ที่จอดColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Is_ชม_ปัดNull() {
-                return this.IsNull(this.tablereport21tnpt._ชม_ปัดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Set_ชม_ปัดNull() {
-                this[this.tablereport21tnpt._ชม_ปัดColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isค่าจอดทั้งหมดNull() {
-                return this.IsNull(this.tablereport21tnpt.ค่าจอดทั้งหมดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setค่าจอดทั้งหมดNull() {
-                this[this.tablereport21tnpt.ค่าจอดทั้งหมดColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isส่วนลดNull() {
-                return this.IsNull(this.tablereport21tnpt.ส่วนลดColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setส่วนลดNull() {
-                this[this.tablereport21tnpt.ส่วนลดColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isค่าบริการเรียกเก็บNull() {
-                return this.IsNull(this.tablereport21tnpt.ค่าบริการเรียกเก็บColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setค่าบริการเรียกเก็บNull() {
-                this[this.tablereport21tnpt.ค่าบริการเรียกเก็บColumn] = global::System.Convert.DBNull;
-            }
-            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isชื่อส่วนลดNull() {
-                return this.IsNull(this.tablereport21tnpt.ชื่อส่วนลดColumn);
+            public bool Israbbit_IDNull() {
+                return this.IsNull(this.tablereport163.rabbit_IDColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setชื่อส่วนลดNull() {
-                this[this.tablereport21tnpt.ชื่อส่วนลดColumn] = global::System.Convert.DBNull;
+            public void Setrabbit_IDNull() {
+                this[this.tablereport163.rabbit_IDColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Isรหัสส่วนลดNull() {
-                return this.IsNull(this.tablereport21tnpt.รหัสส่วนลดColumn);
+            public bool IsBeam_IDNull() {
+                return this.IsNull(this.tablereport163.Beam_IDColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Setรหัสส่วนลดNull() {
-                this[this.tablereport21tnpt.รหัสส่วนลดColumn] = global::System.Convert.DBNull;
+            public void SetBeam_IDNull() {
+                this[this.tablereport163.Beam_IDColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsชำระเงินเองNull() {
-                return this.IsNull(this.tablereport21tnpt.ชำระเงินเองColumn);
+            public bool IsQR_CodeNull() {
+                return this.IsNull(this.tablereport163.QR_CodeColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetชำระเงินเองNull() {
-                this[this.tablereport21tnpt.ชำระเงินเองColumn] = global::System.Convert.DBNull;
+            public void SetQR_CodeNull() {
+                this[this.tablereport163.QR_CodeColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool Istnpt_idNull() {
-                return this.IsNull(this.tablereport21tnpt.tnpt_idColumn);
+            public bool IsSCB_IDNull() {
+                return this.IsNull(this.tablereport163.SCB_IDColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void Settnpt_idNull() {
-                this[this.tablereport21tnpt.tnpt_idColumn] = global::System.Convert.DBNull;
+            public void SetSCB_IDNull() {
+                this[this.tablereport163.SCB_IDColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -55646,210 +51819,6 @@ namespace ParkingManagementReport {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public report163Row Row {
-                get {
-                    return this.eventRow;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataRowAction Action {
-                get {
-                    return this.eventAction;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Row event argument class
-        ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public class report21RowChangeEvent : global::System.EventArgs {
-            
-            private report21Row eventRow;
-            
-            private global::System.Data.DataRowAction eventAction;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21RowChangeEvent(report21Row row, global::System.Data.DataRowAction action) {
-                this.eventRow = row;
-                this.eventAction = action;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21Row Row {
-                get {
-                    return this.eventRow;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataRowAction Action {
-                get {
-                    return this.eventAction;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Row event argument class
-        ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public class report22RowChangeEvent : global::System.EventArgs {
-            
-            private report22Row eventRow;
-            
-            private global::System.Data.DataRowAction eventAction;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report22RowChangeEvent(report22Row row, global::System.Data.DataRowAction action) {
-                this.eventRow = row;
-                this.eventAction = action;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report22Row Row {
-                get {
-                    return this.eventRow;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataRowAction Action {
-                get {
-                    return this.eventAction;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Row event argument class
-        ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public class tnpt_vehicle_earning_summaryRowChangeEvent : global::System.EventArgs {
-            
-            private tnpt_vehicle_earning_summaryRow eventRow;
-            
-            private global::System.Data.DataRowAction eventAction;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_vehicle_earning_summaryRowChangeEvent(tnpt_vehicle_earning_summaryRow row, global::System.Data.DataRowAction action) {
-                this.eventRow = row;
-                this.eventAction = action;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_vehicle_earning_summaryRow Row {
-                get {
-                    return this.eventRow;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataRowAction Action {
-                get {
-                    return this.eventAction;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Row event argument class
-        ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public class tnpt_card_sorted_company_summaryRowChangeEvent : global::System.EventArgs {
-            
-            private tnpt_card_sorted_company_summaryRow eventRow;
-            
-            private global::System.Data.DataRowAction eventAction;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_card_sorted_company_summaryRowChangeEvent(tnpt_card_sorted_company_summaryRow row, global::System.Data.DataRowAction action) {
-                this.eventRow = row;
-                this.eventAction = action;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_card_sorted_company_summaryRow Row {
-                get {
-                    return this.eventRow;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataRowAction Action {
-                get {
-                    return this.eventAction;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Row event argument class
-        ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public class tnpt_company_billing_summaryRowChangeEvent : global::System.EventArgs {
-            
-            private tnpt_company_billing_summaryRow eventRow;
-            
-            private global::System.Data.DataRowAction eventAction;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_company_billing_summaryRowChangeEvent(tnpt_company_billing_summaryRow row, global::System.Data.DataRowAction action) {
-                this.eventRow = row;
-                this.eventAction = action;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tnpt_company_billing_summaryRow Row {
-                get {
-                    return this.eventRow;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataRowAction Action {
-                get {
-                    return this.eventAction;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Row event argument class
-        ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-        public class report21tnptRowChangeEvent : global::System.EventArgs {
-            
-            private report21tnptRow eventRow;
-            
-            private global::System.Data.DataRowAction eventAction;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21tnptRowChangeEvent(report21tnptRow row, global::System.Data.DataRowAction action) {
-                this.eventRow = row;
-                this.eventAction = action;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public report21tnptRow Row {
                 get {
                     return this.eventRow;
                 }

@@ -34,7 +34,7 @@ namespace ParkingManagementReport.Common
             public static readonly string PaymentChannelPromptPay = "PromptPay";
             public static readonly string PaymentChannelTrueMoney = "TrueMoney";
             public static readonly string PaymentChannelCash = "เงินสด";
-            public static readonly string PaymentChannelEdc = "EDC";
+            public static readonly string PaymentChannelEDC = "EDC";
             #endregion
         }
     }

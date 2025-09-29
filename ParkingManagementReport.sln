@@ -5,7 +5,7 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingManagementReport", "ParkingManagementReport\ParkingManagementReport.csproj", "{C3E2C339-AD95-49E8-899E-34B76072E41A}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupReport", "SetupReport\SetupReport.vdproj", "{59F65F1E-B860-4236-9107-F5819C767BFD}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupReport", "SetupReport\SetupReport.vdproj", "{ED4E935E-EC46-4E37-B19E-ADA02F9A500A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,11 +26,11 @@ Global
 		{C3E2C339-AD95-49E8-899E-34B76072E41A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3E2C339-AD95-49E8-899E-34B76072E41A}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{C3E2C339-AD95-49E8-899E-34B76072E41A}.SingleImage|Any CPU.Build.0 = Release|Any CPU
-		{59F65F1E-B860-4236-9107-F5819C767BFD}.CD_ROM|Any CPU.ActiveCfg = Debug
-		{59F65F1E-B860-4236-9107-F5819C767BFD}.Debug|Any CPU.ActiveCfg = Debug
-		{59F65F1E-B860-4236-9107-F5819C767BFD}.DVD-5|Any CPU.ActiveCfg = Debug
-		{59F65F1E-B860-4236-9107-F5819C767BFD}.Release|Any CPU.ActiveCfg = Release
-		{59F65F1E-B860-4236-9107-F5819C767BFD}.SingleImage|Any CPU.ActiveCfg = Debug
+		{ED4E935E-EC46-4E37-B19E-ADA02F9A500A}.CD_ROM|Any CPU.ActiveCfg = Debug
+		{ED4E935E-EC46-4E37-B19E-ADA02F9A500A}.Debug|Any CPU.ActiveCfg = Debug
+		{ED4E935E-EC46-4E37-B19E-ADA02F9A500A}.DVD-5|Any CPU.ActiveCfg = Debug
+		{ED4E935E-EC46-4E37-B19E-ADA02F9A500A}.Release|Any CPU.ActiveCfg = Release
+		{ED4E935E-EC46-4E37-B19E-ADA02F9A500A}.SingleImage|Any CPU.ActiveCfg = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

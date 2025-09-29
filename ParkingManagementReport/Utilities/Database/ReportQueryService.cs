@@ -1717,7 +1717,7 @@ namespace ParkingManagementReport.Utilities.Database
                                 else if (Configs.UsePaymentRabbit)
                                     sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                             }
-                            else if (paymentChannel == Constants.TextBased.PaymentChannelEdc)
+                            else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                             {
                                 if (Configs.UsePaymentKsher)
                                     sql += " AND t3.channel is null AND recordout.pay_type = 'EDC'";
@@ -1751,7 +1751,7 @@ namespace ParkingManagementReport.Utilities.Database
                             else if (Configs.UsePaymentRabbit)
                                 sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                         }
-                        else if (paymentChannel == Constants.TextBased.PaymentChannelEdc)
+                        else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                         {
                             if (Configs.UsePaymentKsher)
                                 sql += " AND t3.channel is null AND recordout.pay_type = 'EDC'";
@@ -1862,7 +1862,7 @@ namespace ParkingManagementReport.Utilities.Database
                                 sql += " AND t3.channel = 'TrueMoney'";
                             else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
                                 sql += " AND t3.channel is null AND t2.pay_type = 'C'";
-                            else if (paymentChannel == Constants.TextBased.PaymentChannelEdc)
+                            else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                                 sql += " AND t3.channel is null AND t2.pay_type = 'EDC'";
                         }
                         sql += " and t2.printno > 0";
@@ -8893,7 +8893,7 @@ namespace ParkingManagementReport.Utilities.Database
                         else if (Configs.UsePaymentBeam)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                     }
-                    else if (paymentChannel == Constants.TextBased.PaymentChannelEdc)
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                     {
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
@@ -8990,7 +8990,7 @@ namespace ParkingManagementReport.Utilities.Database
                         else if (Configs.UsePaymentBeam)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                     }
-                    else if (paymentChannel == Constants.TextBased.PaymentChannelEdc)
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                     {
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using ParkingManagementReport.Common;
 
 namespace ParkingManagementReport
 {
@@ -25,7 +24,7 @@ namespace ParkingManagementReport
             {
                 this.TopMost = true;
                 cobDB.Items.Clear();
-                foreach (var kvp in AppGlobalVariables.Database.LookupList.ToArray())
+                foreach (var kvp in FormMain.pm.DicDatabase.ToArray())
                 {
                     cobDB.Items.Add(kvp.Key);
                 }
@@ -45,9 +44,9 @@ namespace ParkingManagementReport
             {
                 string strText = "";
                 btnDeleteDB.Enabled = true;
-                AppGlobalVariables.Database.LookupList.Remove(UserFullNameTextBoxDB.Text);
+                FormMain.pm.DicDatabase.Remove(txtNameDB.Text);
                 cobDB.Items.Clear();
-                foreach (var kvp in AppGlobalVariables.Database.LookupList.ToArray())
+                foreach (var kvp in FormMain.pm.DicDatabase.ToArray())
                 {
                     cobDB.Items.Add(kvp.Key);
                     strText += kvp.Value + "," + kvp.Key + Environment.NewLine;
@@ -73,7 +72,7 @@ namespace ParkingManagementReport
                 }
 
                 tmpNameDB = "";
-                UserFullNameTextBoxDB.Text = "";
+                txtNameDB.Text = "";
                 txtIPDB.Text = "";
                 txtDB.Text = ""; //Mac 2016/11/09
                 MessageBox.Show("Delete Complete", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -90,7 +89,7 @@ namespace ParkingManagementReport
             try
             {
                 string strText = "";
-                if ((txtIPDB.Text.Trim().Length < 1) && (UserFullNameTextBoxDB.Text.Trim().Length < 1))
+                if ((txtIPDB.Text.Trim().Length < 1) && (txtNameDB.Text.Trim().Length < 1))
                 {
                     MessageBox.Show("กรุณาใส่ IP และ Name", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtIPDB.Focus();
@@ -99,39 +98,39 @@ namespace ParkingManagementReport
 
                 if (tmpNameDB.Length > 0)
                 {
-                    AppGlobalVariables.Database.LookupList.Remove(tmpNameDB);
-                    //AppGlobalVariables.Database.LookupList.Add(UserFullNameTextBoxDB.Text, txtIPDB.Text);
-                    AppGlobalVariables.Database.LookupList.Add(UserFullNameTextBoxDB.Text, txtIPDB.Text + "|" + txtDB.Text); //Mac 2016/11/09
+                    FormMain.pm.DicDatabase.Remove(tmpNameDB);
+                    //FormMain.pm.DicDatabase.Add(txtNameDB.Text, txtIPDB.Text);
+                    FormMain.pm.DicDatabase.Add(txtNameDB.Text, txtIPDB.Text + "|" + txtDB.Text); //Mac 2016/11/09
                     tmpNameDB = "";
-                    UserFullNameTextBoxDB.Text = "";
+                    txtNameDB.Text = "";
                     txtIPDB.Text = "";
                     txtDB.Text = ""; //Mac 2016/11/09
                     MessageBox.Show("Update Complete", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    foreach (var kvp in AppGlobalVariables.Database.LookupList.ToArray())
+                    foreach (var kvp in FormMain.pm.DicDatabase.ToArray())
                     {
-                        if (kvp.Key == UserFullNameTextBoxDB.Text)
+                        if (kvp.Key == txtNameDB.Text)
                         {
                             MessageBox.Show("Name ซ้ำกัน", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             tmpNameDB = "";
-                            UserFullNameTextBoxDB.Focus();
+                            txtNameDB.Focus();
                             return;
                         }
                     }
 
-                    //AppGlobalVariables.Database.LookupList.Add(UserFullNameTextBoxDB.Text, txtIPDB.Text);
-                    AppGlobalVariables.Database.LookupList.Add(UserFullNameTextBoxDB.Text, txtIPDB.Text + "|" + txtDB.Text); //Mac 2016/11/09
+                    //FormMain.pm.DicDatabase.Add(txtNameDB.Text, txtIPDB.Text);
+                    FormMain.pm.DicDatabase.Add(txtNameDB.Text, txtIPDB.Text + "|" + txtDB.Text); //Mac 2016/11/09
                     tmpNameDB = "";
-                    UserFullNameTextBoxDB.Text = "";
+                    txtNameDB.Text = "";
                     txtIPDB.Text = "";
                     txtDB.Text = ""; //Mac 2016/11/09
                     MessageBox.Show("Add Complete", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 cobDB.Items.Clear();
-                foreach (var kvp in AppGlobalVariables.Database.LookupList.ToArray())
+                foreach (var kvp in FormMain.pm.DicDatabase.ToArray())
                 {
                     cobDB.Items.Add(kvp.Key);
                     strText += kvp.Value + "," + kvp.Key + Environment.NewLine;
@@ -169,12 +168,12 @@ namespace ParkingManagementReport
             {
                 tmpNameDB = "";
                 tmpNameDB = cobDB.Text;
-                UserFullNameTextBoxDB.Text = cobDB.Text;
-                //txtIPDB.Text = AppGlobalVariables.Database.LookupList[cobDB.Text];
-                txtIPDB.Text = AppGlobalVariables.Database.LookupList[cobDB.Text].Split('|')[0]; //Mac 2016/11/10
+                txtNameDB.Text = cobDB.Text;
+                //txtIPDB.Text = FormMain.pm.DicDatabase[cobDB.Text];
+                txtIPDB.Text = FormMain.pm.DicDatabase[cobDB.Text].Split('|')[0]; //Mac 2016/11/10
                 try
                 {
-                    txtDB.Text = AppGlobalVariables.Database.LookupList[cobDB.Text].Split('|')[1]; //Mac 2016/11/10
+                    txtDB.Text = FormMain.pm.DicDatabase[cobDB.Text].Split('|')[1]; //Mac 2016/11/10
                 }
                 catch { txtDB.Text = ""; }
 
@@ -192,7 +191,7 @@ namespace ParkingManagementReport
             try
             {
                 tmpNameDB = "";
-                UserFullNameTextBoxDB.Text = "";
+                txtNameDB.Text = "";
                 txtIPDB.Text = "";
                 txtDB.Text = ""; //Mac 2016/11/09
             }
