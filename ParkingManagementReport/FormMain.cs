@@ -3752,6 +3752,16 @@ namespace ParkingManagementReport
 
                             }
                         }
+                        else
+                        {
+                            if(comPromotion.SelectedIndex != 0)
+                            {
+                                dr = Map.NewRow();
+                                dr["Proname"] = comPromotion.Text.ToString();
+                                dr["proid"] = dicProNameInt[comPromotion.Text].ToString();
+                                Map.Rows.Add(dr);
+                            }
+                        }
 
                         string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                         path = path.Replace("\\bin\\Debug", "");
