@@ -52,6 +52,7 @@ namespace ParkingManagementReport.Utilities.Database
         private bool isParkingGreaterChecked;
         private bool isParkingLesserChecked;
         private bool isParkingBetweenChecked;
+        private bool isLegitPromotionRange;
         private DateTime startDate;
         private DateTime endDate;
         private DateTime startTime;
@@ -109,7 +110,8 @@ namespace ParkingManagementReport.Utilities.Database
             string parkingBetweenTo,
             string promotionRangeFrom,
             string promotionRangeTo,
-            bool isRegistrationDateChecked, bool isExpirationDateChecked, bool isParkingGreaterChecked, bool isParkingLesserChecked, bool isParkingBetweenChecked,
+            bool isRegistrationDateChecked, 
+            bool isExpirationDateChecked, bool isParkingGreaterChecked, bool isParkingLesserChecked, bool isParkingBetweenChecked,
             DateTime startDate, DateTime endDate, DateTime startTime, DateTime endTime, DateTime memberExpirationStartDate, DateTime memberExpirationEndDate)
         {
             this.selectedReportId = selectedReportId;
@@ -170,16 +172,9 @@ namespace ParkingManagementReport.Utilities.Database
             this.memberTypeId = AppGlobalVariables.MemberGroupsToId[memberType];
             this.startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
             this.endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString();
-            if (int.TryParse(promotionRangeFrom, out int from))
-                this.promotionRangeFrom = from;
-            else
-                this.promotionRangeFrom = 0;
-            if (int.TryParse(promotionRangeTo, out int to))
-                this.promotionRangeTo = to;
-            else
-                this.promotionRangeTo = 0;
 
-
+            this.isLegitPromotionRange = CheckAndUpdatePromotionRange(promotionRangeFrom, promotionRangeTo);
+           
             string reportQuery = GenerateReportQuery();
 
             //Configs.WriteLogFile(
@@ -1331,20 +1326,51 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " order by t1.dateout, t1.printno";
                     break;
                 case 40:
-                case 41:
-                    sql = "select no as ลำดับ, name as ชื่อ, license as ทะเบียน, picdiv, piclic, date as วันที่";
-                    sql += ", case when gate = 'I' then 'ขาเข้า' when gate = 'O' then 'ขาออก' when gate = 'B' then 'ขาเข้า/ขาออก' end as ประตู";
-                    sql += " from recordmember";
-                    sql += " WHERE date BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
-                    if (!String.IsNullOrEmpty(licensePlate))
-                        sql += " AND license LIKE '%" + licensePlate + "%'";
-                    if (!String.IsNullOrEmpty(cardId))
-                        sql += " AND id = " + cardId;
-                    if (recordNumber != "")
-                        sql += " AND no_recordin = " + recordNumber;
-                    sql += " ORDER BY no";
+                //case 41:
+                //    sql = "select no as ลำดับ, name as ชื่อ, license as ทะเบียน, picdiv, piclic, date as วันที่";
+                //    sql += ", case when gate = 'I' then 'ขาเข้า' when gate = 'O' then 'ขาออก' when gate = 'B' then 'ขาเข้า/ขาออก' end as ประตู";
+                //    sql += " from recordmember";
+                //    sql += " WHERE date BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+                //    if (!String.IsNullOrEmpty(licensePlate))
+                //        sql += " AND license LIKE '%" + licensePlate + "%'";
+                //    if (!String.IsNullOrEmpty(cardId))
+                //        sql += " AND id = " + cardId;
+                //    if (recordNumber != "")
+                //        sql += " AND no_recordin = " + recordNumber;
+                //    sql += " ORDER BY no";
 
+                //    string testImage = @"D:\ImagePicture_POS\POS_User\2024\06\25\18446744073609551874_25062024_11463995458.png";
+                //    break;
+                case 41:
+                    string testImage = @"D:/ImagePicture_POS/POS_User/2024/06/25/18446744073609551874_25062024_11463995458.png";
+
+                    sql = "SELECT " +
+                          "no AS ลำดับ, " +
+                          "name AS ชื่อ, " +
+                          "license AS ทะเบียน, " +
+                          $"'{testImage}' AS picdiv, " +
+                          $"'{testImage}' AS piclic, " +
+                          "date AS วันที่, " +
+                          "CASE " +
+                          "   WHEN gate = 'I' THEN 'ขาเข้า' " +
+                          "   WHEN gate = 'O' THEN 'ขาออก' " +
+                          "   WHEN gate = 'B' THEN 'ขาเข้า/ขาออก' " +
+                          "END AS ประตู " +
+                          "FROM recordmember " +
+                          "WHERE date BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+
+                    if (!string.IsNullOrEmpty(licensePlate))
+                        sql += " AND license LIKE '%" + licensePlate + "%'";
+
+                    if (!string.IsNullOrEmpty(cardId))
+                        sql += " AND id = " + cardId;
+
+                    if (!string.IsNullOrEmpty(recordNumber))
+                        sql += " AND no_recordin = " + recordNumber;
+
+                    sql += " ORDER BY no";
                     break;
+
                 case 42:
                     sql = "select id as 'No.', company as บริษัท, staffid as รหัสพนักงาน, name as 'ชื่อ-นามสกุล', cardid as 'ID Card', stickerno as 'Sticker No.'";
                     sql += ", license as ทะเบียนรถ, cartype as ประเภทรถ, tel as เบอร์ติดต่อ from member_up2u";
@@ -1505,50 +1531,62 @@ namespace ParkingManagementReport.Utilities.Database
                     break;
 
                 case 46:
-                    sql = @"
-                          SELECT
-                              (SELECT groupname FROM membergroupprice_month WHERE id = memgrouppriceid_month) AS บริษัท,";
+                    StringBuilder strBuilder = new StringBuilder();
+
+                    strBuilder.AppendLine("SELECT");
+                    strBuilder.AppendLine("    mgp.groupname AS บริษัท,");
 
                     if (Configs.UseAsciiMember)
-                        sql += "CAST(CONCAT(CHAR(LEFT(cardid, 2)), MID(cardid, 3)) AS CHAR) AS เลขที่บัตร, ";
+                        strBuilder.AppendLine("    CAST(CONCAT(CHAR(LEFT(m.cardid, 2)), MID(m.cardid, 3)) AS CHAR) AS เลขที่บัตร,");
                     else
-                        sql += "CAST(address AS CHAR) AS เลขที่บัตร, ";
+                        strBuilder.AppendLine("    CAST(m.address AS CHAR) AS เลขที่บัตร,");
 
-                    sql += @"
-                           name AS ชื่อสมาชิก,
-                           license AS เลขทะเบียนรถ,
-                           DATE_FORMAT(datestart, '%d/%m/%y') AS วันที่สมัคร,
-                           DATE_FORMAT(dateexprie, '%d/%m/%y') AS วันที่หมดอายุ,
-                           CASE WHEN memgrouppriceid_pay = 0 THEN 'N' ELSE 'Y' END AS ผู้เช่า,
-                           memgrouppriceid_pay AS ค่าบัตรสมาชิก
-                           FROM member WHERE 1 = 1 ";
+                    strBuilder.AppendLine(" m.name AS ชื่อสมาชิก,");
+                    strBuilder.AppendLine(" m.license AS เลขทะเบียนรถ,");
+                    strBuilder.AppendLine(" DATE_FORMAT(m.datestart, '%d/%m/%y') AS วันที่สมัคร,");
+                    strBuilder.AppendLine(" DATE_FORMAT(m.dateexprie, '%d/%m/%y') AS วันที่หมดอายุ,");
+                    strBuilder.AppendLine(" CASE WHEN m.memgrouppriceid_pay = 0 THEN 'N' ELSE 'Y' END AS ผู้เช่า,");
+                    strBuilder.AppendLine(" m.memgrouppriceid_pay AS ค่าบัตรสมาชิก,");
+                    strBuilder.AppendLine(" mgp.id AS membergroupprice_month_id");
+                    strBuilder.AppendLine(" FROM member m");
+                    strBuilder.AppendLine(" LEFT JOIN membergroupprice_month mgp");
+                    strBuilder.AppendLine(" ON mgp.id = m.memgrouppriceid_month");
+                    strBuilder.AppendLine(" WHERE 1 = 1");
+
                     try
                     {
                         if (memberGroupMonth != Constants.TextBased.All)
-                            sql += $"AND memgrouppriceid_month = {AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth]} ";
+                            strBuilder.AppendLine($"AND m.memgrouppriceid_month = {AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth]}");
                     }
-                    catch { MessageBox.Show($"ไม่มีชื่อบริษัท หรือชื่อบริษัทไม่ถูกต้อง:\r\n{memberGroupMonth}"); }
-
+                    catch
+                    {
+                        MessageBox.Show($"ไม่มีชื่อบริษัท หรือชื่อบริษัทไม่ถูกต้อง:\r\n{memberGroupMonth}");
+                    }
 
                     if (paymentStatus == Constants.TextBased.PaymentStatusPaid)
-                        sql += "AND memgrouppriceid_pay > 0 ";
+                        strBuilder.AppendLine("AND m.memgrouppriceid_pay > 0");
 
                     if (paymentStatus == Constants.TextBased.PaymentStatusUnPaid)
-                        sql += "AND memgrouppriceid_pay = 0 ";
+                        strBuilder.AppendLine("AND m.memgrouppriceid_pay = 0");
 
                     if (memberName != Constants.TextBased.All)
-                        sql += $"AND name = '{memberName}' ";
+                        strBuilder.AppendLine($"AND m.name = '{memberName}'");
 
                     if (!string.IsNullOrEmpty(cardId))
-                        sql += $"AND address LIKE '%{cardId.Trim()}%' ";
+                        strBuilder.AppendLine($"AND m.address LIKE '%{cardId.Trim()}%'");
 
-                    sql += @"ORDER BY (SELECT nogroup FROM membergroupprice_month WHERE id = memgrouppriceid_month), ";
+                    if (isLegitPromotionRange)
+                        strBuilder.AppendLine($"AND mgp.id BETWEEN {promotionRangeFrom} AND {promotionRangeTo}");
 
-                    sql += Configs.UseAsciiMember
-                        ? "CAST(CONCAT(CHAR(LEFT(cardid, 2)), MID(cardid, 3)) AS CHAR) "
-                        : "address ";
+                    strBuilder.Append("ORDER BY mgp.nogroup,");
+                    if (Configs.UseAsciiMember)
+                        strBuilder.Append(" CAST(CONCAT(CHAR(LEFT(m.cardid, 2)), MID(m.cardid, 3)) AS CHAR)");
+                    else                    
+                        strBuilder.Append(" m.address");
+
+                    sql = strBuilder.ToString();
+
                     break;
-
 
                 case 47:
                     sql = "select m.groupname as บริษัท";
@@ -8724,9 +8762,7 @@ namespace ParkingManagementReport.Utilities.Database
                 case 161: // 34.สรุปค่าบริการรายเดือน Member รถยนต์
                     if (Configs.Reports.UseReportThanapoom)
                     {
-                        bool isPromotionRangeEmpty = (promotionRangeFrom == 0) || (promotionRangeTo == 0);
-                        bool isLegitRange = !isPromotionRangeEmpty && (promotionRangeFrom <= promotionRangeTo);
-
+                       
                         StringBuilder sqlBuilder = new StringBuilder();
                         sqlBuilder.AppendLine("SELECT");
                         sqlBuilder.AppendLine("vg.id AS 'WPT Code',");
@@ -8742,7 +8778,7 @@ namespace ParkingManagementReport.Utilities.Database
                             int memberGroupMonthId = AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
                             sqlBuilder.AppendLine($"AND vg.id = '{memberGroupMonthId}'");
                         }
-                        if (isLegitRange)
+                        if (isLegitPromotionRange)
                             sqlBuilder.AppendLine($"AND vg.id BETWEEN {promotionRangeFrom} AND {promotionRangeTo}");
 
                         sqlBuilder.AppendLine("GROUP BY vg.id, vg.vendor_name");
@@ -9518,10 +9554,7 @@ namespace ParkingManagementReport.Utilities.Database
                 }
             }
 
-            bool isPromotionRangeEmpty = (promotionRangeFrom == 0) || (promotionRangeTo == 0);
-            bool isLegitRange = promotionRangeFrom < promotionRangeTo;
-
-            if (!isPromotionRangeEmpty && isLegitRange)
+            if (isLegitPromotionRange)
             {
                 if (Configs.Reports.UseReportThanapoom)
                 {
@@ -10169,8 +10202,23 @@ namespace ParkingManagementReport.Utilities.Database
 
             return sql;
         }
-        #endregion
 
+        private bool CheckAndUpdatePromotionRange(string promotionRangeFrom, string promotionRangeTo)
+        {
+            if (int.TryParse(promotionRangeFrom, out int from))
+                this.promotionRangeFrom = from;
+            else
+                this.promotionRangeFrom = 0;
+            if (int.TryParse(promotionRangeTo, out int to))
+                this.promotionRangeTo = to;
+            else
+                this.promotionRangeTo = 0;
+
+            bool isPromotionRangeEmpty = (this.promotionRangeFrom == 0) || (this.promotionRangeTo == 0);
+            bool isLegitPromotionRange = !isPromotionRangeEmpty && (this.promotionRangeFrom <= this.promotionRangeTo);
+
+            return isLegitPromotionRange;
+        }
         private void SaveToTextFile(DataTable dt, string filename)
         {
             string stOutput = "";
@@ -10199,5 +10247,6 @@ namespace ParkingManagementReport.Utilities.Database
             fs.Close();
             MessageBox.Show("Text file Save Complete!");
         }
+        #endregion
     }
 }

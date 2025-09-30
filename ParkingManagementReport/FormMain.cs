@@ -2501,7 +2501,7 @@ namespace ParkingManagementReport
                                         fiStream.Close();
                                         binReader.Close();
                                     }
-                                    catch (Exception ex)
+                                    catch (Exception)
                                     {
                                         dr4["piclic"] = null;
                                     }
@@ -2509,7 +2509,7 @@ namespace ParkingManagementReport
                                     Map4.Rows.Add(dr4);
                                 }
 
-                                rpt.Load(path + "\\CrystalReports\\Report42.rpt");
+                                rpt.Load(path + "\\CrystalReports\\Report42.rpt"); 
                                 rpt.SetDataSource(Map4);
                                 dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
                                 rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
@@ -6844,7 +6844,7 @@ namespace ParkingManagementReport
                 PaymentChannelComboBox.Visible = false;
             }
 
-            if (selectedReportId == 20 || selectedReportId == 21 || selectedReportId == 161)
+            if (selectedReportId == 20 || selectedReportId == 21 || selectedReportId == 46 || selectedReportId == 161)
             {
                 PromotionIdFrom.Clear();
                 PromotionIdTo.Clear();
