@@ -3754,7 +3754,7 @@ namespace ParkingManagementReport
                         }
                         else
                         {
-                            if(comPromotion.SelectedIndex != 0)
+                            if (comPromotion.SelectedIndex != 0)
                             {
                                 dr = Map.NewRow();
                                 dr["Proname"] = comPromotion.Text.ToString();
@@ -5947,7 +5947,7 @@ namespace ParkingManagementReport
                         /* t1 = _post, t2 = _get, t3 = left join t1 and t2 */
                         if (pm.UsePaymentKsher)
                             sql += " LEFT JOIN (SELECT MAX(t1.no) AS max_no, t1.no_recordin, t1.mch_order_no, t1.channel, t1.status, t2.ksher_order_no FROM ksherpay_post t1 LEFT JOIN ksherpay_get t2 ON t1.mch_order_no = t2.mch_order_no WHERE status = 'Y' GROUP BY no_recordin) t3 ON recordout.no = t3.no_recordin";
-                        else if (pm.UsePaymentBeam) 
+                        else if (pm.UsePaymentBeam)
                             sql += " LEFT JOIN (SELECT MAX(t1.no) AS max_no, t1.no_recordin, t1.beam_id, t1.status, t2.qr FROM beam_post t1 LEFT JOIN beam_get t2 ON t1.beam_id = t2.beam_id WHERE status = 'Y' GROUP BY no_recordin) t3 ON recordout.no = t3.no_recordin";
                         else if (pm.UsePaymentRabbit)
                             sql += " LEFT JOIN (SELECT MAX(t1.no) AS max_no, t1.no_recordin, t1.rabbit_id, t1.status, t2.qr FROM rabbit_post t1 LEFT JOIN rabbit_get t2 ON t1.rabbit_id = t2.rabbit_id WHERE status = 'Y' GROUP BY no_recordin) t3 ON recordout.no = t3.no_recordin";
@@ -6069,7 +6069,7 @@ namespace ParkingManagementReport
                             sql += ", t2.receipt ";
                         }
                         sql += " from recordin t1 left join recordout t2 on t1.no = t2.no";
-                        
+
                         if (pm.UsePaymentKsher)
                             sql += " left join (select max(t1.no), t1.no_recordin, t1.mch_order_no, t1.channel, t1.status, t2.ksher_order_no from ksherpay_post t1 left join ksherpay_get t2 on t1.mch_order_no = t2.mch_order_no where t1.status = 'Y' group by t1.no_recordin) t3 on t2.no = t3.no_recordin";
                         else if (pm.UsePaymentBeam)
@@ -6122,7 +6122,7 @@ namespace ParkingManagementReport
 
                         sql += " and t2.printno > 0";
                         sql += " and t2.status = 'N'";
-                        if (pm.print.UseReceiptFor1Out) 
+                        if (pm.print.UseReceiptFor1Out)
                             sql += " order by t2.receipt, t2.printno";
                         else
                             sql += " order by t2.printno";
@@ -13719,7 +13719,7 @@ namespace ParkingManagementReport
                     sql += " ORDER BY t3.no";
                     break;
 
-               
+
                 case 162:
                     string fontSlip162 = "";
                     if (strReceiptName.Length > 0)
@@ -14776,7 +14776,7 @@ namespace ParkingManagementReport
                                             fiStream.Close();
                                             binReader.Close();
                                         }
-                                        catch 
+                                        catch
                                         {
                                             dr["ov"] = null;
                                             //  Console.WriteLine(ex.ToString());
@@ -17462,7 +17462,7 @@ namespace ParkingManagementReport
                                     crvResult.Refresh();
 
                                     break;
-                                } 
+                                }
                                 tabControl1.SelectTab(1);
                                 rpt.Load(path + "\\CrystalReports\\Report213.rpt");
                                 rpt.SetDataSource(dt);
@@ -18334,7 +18334,7 @@ namespace ParkingManagementReport
                 string convertedUserIn = dicUserStr.TryGetValue(Convert.ToInt16(row["เจ้าหน้าที่ขาเข้า"]), out string userIn) ? userIn : string.Empty;
                 string convertedUserOut = dicUserStr.TryGetValue(Convert.ToInt16(row["เจ้าหน้าที่ขาออก"]), out string userOut) ? userOut : string.Empty;
                 string convertedEstamp = dicProNameStr.TryGetValue(Convert.ToInt16(row["E-Stamp"]), out string estamp) ? estamp : string.Empty;
-                
+
                 DataRow newRow = convertedDataTable.NewRow();
                 newRow["ลำดับ"] = row["หมายเลขรายการ"]?.ToString();
                 newRow["ประเภท"] = convertedCarType;
@@ -18882,7 +18882,7 @@ namespace ParkingManagementReport
                 }
             }
         }
-       
+
         private string sqlReport()
         {
             /*string sql = "SELECT recordout.no as ลำดับ,(select typename from cartype where typeid = recordin.cartype) as ประเภท, case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end as ทะเบียน,"
@@ -20316,7 +20316,7 @@ recordin.datein, recordin.userin
                 }
                 else
                 {
-                    sql += " recordin.cartype end";
+                    sql += " recordin.cartype end as ประเภท";
                 }
             }
             else
@@ -20422,7 +20422,7 @@ recordin.datein, recordin.userin
                     }
                     else
                     {
-                        sql += " recordin.cartype end";
+                        sql += " recordin.cartype end as ประเภท";
                     }
                 }
                 else

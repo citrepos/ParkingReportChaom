@@ -217,14 +217,14 @@
             // 
             this.groupBox1.Controls.Add(this.cobChannel);
             this.groupBox1.Controls.Add(this.label42);
+            this.groupBox1.Controls.Add(this.label31);
+            this.groupBox1.Controls.Add(this.cobGuardhouse);
             this.groupBox1.Controls.Add(this.panel7);
             this.groupBox1.Controls.Add(this.panel6);
             this.groupBox1.Controls.Add(this.label36);
             this.groupBox1.Controls.Add(this.txtNameCard);
             this.groupBox1.Controls.Add(this.panel5);
             this.groupBox1.Controls.Add(this.panel4);
-            this.groupBox1.Controls.Add(this.label31);
-            this.groupBox1.Controls.Add(this.cobGuardhouse);
             this.groupBox1.Controls.Add(this.label30);
             this.groupBox1.Controls.Add(this.txtRecordNo);
             this.groupBox1.Controls.Add(this.panel2Up2U);
@@ -305,7 +305,7 @@
             this.panel7.Controls.Add(this.chkLess);
             this.panel7.Controls.Add(this.chkGreater);
             this.panel7.Location = new System.Drawing.Point(10, 130);
-            this.panel7.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel7.Margin = new System.Windows.Forms.Padding(2);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(332, 52);
             this.panel7.TabIndex = 48;
@@ -315,7 +315,7 @@
             // 
             this.chkBetween.AutoSize = true;
             this.chkBetween.Location = new System.Drawing.Point(56, 34);
-            this.chkBetween.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chkBetween.Margin = new System.Windows.Forms.Padding(2);
             this.chkBetween.Name = "chkBetween";
             this.chkBetween.Size = new System.Drawing.Size(68, 17);
             this.chkBetween.TabIndex = 2;
@@ -336,7 +336,7 @@
             // 
             this.txtBetweenMin2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
             this.txtBetweenMin2.Location = new System.Drawing.Point(256, 34);
-            this.txtBetweenMin2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtBetweenMin2.Margin = new System.Windows.Forms.Padding(2);
             this.txtBetweenMin2.Name = "txtBetweenMin2";
             this.txtBetweenMin2.Size = new System.Drawing.Size(45, 18);
             this.txtBetweenMin2.TabIndex = 23;
@@ -373,7 +373,7 @@
             // 
             this.txtBetweenMin1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
             this.txtBetweenMin1.Location = new System.Drawing.Point(130, 34);
-            this.txtBetweenMin1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtBetweenMin1.Margin = new System.Windows.Forms.Padding(2);
             this.txtBetweenMin1.Name = "txtBetweenMin1";
             this.txtBetweenMin1.Size = new System.Drawing.Size(45, 18);
             this.txtBetweenMin1.TabIndex = 19;
@@ -383,7 +383,7 @@
             // 
             this.txtLessMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
             this.txtLessMin.Location = new System.Drawing.Point(130, 18);
-            this.txtLessMin.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtLessMin.Margin = new System.Windows.Forms.Padding(2);
             this.txtLessMin.Name = "txtLessMin";
             this.txtLessMin.Size = new System.Drawing.Size(45, 18);
             this.txtLessMin.TabIndex = 18;
@@ -393,7 +393,7 @@
             // 
             this.txtGreaterMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
             this.txtGreaterMin.Location = new System.Drawing.Point(130, 2);
-            this.txtGreaterMin.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtGreaterMin.Margin = new System.Windows.Forms.Padding(2);
             this.txtGreaterMin.Name = "txtGreaterMin";
             this.txtGreaterMin.Size = new System.Drawing.Size(45, 18);
             this.txtGreaterMin.TabIndex = 17;
@@ -412,7 +412,7 @@
             // 
             this.chkLess.AutoSize = true;
             this.chkLess.Location = new System.Drawing.Point(56, 18);
-            this.chkLess.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chkLess.Margin = new System.Windows.Forms.Padding(2);
             this.chkLess.Name = "chkLess";
             this.chkLess.Size = new System.Drawing.Size(32, 17);
             this.chkLess.TabIndex = 1;
@@ -424,7 +424,7 @@
             // 
             this.chkGreater.AutoSize = true;
             this.chkGreater.Location = new System.Drawing.Point(56, 2);
-            this.chkGreater.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chkGreater.Margin = new System.Windows.Forms.Padding(2);
             this.chkGreater.Name = "chkGreater";
             this.chkGreater.Size = new System.Drawing.Size(32, 17);
             this.chkGreater.TabIndex = 0;
@@ -437,7 +437,7 @@
             this.panel6.Controls.Add(this.chkDateExpire);
             this.panel6.Controls.Add(this.chkDateRegis);
             this.panel6.Location = new System.Drawing.Point(841, 7);
-            this.panel6.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel6.Margin = new System.Windows.Forms.Padding(2);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(166, 43);
             this.panel6.TabIndex = 47;
@@ -447,7 +447,7 @@
             // 
             this.chkDateExpire.AutoSize = true;
             this.chkDateExpire.Location = new System.Drawing.Point(86, 19);
-            this.chkDateExpire.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chkDateExpire.Margin = new System.Windows.Forms.Padding(2);
             this.chkDateExpire.Name = "chkDateExpire";
             this.chkDateExpire.Size = new System.Drawing.Size(86, 17);
             this.chkDateExpire.TabIndex = 1;
@@ -459,7 +459,7 @@
             // 
             this.chkDateRegis.AutoSize = true;
             this.chkDateRegis.Location = new System.Drawing.Point(5, 19);
-            this.chkDateRegis.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chkDateRegis.Margin = new System.Windows.Forms.Padding(2);
             this.chkDateRegis.Name = "chkDateRegis";
             this.chkDateRegis.Size = new System.Drawing.Size(73, 17);
             this.chkDateRegis.TabIndex = 0;
@@ -470,7 +470,7 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(682, 48);
+            this.label36.Location = new System.Drawing.Point(547, 47);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(85, 13);
             this.label36.TabIndex = 46;
@@ -478,7 +478,7 @@
             // 
             // txtNameCard
             // 
-            this.txtNameCard.Location = new System.Drawing.Point(684, 64);
+            this.txtNameCard.Location = new System.Drawing.Point(549, 63);
             this.txtNameCard.Name = "txtNameCard";
             this.txtNameCard.Size = new System.Drawing.Size(84, 20);
             this.txtNameCard.TabIndex = 45;
@@ -487,7 +487,7 @@
             // 
             this.panel5.Controls.Add(this.txtAdd);
             this.panel5.Controls.Add(this.label34);
-            this.panel5.Location = new System.Drawing.Point(966, 85);
+            this.panel5.Location = new System.Drawing.Point(348, 130);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(138, 46);
             this.panel5.TabIndex = 44;
@@ -517,10 +517,10 @@
             this.panel4.Controls.Add(this.cobRenewMem);
             this.panel4.Controls.Add(this.label32);
             this.panel4.Controls.Add(this.cobStatusMem);
-            this.panel4.Location = new System.Drawing.Point(593, 85);
-            this.panel4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel4.Location = new System.Drawing.Point(491, 130);
+            this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(374, 46);
+            this.panel4.Size = new System.Drawing.Size(390, 46);
             this.panel4.TabIndex = 43;
             this.panel4.Visible = false;
             // 
@@ -588,7 +588,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(907, 48);
+            this.label31.Location = new System.Drawing.Point(911, 46);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(27, 13);
             this.label31.TabIndex = 42;
@@ -600,7 +600,7 @@
             this.cobGuardhouse.FormattingEnabled = true;
             this.cobGuardhouse.Items.AddRange(new object[] {
             "ALL"});
-            this.cobGuardhouse.Location = new System.Drawing.Point(909, 64);
+            this.cobGuardhouse.Location = new System.Drawing.Point(913, 62);
             this.cobGuardhouse.Name = "cobGuardhouse";
             this.cobGuardhouse.Size = new System.Drawing.Size(107, 21);
             this.cobGuardhouse.TabIndex = 41;
@@ -644,7 +644,7 @@
             this.panel2Up2U.Controls.Add(this.cobMemgroup);
             this.panel2Up2U.Controls.Add(this.label22);
             this.panel2Up2U.Location = new System.Drawing.Point(1194, 112);
-            this.panel2Up2U.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2Up2U.Margin = new System.Windows.Forms.Padding(2);
             this.panel2Up2U.Name = "panel2Up2U";
             this.panel2Up2U.Size = new System.Drawing.Size(1061, 63);
             this.panel2Up2U.TabIndex = 6;
@@ -677,7 +677,7 @@
             // 
             this.chkNoExpire.AutoSize = true;
             this.chkNoExpire.Location = new System.Drawing.Point(704, 7);
-            this.chkNoExpire.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chkNoExpire.Margin = new System.Windows.Forms.Padding(2);
             this.chkNoExpire.Name = "chkNoExpire";
             this.chkNoExpire.Size = new System.Drawing.Size(59, 17);
             this.chkNoExpire.TabIndex = 41;
@@ -820,16 +820,16 @@
             this.comMemName.FormattingEnabled = true;
             this.comMemName.Items.AddRange(new object[] {
             "ALL"});
-            this.comMemName.Location = new System.Drawing.Point(348, 105);
+            this.comMemName.Location = new System.Drawing.Point(775, 106);
             this.comMemName.Name = "comMemName";
-            this.comMemName.Size = new System.Drawing.Size(241, 21);
+            this.comMemName.Size = new System.Drawing.Size(346, 21);
             this.comMemName.TabIndex = 38;
             this.comMemName.Visible = false;
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(345, 89);
+            this.label21.Location = new System.Drawing.Point(772, 90);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(20, 13);
             this.label21.TabIndex = 37;
@@ -839,7 +839,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(189, 89);
+            this.label20.Location = new System.Drawing.Point(772, 47);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(48, 13);
             this.label20.TabIndex = 36;
@@ -851,16 +851,16 @@
             this.comMemGroupMonth.FormattingEnabled = true;
             this.comMemGroupMonth.Items.AddRange(new object[] {
             "ALL"});
-            this.comMemGroupMonth.Location = new System.Drawing.Point(10, 105);
+            this.comMemGroupMonth.Location = new System.Drawing.Point(462, 106);
             this.comMemGroupMonth.Name = "comMemGroupMonth";
-            this.comMemGroupMonth.Size = new System.Drawing.Size(175, 21);
+            this.comMemGroupMonth.Size = new System.Drawing.Size(307, 21);
             this.comMemGroupMonth.TabIndex = 35;
             this.comMemGroupMonth.Visible = false;
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(7, 89);
+            this.label19.Location = new System.Drawing.Point(459, 91);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(132, 13);
             this.label19.TabIndex = 34;
@@ -966,7 +966,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(594, 48);
+            this.label18.Location = new System.Drawing.Point(459, 47);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(70, 13);
             this.label18.TabIndex = 24;
@@ -974,7 +974,7 @@
             // 
             // txtCardID
             // 
-            this.txtCardID.Location = new System.Drawing.Point(595, 64);
+            this.txtCardID.Location = new System.Drawing.Point(460, 63);
             this.txtCardID.Name = "txtCardID";
             this.txtCardID.Size = new System.Drawing.Size(84, 20);
             this.txtCardID.TabIndex = 23;
@@ -982,7 +982,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(772, 48);
+            this.label17.Location = new System.Drawing.Point(637, 47);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(85, 13);
             this.label17.TabIndex = 22;
@@ -994,7 +994,7 @@
             this.comTypeMem.FormattingEnabled = true;
             this.comTypeMem.Items.AddRange(new object[] {
             "ALL"});
-            this.comTypeMem.Location = new System.Drawing.Point(774, 64);
+            this.comTypeMem.Location = new System.Drawing.Point(639, 62);
             this.comTypeMem.Name = "comTypeMem";
             this.comTypeMem.Size = new System.Drawing.Size(130, 21);
             this.comTypeMem.TabIndex = 21;
@@ -1007,9 +1007,9 @@
             "ALL",
             "ชำระเงิน",
             "ไม่ชำระเงิน"});
-            this.comPay.Location = new System.Drawing.Point(192, 105);
+            this.comPay.Location = new System.Drawing.Point(775, 62);
             this.comPay.Name = "comPay";
-            this.comPay.Size = new System.Drawing.Size(150, 21);
+            this.comPay.Size = new System.Drawing.Size(130, 21);
             this.comPay.TabIndex = 20;
             this.comPay.Visible = false;
             // 
@@ -1036,15 +1036,15 @@
             // comPromotion
             // 
             this.comPromotion.FormattingEnabled = true;
-            this.comPromotion.Location = new System.Drawing.Point(460, 64);
+            this.comPromotion.Location = new System.Drawing.Point(9, 106);
             this.comPromotion.Name = "comPromotion";
-            this.comPromotion.Size = new System.Drawing.Size(129, 21);
+            this.comPromotion.Size = new System.Drawing.Size(445, 21);
             this.comPromotion.TabIndex = 16;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(457, 48);
+            this.label7.Location = new System.Drawing.Point(6, 90);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(52, 13);
             this.label7.TabIndex = 15;
@@ -1187,7 +1187,7 @@
             this.tabPage1.Controls.Add(this.dgvResult);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(1317, 479);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "ตาราง";
@@ -1342,7 +1342,7 @@
             this.lbHead.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
             this.lbHead.Location = new System.Drawing.Point(15, 12);
             this.lbHead.Name = "lbHead";
-            this.lbHead.Size = new System.Drawing.Size(64, 16);
+            this.lbHead.Size = new System.Drawing.Size(63, 16);
             this.lbHead.TabIndex = 1;
             this.lbHead.Text = "เลือกรายงาน";
             // 
@@ -1362,7 +1362,7 @@
             this.tabPage2.Controls.Add(this.crvResult);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(1317, 479);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "หน้ากระดาษ";
@@ -1373,7 +1373,6 @@
             this.crvResult.ActiveViewIndex = -1;
             this.crvResult.AutoScroll = true;
             this.crvResult.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.crvResult.CachedPageNumberPerDoc = 10;
             this.crvResult.Cursor = System.Windows.Forms.Cursors.Default;
             this.crvResult.EnableDrillDown = false;
             this.crvResult.Location = new System.Drawing.Point(3, 3);
@@ -1388,7 +1387,7 @@
             this.tabPage3.Controls.Add(this.groupBox2);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(1317, 479);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "จัดการผู้ใช้";
@@ -1815,9 +1814,6 @@
         private System.Windows.Forms.ComboBox cobRenewMem;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.ComboBox cobStatusMem;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.TextBox txtAdd;
-        private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.ComboBox cobCardMem;
         private System.Windows.Forms.Label label36;
@@ -1840,7 +1836,8 @@
         private System.Windows.Forms.Label label38;
         private System.Windows.Forms.ComboBox cobChannel;
         private System.Windows.Forms.Label label42;
-
-
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.TextBox txtAdd;
+        private System.Windows.Forms.Label label34;
     }
 }
