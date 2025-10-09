@@ -35,6 +35,8 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cobChannel = new System.Windows.Forms.ComboBox();
             this.label42 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.cobGuardhouse = new System.Windows.Forms.ComboBox();
             this.panel7 = new System.Windows.Forms.Panel();
             this.chkBetween = new System.Windows.Forms.CheckBox();
             this.label41 = new System.Windows.Forms.Label();
@@ -63,8 +65,6 @@
             this.cobRenewMem = new System.Windows.Forms.ComboBox();
             this.label32 = new System.Windows.Forms.Label();
             this.cobStatusMem = new System.Windows.Forms.ComboBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.cobGuardhouse = new System.Windows.Forms.ComboBox();
             this.label30 = new System.Windows.Forms.Label();
             this.txtRecordNo = new System.Windows.Forms.TextBox();
             this.panel2Up2U = new System.Windows.Forms.Panel();
@@ -289,6 +289,27 @@
             this.label42.TabIndex = 49;
             this.label42.Text = "ช่องทางการชำระเงิน";
             this.label42.Visible = false;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(911, 46);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(27, 13);
+            this.label31.TabIndex = 42;
+            this.label31.Text = "ป้อม";
+            this.label31.Visible = false;
+            // 
+            // cobGuardhouse
+            // 
+            this.cobGuardhouse.FormattingEnabled = true;
+            this.cobGuardhouse.Items.AddRange(new object[] {
+            "ALL"});
+            this.cobGuardhouse.Location = new System.Drawing.Point(913, 62);
+            this.cobGuardhouse.Name = "cobGuardhouse";
+            this.cobGuardhouse.Size = new System.Drawing.Size(107, 21);
+            this.cobGuardhouse.TabIndex = 41;
+            this.cobGuardhouse.Visible = false;
             // 
             // panel7
             // 
@@ -585,27 +606,6 @@
             this.cobStatusMem.Size = new System.Drawing.Size(121, 21);
             this.cobStatusMem.TabIndex = 37;
             // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(911, 46);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(27, 13);
-            this.label31.TabIndex = 42;
-            this.label31.Text = "ป้อม";
-            this.label31.Visible = false;
-            // 
-            // cobGuardhouse
-            // 
-            this.cobGuardhouse.FormattingEnabled = true;
-            this.cobGuardhouse.Items.AddRange(new object[] {
-            "ALL"});
-            this.cobGuardhouse.Location = new System.Drawing.Point(913, 62);
-            this.cobGuardhouse.Name = "cobGuardhouse";
-            this.cobGuardhouse.Size = new System.Drawing.Size(107, 21);
-            this.cobGuardhouse.TabIndex = 41;
-            this.cobGuardhouse.Visible = false;
-            // 
             // label30
             // 
             this.label30.AutoSize = true;
@@ -822,7 +822,7 @@
             "ALL"});
             this.comMemName.Location = new System.Drawing.Point(775, 106);
             this.comMemName.Name = "comMemName";
-            this.comMemName.Size = new System.Drawing.Size(346, 21);
+            this.comMemName.Size = new System.Drawing.Size(245, 21);
             this.comMemName.TabIndex = 38;
             this.comMemName.Visible = false;
             // 
@@ -851,16 +851,16 @@
             this.comMemGroupMonth.FormattingEnabled = true;
             this.comMemGroupMonth.Items.AddRange(new object[] {
             "ALL"});
-            this.comMemGroupMonth.Location = new System.Drawing.Point(462, 106);
+            this.comMemGroupMonth.Location = new System.Drawing.Point(347, 106);
             this.comMemGroupMonth.Name = "comMemGroupMonth";
-            this.comMemGroupMonth.Size = new System.Drawing.Size(307, 21);
+            this.comMemGroupMonth.Size = new System.Drawing.Size(422, 21);
             this.comMemGroupMonth.TabIndex = 35;
             this.comMemGroupMonth.Visible = false;
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(459, 91);
+            this.label19.Location = new System.Drawing.Point(344, 90);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(132, 13);
             this.label19.TabIndex = 34;
@@ -1038,7 +1038,7 @@
             this.comPromotion.FormattingEnabled = true;
             this.comPromotion.Location = new System.Drawing.Point(9, 106);
             this.comPromotion.Name = "comPromotion";
-            this.comPromotion.Size = new System.Drawing.Size(445, 21);
+            this.comPromotion.Size = new System.Drawing.Size(333, 21);
             this.comPromotion.TabIndex = 16;
             // 
             // label7
