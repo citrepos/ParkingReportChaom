@@ -761,6 +761,75 @@ namespace ParkingManagementReport.Utilities.Database
 
             return map;
         }
+
+        public static DataTable GetCardSortByCompanySummary(string sqlQuery)
+        {
+            DataTable dtFromQuery = DbController.LoadData(sqlQuery);
+
+            DataTable map = new DataTable();
+            map.Columns.Add("ลำดับ", typeof(int));
+            map.Columns.Add("ตราประทับ", typeof(string));
+            map.Columns.Add("หมายเหตุ", typeof(string));
+            map.Columns.Add("บริษัท", typeof(string));
+            map.Columns.Add("สิทธิได้รับบัตรฟรี", typeof(int));
+            map.Columns.Add("จำนวนบัตร(ฟรีค่าเช่า)", typeof(int));
+            map.Columns.Add("จำนวนบัตร(เสียค่าเช่า)", typeof(int));
+            map.Columns.Add("รวมค่าเช่า", typeof(string));
+            map.Columns.Add("จำนวนบัตรรวม", typeof(int));
+
+            if (AppGlobalVariables.MemberGroupMonthsToId == null || AppGlobalVariables.MemberGroupMonthsToId.Count == 0)
+                throw new InvalidOperationException("MemberGroupMonthsToId dictionary is not initialized.");
+
+            int iteration = 0;
+            var memberGroups = new Dictionary<string, int>(AppGlobalVariables.MemberGroupMonthsToId);
+
+            foreach (var kvp in memberGroups)
+            {
+                string currentMemberGroupName = kvp.Key;
+                int currentMemberGroupId = kvp.Value;
+
+                int freeCardAmount = 0;
+                int paidCardAmount = 0;
+                int totalPaidAmount = 0;
+
+                foreach (DataRow dataRow in dtFromQuery.Rows)
+                {
+                    int memberGroupIdFromDataRow = Convert.ToInt32(dataRow["membergroupprice_month_id"]);
+
+                    if (memberGroupIdFromDataRow == currentMemberGroupId)
+                    {
+                        int paidAmount = Convert.ToInt32(dataRow["ค่าบัตรสมาชิก"]);
+
+                        if (paidAmount == 0)
+                            freeCardAmount++;
+                        else
+                        {
+                            paidCardAmount++;
+                            totalPaidAmount += paidAmount;
+                        }
+                    }
+                }
+
+                if (freeCardAmount == 0 && paidCardAmount == 0)
+                    continue;
+
+                DataRow row = map.NewRow();
+                row["ลำดับ"] = ++iteration;
+                row["ตราประทับ"] = currentMemberGroupId;
+                row["บริษัท"] = TextFormatters.RemoveBracketFromName(currentMemberGroupName);
+                row["หมายเหตุ"] = "";
+                row["สิทธิได้รับบัตรฟรี"] = freeCardAmount;
+                row["จำนวนบัตร(ฟรีค่าเช่า)"] = freeCardAmount;
+                row["จำนวนบัตร(เสียค่าเช่า)"] = paidCardAmount;
+                row["รวมค่าเช่า"] = totalPaidAmount.ToString("#,###,##0");
+                row["จำนวนบัตรรวม"] = freeCardAmount + paidCardAmount;
+
+                map.Rows.Add(row);
+            }
+
+            return map;
+        }
+
         #endregion
 
 

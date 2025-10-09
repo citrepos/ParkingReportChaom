@@ -37,6 +37,18 @@ namespace ParkingManagementReport.Utilities.Formatters
             return string.Empty; // return empty if cannot parse
         }
 
+        public static string ExtractBuddhistEraFromDate(DateTime date)
+        {
+            var thaiCalendar = new ThaiBuddhistCalendar();
+            int buddhistYear = thaiCalendar.GetYear(date);
+            return $"พ.ศ. {buddhistYear}";
+        }
+
+        public static string ExtractChristianEraFromDate(DateTime date)
+        {
+            return $"ค.ศ. {date.Year}";
+        }
+
         public static string RemoveSpecialCharacters(string input)
         {
             if (string.IsNullOrWhiteSpace(input))

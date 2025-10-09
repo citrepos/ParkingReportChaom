@@ -170,6 +170,7 @@ namespace ParkingManagementReport.Utilities.Database
             this.promotionId = AppGlobalVariables.PromotionNamesById.First(kvp => kvp.Value == promotionName).Key;
             this.userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
             this.memberTypeId = AppGlobalVariables.MemberGroupsToId[memberType];
+            this.memberGroupMonthId = AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
             this.startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
             this.endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString();
 
@@ -8739,7 +8740,7 @@ namespace ParkingManagementReport.Utilities.Database
                        + " เวลา " + endTime.ToLongTimeString();
                     break;
 
-                case 160: // 33.รายงาน E-Stamp รถยนต์
+                case 160: // ธนภูมิ #33.รายงาน E-Stamp รถยนต์
                     sql = "select t1.no as 'ลำดับ', (SELECT typename FROM cartype WHERE typeid = t2.cartype) as 'ประเภท'";
                     sql += ", t2.license as 'ทะเบียน', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'เวลาเข้า'";
                     sql += ", t1.user_name as 'ชื่อผู้ให้ส่วนลด', t1.promotion_name as 'ชื่อโปรโมชั่น', date_format(t1.date_estamp, '%d/%m/%Y %H:%i:%s') as 'เวลาให้ส่วนลด'";
@@ -8759,7 +8760,7 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " ORDER BY t1.no";
                     break;
 
-                case 161: // 34.สรุปค่าบริการรายเดือน Member รถยนต์
+                case 161: // ธนภูมิ #34.สรุปค่าบริการรายเดือน Member รถยนต์
                     if (Configs.Reports.UseReportThanapoom)
                     {
                        
@@ -8775,7 +8776,6 @@ namespace ParkingManagementReport.Utilities.Database
 
                         if (memberGroupMonth != Constants.TextBased.All)
                         {
-                            int memberGroupMonthId = AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
                             sqlBuilder.AppendLine($"AND vg.id = '{memberGroupMonthId}'");
                         }
                         if (isLegitPromotionRange)
@@ -8884,7 +8884,7 @@ namespace ParkingManagementReport.Utilities.Database
                     }
                     break;
 
-                case 162: // 35.สรุปค่าบริการรายวัน
+                case 162: // ธนภูมิ #35.สรุปค่าบริการรายวัน
                     if (Configs.Reports.UseReportThanapoom)
                     {
                         promotionRangeFrom = 700;
@@ -8991,7 +8991,7 @@ namespace ParkingManagementReport.Utilities.Database
                     }
                     break;
 
-                case 163: // 36.การเข้าออกของรถยนต์แสดงช่องทางการชำระเงิน
+                case 163: // ธนภูมิ #36.การเข้าออกของรถยนต์แสดงช่องทางการชำระเงิน
                     string fontSlip163 = "";
                     if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
                         fontSlip163 = AppGlobalVariables.Printings.ReceiptName;
@@ -9088,18 +9088,30 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " ORDER BY t1.dateout";
                     break;
 
-                case 164: // 37.รายงานสรุปจำนวนรถและรายได้
+                case 164: // ธนภูมิ #37.รายงานสรุปจำนวนรถและรายได้
                     sql = "SELECT recordin.no, recordin.cartype,recordout.price,recordout.discount, recordin.datein, recordout.dateout\n";
                     sql += "FROM recordin\n";
                     sql += "JOIN recordout ON recordin.no = recordout.no\n";
                     sql += $"WHERE dateout BETWEEN '{startDate.ToString("yyyy-MM-dd")}' AND '{endDate.AddDays(1).ToString("yyyy-MM-dd")}'";
                     break;
 
-                case 165: // 38.สรุปจำนวนบัตรทั้งหมดตามบริษัท
+                case 165: // ธนภูมิ #38.สรุปจำนวนบัตรทั้งหมดตามบริษัท
+                    sql = "SELECT m.id AS member_id, m.memgrouppriceid_pay AS ค่าบัตรสมาชิก, mgp.groupname AS บริษัท, mgp.id AS membergroupprice_month_id\n";
+                    sql += "FROM member m\n";
+                    sql += "LEFT JOIN membergroupprice_month mgp\n";
+                    sql += "    ON mgp.id = m.memgrouppriceid_month\n";
+                    sql += "WHERE 1 = 1 \n";
+
+                    if (memberGroupMonth != Constants.TextBased.All)
+                        sql += $"AND mgp.id = {memberGroupMonthId} \n";
+                    if(isLegitPromotionRange)
+                        sql += $"AND mgp.id BETWEEN {promotionRangeFrom} AND {promotionRangeTo} \n";
+
+                    sql += "ORDER BY mgp.nogroup";
                     break;
-                case 166: // 39.สรุปจำนวนบัตรทั้งหมดตามบริษัท
+                case 166: // ธนภูมิ #39.สรุปจำนวนบัตรทั้งหมดตามบริษัท
                     break;
-                case 167: // 40.ค่าบริการจอดเรียกเก็บกับบริษัท รถยนต์-รายเดือน
+                case 167: // ธนภูมิ #40.ค่าบริการจอดเรียกเก็บกับบริษัท รถยนต์-รายเดือน
                     break;
             }
 

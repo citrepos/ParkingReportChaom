@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using ParkingManagementReport.Common;
 using ParkingManagementReport.Utilities.Database;
+using ParkingManagementReport.Utilities.Formatters;
 
 namespace ParkingManagementReport.Utilities
 {
@@ -473,106 +474,113 @@ namespace ParkingManagementReport.Utilities
             if (ResultGridView.Rows.Count <= 0)
                 return;
 
-            int rowCount = ResultGridView.Rows.Count - 1;
-            int totalPrice = 0, totalDiscount = 0;
-            int villageOffset = 0;
-            int colCount = ResultGridView.Rows[0].Cells.Count;
-            int totalExcess = 0;
-
-            if (Configs.IsVillage && (selectedReportId == 0 || selectedReportId == 1 ||
-                selectedReportId == 8 || selectedReportId == 90 || selectedReportId == 91) && Configs.Use2Camera)
+            try
             {
-                villageOffset = 5;
-            }
+                int rowCount = ResultGridView.Rows.Count - 1;
+                int totalPrice = 0, totalDiscount = 0;
+                int villageOffset = 0;
+                int colCount = ResultGridView.Rows[0].Cells.Count;
+                int totalExcess = 0;
 
-            if ((selectedReportId == 0 || selectedReportId == 1 || selectedReportId == 8 ||
-                selectedReportId == 90 || selectedReportId == 91) && Configs.NoPanelUp2U == "2")
-            {
-                villageOffset += 4;
-            }
-
-            switch (selectedReportId)
-            {
-                case 0:
-                case 1:
-                case 8:
-                case 90:
-                case 91:
-                    CalculateStandardReport(rowCount, villageOffset);
-                    break;
-
-                case 2:
-                    for (int i = 0; i < rowCount; i++)
-                    {
-                        totalPrice += int.Parse(ResultGridView.Rows[i].Cells[5].Value.ToString());
-                        totalDiscount += int.Parse(ResultGridView.Rows[i].Cells[6].Value.ToString());
-                    }
-
-                    ResultGridView.Rows[rowCount].Cells[4].Value = "รวม";
-                    ResultGridView.Rows[rowCount].Cells[5].Value = totalPrice.ToString("#,###,##0");
-                    ResultGridView.Rows[rowCount].Cells[6].Value = totalDiscount.ToString("#,###,##0");
-                    break;
-
-                case 29:
-                    int col1 = 0, col2 = 0, col3 = 0;
-
-                    for (int i = 0; i < rowCount; i++)
-                    {
-                        col1 += int.Parse(ResultGridView.Rows[i].Cells[1].Value.ToString());
-                        col2 += int.Parse(ResultGridView.Rows[i].Cells[2].Value.ToString());
-                        col3 += int.Parse(ResultGridView.Rows[i].Cells[3].Value.ToString());
-                        totalPrice += int.Parse(ResultGridView.Rows[i].Cells[4].Value.ToString());
-                    }
-
-                    ResultGridView[0, rowCount].Value = "รวม";
-                    ResultGridView[1, rowCount].Value = col1.ToString("#,###,##0");
-                    ResultGridView[2, rowCount].Value = col2.ToString("#,###,##0");
-                    ResultGridView[3, rowCount].Value = col3.ToString("#,###,##0");
-                    ResultGridView[4, rowCount].Value = totalPrice.ToString("#,###,##0");
-                    break;
-
-                case 3:
-                case 10:
-                    ResultGridView.Rows[rowCount].Cells[3].Value = "รวม";
-                    ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} ครั้ง";
-                    break;
-
-                case 4:
-                case 30:
-                case 31:
-                case 92:
-                case 93:
-                    ResultGridView.Rows[rowCount].Cells[3].Value = "จำนวนรถ";
-                    ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} คัน";
-                    break;
-
-                default:
-                    break;
-            }
-
-            void CalculateStandardReport(int count, int offset)
-            {
-                if ((selectedReportId == 1 || selectedReportId == 91) && Configs.Reports.UseReport1_6)
-                    offset = 1;
-                else if (Configs.Reports.UseReport1_4)
-                    offset = 3;
-                else if (Configs.Reports.UseReport1_6 || Configs.Reports.UseReport1_8)
-                    offset = 1;
-
-                for (int i = 0; i < count; i++)
+                if (Configs.IsVillage && (selectedReportId == 0 || selectedReportId == 1 ||
+                    selectedReportId == 8 || selectedReportId == 90 || selectedReportId == 91) && Configs.Use2Camera)
                 {
-                    if (int.TryParse(ResultGridView.Rows[i].Cells[6 + offset].Value?.ToString(), out int price))
-                        totalPrice += price;
-
-                    if (int.TryParse(ResultGridView.Rows[i].Cells[7 + offset].Value?.ToString(), out int discount))
-                        totalDiscount += discount;
+                    villageOffset = 5;
                 }
 
-                ResultGridView.Rows[count].Cells[3 + offset].Value = "จำนวนรถ";
-                ResultGridView.Rows[count].Cells[4 + offset].Value = $"{count:#,###,##0} คัน";
-                ResultGridView.Rows[count].Cells[5 + offset].Value = "รวม";
-                ResultGridView.Rows[count].Cells[6 + offset].Value = totalPrice.ToString("#,###,##0");
-                ResultGridView.Rows[count].Cells[7 + offset].Value = totalDiscount.ToString("#,###,##0");
+                if ((selectedReportId == 0 || selectedReportId == 1 || selectedReportId == 8 ||
+                    selectedReportId == 90 || selectedReportId == 91) && Configs.NoPanelUp2U == "2")
+                {
+                    villageOffset += 4;
+                }
+
+                switch (selectedReportId)
+                {
+                    case 0:
+                    case 1:
+                    case 8:
+                    case 90:
+                    case 91:
+                        CalculateStandardReport(rowCount, villageOffset);
+                        break;
+
+                    case 2:
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            totalPrice += int.Parse(ResultGridView.Rows[i].Cells[5].Value.ToString());
+                            totalDiscount += int.Parse(ResultGridView.Rows[i].Cells[6].Value.ToString());
+                        }
+
+                        ResultGridView.Rows[rowCount].Cells[4].Value = "รวม";
+                        ResultGridView.Rows[rowCount].Cells[5].Value = totalPrice.ToString("#,###,##0");
+                        ResultGridView.Rows[rowCount].Cells[6].Value = totalDiscount.ToString("#,###,##0");
+                        break;
+
+                    case 29:
+                        int col1 = 0, col2 = 0, col3 = 0;
+
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            col1 += int.Parse(ResultGridView.Rows[i].Cells[1].Value.ToString());
+                            col2 += int.Parse(ResultGridView.Rows[i].Cells[2].Value.ToString());
+                            col3 += int.Parse(ResultGridView.Rows[i].Cells[3].Value.ToString());
+                            totalPrice += int.Parse(ResultGridView.Rows[i].Cells[4].Value.ToString());
+                        }
+
+                        ResultGridView[0, rowCount].Value = "รวม";
+                        ResultGridView[1, rowCount].Value = col1.ToString("#,###,##0");
+                        ResultGridView[2, rowCount].Value = col2.ToString("#,###,##0");
+                        ResultGridView[3, rowCount].Value = col3.ToString("#,###,##0");
+                        ResultGridView[4, rowCount].Value = totalPrice.ToString("#,###,##0");
+                        break;
+
+                    case 3:
+                    case 10:
+                        ResultGridView.Rows[rowCount].Cells[3].Value = "รวม";
+                        ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} ครั้ง";
+                        break;
+
+                    case 4:
+                    case 30:
+                    case 31:
+                    case 92:
+                    case 93:
+                        ResultGridView.Rows[rowCount].Cells[3].Value = "จำนวนรถ";
+                        ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} คัน";
+                        break;
+
+                    default:
+                        break;
+                }
+                void CalculateStandardReport(int count, int offset)
+                {
+                    if ((selectedReportId == 1 || selectedReportId == 91) && Configs.Reports.UseReport1_6)
+                        offset = 1;
+                    else if (Configs.Reports.UseReport1_4)
+                        offset = 3;
+                    else if (Configs.Reports.UseReport1_6 || Configs.Reports.UseReport1_8)
+                        offset = 1;
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (int.TryParse(ResultGridView.Rows[i].Cells[6 + offset].Value?.ToString(), out int price))
+                            totalPrice += price;
+
+                        if (int.TryParse(ResultGridView.Rows[i].Cells[7 + offset].Value?.ToString(), out int discount))
+                            totalDiscount += discount;
+                    }
+
+                    ResultGridView.Rows[count].Cells[3 + offset].Value = "จำนวนรถ";
+                    ResultGridView.Rows[count].Cells[4 + offset].Value = $"{count:#,###,##0} คัน";
+                    ResultGridView.Rows[count].Cells[5 + offset].Value = "รวม";
+                    ResultGridView.Rows[count].Cells[6 + offset].Value = totalPrice.ToString("#,###,##0");
+                    ResultGridView.Rows[count].Cells[7 + offset].Value = totalDiscount.ToString("#,###,##0");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                MessageBox.Show(TextFormatters.ErrorStacktraceFromException(ex));
             }
         }
 
