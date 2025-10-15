@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingManagementReport", "
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupReport", "SetupReport\SetupReport.vdproj", "{59F65F1E-B860-4236-9107-F5819C767BFD}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupReportThanapoom", "SetupReportThanapoom\SetupReportThanapoom.vdproj", "{BE990ABE-EAC2-4DC4-AB27-F2BC64B2ABA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -31,6 +33,11 @@ Global
 		{59F65F1E-B860-4236-9107-F5819C767BFD}.DVD-5|Any CPU.ActiveCfg = Debug
 		{59F65F1E-B860-4236-9107-F5819C767BFD}.Release|Any CPU.ActiveCfg = Release
 		{59F65F1E-B860-4236-9107-F5819C767BFD}.SingleImage|Any CPU.ActiveCfg = Debug
+		{BE990ABE-EAC2-4DC4-AB27-F2BC64B2ABA0}.CD_ROM|Any CPU.ActiveCfg = Debug
+		{BE990ABE-EAC2-4DC4-AB27-F2BC64B2ABA0}.Debug|Any CPU.ActiveCfg = Debug
+		{BE990ABE-EAC2-4DC4-AB27-F2BC64B2ABA0}.DVD-5|Any CPU.ActiveCfg = Debug
+		{BE990ABE-EAC2-4DC4-AB27-F2BC64B2ABA0}.Release|Any CPU.ActiveCfg = Release
+		{BE990ABE-EAC2-4DC4-AB27-F2BC64B2ABA0}.SingleImage|Any CPU.ActiveCfg = Debug
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

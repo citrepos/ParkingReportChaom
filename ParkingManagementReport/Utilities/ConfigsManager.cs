@@ -74,6 +74,8 @@ namespace ParkingManagementReport.Utilities
             if (dt.Rows.Count > 0)
                 Configs.UseFlatRateProSetPrice = true;
 
+            UpdateVendorGroup();
+
             LoadDispensers();
 
             SetSlipOutFormat();
@@ -87,6 +89,10 @@ namespace ParkingManagementReport.Utilities
             SetOnlinePaymentType();
 
             SetParkingFreeMinutes();
+        }
+
+        private static void UpdateVendorGroup()
+        {
 
         }
 
