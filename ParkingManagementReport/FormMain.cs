@@ -3184,7 +3184,7 @@ namespace ParkingManagementReport
                         sql = "select recordin.no, recordin.license, recordin.datein, recordout.dateout,truncate(TIMESTAMPDIFF(minute,recordin.datein,recordout.dateout),0) as tdf, ";
                     }
 
-                    if (pm.print.UseReport21_1 || pm.print.UseReport21_2 || pm.print.UseReport21_3)
+                    if (pm.print.UseReport21_1 || pm.print.UseReport21_2 || pm.print.UseReport21_3 || pm.print.UseReportJasmine)
                     {
                         sql += " concat(floor(timestampdiff(minute, date_format(recordin.datein, '%Y-%m-%d %H:%i:%s'), date_format(recordout.dateout, '%Y-%m-%d %H:%i:%s'))/60)";
                         sql += ", '.', lpad(mod(timestampdiff(minute, date_format(recordin.datein, '%Y-%m-%d %H:%i:%s'), date_format(recordout.dateout, '%Y-%m-%d %H:%i:%s')), 60), 2, '0')) as hm, ";
@@ -3309,7 +3309,7 @@ namespace ParkingManagementReport
 
                                 //if (pm.print.UseReport21_1) //Mac 2018/07/03
                                 //if (pm.print.UseReport21_1 || pm.print.UseReport21_2) //Mac 2022/05/30
-                                if (pm.print.UseReport21_1 || pm.print.UseReport21_2 || pm.print.UseReport21_3) //Mac 2022/09/29
+                                if (pm.print.UseReport21_1 || pm.print.UseReport21_2 || pm.print.UseReport21_3 || pm.print.UseReportJasmine) //Mac 2022/09/29
                                     dr["ParkTime"] = dt.Rows[i]["hm"];
                                 else
                                     dr["ParkTime"] = dt.Rows[i]["tdf"];
@@ -3759,6 +3759,23 @@ namespace ParkingManagementReport
                                 dr = Map.NewRow();
                                 dr["Proname"] = comPromotion.Text.ToString();
                                 dr["proid"] = dicProNameInt[comPromotion.Text].ToString();
+                                Map.Rows.Add(dr);
+                            }
+                            else if (comMemGroupMonth.SelectedIndex != 0)
+                            {
+                                string getMemberGroupMonthSql = $"select * from membergroupprice_month where groupname = '{comMemGroupMonth.Text}'";
+
+                                DataTable memberGroupMonthTable = db.LoadData(getMemberGroupMonthSql);
+                                dr = Map.NewRow();
+                                dr["Proname"] = comMemGroupMonth.Text;
+                                if (memberGroupMonthTable.Rows.Count > 0)
+                                {
+                                    dr["proid"] = memberGroupMonthTable.Rows[0]["nogroup"].ToString();
+                                }
+                                else
+                                {
+                                    dr["proid"] = "";
+                                }
                                 Map.Rows.Add(dr);
                             }
                         }
@@ -19073,7 +19090,8 @@ namespace ParkingManagementReport
             }
             if (intSelectedIndex == 9)
             {
-                sql = "SELECT DISTINCT recordout.no,recordin.cartype, case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end,recordin.datein,recordin.userin,recordout.dateout,recordout.price,recordout.discount,recordout.userout";
+                sql = "SELECT DISTINCT recordout.no,recordin.cartype, case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end as ทะเบียน";
+                sql += ",recordin.datein,recordin.userin,recordout.dateout,recordout.price,recordout.discount,recordout.userout";
                 sql += ",recordout.userout,recordout.userout,recordout.userout,recordout.userout";
             }
             /*if (comTypeMem.SelectedIndex > 0) //Mac 2015/02/10
@@ -20297,7 +20315,6 @@ recordin.datein, recordin.userin
             {
                 UseMemo = false;
             }
-            //string sql = "SELECT recordout.printno,recordout.no,recordin.cartype,case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard";
             string sql = "SELECT DISTINCT ";
             if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0) //Mac 2022/04/22
                 sql += " recordout.printno_second";
@@ -20331,7 +20348,7 @@ recordin.datein, recordin.userin
                     sql += " recordin.cartype ";
                 }
             }
-            sql += " ,case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard";
+            sql += " ,case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end as ทะเบียน,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard";
 
             if (intSelectedIndex == 12 && pm.print.UseReport13_11) //Mac 2017/11/30
                 sql += " ,recordout.clearcard";
@@ -20871,7 +20888,7 @@ recordin.datein, recordin.userin
 
                         intHourPro = intHourPro / 60;
 
-                        dgvResult[8, i].Value = intHourPro.ToString();
+                        dgvResult[8, i].Value = $"{intHourPro.ToString()}.00";
                         if (intHourPro < intHour)
                         {
                             dgvResult[9, i].Value = intHourPro.ToString();//ลด
