@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft.Office.Interop.Excel;
 using ParkingManagementReport.Common;
 using ParkingManagementReport.Utilities.Formatters;
 
@@ -545,36 +546,48 @@ namespace ParkingManagementReport.Utilities.Database
             resultTable.Columns.Add("VAT", typeof(double));
             resultTable.Columns.Add("ค่าบริการทั้งหมด", typeof(double));
 
+            int iteration = 0;
             double sumBeforeVat = 0;
             double sumVat = 0;
             double sumTotalCharge = 0;
 
-            for (int i = 0; i < dataTable.Rows.Count; i++)
+            foreach (KeyValuePair<int, string> kvp in AppGlobalVariables.VendorGroupMonthsById)
             {
                 try
                 {
-                    string itemIndexText = $"{i + 1}";
-                    string currentWptCode = dataTable.Rows[i]["WPT Code"].ToString();
-                    string currentCustomerName = dataTable.Rows[i]["บริษัท"].ToString();
-                    double currentPrice = double.TryParse(dataTable.Rows[i]["รวมค่าบัตรสมาชิก"]?.ToString(), out var price) ? price : 0;
+                    int currentVendorGroupId = kvp.Key;
+                    string currentVendorGroupName = kvp.Value;
+                    double currentPrice = 0;
+                    //double currentPrice = double.TryParse(dataTable.Rows[i]["รวมค่าบัตรสมาชิก"]?.ToString(), out var price) ? price : 0;
 
-                    var (beforeVatCharge, vatCharge, totalCharge) = CalculationsManager.CalculatePriceSummaryAndVat(currentPrice);
+                    for (int i = 0; i < dataTable.Rows.Count; i++)
+                    {
+                        int vendorGroupId = int.TryParse(dataTable.Rows[i]["vendor_id"]?.ToString(), out int vgId) ? vgId : 0;
 
-                    DataRow row = resultTable.NewRow();
-                    row["ลำดับ"] = itemIndexText;
-                    row["WPT Code"] = currentWptCode;
-                    row["Customer"] = TextFormatters.RemoveBracketFromName(currentCustomerName);
-                    row["ค่าบริการก่อน VAT"] = beforeVatCharge;
-                    row["VAT"] = vatCharge;
-                    row["ค่าบริการทั้งหมด"] = totalCharge;
+                        if (vendorGroupId == currentVendorGroupId)
+                            currentPrice += double.TryParse(dataTable.Rows[i]["memgrouppriceid_pay"]?.ToString(), out var price) ? price : 0;
+                    }
 
-                    sumBeforeVat += beforeVatCharge;
-                    sumVat += vatCharge;
-                    sumTotalCharge += totalCharge;
+                    if(currentPrice > 0)
+                    {
+                        var (beforeVatCharge, vatCharge, totalCharge) = CalculationsManager.CalculatePriceSummaryAndVat(currentPrice);
 
-                    resultTable.Rows.Add(row);
+                        DataRow row = resultTable.NewRow();
+                        row["ลำดับ"] = ++iteration;
+                        row["WPT Code"] = currentVendorGroupId;
+                        row["Customer"] = TextFormatters.RemoveBracketFromName(currentVendorGroupName);
+                        row["ค่าบริการก่อน VAT"] = beforeVatCharge;
+                        row["VAT"] = vatCharge;
+                        row["ค่าบริการทั้งหมด"] = totalCharge;
+
+                        resultTable.Rows.Add(row);
+
+                        sumBeforeVat += beforeVatCharge;
+                        sumVat += vatCharge;
+                        sumTotalCharge += totalCharge;
+                    }
                 }
-                catch { }
+                catch (Exception exc) { MessageBox.Show($"{exc.GetType()} | {exc.Message} | {exc.StackTrace}"); }
             }
 
             resultTable.Rows.Add("", "",

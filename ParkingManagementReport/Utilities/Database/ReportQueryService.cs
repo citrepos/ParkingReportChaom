@@ -1534,7 +1534,7 @@ namespace ParkingManagementReport.Utilities.Database
                 case 46:
                     StringBuilder strBuilder = new StringBuilder();
 
-                    strBuilder.AppendLine("SELECT");
+                    strBuilder.AppendLine("SELECT DISTINCT");
                     strBuilder.AppendLine("    mgp.groupname AS บริษัท,");
 
                     if (Configs.UseAsciiMember)
@@ -8763,12 +8763,15 @@ namespace ParkingManagementReport.Utilities.Database
                 case 161: // ธนภูมิ #34.สรุปค่าบริการรายเดือน Member รถยนต์
                     if (Configs.Reports.UseReportThanapoom)
                     {
-                       
                         StringBuilder sqlBuilder = new StringBuilder();
-                        sqlBuilder.AppendLine("SELECT");
-                        sqlBuilder.AppendLine("vg.id AS 'WPT Code',");
-                        sqlBuilder.AppendLine("vg.vendor_name AS บริษัท,");
-                        sqlBuilder.AppendLine("SUM(m.memgrouppriceid_pay) AS 'รวมค่าบัตรสมาชิก'");
+                        sqlBuilder.AppendLine("SELECT DISTINCT");
+                        sqlBuilder.AppendLine("m.id AS member_id,");
+                        sqlBuilder.AppendLine("m.name AS member_name,");
+                        sqlBuilder.AppendLine("m.address AS member_address,");
+                        sqlBuilder.AppendLine("m.license AS member_license,");
+                        sqlBuilder.AppendLine("vg.id AS vendor_id,");
+                        sqlBuilder.AppendLine("vg.vendor_name AS vendor_name,");
+                        sqlBuilder.AppendLine("m.memgrouppriceid_pay AS memgrouppriceid_pay");
                         sqlBuilder.AppendLine("FROM member m");
                         sqlBuilder.AppendLine("JOIN vendor_group vg");
                         sqlBuilder.AppendLine("ON vg.id = m.memgrouppriceid_month");
@@ -8780,13 +8783,6 @@ namespace ParkingManagementReport.Utilities.Database
                         }
                         if (isLegitPromotionRange)
                             sqlBuilder.AppendLine($"AND vg.id BETWEEN {promotionRangeFrom} AND {promotionRangeTo}");
-
-                        sqlBuilder.AppendLine("GROUP BY vg.id, vg.vendor_name");
-
-                        if (paymentStatus == Constants.TextBased.PaymentStatusPaid)
-                            sqlBuilder.AppendLine("HAVING SUM(m.memgrouppriceid_pay) > 0");
-                        else if (paymentStatus == Constants.TextBased.PaymentStatusUnPaid)
-                            sqlBuilder.AppendLine("HAVING SUM(m.memgrouppriceid_pay) = 0");
 
                         sqlBuilder.AppendLine("ORDER BY vg.id;");
 

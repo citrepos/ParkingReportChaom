@@ -6839,6 +6839,17 @@ namespace ParkingManagementReport
                 ParkingTimeComparisonPanel.Visible = true;
             else
                 ParkingTimeComparisonPanel.Visible = false;
+            
+            if (selectedReportId == 161)
+            {
+                label20.Enabled = false;
+                PaymentStatusComboBox.Enabled = false;
+            }
+            else
+            {
+                label20.Enabled = true;
+                PaymentStatusComboBox.Enabled = true;
+            }
 
             if (selectedReportId == 162 && Configs.Reports.UseReportThanapoom)
             {
