@@ -1265,25 +1265,6 @@ namespace ParkingManagementReport.Utilities.Database
                     totalDiscountTimeMinute += totalTimeMinute * (AppGlobalVariables.IntPriceHour[j] == 0 ? 1 : 0);
                 }
 
-                /* Old
-                AppGlobalVariables.IntTime2 = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntPriceMin2 = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntPriceHour2 = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntHourRound2 = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntExpense2 = new int[dt2.Rows.Count];
-                AppGlobalVariables.IntOver2 = new int[dt2.Rows.Count];
-
-                AppGlobalVariables.IntTime2 = AppGlobalVariables.IntTime; // ช่วงเวลา อิงจากชุดแรก (ชุดส่วนลด)
-                AppGlobalVariables.IntPriceHour2[0] = 40; // อัตราค่าจอด ชั้วโมงแรก
-                AppGlobalVariables.IntPriceHour2[1] = 40; // อัตราค่าจอด ชั่วโมงถัดไป
-                AppGlobalVariables.IntHourRound2[0] = 16; // นาทีปัดขึ้น ชั่วโมงแรก
-                AppGlobalVariables.IntHourRound2[1] = 1;  // นาทีปัดขึ้น ชั่วโมงถัดไป
-
-                intParkingPrice = CalculationsManager.CalPrice2(0, intMinute, notDay);
-                หรือ
-                intParkingPrice = CalculationsManager.GetPriceThanapoom(intMinute);
-                */
-
                 intFee = CalculationsManager.CalPrice(0, intMinute, notDay);
                 intParkingPrice = CalculationsManager.GetPriceThanapoom(intMinute);
                 if (dataTable.Rows[iteration]["proid"].ToString() == "119")
