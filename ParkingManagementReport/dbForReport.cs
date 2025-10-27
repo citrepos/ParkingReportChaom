@@ -7,6 +7,30 @@ namespace ParkingManagementReport
 
     public partial class dbForReport
     {
+        partial class reportEstampDataTable
+        {
+        }
+
+        partial class report13DataTable
+        {
+        }
+
+        partial class dtallDataTable
+        {
+        }
+
+        partial class report161DataTable
+        {
+        }
+
+        partial class report18DataTable
+        {
+        }
+
+        partial class report1DataTable
+        {
+        }
+
         partial class tnpt_card_sorted_company_summaryDataTable
         {
         }

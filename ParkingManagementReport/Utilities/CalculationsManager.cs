@@ -474,7 +474,7 @@ namespace ParkingManagementReport.Utilities
                 return;
 
             int rowCount = ResultGridView.Rows.Count - 1;
-            int totalPrice = 0, totalDiscount = 0;
+            int totalPrice = 0, totalDiscount = 0, totalCusin = 0, totalMemin = 0, totalCusout = 0, totalMemout = 0;
             int villageOffset = 0;
             int colCount = ResultGridView.Rows[0].Cells.Count;
             int totalExcess = 0;
@@ -513,24 +513,34 @@ namespace ParkingManagementReport.Utilities
                     ResultGridView.Rows[rowCount].Cells[6].Value = totalDiscount.ToString("#,###,##0");
                     break;
 
-                case 29:
-                    int col1 = 0, col2 = 0, col3 = 0;
-
-                    for (int i = 0; i < rowCount; i++)
-                    {
-                        col1 += int.Parse(ResultGridView.Rows[i].Cells[1].Value.ToString());
-                        col2 += int.Parse(ResultGridView.Rows[i].Cells[2].Value.ToString());
-                        col3 += int.Parse(ResultGridView.Rows[i].Cells[3].Value.ToString());
-                        totalPrice += int.Parse(ResultGridView.Rows[i].Cells[4].Value.ToString());
-                    }
-
-                    ResultGridView[0, rowCount].Value = "รวม";
-                    ResultGridView[1, rowCount].Value = col1.ToString("#,###,##0");
-                    ResultGridView[2, rowCount].Value = col2.ToString("#,###,##0");
-                    ResultGridView[3, rowCount].Value = col3.ToString("#,###,##0");
-                    ResultGridView[4, rowCount].Value = totalPrice.ToString("#,###,##0");
+                case 7:
+                    ResultGridView.Rows[rowCount].Cells[1].Value = "จำนวนรถ";
+                    ResultGridView.Rows[rowCount].Cells[2].Value = $"{rowCount:#,###,##0} คัน";
+                    ResultGridView.Rows[rowCount].Cells[3].Value = "รวม";
                     break;
+                case 25:
+                case 26:
+                    CalculateCase27(rowCount);
+                    break;
+                case 29:
+                        CalculateStandardReportImpact(rowCount);
+                    //    int col1 = 0, col2 = 0, col3 = 0;
 
+                    //    for (int i = 0; i < rowCount; i++)
+                    //    {
+                    //        col1 += int.Parse(ResultGridView.Rows[i].Cells[1].Value.ToString());
+                    //        col2 += int.Parse(ResultGridView.Rows[i].Cells[2].Value.ToString());
+                    //        col3 += int.Parse(ResultGridView.Rows[i].Cells[3].Value.ToString());
+                    //        totalPrice += int.Parse(ResultGridView.Rows[i].Cells[4].Value.ToString());
+                    //    }
+
+                    //    ResultGridView[0, rowCount].Value = "รวม";
+                    //    ResultGridView[1, rowCount].Value = col1.ToString("#,###,##0");
+                    //    ResultGridView[2, rowCount].Value = col2.ToString("#,###,##0");
+                    //    ResultGridView[3, rowCount].Value = col3.ToString("#,###,##0");
+                    //    ResultGridView[4, rowCount].Value = totalPrice.ToString("#,###,##0");
+
+                    break;
                 case 3:
                 case 10:
                     ResultGridView.Rows[rowCount].Cells[3].Value = "รวม";
@@ -545,7 +555,15 @@ namespace ParkingManagementReport.Utilities
                     ResultGridView.Rows[rowCount].Cells[3].Value = "จำนวนรถ";
                     ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} คัน";
                     break;
-
+                case 100:
+                    ResultGridView.Rows[rowCount].Cells[3].Value = "จำนวนรถ";
+                    ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} คัน";
+                    ResultGridView.Rows[rowCount].Cells[5].Value = "รวม";
+                    break;
+                case 101:
+                case 162:
+                    CalculateStandardReportImpact(rowCount);
+                    break;
                 default:
                     break;
             }
@@ -559,41 +577,119 @@ namespace ParkingManagementReport.Utilities
                 else if (Configs.Reports.UseReport1_6 || Configs.Reports.UseReport1_8)
                     offset = 1;
 
-                for (int i = 0; i < count; i++)
+                if (Configs.Reports.UseReportImpact)
                 {
-                    if (int.TryParse(ResultGridView.Rows[i].Cells[6 + offset].Value?.ToString(), out int price))
-                        totalPrice += price;
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (int.TryParse(ResultGridView.Rows[i].Cells[9 + offset].Value?.ToString(), out int price))
+                            totalPrice += price;
 
-                    if (int.TryParse(ResultGridView.Rows[i].Cells[7 + offset].Value?.ToString(), out int discount))
-                        totalDiscount += discount;
+                        if (int.TryParse(ResultGridView.Rows[i].Cells[10 + offset].Value?.ToString(), out int discount))
+                            totalDiscount += discount;
+                    }
+
+                    ResultGridView.Rows[count].Cells[3 + offset].Value = "จำนวนรถ";
+                    ResultGridView.Rows[count].Cells[4 + offset].Value = $"{count:#,###,##0} คัน";
+                    ResultGridView.Rows[count].Cells[5 + offset].Value = "รวม";
+                    ResultGridView.Rows[count].Cells[9 + offset].Value = totalPrice.ToString("#,###,##0");
+                    ResultGridView.Rows[count].Cells[10 + offset].Value = totalDiscount.ToString("#,###,##0");
+
+                } else
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (int.TryParse(ResultGridView.Rows[i].Cells[6 + offset].Value?.ToString(), out int price))
+                            totalPrice += price;
+
+                        if (int.TryParse(ResultGridView.Rows[i].Cells[7 + offset].Value?.ToString(), out int discount))
+                            totalDiscount += discount;
+                    }
+
+                    ResultGridView.Rows[count].Cells[3 + offset].Value = "จำนวนรถ";
+                    ResultGridView.Rows[count].Cells[4 + offset].Value = $"{count:#,###,##0} คัน";
+                    ResultGridView.Rows[count].Cells[5 + offset].Value = "รวม";
+                    ResultGridView.Rows[count].Cells[6 + offset].Value = totalPrice.ToString("#,###,##0");
+                    ResultGridView.Rows[count].Cells[7 + offset].Value = totalDiscount.ToString("#,###,##0");
                 }
 
-                ResultGridView.Rows[count].Cells[3 + offset].Value = "จำนวนรถ";
-                ResultGridView.Rows[count].Cells[4 + offset].Value = $"{count:#,###,##0} คัน";
-                ResultGridView.Rows[count].Cells[5 + offset].Value = "รวม";
-                ResultGridView.Rows[count].Cells[6 + offset].Value = totalPrice.ToString("#,###,##0");
-                ResultGridView.Rows[count].Cells[7 + offset].Value = totalDiscount.ToString("#,###,##0");
+            }
+
+            void CalculateStandardReportImpact(int count)
+            {
+                if (selectedReportId == 29)
+
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (int.TryParse(ResultGridView.Rows[i].Cells[4].Value?.ToString(), out int price))
+                            totalPrice += price;
+                    }
+
+                    ResultGridView.Rows[count].Cells[3].Value = "รวม";
+                    ResultGridView.Rows[count].Cells[4].Value = totalPrice.ToString("#,###,##0");
+                }
+
+                if (selectedReportId == 101)
+
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (int.TryParse(ResultGridView.Rows[i].Cells[7].Value?.ToString(), out int price))
+                            totalPrice += price;
+                    }
+
+                    ResultGridView.Rows[count].Cells[4].Value = "จำนวนรถ";
+                    ResultGridView.Rows[count].Cells[5].Value = $"{count:#,###,##0} คัน";
+                    ResultGridView.Rows[count].Cells[6].Value = "รวม";
+                    ResultGridView.Rows[count].Cells[7].Value = totalPrice.ToString("#,###,##0");
+                }
+
+                if (selectedReportId == 162)
+                {
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (int.TryParse(ResultGridView.Rows[i].Cells[5].Value?.ToString(), out int price))
+                            totalPrice += price;
+                    }
+
+                    ResultGridView.Rows[count].Cells[2].Value = "จำนวนรถ";
+                    ResultGridView.Rows[count].Cells[3].Value = $"{count:#,###,##0} คัน";
+                    ResultGridView.Rows[count].Cells[4].Value = "รวม";
+                    ResultGridView.Rows[count].Cells[5].Value = totalPrice.ToString("##,###,##0");
+                }
+            }
+
+            void CalculateCase27(int count)
+            {
+
+                for (int i = 0; i < count; i++)
+                {
+                    if (int.TryParse(ResultGridView.Rows[i].Cells[1].Value?.ToString(), out int cusin))
+                        totalCusin += cusin;
+                    if (int.TryParse(ResultGridView.Rows[i].Cells[2].Value?.ToString(), out int memin))
+                        totalMemin += memin;
+                    if (int.TryParse(ResultGridView.Rows[i].Cells[3].Value?.ToString(), out int cusout))
+                        totalCusout += cusout;
+                    if (int.TryParse(ResultGridView.Rows[i].Cells[4].Value?.ToString(), out int memout))
+                        totalMemout += memout;
+                }
+
+                ResultGridView.Rows[count].Cells[0].Value = "รวม";
+                ResultGridView.Rows[count].Cells[1].Value = totalCusin.ToString("##,###,##0");
+                ResultGridView.Rows[count].Cells[2].Value = totalMemin.ToString("##,###,##0");
+                ResultGridView.Rows[count].Cells[3].Value = totalCusout.ToString("##,###,##0");
+                ResultGridView.Rows[count].Cells[4].Value = totalMemout.ToString("##,###,##0");
             }
         }
+
+
+    
 
         internal static (double beforeVatCharge, double vatCharge, double totalCharge) CalculatePriceSummaryAndVat(double totalPrice)
         {
             double currentBeforeVat = totalPrice;
             double currentVat = 0.07 * totalPrice;
             double currentTotal = currentBeforeVat + currentVat;
-
-            double beforeVatCharge = Math.Round(currentBeforeVat, 2);
-            double vatCharge = Math.Round(currentVat, 2);
-            double totalCharge = Math.Round(currentTotal, 2);
-
-            return (beforeVatCharge, vatCharge, totalCharge);
-        }
-
-        internal static (double beforeVatCharge, double vatCharge, double totalCharge) CalculateVatFromFullPrice(double totalPrice)
-        {
-            double currentTotal = totalPrice;
-            double currentVat = 0.07 * totalPrice;
-            double currentBeforeVat = totalPrice - currentVat;
 
             double beforeVatCharge = Math.Round(currentBeforeVat, 2);
             double vatCharge = Math.Round(currentVat, 2);

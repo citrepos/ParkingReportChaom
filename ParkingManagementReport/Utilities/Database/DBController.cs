@@ -25,6 +25,7 @@ namespace ParkingManagementReport.Utilities.Database
             DataTable dt = new DataTable();
             DataSet ds = new DataSet();
             var connection = isLocal ? localConnection : remoteConnection;
+            Console.WriteLine(connection);
 
             try
             {
@@ -103,7 +104,7 @@ namespace ParkingManagementReport.Utilities.Database
             return SaveData($"UPDATE recordno SET no={no}", true);
         }
 
-        public static bool Connect(string strIP, string strDatabase = "carpark2_donki_thonglor", bool isLocal = false)
+        public static bool Connect(string strIP, string strDatabase = "carpark2", bool isLocal = false)
         {
             localConnection = new MySqlConnection();
             remoteConnection = new MySqlConnection();

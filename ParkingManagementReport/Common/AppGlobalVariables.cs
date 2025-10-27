@@ -11,6 +11,9 @@ namespace ParkingManagementReport.Common
         public static string IdTextUser { get; set; }
         public static string ConditionText { get; set; }
 
+        public static string startDateTimeText { get; set; }
+        public static string endDateTimeText { get; set; }
+
         public static int[] IntTime;
         public static int[] IntPriceMin;
         public static int[] IntPriceHour;
@@ -47,7 +50,6 @@ namespace ParkingManagementReport.Common
         public static Dictionary<int, string> PromotionNamesById { get; set; }
         public static Dictionary<int, string> UsersById { get; set; }
         public static Dictionary<int, string> ReportsById { get; set; }
-        public static Dictionary<int, string> VendorGroupMonthsById { get; set; }
         public static Dictionary<string, string> ParamsLookup { get; set; }
         public static Dictionary<string, string> MemberStatusesLookup { get; set; }
         public static Dictionary<string, int> MemberGroupsToId { get; set; }

@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using ParkingManagementReport.Common;
 using ParkingManagementReport.Utilities.Formatters;
@@ -168,8 +169,11 @@ namespace ParkingManagementReport.Utilities.Database
             this.promotionId = AppGlobalVariables.PromotionNamesById.First(kvp => kvp.Value == promotionName).Key;
             this.userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
             this.memberTypeId = AppGlobalVariables.MemberGroupsToId[memberType];
-            this.startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
-            this.endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString();
+            //this.startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
+            //this.endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString();
+            AppGlobalVariables.startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
+            AppGlobalVariables.endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString();
+
             if (int.TryParse(promotionRangeFrom, out int from))
                 this.promotionRangeFrom = from;
             else
@@ -194,11 +198,158 @@ namespace ParkingManagementReport.Utilities.Database
         private string GenerateReportQuery()
         {
             string sql = "";
-
+            string startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
+            string endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString();//
 
             switch (selectedReportId)
             {
+
                 case 0:
+
+
+                    if (Configs.Reports.UseReportImpact)
+                    {
+
+                        sql = " SELECT recordout.no AS 'ลำดับ',";
+                    sql += " CASE WHEN recordin.cartype=200 THEN IFNULL((SELECT typename FROM cartype WHERE typeid=member.typeid),'Member')";
+                    sql += " ELSE (SELECT typename FROM cartype WHERE typeid=recordin.cartype) END AS 'ประเภท',";
+                    sql += " CASE WHEN recordin.license='NO' THEN recordin.id WHEN recordin.license='' THEN recordin.id ELSE recordin.license END AS 'ทะเบียน',";
+                    sql += " recordin.qrcode_park AS 'หมายเลขบัตร', DATE_FORMAT(recordin.datein,'%d/%m/%Y %H:%i:%s') AS 'เวลาเข้า', ";
+                    sql += " (SELECT name FROM user WHERE id = recordin.userin) AS 'เจ้าหน้าที่ขาเข้า', DATE_FORMAT(COALESCE(recordout.dategateout, recordout.dateout), '%d/%m/%Y %H:%i:%s') AS 'เวลาออก',";
+                    sql += " (SELECT name FROM user WHERE id = COALESCE(recordout.usergateout, recordout.userout)) as เจ้าหน้าที่ขาออก, ";
+                    sql += " CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC'";
+                    sql += " ELSE 'เงินสด' END AS ช่องทางการชำระเงิน,";
+                    sql += " recordout.price as รายได้, recordout.discount as ส่วนลด";
+                    sql += " FROM recordin LEFT JOIN recordout ON recordin.no = recordout.no";
+                    sql += " LEFT JOIN member ON member.license LIKE CONCAT('%',recordin.license,'%')";
+                    sql += " LEFT JOIN cardmf t1 ON recordin.id = t1.name LEFT JOIN cardpx t2 ON recordin.id = t2.name";
+                    sql += " LEFT JOIN (SELECT MAX(r1.no) as max_no, r1.no_recordin, r1.rabbit_id, r1.status, r2.qr";
+                    sql += " FROM rabbit_post r1 LEFT JOIN rabbit_get r2 ON r1.rabbit_id = r2.rabbit_id WHERE r1.status = 'Y' GROUP BY r1.no_recordin ) t3 ON recordout.no = t3.no_recordin";
+                    sql += " WHERE COALESCE(recordout.dategateout, recordout.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+
+                    if (user != Constants.TextBased.All)
+                    {
+                        var userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        sql += " AND (recordin.userin = " + userId + " OR recordout.userout = " + userId + ")";
+                    }
+                    if (promotionName != Constants.TextBased.All)
+                        sql += " AND recordout.proid =" + promotionId;
+                    if (!String.IsNullOrEmpty(cardId))
+                        sql += " AND recordin.qrcode_park = " + cardId;
+
+                    if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
+                    {
+                        if (Configs.UsePaymentKsher)
+                            sql += " AND t3.channel = 'PromptPay'";
+                        else if (Configs.UsePaymentBeam)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                        else if (Configs.UsePaymentRabbit)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                    }
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
+                    {
+                        if (Configs.UsePaymentKsher)
+                            sql += " AND t3.channel is null AND t1.pay_type = 'C'";
+                        else if (Configs.UsePaymentRabbit)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                        else if (Configs.UsePaymentBeam)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                    }
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
+                    {
+                        if (Configs.UsePaymentKsher)
+                            sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
+                        else if (Configs.UsePaymentRabbit)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                        else if (Configs.UsePaymentBeam)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                    }
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
+                    {
+                        sql += " AND t3.channel = 'TrueMoney'";
+                    }
+                    if (Configs.Reports.ReportSearchMemGroup) //Mac 2021/03/11
+                    {
+                        if (memberType != Constants.TextBased.All)
+                            sql += " and member.memgroupid = " + AppGlobalVariables.MemberGroupsToId[memberType];
+
+                        if (carType == Constants.TextBased.Visitor)
+                            sql += " AND recordin.cartype != 200";
+                        if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                            sql += " AND recordin.cartype =" + carTypeId;
+                    }
+                    else if (Configs.Member2Cartype) //Mac 2016/05/03
+                    {
+                        if (memberType == Constants.TextBased.All)
+                            if (memberType == Constants.TextBased.All)
+                            {
+                                if (carType != Constants.TextBased.All)
+                                {
+                                    sql += " AND (recordin.cartype =" + carTypeId + " or member.typeid =" + carTypeId + ")";
+                                }
+                            }
+                            else if (memberTypeSelectedIndex == 1)
+                            {
+                                sql += " AND recordin.cartype != 200";
+                                if (carType != Constants.TextBased.All)
+                                {
+                                    sql += " AND recordin.cartype =" + carTypeId;
+                                }
+                            }
+                            else if (memberTypeSelectedIndex == 2)
+                            {
+                                sql += " AND recordin.cartype = 200";
+                                if (carType != Constants.TextBased.All)
+                                {
+                                    sql += " AND member.typeid =" + carTypeId;
+                                }
+                            }
+                            else
+                            {
+                                //sql += " AND recordin.cartype = 200";
+                                sql += " AND member.memgroupid =" + AppGlobalVariables.MemberGroupsToId[memberType];
+                                if (carType != Constants.TextBased.All)
+                                {
+                                    sql += " AND member.typeid =" + carTypeId;
+                                }
+                            }
+                    }
+                    else
+                    {
+                        if (carType == Constants.TextBased.Visitor)
+                            sql += " AND recordin.cartype != 200";
+                        if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                            sql += " AND recordin.cartype =" + carTypeId;
+                        if (carType == Constants.TextBased.All) //Mac 2015/02/10
+                        {
+                            if (memberType != Constants.TextBased.All)
+                                sql += " AND member.typeid =" + memberTypeId;
+                        }
+                    }
+                    if (licensePlate != "")
+                        sql += " AND recordin.license LIKE '%" + licensePlate + "%'";
+                    if (cardId != "")
+                        sql += " AND recordin.id = " + cardId;
+                    if (selectedReportId == 5)
+                        sql += " AND recordout.losscard > 0 ";
+                    if (Configs.UseSettingNewMember)
+                    {
+                        if (memberGroupMonth != Constants.TextBased.All)
+                            sql += " and member.storeid = " + memberGroupMonthId;
+                    }
+                    else if ((selectedReportId == 0 || selectedReportId == 90) && Configs.Reports.UseReport1_7) //Mac 2020/10/26
+                    {
+                        if (memberGroupMonth != Constants.TextBased.All)
+                            sql += " and member.memgrouppriceid_month = " + memberGroupMonthId;
+                    }
+
+                    sql += " GROUP BY recordout.no ORDER BY recordout.no;";
+            }
+                    else
+                    {
+                        sql = GetGenericReport();
+                    }
+                        break;
                 case 1:
                 case 5:
                 case 9:
@@ -676,42 +827,56 @@ namespace ParkingManagementReport.Utilities.Database
                     + " CALL dowhile4('" + startDateTimeText + "','" + endDateTimeText + "');";
                     break;
                 case 29:
-                    sql = "DROP PROCEDURE IF EXISTS dowhile4; "
-                    + " CREATE PROCEDURE dowhile4(IN date_select DATETIME, IN date_finish DATE) "
-                    + " BEGIN "
-                     + "  CREATE TABLE perDay (days varchar(50),caroutVisitor INT(1),caroutMember INT(1),lostPro INT(1),price INT(1)); "
-                     + "  WHILE DATE(date_select) <= DATE(date_finish) DO "
-                     + "    INSERT INTO perDay VALUES(CONCAT(DATE_FORMAT(date_select,'%d-%m-%Y'),' ถึง ',DATE_FORMAT( DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND),'%d-%m-%Y')), "
-                     + "    (SELECT count(recordout.no) FROM recordout JOIN recordin ON recordin.no = recordout.no "
-                     + "      WHERE dateout BETWEEN date_select AND  "
-                     + "      DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)  "
-                     + "      AND recordin.cartype < 200  ), "
+                    if (Configs.Reports.UseReportImpact)
+                    {
+                        sql = " SELECT CASE WHEN recordin.cartype = 200 THEN IFNULL((SELECT typename FROM cartype WHERE typeid = member.typeid), 'Member') ";
+                        sql += " ELSE (SELECT typename FROM cartype WHERE typeid = recordin.cartype) END AS 'ประเภท',";
+                        sql += " DATE_FORMAT(recordin.datein, '%d/%m/%Y %H:%i:%s') AS 'เวลาเข้า', (SELECT name FROM user WHERE id = recordin.userin) AS 'เจ้าหน้าที่ขาเข้า',";
+                        sql += " DATE_FORMAT(COALESCE(recordout.dategateout, recordout.dateout), '%d/%m/%Y %H:%i:%s') AS 'เวลาออก', (SELECT name FROM user WHERE id = COALESCE(recordout.usergateout, recordout.userout)) AS 'เจ้าหน้าที่ขาออก'";
+                        sql += " FROM recordin LEFT JOIN recordout ON recordin.no = recordout.no";
+                        sql += " LEFT JOIN member ON member.license LIKE CONCAT('%', recordin.license, '%')";
+                        sql += " WHERE COALESCE(recordout.dategateout, recordout.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+                        sql += " GROUP BY recordout.no ORDER BY recordout.no;";
+                    }
+                    else
+                    {
+                        sql = "DROP PROCEDURE IF EXISTS dowhile4; "
+                        + " CREATE PROCEDURE dowhile4(IN date_select DATETIME, IN date_finish DATE) "
+                        + " BEGIN "
+                         + "  CREATE TABLE perDay (days varchar(50),caroutVisitor INT(1),caroutMember INT(1),lostPro INT(1),price INT(1)); "
+                         + "  WHILE DATE(date_select) <= DATE(date_finish) DO "
+                         + "    INSERT INTO perDay VALUES(CONCAT(DATE_FORMAT(date_select,'%d-%m-%Y'),' ถึง ',DATE_FORMAT( DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND),'%d-%m-%Y')), "
+                         + "    (SELECT count(recordout.no) FROM recordout JOIN recordin ON recordin.no = recordout.no "
+                         + "      WHERE dateout BETWEEN date_select AND  "
+                         + "      DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)  "
+                         + "      AND recordin.cartype < 200  ), "
 
-                     + "    (SELECT count(recordout.no) FROM recordout JOIN recordin ON recordin.no = recordout.no "
-                     + "      WHERE dateout BETWEEN date_select AND  "
-                     + "      DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)  "
-                     + "      AND recordin.cartype = 200), "
+                         + "    (SELECT count(recordout.no) FROM recordout JOIN recordin ON recordin.no = recordout.no "
+                         + "      WHERE dateout BETWEEN date_select AND  "
+                         + "      DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)  "
+                         + "      AND recordin.cartype = 200), "
 
-                    + "       (SELECT count(no) FROM recordout WHERE proid = 0  "
-                    + "       AND dateout BETWEEN date_select AND  "
-                    + "       DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)), "
+                        + "       (SELECT count(no) FROM recordout WHERE proid = 0  "
+                        + "       AND dateout BETWEEN date_select AND  "
+                        + "       DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)), "
 
-                    + "      (SELECT SUM(price) FROM recordout WHERE "
-                    + "       dateout BETWEEN date_select AND  "
-                    + "       DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND))); "
+                        + "      (SELECT SUM(price) FROM recordout WHERE "
+                        + "       dateout BETWEEN date_select AND  "
+                        + "       DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND))); "
 
-                    + "     SET date_select = DATE_ADD(date_select,INTERVAL 1 DAY); "
-                    + "   END WHILE; "
-                    + "   SELECT days as วันที่ ,caroutVisitor as ผู้มาติดต่อ, caroutMember as สมาชิก, lostPro as ไม่ได้ประทับตรา,  "
-                    + "          CASE WHEN price IS NOT NULL  "
-                    + "               THEN price "
-                    + "               ELSE 0 "
-                    + "          END as  รายได้"
-                    + "   FROM perDay; "
-                    + " END; "
+                        + "     SET date_select = DATE_ADD(date_select,INTERVAL 1 DAY); "
+                        + "   END WHILE; "
+                        + "   SELECT days as วันที่ ,caroutVisitor as ผู้มาติดต่อ, caroutMember as สมาชิก, lostPro as ไม่ได้ประทับตรา,  "
+                        + "          CASE WHEN price IS NOT NULL  "
+                        + "               THEN price "
+                        + "               ELSE 0 "
+                        + "          END as  รายได้"
+                        + "   FROM perDay; "
+                        + " END; "
 
-                    + " DROP TABLE IF EXISTS perDay; "
-                    + " CALL dowhile4('" + startDateTimeText + "','" + endDateTimeText + "');";
+                        + " DROP TABLE IF EXISTS perDay; "
+                        + " CALL dowhile4('" + startDateTimeText + "','" + endDateTimeText + "');";
+                    }
                     break;
                 case 30:
                     if (Configs.UseMemberType) //Mac 2018/01/16
@@ -750,8 +915,8 @@ namespace ParkingManagementReport.Utilities.Database
                         sql += ",t1.id as หมายเลขบัตร,(select memid from member_up2u where cardid = t1.id) as เลขสมาชิก";
                         sql += ",(select name from member_up2u where cardid = t1.id) as ชื่อสมาชิก,(select date_format(dateexpire, '%d/%m/%Y %H:%i:%s') from member_up2u where cardid = t1.id) as วันหมดอายุ"; //Mac 2018/12/21
                     }
-                    sql += " , date_format(t1.datein, '%d/%m/%Y %H:%i:%s') AS เวลาเข้า, (SELECT name FROM user WHERE id = t1.userin) AS เจ้าหน้าที่ขาเข้า, date_format(t2.dateout, '%d/%m/%Y %H:%i:%s') AS เวลาเคลียร์บัตร "; //Mac 2018/12/21
-                    sql += " , (SELECT name FROM user WHERE id = t2.userout) AS เจ้าหน้าที่เคลียร์บัตร, t2.clearcard AS เหตุผล ";
+                    sql += " , date_format(t1.datein, '%d/%m/%Y %H:%i:%s') AS เวลาเข้า, (SELECT name FROM user WHERE id = t1.userin) AS เจ้าหน้าที่ขาเข้า, date_format(COALESCE(t2.dategateout, t2.dateout), '%d/%m/%Y %H:%i:%s') AS เวลาเคลียร์บัตร "; //Mac 2018/12/21
+                    sql += " , (SELECT name FROM user WHERE id = COALESCE(t2.usergateout, t2.userout)) AS เจ้าหน้าที่เคลียร์บัตร, t2.clearcard AS เหตุผล ";
                     sql += " FROM recordin t1 LEFT JOIN recordout t2 ON t1.no = t2.no ";
 
                     if (Configs.UseMemberLicensePlate) //Mac 2018/09/03
@@ -762,7 +927,7 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " left join cardmf t4 on t1.id = t4.name";
                     sql += " left join cardpx t5 on t1.id = t5.name";
 
-                    sql += " WHERE dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "' AND char_length(trim(t2.clearcard)) > 0 ";
+                    sql += " WHERE COALESCE(t2.dategateout, t2.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "' AND char_length(trim(t2.clearcard)) > 0 ";
 
                     if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) //Mac 2022/04/22
                         sql += " and t1.notshow = 'N'";
@@ -1013,8 +1178,8 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += ", (select typename from cartype where typeid = t3.cartype) AS ประเภท";
                     sql += ", t3.license as ทะเบียน";
                     sql += ", concat(date_format(t3.datein,'%d/%m/'), date_format(t3.datein,'%Y'), date_format(t3.datein,' %H:%i:%s')) as เวลาเข้า";
-                    sql += ", (select name from user where id = t2.userout) AS เจ้าหน้าที่ขาออก";
-                    sql += ", concat(date_format(t2.dateout,'%d/%m/'), date_format(t2.dateout,'%Y'), date_format(t2.dateout,' %H:%i:%s')) as เวลาออก";
+                    sql += ", (select name from user where id = COALESCE(t2.usergateout, t2.userout)) AS เจ้าหน้าที่ขาออก";
+                    sql += ", concat(date_format(COALESCE(t2.dategateout, t2.dateout),'%d/%m/'), date_format(COALESCE(t2.dategateout, t2.dateout),'%Y'), date_format(COALESCE(t2.dategateout, t2.dateout),' %H:%i:%s')) as เวลาออก";
                     sql += ", t1.name as 'ผู้ทำรายการ Void'";
                     sql += ", format(t2.price, 2) as จำนวนเงิน";
                     sql += ", t1.remark as 'หมายเหตุ'";
@@ -1026,7 +1191,7 @@ namespace ParkingManagementReport.Utilities.Database
 
                     sql += " left join member t4 on t3.cartype = 200 and t3.license = t4.license";
 
-                    sql += " where t2.dateout between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
+                    sql += " where COALESCE(t2.dategateout, t2.dateout) between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
 
                     if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0)
                         sql += " and t3.notshow = 'N'";
@@ -1717,7 +1882,7 @@ namespace ParkingManagementReport.Utilities.Database
                                 else if (Configs.UsePaymentRabbit)
                                     sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                             }
-                            else if (paymentChannel == Constants.TextBased.PaymentChannelEdc)
+                            else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                             {
                                 if (Configs.UsePaymentKsher)
                                     sql += " AND t3.channel is null AND recordout.pay_type = 'EDC'";
@@ -1751,7 +1916,7 @@ namespace ParkingManagementReport.Utilities.Database
                             else if (Configs.UsePaymentRabbit)
                                 sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                         }
-                        else if (paymentChannel == Constants.TextBased.PaymentChannelEdc)
+                        else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                         {
                             if (Configs.UsePaymentKsher)
                                 sql += " AND t3.channel is null AND recordout.pay_type = 'EDC'";
@@ -1862,7 +2027,7 @@ namespace ParkingManagementReport.Utilities.Database
                                 sql += " AND t3.channel = 'TrueMoney'";
                             else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
                                 sql += " AND t3.channel is null AND t2.pay_type = 'C'";
-                            else if (paymentChannel == Constants.TextBased.PaymentChannelEdc)
+                            else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                                 sql += " AND t3.channel is null AND t2.pay_type = 'EDC'";
                         }
                         sql += " and t2.printno > 0";
@@ -4382,346 +4547,631 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " order by datepay";
                     break;
                 case 100:
-                    sql = "select date_format(aa,'%d/%m/%Y') as 'วันที่', bb as 'เลขที่ใบกำกับภาษีเริ่มต้น', cc as 'เลขที่ใบกำกับภาษีสิ้นสุด', dd as 'รหัสเครื่องคิดเงิน'";
-                    sql += ", ee as 'ค่าบริการ', ff as 'ภาษีมูลค่าเพิ่ม', gg as 'รวมเงิน' from ";
-                    sql += "(select t2.dateout as 'aa'";
-                    if (Configs.UseReceiptFor1Out)
+                    if (Configs.Reports.UseReportImpact)
                     {
-                        if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                        sql = "SELECT recordout.no AS 'ลำดับ', ";
+                        sql += "CASE WHEN recordin.cartype=200 THEN IFNULL((SELECT typename FROM cartype WHERE typeid=member.typeid),'Member') ";
+                        sql += "ELSE (SELECT typename FROM cartype WHERE typeid=recordin.cartype) END AS 'ประเภท', ";
+                        sql += "CASE WHEN recordin.license='NO' THEN recordin.id WHEN recordin.license='' THEN recordin.id ELSE recordin.license END AS 'ทะเบียน', ";
+                        sql += "recordin.qrcode_park AS 'หมายเลขบัตร', DATE_FORMAT(recordin.datein,'%d/%m/%Y %H:%i:%s') AS 'เวลาเข้า', ";
+                        sql += "(SELECT name FROM user WHERE id=recordin.userin) AS 'เจ้าหน้าที่ขาเข้า' ";
+                        sql += "FROM recordin LEFT JOIN recordout ON recordin.no=recordout.no LEFT JOIN member ON member.license LIKE CONCAT('%',recordin.license,'%') ";
+
+                        sql += " WHERE dategateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+
+                        if (user != Constants.TextBased.All)
+                            sql += " AND recordin.userin = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+
+                        if (promotionName != Constants.TextBased.All)
+                            sql += " AND recordout.proid =" + promotionId;
+                        if (!String.IsNullOrEmpty(cardId))
+                            sql += " AND recordin.qrcode_park = " + cardId;
+
+                        if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
                         {
-                            sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y%m') ,lpad(min(t2.printno),6,'0'))) as 'bb'";
-                            sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y%m') ,lpad(max(t2.printno),6,'0'))) as 'cc'";
+                            if (Configs.UsePaymentKsher)
+                                sql += " AND t3.channel = 'PromptPay'";
+                            else if (Configs.UsePaymentBeam)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                            else if (Configs.UsePaymentRabbit)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                        }
+                        else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
+                        {
+                            if (Configs.UsePaymentKsher)
+                                sql += " AND t3.channel is null AND t1.pay_type = 'C'";
+                            else if (Configs.UsePaymentRabbit)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                            else if (Configs.UsePaymentBeam)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                        }
+                        else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
+                        {
+                            if (Configs.UsePaymentKsher)
+                                sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
+                            else if (Configs.UsePaymentRabbit)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                            else if (Configs.UsePaymentBeam)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                        }
+                        else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
+                        {
+                            sql += " AND t3.channel = 'TrueMoney'";
+                        }
+
+                        if (Configs.Reports.ReportSearchMemGroup) //Mac 2021/03/11
+                        {
+                            if (memberType != Constants.TextBased.All)
+                                sql += " and member.memgroupid = " + AppGlobalVariables.MemberGroupsToId[memberType];
+
+                            if (carType == Constants.TextBased.Visitor)
+                                sql += " AND recordin.cartype != 200";
+                            if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                                sql += " AND recordin.cartype =" + carTypeId;
+                        }
+                        else if (Configs.Member2Cartype) //Mac 2016/05/03
+                        {
+                            if (memberType == Constants.TextBased.All)
+                                if (memberType == Constants.TextBased.All)
+                                {
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND (recordin.cartype =" + carTypeId + " or member.typeid =" + carTypeId + ")";
+                                    }
+                                }
+                                else if (memberTypeSelectedIndex == 1)
+                                {
+                                    sql += " AND recordin.cartype != 200";
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND recordin.cartype =" + carTypeId;
+                                    }
+                                }
+                                else if (memberTypeSelectedIndex == 2)
+                                {
+                                    sql += " AND recordin.cartype = 200";
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND member.typeid =" + carTypeId;
+                                    }
+                                }
+                                else
+                                {
+                                    //sql += " AND recordin.cartype = 200";
+                                    sql += " AND member.memgroupid =" + AppGlobalVariables.MemberGroupsToId[memberType];
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND member.typeid =" + carTypeId;
+                                    }
+                                }
                         }
                         else
                         {
-                            sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y') ,lpad(min(t2.printno),6,'0'))) as 'bb'";
-                            sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y') ,lpad(max(t2.printno),6,'0'))) as 'cc'";
+                            if (carType == Constants.TextBased.Visitor)
+                                sql += " AND recordin.cartype != 200";
+                            if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                                sql += " AND recordin.cartype =" + carTypeId;
+                            if (carType == Constants.TextBased.All) //Mac 2015/02/10
+                            {
+                                if (memberType != Constants.TextBased.All)
+                                    sql += " AND member.typeid =" + memberTypeId;
+                            }
                         }
+                        if (licensePlate != "")
+                            sql += " AND recordin.license LIKE '%" + licensePlate + "%'";
+                        if (cardId != "")
+                            sql += " AND recordin.id = " + cardId;
+                        if (selectedReportId == 5)
+                            sql += " AND recordout.losscard > 0 ";
+                        if (Configs.UseSettingNewMember)
+                        {
+                            if (memberGroupMonth != Constants.TextBased.All)
+                                sql += " and member.storeid = " + memberGroupMonthId;
+                        }
+                        else if ((selectedReportId == 0 || selectedReportId == 90) && Configs.Reports.UseReport1_7) //Mac 2020/10/26
+                        {
+                            if (memberGroupMonth != Constants.TextBased.All)
+                                sql += " and member.memgrouppriceid_month = " + memberGroupMonthId;
+                        }
+
+
+                        sql += " GROUP BY recordout.no ORDER BY recordout.no;";
+
                     }
                     else
                     {
-                        if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                        sql = "select date_format(aa,'%d/%m/%Y') as 'วันที่', bb as 'เลขที่ใบกำกับภาษีเริ่มต้น', cc as 'เลขที่ใบกำกับภาษีสิ้นสุด', dd as 'รหัสเครื่องคิดเงิน'";
+                        sql += ", ee as 'ค่าบริการ', ff as 'ภาษีมูลค่าเพิ่ม', gg as 'รวมเงิน' from ";
+                        sql += "(select t2.dateout as 'aa'";
+                        if (Configs.UseReceiptFor1Out)
                         {
-                            sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y%m') ,lpad(min(t2.printno),6,'0'))) as 'bb'";
-                            sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y%m') ,lpad(max(t2.printno),6,'0'))) as 'cc'";
+                            if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                            {
+                                sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y%m') ,lpad(min(t2.printno),6,'0'))) as 'bb'";
+                                sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y%m') ,lpad(max(t2.printno),6,'0'))) as 'cc'";
+                            }
+                            else
+                            {
+                                sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y') ,lpad(min(t2.printno),6,'0'))) as 'bb'";
+                                sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y') ,lpad(max(t2.printno),6,'0'))) as 'cc'";
+                            }
                         }
                         else
                         {
-                            sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y') ,lpad(min(t2.printno),6,'0'))) as 'bb'";
-                            sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y') ,lpad(max(t2.printno),6,'0'))) as 'cc'";
+                            if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                            {
+                                sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y%m') ,lpad(min(t2.printno),6,'0'))) as 'bb'";
+                                sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y%m') ,lpad(max(t2.printno),6,'0'))) as 'cc'";
+                            }
+                            else
+                            {
+                                sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y') ,lpad(min(t2.printno),6,'0'))) as 'bb'";
+                                sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y') ,lpad(max(t2.printno),6,'0'))) as 'cc'";
+                            }
                         }
+                        sql += " , t2.posid as 'dd'";
+
+                        if (Configs.Reports.ReportPriceSplitLosscard)
+                        {
+                            sql += " , format(sum((t2.price-t2.losscard)) - ROUND(sum((t2.price-t2.losscard))*7/107, 6), 2) as ee";
+                            sql += " , format(ROUND(sum((t2.price-t2.losscard))*7/107, 6), 2) as ff";
+                            sql += " , format(sum((t2.price-t2.losscard)), 2) as gg";
+                        }
+                        else
+                        {
+                            sql += " , format(sum(t2.price) - ROUND(sum(t2.price)*7/107, 6), 2) as 'ee'";
+                            sql += " , format(ROUND(sum(t2.price)*7/107, 6), 2) as 'ff'";
+                            sql += " , format(sum(t2.price), 2) as 'gg'";
+                        }
+                        sql += " from recordin t1 left join recordout t2 on t1.no = t2.no";
+
+                        if (Configs.UseMemberLicensePlate) //Mac 2024/06/27
+                            sql += " left join member t3 on t3.license like concat('%',t1.license,'%')"; //Mac 2025/03/14
+                        else
+                            sql += " left join member t3 on t1.id = t3.cardid"; //Mac 2021/08/09
+
+                        sql += " where t2.dateout between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
+                        sql += " and t2.no is not null";
+                        sql += " and t2.printno > 0";
+
+                        if (Configs.UseVoidSlip)
+                            sql += " and t2.status = 'N'";
+
+                        if (guardhouse != String.Empty)
+                            sql += " and t2.guardhouse = '" + guardhouse + "' ";
+
+                        if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                            sql += " and t1.typeid =" + carTypeId;
+                        else if (carType == Constants.TextBased.Visitor)
+                            sql += " and t1.cartype != 200";
+
+                        if (user != Constants.TextBased.All)
+                            sql += " and t2.userout =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+
+                        if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
+                            sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
+
+                        if (Configs.UseReceiptFor1Out)
+                        {
+                            sql += " group by date_format(t2.dateout,'%Y-%m-%d'), t2.posid, t2.receipt";
+                        }
+                        else
+                        {
+                            sql += " group by date_format(t2.dateout,'%Y-%m-%d'), t2.posid";
+                        }
+
+                        sql += " union";
+                        sql += " select datepay as 'aa'";
+                        sql += " , concat(receipt, concat(date_format(datepay, '%y'), lpad(min(printno), 6, '0'))) as 'bb'";
+                        sql += " , concat(receipt, concat(date_format(datepay, '%y'), lpad(max(printno), 6, '0'))) as 'cc'";
+                        sql += " , posid as 'dd'";
+                        sql += " , format(sum(price) - ROUND(sum(price)*7/107, 6), 2) as 'ee'";
+                        sql += " , format(ROUND(sum(price)*7/107, 6), 2) as 'ff'";
+                        sql += " , format(sum(price), 2) as 'gg'";
+                        sql += " from member_record ";
+                        sql += " where datepay between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
+                        sql += " and printno > 0";
+                        if (Configs.UseVoidSlip)
+                            sql += " and status != 'V'";
+
+                        if (guardhouse != String.Empty)
+                            sql += " and guardhouse = '" + guardhouse + "'";
+                        if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                            sql += " and cartype =" + carType;
+                        else if (carType == Constants.TextBased.Visitor)
+                            sql += " and cartype != 200";
+                        if (user != Constants.TextBased.All)
+                            sql += " and user =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+
+                        if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
+                            sql += " and storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
+
+                        sql += " group by date_format(datepay,'%Y-%m-%d'), posid";
+
+                        sql += ") tt order by date_format(aa,'%Y-%m-%d'), dd, bb";
                     }
-                    sql += " , t2.posid as 'dd'";
-
-                    if (Configs.Reports.ReportPriceSplitLosscard)
-                    {
-                        sql += " , format(sum((t2.price-t2.losscard)) - ROUND(sum((t2.price-t2.losscard))*7/107, 6), 2) as ee";
-                        sql += " , format(ROUND(sum((t2.price-t2.losscard))*7/107, 6), 2) as ff";
-                        sql += " , format(sum((t2.price-t2.losscard)), 2) as gg";
-                    }
-                    else
-                    {
-                        sql += " , format(sum(t2.price) - ROUND(sum(t2.price)*7/107, 6), 2) as 'ee'";
-                        sql += " , format(ROUND(sum(t2.price)*7/107, 6), 2) as 'ff'";
-                        sql += " , format(sum(t2.price), 2) as 'gg'";
-                    }
-                    sql += " from recordin t1 left join recordout t2 on t1.no = t2.no";
-
-                    if (Configs.UseMemberLicensePlate) //Mac 2024/06/27
-                        sql += " left join member t3 on t3.license like concat('%',t1.license,'%')"; //Mac 2025/03/14
-                    else
-                        sql += " left join member t3 on t1.id = t3.cardid"; //Mac 2021/08/09
-
-                    sql += " where t2.dateout between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
-                    sql += " and t2.no is not null";
-                    sql += " and t2.printno > 0";
-
-                    if (Configs.UseVoidSlip)
-                        sql += " and t2.status = 'N'";
-
-                    if (guardhouse != String.Empty)
-                        sql += " and t2.guardhouse = '" + guardhouse + "' ";
-
-                    if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                        sql += " and t1.typeid =" + carTypeId;
-                    else if (carType == Constants.TextBased.Visitor)
-                        sql += " and t1.cartype != 200";
-
-                    if (user != Constants.TextBased.All)
-                        sql += " and t2.userout =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-
-                    if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
-                        sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-
-                    if (Configs.UseReceiptFor1Out)
-                    {
-                        sql += " group by date_format(t2.dateout,'%Y-%m-%d'), t2.posid, t2.receipt";
-                    }
-                    else
-                    {
-                        sql += " group by date_format(t2.dateout,'%Y-%m-%d'), t2.posid";
-                    }
-
-                    sql += " union";
-                    sql += " select datepay as 'aa'";
-                    sql += " , concat(receipt, concat(date_format(datepay, '%y'), lpad(min(printno), 6, '0'))) as 'bb'";
-                    sql += " , concat(receipt, concat(date_format(datepay, '%y'), lpad(max(printno), 6, '0'))) as 'cc'";
-                    sql += " , posid as 'dd'";
-                    sql += " , format(sum(price) - ROUND(sum(price)*7/107, 6), 2) as 'ee'";
-                    sql += " , format(ROUND(sum(price)*7/107, 6), 2) as 'ff'";
-                    sql += " , format(sum(price), 2) as 'gg'";
-                    sql += " from member_record ";
-                    sql += " where datepay between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
-                    sql += " and printno > 0";
-                    if (Configs.UseVoidSlip)
-                        sql += " and status != 'V'";
-                    if (guardhouse != String.Empty)
-                        sql += " and guardhouse = '" + guardhouse + "'";
-                    if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                        sql += " and cartype =" + carType;
-                    else if (carType == Constants.TextBased.Visitor)
-                        sql += " and cartype != 200";
-                    if (user != Constants.TextBased.All)
-                        sql += " and user =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-
-                    if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
-                        sql += " and storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-
-                    sql += " group by date_format(datepay,'%Y-%m-%d'), posid";
-
-                    sql += ") tt order by date_format(aa,'%Y-%m-%d'), dd, bb";
-
                     break;
+
                 case 101:
-                    sql = "select concat(aa, ' ', (select name from user where id = zz)) as 'จุดที่ออก', bb as 'เลขที่ใบกำกับภาษี', cc as 'รหัสเครื่องคิดเงิน', dd as 'หมายเลขบัตร', ee as 'ทะเบียนรถ'";
-                    sql += ", date_format(ff, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(gg, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก', hh as 'ประเภท/รายการ', ii as 'เวลาจอด/จำนวนเดือน', jj as 'ตราประทับ (E-Stamp)'";
-                    sql += ", kk as 'ค่าบริการ', ll as 'ภาษีมูลค่าเพิ่ม', mm as 'รวมเงิน' from ";
-
-                    sql += "(select t2.userout as zz, concat('จุดที่ออก ', t2.guardhouse) as aa";
-                    if (Configs.UseReceiptFor1Out)
+                    if (Configs.Reports.UseReportImpact)
                     {
-                        if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                        sql = " SELECT recordout.no AS 'ลำดับ',";
+                        sql += " CASE WHEN recordin.cartype=200 THEN IFNULL((SELECT typename FROM cartype WHERE typeid=member.typeid),'Member')";
+                        sql += " ELSE (SELECT typename FROM cartype WHERE typeid=recordin.cartype) END AS 'ประเภท',";
+                        sql += " CASE WHEN recordin.license='NO' THEN recordin.id WHEN recordin.license='' THEN recordin.id ELSE recordin.license END AS 'ทะเบียน',";
+                        sql += " recordin.qrcode_park AS 'หมายเลขบัตร', DATE_FORMAT(COALESCE(recordout.dategateout, recordout.dateout),'%d/%m/%Y %H:%i:%s') AS 'เวลาออก', ";
+                        sql += " (SELECT name FROM user WHERE id= COALESCE(recordout.usergateout, recordout.userout)) AS 'เจ้าหน้าที่ขาออก', ";
+                        sql += " CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC'";
+                        sql += " ELSE 'เงินสด' END AS ช่องทางการชำระเงิน,";
+                        sql += " recordout.price as รายได้ ";
+                        sql += " FROM recordin LEFT JOIN recordout ON recordin.no = recordout.no";
+                        sql += " LEFT JOIN member ON member.license LIKE CONCAT('%',recordin.license,'%')";
+                        sql += " LEFT JOIN cardmf t1 ON recordin.id = t1.name LEFT JOIN cardpx t2 ON recordin.id = t2.name";
+                        sql += " LEFT JOIN (SELECT MAX(r1.no) as max_no, r1.no_recordin, r1.rabbit_id, r1.status, r2.qr";
+                        sql += " FROM rabbit_post r1 LEFT JOIN rabbit_get r2 ON r1.rabbit_id = r2.rabbit_id WHERE r1.status = 'Y' GROUP BY r1.no_recordin ) t3 ON recordout.no = t3.no_recordin";
+
+
+
+                        sql += " WHERE COALESCE(recordout.dategateout, recordout.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+
+                        if (user != Constants.TextBased.All)
+                            sql += " AND recordout.userout = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        if (promotionName != Constants.TextBased.All)
+                            sql += " AND recordout.proid =" + promotionId;
+                        if (!String.IsNullOrEmpty(cardId))
+                            sql += " AND recordin.qrcode_park = " + cardId;
+
+
+                        if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
                         {
-                            sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y%m'), lpad(t2.printno,6,'0'))) as bb";
+                            if (Configs.UsePaymentKsher)
+                                sql += " AND t3.channel = 'PromptPay'";
+                            else if (Configs.UsePaymentBeam)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                            else if (Configs.UsePaymentRabbit)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                        }
+                        else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
+                        {
+                            if (Configs.UsePaymentKsher)
+                                sql += " AND t3.channel is null AND t1.pay_type = 'C'";
+                            else if (Configs.UsePaymentRabbit)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                            else if (Configs.UsePaymentBeam)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                        }
+                        else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
+                        {
+                            if (Configs.UsePaymentKsher)
+                                sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
+                            else if (Configs.UsePaymentRabbit)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                            else if (Configs.UsePaymentBeam)
+                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                        }
+                        else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
+                        {
+                            sql += " AND t3.channel = 'TrueMoney'";
+                        }
+                        if (Configs.Reports.ReportSearchMemGroup) //Mac 2021/03/11
+                        {
+                            if (memberType != Constants.TextBased.All)
+                                sql += " and member.memgroupid = " + AppGlobalVariables.MemberGroupsToId[memberType];
+
+                            if (carType == Constants.TextBased.Visitor)
+                                sql += " AND recordin.cartype != 200";
+                            if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                                sql += " AND recordin.cartype =" + carTypeId;
+                        }
+                        else if (Configs.Member2Cartype) //Mac 2016/05/03
+                        {
+                            if (memberType == Constants.TextBased.All)
+                                if (memberType == Constants.TextBased.All)
+                                {
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND (recordin.cartype =" + carTypeId + " or member.typeid =" + carTypeId + ")";
+                                    }
+                                }
+                                else if (memberTypeSelectedIndex == 1)
+                                {
+                                    sql += " AND recordin.cartype != 200";
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND recordin.cartype =" + carTypeId;
+                                    }
+                                }
+                                else if (memberTypeSelectedIndex == 2)
+                                {
+                                    sql += " AND recordin.cartype = 200";
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND member.typeid =" + carTypeId;
+                                    }
+                                }
+                                else
+                                {
+                                    //sql += " AND recordin.cartype = 200";
+                                    sql += " AND member.memgroupid =" + AppGlobalVariables.MemberGroupsToId[memberType];
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND member.typeid =" + carTypeId;
+                                    }
+                                }
                         }
                         else
                         {
-                            sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y'), lpad(t2.printno,6,'0'))) as bb";
+                            if (carType == Constants.TextBased.Visitor)
+                                sql += " AND recordin.cartype != 200";
+                            if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                                sql += " AND recordin.cartype =" + carTypeId;
+                            if (carType == Constants.TextBased.All) //Mac 2015/02/10
+                            {
+                                if (memberType != Constants.TextBased.All)
+                                    sql += " AND member.typeid =" + memberTypeId;
+                            }
                         }
+                        if (licensePlate != "")
+                            sql += " AND recordin.license LIKE '%" + licensePlate + "%'";
+                        if (cardId != "")
+                            sql += " AND recordin.id = " + cardId;
+                        if (selectedReportId == 5)
+                            sql += " AND recordout.losscard > 0 ";
+                        if (Configs.UseSettingNewMember)
+                        {
+                            if (memberGroupMonth != Constants.TextBased.All)
+                                sql += " and member.storeid = " + memberGroupMonthId;
+                        }
+                        else if ((selectedReportId == 0 || selectedReportId == 90) && Configs.Reports.UseReport1_7) //Mac 2020/10/26
+                        {
+                            if (memberGroupMonth != Constants.TextBased.All)
+                                sql += " and member.memgrouppriceid_month = " + memberGroupMonthId;
+                        }
+
+                        sql += " GROUP BY recordout.no ORDER BY recordout.no;";
+
                     }
                     else
                     {
-                        if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                        sql = "select concat(aa, ' ', (select name from user where id = zz)) as 'จุดที่ออก', bb as 'เลขที่ใบกำกับภาษี', cc as 'รหัสเครื่องคิดเงิน', dd as 'หมายเลขบัตร', ee as 'ทะเบียนรถ'";
+                        sql += ", date_format(ff, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(gg, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก', hh as 'ประเภท/รายการ', ii as 'เวลาจอด/จำนวนเดือน', jj as 'ตราประทับ (E-Stamp)'";
+                        sql += ", kk as 'ค่าบริการ', ll as 'ภาษีมูลค่าเพิ่ม', mm as 'รวมเงิน' from ";
+
+                        sql += "(select t2.userout as zz, concat('จุดที่ออก ', t2.guardhouse) as aa";
+                        if (Configs.UseReceiptFor1Out)
                         {
-                            sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y%m'), lpad(t2.printno,6,'0'))) as bb";
+                            if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                            {
+                                sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y%m'), lpad(t2.printno,6,'0'))) as bb";
+                            }
+                            else
+                            {
+                                sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y'), lpad(t2.printno,6,'0'))) as bb";
+                            }
                         }
                         else
                         {
-                            sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y'), lpad(t2.printno,6,'0'))) as bb";
+                            if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                            {
+                                sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y%m'), lpad(t2.printno,6,'0'))) as bb";
+                            }
+                            else
+                            {
+                                sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y'), lpad(t2.printno,6,'0'))) as bb";
+                            }
                         }
+                        sql += " , t2.posid as cc, cast(ifnull((select name_on_card from cardpx where name = t1.id), (select name_on_card from cardmf where name = t1.id)) as char) as dd, t1.license as ee";
+                        sql += " , t1.datein as ff, t2.dateout as gg";
+                        sql += " , 'รายวัน(Visiter)' as hh";
+                        sql += " ,ifnull(concat(floor(timestampdiff(minute, date_format(t1.datein, '%Y-%m-%d %H:%i:%s'), date_format(t2.dateout, '%Y-%m-%d %H:%i:%s'))/60)";
+                        sql += " , '.', lpad(mod(timestampdiff(minute, date_format(t1.datein, '%Y-%m-%d %H:%i:%s'), date_format(t2.dateout, '%Y-%m-%d %H:%i:%s')), 60), 2, '0')),'-') as ii";
+                        sql += " , lpad(t2.proid,7,'0') as jj";
+
+                        if (Configs.Reports.ReportPriceSplitLosscard)
+                        {
+                            sql += " , format((t2.price-t2.losscard) - ROUND((t2.price-t2.losscard)*7/107, 6), 2) as kk";
+                            sql += " , format(ROUND((t2.price-t2.losscard)*7/107, 6), 2) as ll";
+                            sql += " , format((t2.price-t2.losscard), 2) as mm";
+                        }
+                        else
+                        {
+                            sql += " , format(t2.price - ROUND(t2.price*7/107, 6), 2) as kk";
+                            sql += " , format(ROUND(t2.price*7/107, 6), 2) as ll";
+                            sql += " , format(t2.price, 2) as mm";
+                        }
+
+                        sql += " from recordin t1 left join recordout t2 on t1.no = t2.no";
+                        if (Configs.UseMemberLicensePlate) //Mac 2024/06/27
+                                                           //sql += " left join member t3 on t1.license = t3.license";
+                            sql += " left join member t3 on t3.license like concat('%',t1.license,'%')"; //Mac 2025/03/14
+                        else
+                            sql += " left join member t3 on t1.id = t3.cardid"; //Mac 2021/08/09
+                        sql += " where t2.dateout between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
+                        sql += " and t2.no is not null";
+                        sql += " and t2.printno > 0";
+
+                        if (Configs.UseVoidSlip)
+                            sql += " and t2.status = 'N'";
+
+                        if (guardhouse != String.Empty)
+                            sql += " and t2.guardhouse = '" + guardhouse + "'";
+                        if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                            sql += " and t1.typeid =" + carTypeId;
+                        else if (carType == Constants.TextBased.Visitor)
+                            sql += " and t1.cartype != 200";
+                        if (!String.IsNullOrEmpty(licensePlate))
+                            sql += " and t1.license LIKE '%" + licensePlate + "%'";
+                        if (user != Constants.TextBased.All)
+                            sql += " and t2.userout =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+
+                        if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
+                            sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
+
+                        if (!String.IsNullOrEmpty(cardId)) //Mac 2020/08/11
+                            sql += " and t1.id = cast(ifnull(ifnull((select name from cardpx where name_on_card = '" + cardId + "'), (select name from cardmf where name_on_card = '" + cardId + "')), '" + cardId + "') as char)";
+
+                        sql += " union";
+                        sql += " select user as zz, concat('จุดที่ออก ', guardhouse) as aa";
+                        sql += " , concat(receipt, concat(date_format(datepay, '%y'), lpad(printno, 6, '0'))) as 'bb'";
+                        sql += " , posid as cc, cast(ifnull((select name_on_card from cardpx where name = cardid), (select name_on_card from cardmf where name = cardid)) as char) as dd, license as ee";
+                        sql += " , datepay as ff, datepay as gg";
+                        sql += " , case when cardfee > 0 then 'ค่าบัตรสมาชิก' else (select name from cardtype where id = cardtypeid) end as hh";
+                        sql += " , addmonth as ii, '0000000' as jj";
+                        sql += " , format(price - ROUND(price*7/107, 6), 2) as kk";
+                        sql += " , format(ROUND(price*7/107, 6), 2) as ll";
+                        sql += " , format(price, 2) as mm";
+                        sql += " from member_record";
+                        sql += " where datepay between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
+                        sql += " and printno > 0";
+                        if (Configs.UseVoidSlip)
+                            sql += " and status != 'V'";
+                        if (guardhouse != String.Empty)
+                            sql += " and guardhouse = '" + guardhouse + "'";
+                        if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                            sql += " and cartype =" + carType;
+                        else if (carType == Constants.TextBased.Visitor)
+                            sql += " and cartype != 200";
+                        if (!String.IsNullOrEmpty(licensePlate))
+                            sql += " and license LIKE '%" + licensePlate + "%'";
+                        if (user != Constants.TextBased.All)
+                            sql += " and user =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+
+                        if (memberCardType == Constants.TextBased.MemberCardTypeWithPayment) //Mac 2021/01/27
+                            sql += " and cardfee > 0";
+                        else if (memberCardType == Constants.TextBased.MemberCardTypeNonPayment)
+                            sql += " and cardfee = 0";
+
+                        if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
+                            sql += " and storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
+
+                        if (!String.IsNullOrEmpty(cardId)) //Mac 2020/08/11
+                            sql += " and cardid = cast(ifnull(ifnull((select name from cardpx where name_on_card = '" + cardId + "'), (select name from cardmf where name_on_card = '" + cardId + "')), '" + cardId + "') as char)";
+
+                        sql += ") tt order by aa, date_format(gg,'%Y-%m-%d %H:%i:%s'), bb";
                     }
-                    sql += " , t2.posid as cc, cast(ifnull((select name_on_card from cardpx where name = t1.id), (select name_on_card from cardmf where name = t1.id)) as char) as dd, t1.license as ee";
-                    sql += " , t1.datein as ff, t2.dateout as gg";
-                    sql += " , 'รายวัน(Visiter)' as hh";
-                    sql += " ,ifnull(concat(floor(timestampdiff(minute, date_format(t1.datein, '%Y-%m-%d %H:%i:%s'), date_format(t2.dateout, '%Y-%m-%d %H:%i:%s'))/60)";
-                    sql += " , '.', lpad(mod(timestampdiff(minute, date_format(t1.datein, '%Y-%m-%d %H:%i:%s'), date_format(t2.dateout, '%Y-%m-%d %H:%i:%s')), 60), 2, '0')),'-') as ii";
-                    sql += " , lpad(t2.proid,7,'0') as jj";
-
-                    if (Configs.Reports.ReportPriceSplitLosscard)
-                    {
-                        sql += " , format((t2.price-t2.losscard) - ROUND((t2.price-t2.losscard)*7/107, 6), 2) as kk";
-                        sql += " , format(ROUND((t2.price-t2.losscard)*7/107, 6), 2) as ll";
-                        sql += " , format((t2.price-t2.losscard), 2) as mm";
-                    }
-                    else
-                    {
-                        sql += " , format(t2.price - ROUND(t2.price*7/107, 6), 2) as kk";
-                        sql += " , format(ROUND(t2.price*7/107, 6), 2) as ll";
-                        sql += " , format(t2.price, 2) as mm";
-                    }
-
-                    sql += " from recordin t1 left join recordout t2 on t1.no = t2.no";
-                    if (Configs.UseMemberLicensePlate) //Mac 2024/06/27
-                        //sql += " left join member t3 on t1.license = t3.license";
-                        sql += " left join member t3 on t3.license like concat('%',t1.license,'%')"; //Mac 2025/03/14
-                    else
-                        sql += " left join member t3 on t1.id = t3.cardid"; //Mac 2021/08/09
-                    sql += " where t2.dateout between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
-                    sql += " and t2.no is not null";
-                    sql += " and t2.printno > 0";
-
-                    if (Configs.UseVoidSlip)
-                        sql += " and t2.status = 'N'";
-
-                    if (guardhouse != String.Empty)
-                        sql += " and t2.guardhouse = '" + guardhouse + "'";
-                    if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                        sql += " and t1.typeid =" + carTypeId;
-                    else if (carType == Constants.TextBased.Visitor)
-                        sql += " and t1.cartype != 200";
-                    if (!String.IsNullOrEmpty(licensePlate))
-                        sql += " and t1.license LIKE '%" + licensePlate + "%'";
-                    if (user != Constants.TextBased.All)
-                        sql += " and t2.userout =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-
-                    if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
-                        sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-
-                    if (!String.IsNullOrEmpty(cardId)) //Mac 2020/08/11
-                        sql += " and t1.id = cast(ifnull(ifnull((select name from cardpx where name_on_card = '" + cardId + "'), (select name from cardmf where name_on_card = '" + cardId + "')), '" + cardId + "') as char)";
-
-                    sql += " union";
-                    sql += " select user as zz, concat('จุดที่ออก ', guardhouse) as aa";
-                    sql += " , concat(receipt, concat(date_format(datepay, '%y'), lpad(printno, 6, '0'))) as 'bb'";
-                    sql += " , posid as cc, cast(ifnull((select name_on_card from cardpx where name = cardid), (select name_on_card from cardmf where name = cardid)) as char) as dd, license as ee";
-                    sql += " , datepay as ff, datepay as gg";
-                    sql += " , case when cardfee > 0 then 'ค่าบัตรสมาชิก' else (select name from cardtype where id = cardtypeid) end as hh";
-                    sql += " , addmonth as ii, '0000000' as jj";
-                    sql += " , format(price - ROUND(price*7/107, 6), 2) as kk";
-                    sql += " , format(ROUND(price*7/107, 6), 2) as ll";
-                    sql += " , format(price, 2) as mm";
-                    sql += " from member_record";
-                    sql += " where datepay between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
-                    sql += " and printno > 0";
-                    if (Configs.UseVoidSlip)
-                        sql += " and status != 'V'";
-                    if (guardhouse != String.Empty)
-                        sql += " and guardhouse = '" + guardhouse + "'";
-                    if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                        sql += " and cartype =" + carType;
-                    else if (carType == Constants.TextBased.Visitor)
-                        sql += " and cartype != 200";
-                    if (!String.IsNullOrEmpty(licensePlate))
-                        sql += " and license LIKE '%" + licensePlate + "%'";
-                    if (user != Constants.TextBased.All)
-                        sql += " and user =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-
-                    if (memberCardType == Constants.TextBased.MemberCardTypeWithPayment) //Mac 2021/01/27
-                        sql += " and cardfee > 0";
-                    else if (memberCardType == Constants.TextBased.MemberCardTypeNonPayment)
-                        sql += " and cardfee = 0";
-
-                    if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
-                        sql += " and storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-
-                    if (!String.IsNullOrEmpty(cardId)) //Mac 2020/08/11
-                        sql += " and cardid = cast(ifnull(ifnull((select name from cardpx where name_on_card = '" + cardId + "'), (select name from cardmf where name_on_card = '" + cardId + "')), '" + cardId + "') as char)";
-
-                    sql += ") tt order by aa, date_format(gg,'%Y-%m-%d %H:%i:%s'), bb";
-
                     break;
                 case 102: //Mac 2020/01/23
-                    sql = "select concat(aa, ' ', (select name from user where id = zz)) as 'จุดที่ออก', bb as 'เลขที่ใบกำกับภาษี', cc as 'รหัสเครื่องคิดเงิน', dd as 'หมายเลขบัตร', ee as 'ทะเบียนรถ'";
-                    sql += ", date_format(ff, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(gg, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก', hh as 'ประเภท/รายการ', ii as 'สาเหตุยกเลิก'";
-                    sql += ", jj as 'ค่าบริการ', kk as 'ภาษีมูลค่าเพิ่ม', ll as 'รวมเงิน' from ";
-
-                    sql += "(select t2.userout as zz, concat('จุดที่ออก ', t2.guardhouse) as aa";
-                    if (Configs.UseReceiptFor1Out)
+                    if(Configs.Reports.UseReportImpact)
                     {
-                        if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                        sql = "SELECT estamp_data FROM recordin r1";
+                        sql += " where r1.datetime between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
+
+                    }
+                    else
+                    {
+                        sql = "select concat(aa, ' ', (select name from user where id = zz)) as 'จุดที่ออก', bb as 'เลขที่ใบกำกับภาษี', cc as 'รหัสเครื่องคิดเงิน', dd as 'หมายเลขบัตร', ee as 'ทะเบียนรถ'";
+                        sql += ", date_format(ff, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(gg, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก', hh as 'ประเภท/รายการ', ii as 'สาเหตุยกเลิก'";
+                        sql += ", jj as 'ค่าบริการ', kk as 'ภาษีมูลค่าเพิ่ม', ll as 'รวมเงิน' from ";
+
+                        sql += "(select t2.userout as zz, concat('จุดที่ออก ', t2.guardhouse) as aa";
+                        if (Configs.UseReceiptFor1Out)
                         {
-                            sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y%m'), lpad(t2.printno,6,'0'))) as bb";
+                            if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                            {
+                                sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y%m'), lpad(t2.printno,6,'0'))) as bb";
+                            }
+                            else
+                            {
+                                sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y'), lpad(t2.printno,6,'0'))) as bb";
+                            }
                         }
                         else
                         {
-                            sql += " , concat(t2.receipt, concat(date_format(t2.dateout,'%y'), lpad(t2.printno,6,'0'))) as bb";
+                            if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                            {
+                                sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y%m'), lpad(t2.printno,6,'0'))) as bb";
+                            }
+                            else
+                            {
+                                sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y'), lpad(t2.printno,6,'0'))) as bb";
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (Configs.OutReceiptNameMonth) //Mac 2024/11/25
+                        sql += " , t2.posid as cc, cast(ifnull((select name_on_card from cardpx where name = t1.id), (select name_on_card from cardmf where name = t1.id)) as char) as dd, t1.license as ee";
+                        sql += " , t1.datein as ff, t2.dateout as gg";
+                        sql += " , 'รายวัน(Visiter)' as hh";
+                        sql += " , t2.voidslip as ii";
+
+                        if (Configs.Reports.ReportPriceSplitLosscard)
                         {
-                            sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y%m'), lpad(t2.printno,6,'0'))) as bb";
+                            sql += " , format((t2.price-t2.losscard) - ROUND((t2.price-t2.losscard)*7/107, 6), 2) as jj";
+                            sql += " , format(ROUND((t2.price-t2.losscard)*7/107, 6), 2) as kk";
+                            sql += " , format((t2.price-t2.losscard), 2) as ll";
                         }
                         else
                         {
-                            sql += " , concat((select value from slipoutformat where name = 'receiptname'), concat(date_format(t2.dateout,'%y'), lpad(t2.printno,6,'0'))) as bb";
+                            sql += " , format(t2.price - ROUND(t2.price*7/107, 6), 2) as jj";
+                            sql += " , format(ROUND(t2.price*7/107, 6), 2) as kk";
+                            sql += " , format(t2.price, 2) as ll";
                         }
+
+                        sql += " from recordin t1 left join recordout t2 on t1.no = t2.no";
+                        if (Configs.UseMemberLicensePlate) //Mac 2024/06/27
+                                                           //sql += " left join member t3 on t1.license = t3.license";
+                            sql += " left join member t3 on t3.license like concat('%',t1.license,'%')"; //Mac 2025/03/14
+                        else
+                            sql += " left join member t3 on t1.id = t3.cardid"; //Mac 2021/08/09
+                        sql += " where t2.dateout between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
+                        sql += " and t2.no is not null";
+                        sql += " and t2.printno > 0";
+                        sql += " and t2.status = 'V'";
+
+                        if (guardhouse != String.Empty)
+                            sql += " and t2.guardhouse = '" + guardhouse + "' ";
+                        if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                            sql += " and t1.typeid =" + carTypeId;
+                        else if (carType == Constants.TextBased.Visitor)
+                            sql += " and t1.cartype != 200";
+                        if (!String.IsNullOrEmpty(licensePlate))
+                            sql += " and t1.license LIKE '%" + licensePlate + "%'";
+                        if (user != Constants.TextBased.All)
+                            sql += " and t2.userout =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+
+                        if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
+                            sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
+
+                        if (!String.IsNullOrEmpty(cardId)) //Mac 2020/08/11
+                            sql += " and t1.id = cast(ifnull(ifnull((select name from cardpx where name_on_card = '" + cardId + "'), (select name from cardmf where name_on_card = '" + cardId + "')), '" + cardId + "') as char)";
+
+                        sql += " union";
+                        sql += " select user as zz, concat('จุดที่ออก ', guardhouse) as aa";
+                        sql += " , concat(receipt, concat(date_format(datepay, '%y'), lpad(printno, 6, '0'))) as 'bb'";
+                        sql += " , posid as cc, cast(ifnull((select name_on_card from cardpx where name = cardid), (select name_on_card from cardmf where name = cardid)) as char) as dd, license as ee";
+                        sql += " , datepay as ff, datepay as gg";
+                        sql += " , case when cardfee > 0 then 'ค่าบัตรสมาชิก' else (select name from cardtype where id = cardtypeid) end as hh";
+                        sql += " , voidslip as ii";
+                        sql += " , format(price - ROUND(price*7/107, 6), 2) as jj";
+                        sql += " , format(ROUND(price*7/107, 6), 2) as kk";
+                        sql += " , format(price, 2) as ll";
+                        sql += " from member_record";
+                        sql += " where datepay between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
+                        sql += " and printno > 0";
+                        sql += " and status = 'V'";
+
+                        if (guardhouse != String.Empty)
+                            sql += " and guardhouse = '" + guardhouse + "'";
+                        if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                            sql += " and cartype =" + carType;
+                        else if (carType == Constants.TextBased.Visitor)
+                            sql += " and cartype != 200";
+                        if (!String.IsNullOrEmpty(licensePlate))
+                            sql += " and license LIKE '%" + licensePlate + "%'";
+                        if (user != Constants.TextBased.All)
+                            sql += " and user =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+
+                        if (memberCardType == Constants.TextBased.MemberCardTypeWithPayment) //Mac 2021/01/27
+                            sql += " and cardfee > 0";
+                        else if (memberCardType == Constants.TextBased.MemberCardTypeNonPayment)
+                            sql += " and cardfee = 0";
+
+                        if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
+                            sql += " and storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
+
+                        if (!String.IsNullOrEmpty(cardId)) //Mac 2020/08/11
+                            sql += " and cardid = cast(ifnull(ifnull((select name from cardpx where name_on_card = '" + cardId + "'), (select name from cardmf where name_on_card = '" + cardId + "')), '" + cardId + "') as char)";
+
+                        sql += ") tt order by aa, date_format(gg,'%Y-%m-%d %H:%i:%s'), bb";
+                        
                     }
-                    sql += " , t2.posid as cc, cast(ifnull((select name_on_card from cardpx where name = t1.id), (select name_on_card from cardmf where name = t1.id)) as char) as dd, t1.license as ee";
-                    sql += " , t1.datein as ff, t2.dateout as gg";
-                    sql += " , 'รายวัน(Visiter)' as hh";
-                    sql += " , t2.voidslip as ii";
-
-                    if (Configs.Reports.ReportPriceSplitLosscard)
-                    {
-                        sql += " , format((t2.price-t2.losscard) - ROUND((t2.price-t2.losscard)*7/107, 6), 2) as jj";
-                        sql += " , format(ROUND((t2.price-t2.losscard)*7/107, 6), 2) as kk";
-                        sql += " , format((t2.price-t2.losscard), 2) as ll";
-                    }
-                    else
-                    {
-                        sql += " , format(t2.price - ROUND(t2.price*7/107, 6), 2) as jj";
-                        sql += " , format(ROUND(t2.price*7/107, 6), 2) as kk";
-                        sql += " , format(t2.price, 2) as ll";
-                    }
-
-                    sql += " from recordin t1 left join recordout t2 on t1.no = t2.no";
-                    if (Configs.UseMemberLicensePlate) //Mac 2024/06/27
-                        //sql += " left join member t3 on t1.license = t3.license";
-                        sql += " left join member t3 on t3.license like concat('%',t1.license,'%')"; //Mac 2025/03/14
-                    else
-                        sql += " left join member t3 on t1.id = t3.cardid"; //Mac 2021/08/09
-                    sql += " where t2.dateout between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
-                    sql += " and t2.no is not null";
-                    sql += " and t2.printno > 0";
-                    sql += " and t2.status = 'V'";
-
-                    if (guardhouse != String.Empty)
-                        sql += " and t2.guardhouse = '" + guardhouse + "' ";
-                    if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                        sql += " and t1.typeid =" + carTypeId;
-                    else if (carType == Constants.TextBased.Visitor)
-                        sql += " and t1.cartype != 200";
-                    if (!String.IsNullOrEmpty(licensePlate))
-                        sql += " and t1.license LIKE '%" + licensePlate + "%'";
-                    if (user != Constants.TextBased.All)
-                        sql += " and t2.userout =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-
-                    if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
-                        sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-
-                    if (!String.IsNullOrEmpty(cardId)) //Mac 2020/08/11
-                        sql += " and t1.id = cast(ifnull(ifnull((select name from cardpx where name_on_card = '" + cardId + "'), (select name from cardmf where name_on_card = '" + cardId + "')), '" + cardId + "') as char)";
-
-                    sql += " union";
-                    sql += " select user as zz, concat('จุดที่ออก ', guardhouse) as aa";
-                    sql += " , concat(receipt, concat(date_format(datepay, '%y'), lpad(printno, 6, '0'))) as 'bb'";
-                    sql += " , posid as cc, cast(ifnull((select name_on_card from cardpx where name = cardid), (select name_on_card from cardmf where name = cardid)) as char) as dd, license as ee";
-                    sql += " , datepay as ff, datepay as gg";
-                    sql += " , case when cardfee > 0 then 'ค่าบัตรสมาชิก' else (select name from cardtype where id = cardtypeid) end as hh";
-                    sql += " , voidslip as ii";
-                    sql += " , format(price - ROUND(price*7/107, 6), 2) as jj";
-                    sql += " , format(ROUND(price*7/107, 6), 2) as kk";
-                    sql += " , format(price, 2) as ll";
-                    sql += " from member_record";
-                    sql += " where datepay between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
-                    sql += " and printno > 0";
-                    sql += " and status = 'V'";
-
-                    if (guardhouse != String.Empty)
-                        sql += " and guardhouse = '" + guardhouse + "'";
-                    if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                        sql += " and cartype =" + carType;
-                    else if (carType == Constants.TextBased.Visitor)
-                        sql += " and cartype != 200";
-                    if (!String.IsNullOrEmpty(licensePlate))
-                        sql += " and license LIKE '%" + licensePlate + "%'";
-                    if (user != Constants.TextBased.All)
-                        sql += " and user =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-
-                    if (memberCardType == Constants.TextBased.MemberCardTypeWithPayment) //Mac 2021/01/27
-                        sql += " and cardfee > 0";
-                    else if (memberCardType == Constants.TextBased.MemberCardTypeNonPayment)
-                        sql += " and cardfee = 0";
-
-                    if (memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/09
-                        sql += " and storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-
-                    if (!String.IsNullOrEmpty(cardId)) //Mac 2020/08/11
-                        sql += " and cardid = cast(ifnull(ifnull((select name from cardpx where name_on_card = '" + cardId + "'), (select name from cardmf where name_on_card = '" + cardId + "')), '" + cardId + "') as char)";
-
-                    sql += ") tt order by aa, date_format(gg,'%Y-%m-%d %H:%i:%s'), bb";
                     break;
                 case 103: //Mac 2020/01/23
                     sql = "select date_format(t2.dateout,'%d/%m/%Y') as 'วันที่'";
@@ -8701,12 +9151,13 @@ namespace ParkingManagementReport.Utilities.Database
                        + " เวลา " + endTime.ToLongTimeString();
                     break;
 
-                case 160: // 33.รายงาน E-Stamp รถยนต์
+                case 160:
                     sql = "select t1.no as 'ลำดับ', (SELECT typename FROM cartype WHERE typeid = t2.cartype) as 'ประเภท'";
                     sql += ", t2.license as 'ทะเบียน', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'เวลาเข้า'";
                     sql += ", t1.user_name as 'ชื่อผู้ให้ส่วนลด', t1.promotion_name as 'ชื่อโปรโมชั่น', date_format(t1.date_estamp, '%d/%m/%Y %H:%i:%s') as 'เวลาให้ส่วนลด'";
                     sql += " from estamprecord t1 left join recordin t2 on t1.record_no = t2.no";
                     sql += " WHERE t1.date_estamp BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+
 
                     if ((user != "ALL") && (user.Length > 0))
                         sql += " AND t1.user_name = '" + user + "'";
@@ -8722,93 +9173,127 @@ namespace ParkingManagementReport.Utilities.Database
                     break;
 
                 case 161:
-                    string fontSlip161 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip161 = AppGlobalVariables.Printings.ReceiptName;
-                    else
+                    if (Configs.Reports.UseReportThanapoom)
                     {
-                        if (!Configs.UseReceiptName)
-                            fontSlip161 = "IV";
-                    }
+                        bool isPromotionRangeEmpty = (promotionRangeFrom == 0) || (promotionRangeTo == 0);
+                        bool isLegitRange = promotionRangeFrom < promotionRangeTo;
 
-                    sql = "select cast(t2.id as char) as 'หมายเลขบัตร', t2.license as 'ทะเบียนรถ', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(t3.dateout, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก'";
-                    if (Configs.UseReceiptFor1Out)
-                    {
-                        if (Configs.OutReceiptNameMonth)
-                        {
-                            sql += ", concat(t3.receipt, concat(date_format(t3.dateout,'%y%m') ,lpad(t3.printno,6,'0'))) as 'ใบกำกับภาษี'";
-                        }
-                        else
-                        {
-                            sql += ", concat(t3.receipt, concat(date_format(t3.dateout,'%y') ,lpad(t3.printno,6,'0'))) as 'ใบกำกับภาษี'";
-                        }
-                    }
-                    else
-                    {
-                        if (Configs.OutReceiptNameMonth)
-                        {
-                            sql += ", concat('" + fontSlip161 + "', concat(date_format(t3.dateout,'%y%m') ,lpad(t3.printno,6,'0'))) as 'ใบกำกับภาษี'";
-                        }
-                        else
-                        {
+                        sql = @"SELECT 
+    mg.groupname AS บริษัท,
+    mg.nogroup AS 'WPT Code',
+    SUM(m.memgrouppriceid_pay) AS 'รวมค่าบัตรสมาชิก'
+FROM member m
+JOIN membergroupprice_month mg 
+    ON mg.id = m.memgrouppriceid_month
+WHERE 1 = 1 ";
 
-                            sql += ", concat('" + fontSlip161 + "', concat(date_format(t3.dateout,'%y') ,lpad(t3.printno,6,'0'))) as 'ใบกำกับภาษี'";
-                        }
-                    }
-                    sql += ", t1.price_old as 'จำนวนเดิม', t1.price as 'จำนวนใหม่', (select name from user where id = t1.user) as 'ปรับปรุงโดย'";
-                    sql += ", date_format(t1.datemodify, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาปรับปรุง', t1.reason as 'สาเหตุ'";
-                    sql += " from modify_amount t1 left join recordin t2 on t1.no_recordin = t2.no left join recordout t3 on t1.no_recordin = t3.no";
-                    sql += " WHERE t1.datemodify BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+                        if (memberGroupMonth != Constants.TextBased.All)
+                            sql += $"AND mg.groupname = '{memberGroupMonth}'\n";
 
-                    if (user != Constants.TextBased.All)
-                        sql += " AND t1.user = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-                    if (promotionName != Constants.TextBased.All)
-                        sql += " AND t3.proid =" + promotionId;
-                    if (!String.IsNullOrEmpty(licensePlate))
-                        sql += " AND t2.license LIKE '%" + licensePlate + "%'";
-                    if (!String.IsNullOrEmpty(cardId))
-                        sql += " AND t2.id = " + cardId;
+                        if (!isPromotionRangeEmpty && isLegitRange)
+                            sql += $"AND mg.nogroup BETWEEN {promotionRangeFrom} AND {promotionRangeTo}\n";
 
-                    sql += " ORDER BY t1.no";
+                        if (paymentStatus == Constants.TextBased.PaymentStatusPaid)
+                            sql += "AND m.memgrouppriceid_pay != 0\n";
+                        else if (paymentStatus == Constants.TextBased.PaymentStatusUnPaid)
+                            sql += "AND memgrouppriceid_pay = 0\n";
 
-                    sql = "select cast(t2.id as char) as 'หมายเลขบัตร', t2.license as 'ทะเบียนรถ', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(t1.dateout, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก'";
-                    if (Configs.UseReceiptFor1Out)
-                    {
-                        if (Configs.OutReceiptNameMonth)
-                        {
-                            sql += ", concat(t1.receipt, concat(date_format(t1.dateout,'%y%m') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี'";
-                        }
-                        else
-                        {
-                            sql += ", concat(t1.receipt, concat(date_format(t1.dateout,'%y') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี'";
-                        }
+                        sql += "GROUP BY mg.groupname, mg.nogroup\r\nORDER BY mg.nogroup;";
                     }
                     else
                     {
-                        if (Configs.OutReceiptNameMonth)
+                        string fontSlip161 = "";
+                        if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
+                            fontSlip161 = AppGlobalVariables.Printings.ReceiptName;
+                        else
                         {
-                            sql += ", concat('" + fontSlip161 + "', concat(date_format(t1.dateout,'%y%m') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี'";
+                            if (!Configs.UseReceiptName)
+                                fontSlip161 = "IV";
+                        }
+
+                        sql = "select cast(t2.id as char) as 'หมายเลขบัตร', t2.license as 'ทะเบียนรถ', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(t3.dateout, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก'";
+                        if (Configs.UseReceiptFor1Out)
+                        {
+                            if (Configs.OutReceiptNameMonth)
+                            {
+                                sql += ", concat(t3.receipt, concat(date_format(t3.dateout,'%y%m') ,lpad(t3.printno,6,'0'))) as 'ใบกำกับภาษี'";
+                            }
+                            else
+                            {
+                                sql += ", concat(t3.receipt, concat(date_format(t3.dateout,'%y') ,lpad(t3.printno,6,'0'))) as 'ใบกำกับภาษี'";
+                            }
                         }
                         else
                         {
+                            if (Configs.OutReceiptNameMonth)
+                            {
+                                sql += ", concat('" + fontSlip161 + "', concat(date_format(t3.dateout,'%y%m') ,lpad(t3.printno,6,'0'))) as 'ใบกำกับภาษี'";
+                            }
+                            else
+                            {
 
-                            sql += ", concat('" + fontSlip161 + "', concat(date_format(t1.dateout,'%y') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี'";
+                                sql += ", concat('" + fontSlip161 + "', concat(date_format(t3.dateout,'%y') ,lpad(t3.printno,6,'0'))) as 'ใบกำกับภาษี'";
+                            }
                         }
-                    }
-                    sql += ", t3.price_old as 'จำนวนเดิม', t3.price as 'จำนวนใหม่', (select name from user where id = t3.user) as 'ปรับปรุงโดย'";
-                    sql += ", date_format(t3.datemodify, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาปรับปรุง', t3.reason as 'สาเหตุ'";
-                    sql += " from recordout t1 left join recordin t2 on t1.no = t2.no left join modify_amount t3 on t1.no_modify = t3.no";
-                    sql += " WHERE t3.datemodify BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+                        //sql += "date_format(recordin.datein, '%d/%m/%Y %H:%i:%s') as เวลาเข้า"; //Mac 2018/12/21
+                        sql += ", t1.price_old as 'จำนวนเดิม', t1.price as 'จำนวนใหม่', (select name from user where id = t1.user) as 'ปรับปรุงโดย'";
+                        sql += ", date_format(t1.datemodify, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาปรับปรุง', t1.reason as 'สาเหตุ'";
+                        sql += " from modify_amount t1 left join recordin t2 on t1.no_recordin = t2.no left join recordout t3 on t1.no_recordin = t3.no";
+                        sql += " WHERE t1.datemodify BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
 
-                    if (user != Constants.TextBased.All)
-                        sql += " AND t3.user = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-                    if (promotionName != Constants.TextBased.All)
-                        sql += " AND t1.proid =" + promotionId;
-                    if (!String.IsNullOrEmpty(licensePlate))
-                        sql += " AND t2.license LIKE '%" + licensePlate + "%'";
-                    if (!String.IsNullOrEmpty(cardId))
-                        sql += " AND t2.id = " + cardId;
-                    sql += " ORDER BY t3.no";
+                        if (user != Constants.TextBased.All)
+                            sql += " AND t1.user = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        if (promotionName != Constants.TextBased.All)
+                            sql += " AND t3.proid =" + promotionId;
+                        if (!String.IsNullOrEmpty(licensePlate))
+                            sql += " AND t2.license LIKE '%" + licensePlate + "%'";
+                        if (!String.IsNullOrEmpty(cardId))
+                            sql += " AND t2.id = " + cardId;
+
+                        sql += " ORDER BY t1.no";
+
+                        sql = "select cast(t2.id as char) as 'หมายเลขบัตร', t2.license as 'ทะเบียนรถ', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(t1.dateout, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก'";
+                        if (Configs.UseReceiptFor1Out)
+                        {
+                            if (Configs.OutReceiptNameMonth)
+                            {
+                                sql += ", concat(t1.receipt, concat(date_format(t1.dateout,'%y%m') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี'";
+                            }
+                            else
+                            {
+                                sql += ", concat(t1.receipt, concat(date_format(t1.dateout,'%y') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี'";
+                            }
+                        }
+                        else
+                        {
+                            if (Configs.OutReceiptNameMonth)
+                            {
+                                sql += ", concat('" + fontSlip161 + "', concat(date_format(t1.dateout,'%y%m') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี'";
+                            }
+                            else
+                            {
+
+                                sql += ", concat('" + fontSlip161 + "', concat(date_format(t1.dateout,'%y') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี'";
+                            }
+                        }
+                        //sql += "date_format(recordin.datein, '%d/%m/%Y %H:%i:%s') as เวลาเข้า"; //Mac 2018/12/21
+                        sql += ", t3.price_old as 'จำนวนเดิม', t3.price as 'จำนวนใหม่', (select name from user where id = t3.user) as 'ปรับปรุงโดย'";
+                        sql += ", date_format(t3.datemodify, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาปรับปรุง', t3.reason as 'สาเหตุ'";
+                        //sql += " from modify_amount t1 left join recordin t2 on t1.no_recordin = t2.no left join recordout t3 on t1.no_recordin = t3.no";
+                        sql += " from recordout t1 left join recordin t2 on t1.no = t2.no left join modify_amount t3 on t1.no_modify = t3.no";
+                        sql += " WHERE t3.datemodify BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+
+                        if (user != Constants.TextBased.All)
+                            sql += " AND t3.user = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        if (promotionName != Constants.TextBased.All)
+                            sql += " AND t1.proid =" + promotionId;
+                        if (!String.IsNullOrEmpty(licensePlate))
+                            sql += " AND t2.license LIKE '%" + licensePlate + "%'";
+                        if (!String.IsNullOrEmpty(cardId))
+                            sql += " AND t2.id = " + cardId;
+                        sql += " ORDER BY t3.no";
+                    }
+
                     break;
 
                 case 162:
@@ -8821,7 +9306,7 @@ namespace ParkingManagementReport.Utilities.Database
                             fontSlip162 = "IV";
                     }
 
-                    sql = "select cast(t2.no as char) as 'หมายเลขบัตร', t2.license as 'ทะเบียนรถ', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(t1.dateout, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก',\n";
+                    sql = "select cast(t2.no as char) as 'หมายเลขบัตร', t2.license as 'ทะเบียนรถ', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(COALESCE(t1.dategateout, t1.dateout), '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก',\n";
                     if (Configs.UseReceiptFor1Out)
                     {
                         if (Configs.OutReceiptNameMonth)
@@ -8837,7 +9322,8 @@ namespace ParkingManagementReport.Utilities.Database
                             sql += "concat('" + fontSlip162 + "', concat(date_format(t1.dateout,'%y') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี',\n";
                     }
 
-                    sql += "format(t1.price, 2) as 'รายได้',\n";
+                    sql += "t1.price as 'รายได้',\n";
+                    sql += "(SELECT name FROM user WHERE id = COALESCE(t1.usergateout, t1.userout)) as เจ้าหน้าที่ขาออก,";
                     if (Configs.UsePaymentKsher)
                     {
                         sql += "case when t3.channel = 'TrueMoney' then 'TrueMoney' when t3.channel = 'promptpay' then 'PromptPay' when t1.pay_type = 'EDC' then 'EDC' else 'เงินสด' end as 'ช่องทางการชำระเงิน',\n";
@@ -8863,7 +9349,7 @@ namespace ParkingManagementReport.Utilities.Database
                         sql += "from rabbit_post t1 left join rabbit_get t2 on t1.rabbit_id = t2.rabbit_id where t1.status = 'Y' group by t1.no_recordin) t3 on t1.no = t3.no_recordin\n";
                     }
 
-                    sql += "WHERE t1.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'\n";
+                    sql += "WHERE COALESCE(t1.dategateout, t1.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'\n";
                     sql += "AND t1.price > 0";
 
                     if (user != Constants.TextBased.All)
@@ -8893,7 +9379,7 @@ namespace ParkingManagementReport.Utilities.Database
                         else if (Configs.UsePaymentBeam)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                     }
-                    else if (paymentChannel == Constants.TextBased.PaymentChannelEdc)
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                     {
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
@@ -8908,120 +9394,121 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " ORDER BY t1.dateout";
                     break;
 
-                case 163: // 36.การเข้าออกของรถยนต์แสดงช่องทางการชำระเงิน
-                    string fontSlip163 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip163 = AppGlobalVariables.Printings.ReceiptName;
-                    else
+                case 163:
+                    if (Configs.Reports.UseReportImpact)
                     {
-                        if (!Configs.UseReceiptName)
-                            fontSlip163 = "IV";
-                    }
-
-                    sql = "select cast(t2.no as char) as 'หมายเลขบัตร', t2.license as 'ทะเบียนรถ', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(t1.dateout, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก',\n";
-                    if (Configs.UseReceiptFor1Out)
-                    {
-                        if (Configs.OutReceiptNameMonth)
-                            sql += "concat(t1.receipt, concat(date_format(t1.dateout,'%y%m') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี',\n";
-                        else
-                            sql += "concat(t1.receipt, concat(date_format(t1.dateout,'%y') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี',\n";
+                        sql = "SELECT * FROM member";
                     }
                     else
                     {
-                        if (Configs.OutReceiptNameMonth)
-                            sql += "concat('" + fontSlip163 + "', concat(date_format(t1.dateout,'%y%m') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี',\n";
-                        else
-                            sql += "concat('" + fontSlip163 + "', concat(date_format(t1.dateout,'%y') ,lpad(t1.printno,6,'0'))) as 'ใบกำกับภาษี',\n";
-                    }
-
-                    sql += "format(t1.price, 2) as 'รายได้',\n";
-                    if (Configs.UsePaymentKsher)
-                    {
-                        sql += "case when t3.channel = 'TrueMoney' then 'TrueMoney' when t3.channel = 'promptpay' then 'PromptPay' when t1.pay_type = 'EDC' then 'EDC' else 'เงินสด' end as 'ช่องทางการชำระเงิน',\n";
-                        sql += "t3.ksher_order_no as 'ksher order no', t3.mch_order_no as 'mch order no' ";
-                        sql += "from recordout t1 left join recordin t2 on t1.no = t2.no ";
-                        sql += "left join (select max(t1.no), t1.no_recordin, t1.mch_order_no, t1.channel, t1.status, t2.ksher_order_no\n";
-                        sql += "from ksherpay_post t1 left join ksherpay_get t2 on t1.mch_order_no = t2.mch_order_no where t1.status = 'Y' group by t1.no_recordin) t3 on t1.no = t3.no_recordin\n";
-                    }
-                    else if (Configs.UsePaymentBeam)
-                    {
-                        sql += "CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END AS 'ช่องทางการชำระเงิน',\n";
-                        sql += "t3.qr as 'QR', t3.beam_id as 'Beam ID'\n";
-                        sql += "from recordout t1 left join recordin t2 on t1.no = t2.no ";
-                        sql += "left join (select max(t1.no), t1.no_recordin, t1.beam_id, t1.status, t2.qr\n";
-                        sql += "from beam_post t1 left join beam_get t2 on t1.beam_id = t2.beam_id where t1.status = 'Y' group by t1.no_recordin) t3 on t1.no = t3.no_recordin\n";
-                    }
-                    else if (Configs.UsePaymentRabbit)
-                    {
-                        sql += "CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END AS 'ช่องทางการชำระเงิน',\n";
-                        sql += "t3.qr as 'QR', t3.rabbit_id as 'rabbit ID'\n";
-                        sql += "from recordout t1 left join recordin t2 on t1.no = t2.no ";
-                        sql += "left join (select max(t1.no), t1.no_recordin, t1.rabbit_id, t1.status, t2.qr\n";
-                        sql += "from rabbit_post t1 left join rabbit_get t2 on t1.rabbit_id = t2.rabbit_id where t1.status = 'Y' group by t1.no_recordin) t3 on t1.no = t3.no_recordin\n";
-                    }
-
-                    sql += "WHERE t1.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'\n";
-                    sql += "AND t1.price > 0";
-
-                    if (user != Constants.TextBased.All)
-                        sql += " AND t1.userout = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-                    if (promotionName != Constants.TextBased.All)
-                        sql += " AND t1.proid =" + promotionId;
-                    if (!String.IsNullOrEmpty(licensePlate))
-                        sql += " AND t2.license LIKE '%" + licensePlate + "%'";
-                    if (!String.IsNullOrEmpty(cardId))
-                        sql += " AND t2.id = " + cardId;
-
-                    if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
-                    {
-                        if (Configs.UsePaymentKsher)
-                            sql += " AND t3.channel = 'PromptPay'";
-                        else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
-                        else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
-                    }
-                    else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
-                    {
-                        if (Configs.UsePaymentKsher)
-                            sql += " AND t3.channel is null AND t1.pay_type = 'C'";
-                        else if (Configs.UsePaymentRabbit)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
-                        else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
-                    }
-                    else if (paymentChannel == Constants.TextBased.PaymentChannelEdc)
-                    {
-                        if (Configs.UsePaymentKsher)
-                            sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
-                        else if (Configs.UsePaymentRabbit)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
-                        else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
-                    }
-                    else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
-                        sql += " AND t3.channel = 'TrueMoney'";
-
-                    sql += " ORDER BY t1.dateout";
-                    break;
-
-                case 164: // 37.รายงานสรุปจำนวนรถและรายได้
-                    sql = "SELECT recordin.no, recordin.cartype,recordout.price,recordout.discount, recordin.datein, recordout.dateout\n";
-                    sql += "FROM recordin\n";
-                    sql += "JOIN recordout ON recordin.no = recordout.no\n";
-                    sql += $"WHERE dateout BETWEEN '{startDate.ToString("yyyy-MM-dd")}' AND '{endDate.AddDays(1).ToString("yyyy-MM-dd")}'";
-                    break;
-
-                case 165: // 38.สรุปจำนวนบัตรทั้งหมดตามบริษัท
-                    break;
-                case 166: // 39.สรุปจำนวนบัตรทั้งหมดตามบริษัท
-                    break;
-                case 167: // 40.ค่าบริการจอดเรียกเก็บกับบริษัท รถยนต์-รายเดือน
+                        sql = "SELECT recordin.no, recordin.cartype,recordout.price,recordout.discount, recordin.datein, recordout.dateout\n";
+                        sql += "FROM recordin\n";
+                        sql += "JOIN recordout ON recordin.no = recordout.no\n";
+                        sql += $"WHERE dateout BETWEEN '{startDate.ToString("yyyy-MM-dd")}' AND '{endDate.AddDays(1).ToString("yyyy-MM-dd")}'";
+                    }    
                     break;
             }
 
             return sql;
         }
+
+        private string GetPaymentChannel()
+        {
+            string paymentChannelPost = "";
+            string paymentChannelGet = "";
+            string orderNumberId = "";
+            string orderNumber = "";
+
+            string paymentChannelQuery = "";
+
+            if (Configs.UsePaymentKsher)
+            {
+                paymentChannelPost = "ksherpay_post";
+                paymentChannelGet = "ksherpay_get";
+                orderNumberId = "mch_order_no";
+                orderNumber = "ksher_order_no";
+            }
+            else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
+                paymentChannelQuery = " AND t3.channel = 'TrueMoney'";
+            else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
+                paymentChannelQuery = " AND t3.channel is null AND recordout.pay_type = 'C'";
+            else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
+                paymentChannelQuery = " AND t3.channel is null AND recordout.pay_type = 'EDC'";
+
+            if (Configs.UsePrintQRCode || Configs.Reports.UseReportThanapoom) // Mac 2025/03/07
+            {
+                paymentChannelQuery += "\nLEFT JOIN (" +
+                    "\n    SELECT" +
+                    "\n        MAX(t1.no) AS max_no," +
+                    "\n        t1.no_recordin," +
+                    $"\n        t1.{orderNumberId}," +
+                    (Configs.UsePaymentKsher ? "\n        t1.channel," : "") +
+                    "\n        t1.status," +
+                    $"\n        t2.{orderNumber}" +
+                    $"\n    FROM {paymentChannelPost} t1" +
+                    $"\n    LEFT JOIN {paymentChannelGet} t2 ON t1.{orderNumberId} = t2.{orderNumberId}" +
+                    "\n    WHERE t1.status = 'Y'" +
+                    "\n    GROUP BY t1.no_recordin" +
+                    "\n) t3 ON recordout.no = t3.no_recordin";
+            }
+
+            //sql += " left join (select max(t1.no), t1.no_recordin, t1.mch_order_no, t1.channel, t1.status, t2.ksher_order_no from ksherpay_post t1 left join ksherpay_get t2 on t1.mch_order_no = t2.mch_order_no where t1.status = 'Y' group by t1.no_recordin) t3 on recordout.no = t3.no_recordin";
+
+            //if (paymentChannel != Constants.TextBased.All)
+
+            if (Configs.UsePrintQRCode)
+            {
+                if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
+                    paymentChannelQuery = " AND t3.channel = 'PromptPay'";
+                else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
+                    paymentChannelQuery = " AND t3.channel = 'TrueMoney'";
+                else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
+                    paymentChannelQuery = " AND t3.channel is null AND recordout.pay_type = 'C'";
+                else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
+                    paymentChannelQuery = " AND t3.channel is null AND recordout.pay_type = 'EDC'";
+            }
+            /*else if (Configs.Reports.UseReportThanapoom)
+            {
+                if (Configs.UsePaymentKsher)
+                {
+                    if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
+                        paymentChannelQuery = " AND t3.channel = 'PromptPay'";
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
+                        paymentChannelQuery = " AND t3.channel = 'TrueMoney'";
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
+                        paymentChannelQuery = " AND t3.channel is null AND recordout.pay_type = 'C'";
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
+                        paymentChannelQuery = " AND t3.channel is null AND recordout.pay_type = 'EDC'";
+                }
+                else if (Configs.UsePaymentBeam)
+                {
+                    if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
+                        paymentChannelQuery = " AND t3.channel = 'PromptPay'";
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
+                        paymentChannelQuery = " AND t3.channel = 'TrueMoney'";
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
+                        paymentChannelQuery = " AND t3.channel is null AND recordout.pay_type = 'C'";
+                    else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
+                        paymentChannelQuery = " AND t3.channel is null AND recordout.pay_type = 'EDC'";
+                }*/
+            /*else if (Configs.UsePaymentRabbit)
+            {
+                if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
+                    paymentChannelQuery = " AND t3.channel = 'PromptPay'";
+                else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
+                    paymentChannelQuery = " AND t3.channel = 'TrueMoney'";
+                else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
+                    paymentChannelQuery = " AND t3.channel is null AND recordout.pay_type = 'C'";
+                else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
+                    paymentChannelQuery = " AND t3.channel is null AND recordout.pay_type = 'EDC'";
+            }*/
+            //}
+
+            //paymentChannelQuery += " where recordout.dateout between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
+
+            return paymentChannelQuery;
+        }
+
 
         #region HELPERS
         private string GetGenericReport()
@@ -9076,7 +9563,7 @@ namespace ParkingManagementReport.Utilities.Database
                 if (Configs.Reports.UseReport1_4)
                     sql += ", date_format(recordin.dateout_sub, '%d/%m/%Y %H:%i:%s') as 'เวลาออกรอง'";
             }
-            sql += ",date_format(recordout.dateout, '%d/%m/%Y %H:%i:%s') as เวลาออก,"; //Mac 2018/12/21
+            sql += ",date_format(COALESCE(recordout.dategateout, recordout.dateout), '%d/%m/%Y %H:%i:%s') as เวลาออก,"; //Mac 2018/12/21
             if (selectedReportId == 5)
             {
                 if (Configs.Reports.UseReport6)
@@ -9190,7 +9677,7 @@ namespace ParkingManagementReport.Utilities.Database
 
             string startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
             string endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString();// + " 23:59:59";
-            sql += " WHERE dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+            sql += " WHERE COALESCE(recordout.dategateout, recordout.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
 
             if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) //Mac 2022/04/22
                 sql += " and recordin.notshow = 'N'";
@@ -9415,9 +9902,27 @@ namespace ParkingManagementReport.Utilities.Database
 
             sqlBuilder.AppendLine("    recordout.price,");
 
-            sqlBuilder.AppendLine("recordin.cartype");
-            sqlBuilder.AppendLine("FROM recordin");
-            sqlBuilder.AppendLine("JOIN recordout ON recordin.no = recordout.no");
+            if (Configs.Reports.UseReportThanapoom)
+            {
+                sqlBuilder.AppendLine("    CASE");
+                sqlBuilder.AppendLine("        WHEN p.tnpt_id IS NULL OR p.tnpt_id = '' THEN 0");
+                sqlBuilder.AppendLine("        WHEN p.tnpt_id REGEXP '^-?[0-9]+$' THEN CAST(p.tnpt_id AS UNSIGNED)");
+                sqlBuilder.AppendLine("        ELSE 0");
+                sqlBuilder.AppendLine("    END AS tnpt_id_int,");
+
+                sqlBuilder.AppendLine("    recordout.losscard,");
+                sqlBuilder.AppendLine("    recordout.overdate,");
+                sqlBuilder.AppendLine("recordin.cartype");
+                sqlBuilder.AppendLine("FROM recordin");
+                sqlBuilder.AppendLine("JOIN recordout ON recordin.no = recordout.no");
+                sqlBuilder.AppendLine("LEFT JOIN promotion p ON p.id = recordout.proid");
+            }
+            else
+            {
+                sqlBuilder.AppendLine("recordin.cartype");
+                sqlBuilder.AppendLine("FROM recordin");
+                sqlBuilder.AppendLine("JOIN recordout ON recordin.no = recordout.no");
+            }
 
             sqlBuilder.AppendLine($"WHERE dateout BETWEEN '{startDateTimeText:yyyy-MM-dd HH:mm:ss}' AND '{endDateTimeText:yyyy-MM-dd HH:mm:ss}' AND");
 
@@ -9458,7 +9963,20 @@ namespace ParkingManagementReport.Utilities.Database
 
             if (!isPromotionRangeEmpty && isLegitRange)
             {
-                sqlBuilder.AppendLine($"recordout.proid BETWEEN {promotionRangeFrom} AND {promotionRangeTo}");
+                if (Configs.Reports.UseReportThanapoom)
+                {
+                    sqlBuilder.AppendLine("   (");
+                    sqlBuilder.AppendLine("      CASE");
+                    sqlBuilder.AppendLine("          WHEN p.tnpt_id IS NULL OR p.tnpt_id = '' THEN 0");
+                    sqlBuilder.AppendLine("          WHEN p.tnpt_id REGEXP '^-?[0-9]+$' THEN CAST(p.tnpt_id AS UNSIGNED)");
+                    sqlBuilder.AppendLine("          ELSE 0");
+                    sqlBuilder.AppendLine("      END");
+                    sqlBuilder.AppendLine($"  ) BETWEEN {promotionRangeFrom} AND {promotionRangeTo}");
+                }
+                else
+                {
+                    sqlBuilder.AppendLine($"recordout.proid >= {promotionRangeFrom} AND recordout.proid <= {promotionRangeTo}");
+                }
             }
             else if (promotionName != Constants.TextBased.All)
             {
@@ -9469,7 +9987,14 @@ namespace ParkingManagementReport.Utilities.Database
                 sqlBuilder.AppendLine("recordout.proid > 0 AND recordout.proid < 9999");
             }
 
-            sqlBuilder.AppendLine("ORDER BY recordout.proid, recordout.dateout");
+            if (Configs.Reports.UseReportThanapoom)
+            {
+                sqlBuilder.AppendLine("ORDER BY tnpt_id_int, recordout.proid, recordout.dateout");
+            }
+            else
+            {
+                sqlBuilder.AppendLine("ORDER BY recordout.proid, recordout.dateout");
+            }
 
             return sqlBuilder.ToString();
         }
@@ -9788,7 +10313,7 @@ namespace ParkingManagementReport.Utilities.Database
             else
                 sql += " recordout.printno";
 
-            sql += " ,recordout.no, ";
+            sql += " ,recordout.no As ลำดับ, ";
             if (Configs.UseMemberType) //Mac 2018/01/16
             {
                 sql += " case when recordin.cartype = 200 then ifnull(member.typeid, '200') else "; //Mac 2022/03/02
@@ -9814,7 +10339,7 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " recordin.cartype ";
                 }
             }
-            sql += " ,case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard";
+            sql += " ,case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end,recordin.datein,recordout.userout,COALESCE(recordout.dategateout, recordout.dateout),recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard";
 
             if (selectedReportId == 12 && Configs.Reports.UseReport13_11)
                 sql += " ,recordout.clearcard";
@@ -9863,7 +10388,7 @@ namespace ParkingManagementReport.Utilities.Database
                 else
                     sql += " recordout.printno";
 
-                sql += " ,recordout.no,";
+                sql += " ,recordout.no As ลำดับ,";
                 if (Configs.UseMemberType) //Mac 2018/01/16
                 {
                     sql += " case when recordin.cartype = 200 then ifnull(member.typeid, '200') else "; //Mac 2022/03/02
@@ -9922,7 +10447,7 @@ namespace ParkingManagementReport.Utilities.Database
             string startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
             string endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString();
 
-            sql += " WHERE recordout.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+            sql += " WHERE COALESCE(recordout.dategateout, recordout.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
 
             if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) //Mac 2022/04/22
                 sql += " and recordin.notshow = 'N'";
@@ -10080,7 +10605,7 @@ namespace ParkingManagementReport.Utilities.Database
                 }
             }
             else
-                sql += " GROUP BY recordout.no ORDER BY recordout.dateout";
+                sql += " GROUP BY recordout.no ORDER BY recordout.no";
 
             return sql;
         }

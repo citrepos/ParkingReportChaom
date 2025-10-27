@@ -33,7 +33,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ReportComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ViewBlockerPanel = new System.Windows.Forms.Panel();
             this.PromotionIdRangePanel = new System.Windows.Forms.Panel();
             this.label44 = new System.Windows.Forms.Label();
             this.label43 = new System.Windows.Forms.Label();
@@ -221,8 +220,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.groupBox1.Controls.Add(this.ViewBlockerPanel);
             this.groupBox1.Controls.Add(this.PromotionIdRangePanel);
             this.groupBox1.Controls.Add(this.PaymentChannelComboBox);
             this.groupBox1.Controls.Add(this.label42);
@@ -273,15 +270,6 @@
             this.groupBox1.Size = new System.Drawing.Size(1220, 186);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
-            // 
-            // ViewBlockerPanel
-            // 
-            this.ViewBlockerPanel.Location = new System.Drawing.Point(593, 130);
-            this.ViewBlockerPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.ViewBlockerPanel.Name = "ViewBlockerPanel";
-            this.ViewBlockerPanel.Size = new System.Drawing.Size(511, 47);
-            this.ViewBlockerPanel.TabIndex = 52;
-            this.ViewBlockerPanel.Visible = false;
             // 
             // PromotionIdRangePanel
             // 
@@ -1099,6 +1087,7 @@
             this.UserComboBox.Name = "UserComboBox";
             this.UserComboBox.Size = new System.Drawing.Size(176, 21);
             this.UserComboBox.TabIndex = 10;
+            this.UserComboBox.SelectedIndexChanged += new System.EventHandler(this.UserComboBox_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -1333,7 +1322,7 @@
             // 
             // ExcelExportButton
             // 
-            this.ExcelExportButton.Location = new System.Drawing.Point(1202, 5);
+            this.ExcelExportButton.Location = new System.Drawing.Point(1202, 6);
             this.ExcelExportButton.Name = "ExcelExportButton";
             this.ExcelExportButton.Size = new System.Drawing.Size(109, 23);
             this.ExcelExportButton.TabIndex = 2;
@@ -1848,6 +1837,5 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.Label label43;
-        private System.Windows.Forms.Panel ViewBlockerPanel;
     }
 }

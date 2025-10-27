@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 using CrystalDecisions.CrystalReports.Engine;
 using ParkingManagementReport.Common;
@@ -13,6 +14,7 @@ using ParkingManagementReport.Utilities;
 using ParkingManagementReport.Utilities.Database;
 using ParkingManagementReport.Utilities.Formatters;
 using ParkingManagementReport.Utilities.Hardwares;
+using System.Diagnostics;
 
 namespace ParkingManagementReport
 {
@@ -70,8 +72,7 @@ namespace ParkingManagementReport
 
             /*FOR TEST
             StartDatePicker.Value = new DateTime(day: 01, month: 4, year: 2025);
-            EndDatePicker.Value = new DateTime(day: 15, month: 4, year: 2025);
-            */
+            EndDatePicker.Value = new DateTime(day: 15, month: 4, year: 2025);*/
         }
 
         #region INIT
@@ -110,7 +111,7 @@ namespace ParkingManagementReport
             Constants.TextBased.PaymentChannelPromptPay,
             Constants.TextBased.PaymentChannelTrueMoney,
             Constants.TextBased.PaymentChannelCash,
-            Constants.TextBased.PaymentChannelEdc
+            Constants.TextBased.PaymentChannelEDC
             });
 
             MemberCardTypeComboBox.Items.AddRange(new object[] {
@@ -292,7 +293,6 @@ namespace ParkingManagementReport
 
             PaymentStatusComboBox.Items.Clear();
             PaymentStatusComboBox.Text = Constants.TextBased.All;
-
             //CRUDManager.LoadComboBoxDataFromQuery(
             //    PaymentStatusComboBox,
             //    "SELECT name, id FROM cardtype WHERE name IS NOT NULL AND LENGTH(TRIM(name)) > 0 ORDER BY id",
@@ -322,10 +322,6 @@ namespace ParkingManagementReport
                 MemberNameComboBox,
                 "SELECT name FROM member ORDER BY name",
                 null);
-
-            ConfigsManager.LoadDataToIntStringDictionary(
-                "SELECT id, vendor_name FROM vendor_group ORDER BY id",
-                AppGlobalVariables.VendorGroupMonthsById);
         }
 
         private void ConfigureUp2UPanelSettings()
@@ -421,7 +417,7 @@ namespace ParkingManagementReport
             MemberTypeComboBox.Items.Clear();
             CarTypeComboBox.Items.Clear();
 
-            AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 0, Constants.TextBased.All);
+            AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 399, Constants.TextBased.All);
             AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 199, Constants.TextBased.Visitor);
             AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 200, Constants.TextBased.Member);
             AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.All);
@@ -493,7 +489,7 @@ namespace ParkingManagementReport
         {
             try
             {
-                AppGlobalVariables.CarTypesById.Add(0, Constants.TextBased.All);
+                AppGlobalVariables.CarTypesById.Add(399, Constants.TextBased.All);
                 AppGlobalVariables.CarTypesById.Add(199, Constants.TextBased.Visitor);
                 AppGlobalVariables.CarTypesById.Add(200, Constants.TextBased.Member);
 
@@ -509,19 +505,25 @@ namespace ParkingManagementReport
                         int carTypeId = Convert.ToInt16(carTypes.Rows[i].ItemArray[0]);
                         string carTypeName = carTypes.Rows[i].ItemArray[1].ToString();
 
-                        if (!AppGlobalVariables.CarTypesById.ContainsValue(carTypeName))
+                        if (!AppGlobalVariables.CarTypesById.ContainsKey(carTypeId))
                             if (carTypeName != Constants.TextBased.Member)
+                            {
                                 AppGlobalVariables.CarTypesById.Add(carTypeId, carTypeName);
-
-                        if (!CarTypeComboBox.Items.Contains(carTypeName))
-                            if (carTypeName != Constants.TextBased.Member)
                                 CarTypeComboBox.Items.Add(carTypeName);
+                            }
                     }
                 }
             }
+
+
             catch (Exception ex)
             {
                 Logger.Error(TextFormatters.ErrorStacktraceFromException(ex), "LoadCarTypes");
+            }
+
+            foreach (var item in CarTypeComboBox.Items)
+            {
+                Debug.WriteLine("item: " + item.ToString());
             }
         }
 
@@ -604,8 +606,9 @@ namespace ParkingManagementReport
                 label16.Visible = false;
 
                 DataTable allReports = DbController.LoadData("SELECT id, name, active FROM reports");
+                Console.WriteLine(AppGlobalVariables.OperatingUser.Id);
                 DataTable userReports = DbController.LoadData($"SELECT reports_id FROM usereport WHERE user_id = {AppGlobalVariables.OperatingUser.Id} ORDER BY reports_id");
-
+               
                 if (allReports?.Rows.Count > 0 && userReports?.Rows.Count > 0)
                 {
                     int[] specialReports = { 19, 20, 21, 46, 47, 67 }; // Special reports that affect visibility
@@ -661,6 +664,7 @@ namespace ParkingManagementReport
                 return;
 
             DataTable dt = DbController.LoadData(sql);
+            Console.WriteLine(dt);
 
             ResultGridView.Location = new Point(dgvX, dgvY);
             ResultGridView.Height = dgvH;
@@ -962,8 +966,8 @@ namespace ParkingManagementReport
 
                         rpt.SetDataSource(dt);
 
-                        if (selectedReportId == 12)
-                            ReportHeaderLabel.Text = ReportHeaderLabel.Text.Replace("แสดงโปรโมชั่น", "");
+                        //if (selectedReportId == 12)
+                        //    ReportHeaderLabel.Text = ReportHeaderLabel.Text.Replace("แสดงโปรโมชั่น", "");
 
                         rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
                         if (dtMap.Rows.Count > 0)
@@ -1015,7 +1019,7 @@ namespace ParkingManagementReport
                         PrimaryCrystalReportViewer.ReportSource = rpt;
                         PrimaryCrystalReportViewer.Refresh();
 
-                        ResultGridView.Columns[5].Visible = false;
+                        //ResultGridView.Columns[5].Visible = false;
 
                         ////
 
@@ -1123,7 +1127,10 @@ namespace ParkingManagementReport
                     PdfExportButton.Enabled = true;
                     ExcelExportButton.Enabled = true;
 
-                    ResultGridView.DataSource = dt;
+                    if (Configs.Reports.UseReportThanapoom)
+                        ResultGridView.DataSource = dt = DataTableManager.EditedThanapoomDataTable(dt, selectedReportId);
+                    else
+                        ResultGridView.DataSource = dt;
 
                     ResultGridView.AutoResizeColumns();
 
@@ -1334,7 +1341,7 @@ namespace ParkingManagementReport
                                 }
                                 rpt.SetDataSource(dt);
 
-                                if ((Configs.VisitorFillDetail) && (selectedReportId == 0 || selectedReportId == 90)) 
+                                if ((Configs.VisitorFillDetail) && (selectedReportId == 0 || selectedReportId == 90))
                                 {
                                     CrystalDecisions.CrystalReports.Engine.TextObject txtReportCol;
                                     txtReportCol = rpt.ReportDefinition.ReportObjects["text21"] as TextObject;
@@ -1345,7 +1352,7 @@ namespace ParkingManagementReport
                                 if (dtMap.Rows.Count > 0)
                                 {
                                     rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                    if (Configs.Reports.UseReport1logo) 
+                                    if (Configs.Reports.UseReport1logo)
                                     {
                                         rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
                                         rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
@@ -1353,7 +1360,7 @@ namespace ParkingManagementReport
                                     }
                                 }
                                 PrimaryCrystalReportViewer.ReportSource = rpt;
-                                PrimaryCrystalReportViewer.Refresh();;
+                                PrimaryCrystalReportViewer.Refresh(); ;
                                 break;
 
                             case 1:
@@ -1552,7 +1559,7 @@ namespace ParkingManagementReport
                                 }
                                 else
                                 {
-                                    if (Configs.Reports.UseReport2_4) //Mac 2025/03/06
+                                    if (Configs.Reports.UseReport2_4) //Mac 2025/ 03/06
                                         rpt.Load(path + "\\CrystalReports\\Report2_4.rpt");
                                     else
                                     {
@@ -1696,8 +1703,29 @@ namespace ParkingManagementReport
                                 break;
 
                             case 5:
-                                goto case 0;
+                                if (Configs.Reports.UseReportThanapoom)
+                                {
+                                    rpt.Load(path + "\\CrystalReports\\Report1NoOfficer.rpt");
+                                    rpt.SetDataSource(dt);
 
+                                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                                    if (dtMap.Rows.Count > 0)
+                                    {
+                                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                                        if (Configs.Reports.UseReport1logo)
+                                        {
+                                            rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                                            rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
+                                            rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                        }
+                                    }
+                                    PrimaryCrystalReportViewer.ReportSource = rpt;
+                                    PrimaryCrystalReportViewer.Refresh(); ;
+                                }
+                                else
+                                    goto case 0;
+
+                                break;
 
                             case 7:
                                 DataTable Map2 = new DataTable("myMember");  //*** DataTable Map DataSet.xsd ***//
@@ -3406,83 +3434,151 @@ namespace ParkingManagementReport
                                 PrimaryCrystalReportViewer.Refresh();
                                 break;
                             case 100: //Mac 2019/12/24
-                                dst = StartDatePicker.Value;
-                                startDateTime = dst.ToString("dd/MM/yyyy");
-                                dfn = EndDatePicker.Value;
-                                endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                                rpt.Load(path + "\\CrystalReports\\Report101.rpt");
-                                rpt.SetDataSource(dt);
-
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                                rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                                rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                                if (dtMap.Rows.Count > 0)
+                                if (Configs.Reports.UseReportImpact)
                                 {
-                                    rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                    rpt.Load(path + "\\CrystalReports\\Report1_ImpactIn.rpt");
+
+                                    rpt.SetDataSource(dt);
+
+                                    if ((Configs.VisitorFillDetail) && (selectedReportId == 0 || selectedReportId == 90))
+                                    {
+                                        CrystalDecisions.CrystalReports.Engine.TextObject txtReportCol;
+                                        txtReportCol = rpt.ReportDefinition.ReportObjects["text21"] as TextObject;
+                                        txtReportCol.Text = "ติดต่อ (เรื่อง/ชื่อ)";
+                                    }
+
+                                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                                    if (dtMap.Rows.Count > 0)
+                                    {
+                                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                                        if (Configs.Reports.UseReport1logo)
+                                        {
+                                            rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                                            rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
+                                            rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                        }
+                                    }
+                                    PrimaryCrystalReportViewer.ReportSource = rpt;
+                                    PrimaryCrystalReportViewer.Refresh(); ;
                                 }
-                                rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                                rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                                rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
+                                else
+                                {
+                                    dst = StartDatePicker.Value;
+                                    startDateTime = dst.ToString("dd/MM/yyyy");
+                                    dfn = EndDatePicker.Value;
+                                    endDateTime = dfn.ToString("dd/MM/yyyy");
 
-                                PrimaryCrystalReportViewer.ReportSource = rpt;
+                                    rpt.Load(path + "\\CrystalReports\\Report101.rpt");
+                                    rpt.SetDataSource(dt);
 
-                                PrimaryCrystalReportViewer.Refresh();
+                                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
+                                    rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
+                                    rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
+                                    if (dtMap.Rows.Count > 0)
+                                    {
+                                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                                        rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                                        rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                    }
+                                    rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
+                                    rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
+                                    rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
+
+                                    PrimaryCrystalReportViewer.ReportSource = rpt;
+
+                                    PrimaryCrystalReportViewer.Refresh();
+                                }
                                 break;
                             case 101: //Mac 2020/01/20
-                                dst = StartDatePicker.Value;
-                                startDateTime = dst.ToString("dd/MM/yyyy");
-                                dfn = EndDatePicker.Value;
-                                endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                                rpt.Load(path + "\\CrystalReports\\Report102.rpt");
-                                rpt.SetDataSource(dt);
-
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                                rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                                rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                                if (dtMap.Rows.Count > 0)
+                                if (Configs.Reports.UseReportImpact)
                                 {
-                                    rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                    rpt.Load(path + "\\CrystalReports\\Report1_ImpactOut.rpt");
+
+                                    rpt.SetDataSource(dt);
+
+                                    if ((Configs.VisitorFillDetail) && (selectedReportId == 0 || selectedReportId == 90))
+                                    {
+                                        CrystalDecisions.CrystalReports.Engine.TextObject txtReportCol;
+                                        txtReportCol = rpt.ReportDefinition.ReportObjects["text21"] as TextObject;
+                                        txtReportCol.Text = "ติดต่อ (เรื่อง/ชื่อ)";
+                                    }
+
+                                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                                    if (dtMap.Rows.Count > 0)
+                                    {
+                                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                                        if (Configs.Reports.UseReport1logo)
+                                        {
+                                            rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                                            rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
+                                            rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                        }
+                                    }
+                                    PrimaryCrystalReportViewer.ReportSource = rpt;
+                                    PrimaryCrystalReportViewer.Refresh(); ;
                                 }
-                                rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                                rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                                rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
+                                else
+                                {
+                                    dst = StartDatePicker.Value;
+                                    startDateTime = dst.ToString("dd/MM/yyyy");
+                                    dfn = EndDatePicker.Value;
+                                    endDateTime = dfn.ToString("dd/MM/yyyy");
 
-                                PrimaryCrystalReportViewer.ReportSource = rpt;
+                                    rpt.Load(path + "\\CrystalReports\\Report102.rpt");
+                                    rpt.SetDataSource(dt);
 
-                                PrimaryCrystalReportViewer.Refresh();
+                                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
+                                    rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
+                                    rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
+                                    if (dtMap.Rows.Count > 0)
+                                    {
+                                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                                        rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                                        rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                    }
+                                    rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
+                                    rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
+                                    rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
+
+                                    PrimaryCrystalReportViewer.ReportSource = rpt;
+
+                                    PrimaryCrystalReportViewer.Refresh();
+                                }
                                 break;
 
                             case 102: //Mac 2020/01/23
-                                dst = StartDatePicker.Value;
-                                startDateTime = dst.ToString("dd/MM/yyyy");
-                                dfn = EndDatePicker.Value;
-                                endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                                rpt.Load(path + "\\CrystalReports\\Report103.rpt");
-                                rpt.SetDataSource(dt);
-
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                                rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                                rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                                if (dtMap.Rows.Count > 0)
+                                if (Configs.Reports.UseReportImpact)
                                 {
-                                    rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+
                                 }
-                                rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                                rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                                rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
+                                else
+                                {
+                                    dst = StartDatePicker.Value;
+                                    startDateTime = dst.ToString("dd/MM/yyyy");
+                                    dfn = EndDatePicker.Value;
+                                    endDateTime = dfn.ToString("dd/MM/yyyy");
 
-                                PrimaryCrystalReportViewer.ReportSource = rpt;
+                                    rpt.Load(path + "\\CrystalReports\\Report103.rpt");
+                                    rpt.SetDataSource(dt);
 
-                                PrimaryCrystalReportViewer.Refresh();
+                                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
+                                    rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
+                                    rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
+                                    if (dtMap.Rows.Count > 0)
+                                    {
+                                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                                        rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                                        rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                    }
+                                    rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
+                                    rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
+                                    rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
+
+                                    PrimaryCrystalReportViewer.ReportSource = rpt;
+
+                                    PrimaryCrystalReportViewer.Refresh();
+                                }
+                                
                                 break;
 
                             case 103: //Mac 2020/01/23
@@ -4835,19 +4931,46 @@ namespace ParkingManagementReport
                                 PrimaryCrystalReportViewer.Refresh();
                                 break;
 
-                            case 161:  // 34.สรุปค่าบริการรายเดือน Member รถยนต์
-                                rpt.Load(path + "\\CrystalReports\\Report162.rpt");
-                                rpt.SetDataSource(dt);
-                                if (dtMap.Rows.Count > 0)
-                                    rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                            case 161:
+                                if (Configs.Reports.UseReportThanapoom)
+                                {
+                                    DataTable mappedTable = CRUDManager.GetFeeAndVatSummaryFromMemberGroupPriceMonth(
+                                        sql,
+                                        PromotionIdFrom.Text,
+                                        PromotionIdTo.Text);
 
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                                PrimaryCrystalReportViewer.ReportSource = rpt;
-                                PrimaryCrystalReportViewer.Refresh();
+                                    ResultGridView.DataSource = mappedTable;
+
+                                    var numericStyle = new DataGridViewCellStyle
+                                    {
+                                        Alignment = DataGridViewContentAlignment.MiddleRight,
+                                        Format = "N2"
+                                    };
+
+                                    for (int colIndex = mappedTable.Columns.Count - 3; colIndex < mappedTable.Columns.Count; colIndex++)
+                                    {
+                                        ResultGridView.Columns[colIndex].DefaultCellStyle = numericStyle;
+                                        ResultGridView.Columns[colIndex].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+                                    }
+
+                                    Cursor = Cursors.Default;
+                                    return;
+                                }
+                                else
+                                {
+                                    rpt.Load(path + "\\CrystalReports\\Report162.rpt");
+                                    rpt.SetDataSource(dt);
+                                    if (dtMap.Rows.Count > 0)
+                                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+
+                                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                                    PrimaryCrystalReportViewer.ReportSource = rpt;
+                                    PrimaryCrystalReportViewer.Refresh();
+                                }
                                 break;
 
-                            case 163:
-                                rpt.Load(path + "\\CrystalReports\\Report164.rpt");
+                            case 162:
+                                rpt.Load(path + "\\CrystalReports\\Report163.rpt");
                                 rpt.SetDataSource(dt);
                                 if (dtMap.Rows.Count > 0)
                                     rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
@@ -5233,8 +5356,8 @@ namespace ParkingManagementReport
 
         private void CaseReportPricePromotion()
         {
+            //ResultGridView.Columns[0].HeaderText = "ลำดับ";
             ResultGridView.Columns[0].HeaderText = "เลขที่ใบเสร็จ/ใบกำกับภาษี";
-            ResultGridView.Columns[1].HeaderText = "ลำดับ";
             ResultGridView.Columns[2].HeaderText = "ประเภท";
             ResultGridView.Columns[3].HeaderText = "ทะเบียน";
             ResultGridView.Columns[4].HeaderText = "เวลาเข้า";
@@ -5255,6 +5378,7 @@ namespace ParkingManagementReport
             ResultGridView.Columns[13].HeaderText = "รายได้";
             ResultGridView.Columns[14].HeaderText = "ส่วนลด"; //Mac 2016/03/05
             ResultGridView.Columns[15].HeaderText = "E-Stamp";
+            
             ResultGridView.Columns[0].Width = 110;
             ResultGridView.Columns[1].Width = 50;
             ResultGridView.Columns[4].Width = 120;
@@ -5274,7 +5398,15 @@ namespace ParkingManagementReport
                 ResultGridView.Columns[14].HeaderText = "ภาษี 7%";
                 ResultGridView.Columns[15].HeaderText = "รายได้";
                 ResultGridView.Columns[16].HeaderText = "E-Stamp";
-                if (Configs.Reports.UseReport13_3) 
+                if (ResultGridView.Columns.Count <= 17)
+                {
+                    ResultGridView.Columns.Add("receipt", "receipt");
+                }
+                else
+                {
+                    ResultGridView.Columns[17].HeaderText = "receipt";
+                }
+                if (Configs.Reports.UseReport13_3)
                     ResultGridView.Columns[17].HeaderText = "เก็บจริง";
             }
 
@@ -5292,7 +5424,7 @@ namespace ParkingManagementReport
 
             for (int i = 0; i < intNo; i++)
             {
-                int intID = Convert.ToInt32(ResultGridView[0, i].Value);
+                int intID = Convert.ToInt32(ResultGridView[1, i].Value);
                 DateTime dto = DateTime.Parse(ResultGridView[6, i].Value.ToString());
                 if (intID > 0)
                 {
@@ -5326,7 +5458,7 @@ namespace ParkingManagementReport
                     }
                 }
 
-                try 
+                try
                 {
                     string x = ResultGridView[2, i].Value.ToString();
                     int value;
@@ -5443,6 +5575,36 @@ namespace ParkingManagementReport
                         //else intID = Convert.ToInt32(ResultGridView[14, i].Value);
 
                         int intHourPro = 0;
+/*                        if (intID >= 5000)
+                        {
+                            DateTime timeIn = DateTime.Parse(ResultGridView[4, i].Value.ToString());
+                            DateTime timeOut = DateTime.Parse(ResultGridView[6, i].Value.ToString());
+                            TimeSpan diff = timeOut - timeIn;
+
+                            int totalMinutes = (diff.Days * 24 * 60) + (diff.Hours * 60) + diff.Minutes;
+
+                            // 🟦 ดึงค่านาทีฟรีจากตาราง promotion
+                            string sqlFreeMinute = $"SELECT minute FROM promotion WHERE promotion_id = {intID}";
+                            DataTable dtPromo = DbController.LoadData(sqlFreeMinute);
+
+                            int freeMinutes = 0;
+                            if (dtPromo != null && dtPromo.Rows.Count > 0)
+                                freeMinutes = Convert.ToInt32(dtPromo.Rows[0]["minute"]);
+
+                            // 🟨 หักนาทีฟรีออก
+                            totalMinutes -= freeMinutes;
+                            if (totalMinutes < 0) totalMinutes = 0;
+
+                            // 🟩 แปลงกลับเป็นชั่วโมง/นาที เพื่อส่งให้ CalPrice
+                            int totalHours = totalMinutes / 60;
+                            int remainMinutes = totalMinutes % 60;
+
+                            // คำนวณราคาตาม pricerate0 ผ่าน CalPrice()
+                            int newPrice = CalPrice(totalHours, remainMinutes, false);
+
+                            // อัปเดตราคาใหม่ใน Grid
+                            ResultGridView[13, i].Value = newPrice.ToString();
+                        }*/
                         if (intID > 0)
                             intHourPro = AppGlobalVariables.PromotionNamesMinuteMap[intID] / 60;
                         ResultGridView[8, i].Value = intHourPro.ToString();
@@ -5546,6 +5708,7 @@ namespace ParkingManagementReport
                         if (ResultGridView[17, i].Value.ToString().Trim() == "")
                             ResultGridView[17, i].Value = ResultGridView[15, i].Value;
                     }
+
                 }
                 else
                 {
@@ -5607,9 +5770,159 @@ namespace ParkingManagementReport
             totalBeforeVat = doubleSumBeforeVat;
             totalVat = doubleSumVat;
 
-            if (Configs.UseReceiptFor1Out) //Mac 2018/11/14
-                ResultGridView.Columns[ResultGridView.ColumnCount - 1].Visible = false;
+            //if (Configs.UseReceiptFor1Out) //Mac 2018/11/14
+            //    ResultGridView.Columns[ResultGridView.ColumnCount - 1].Visible = false;
         }
+        //internal static int CalPrice(int intHour, int intMin, bool UseNoDay)
+        //{
+        //    string sql = "SELECT time, minute, hour, round, expense, timeover FROM pricerate0 ORDER BY no";
+        //    DataTable dt = DbController.LoadData(sql);
+
+        //    AppGlobalVariables.IntTime = dt.AsEnumerable()
+        //        .Select(r => Convert.ToInt32(r["time"] == DBNull.Value ? 0 : r["time"]))
+        //        .ToArray();
+
+        //    AppGlobalVariables.IntPriceMin = dt.AsEnumerable()
+        //        .Select(r => Convert.ToInt32(r["minute"] == DBNull.Value ? 0 : r["minute"]))
+        //        .ToArray();
+
+        //    AppGlobalVariables.IntPriceHour = dt.AsEnumerable()
+        //        .Select(r => Convert.ToInt32(r["hour"] == DBNull.Value ? 0 : r["hour"]))
+        //        .ToArray();
+
+        //    AppGlobalVariables.IntHourRound = dt.AsEnumerable()
+        //        .Select(r => Convert.ToInt32(r["round"] == DBNull.Value ? 0 : r["round"]))
+        //        .ToArray();
+
+        //    AppGlobalVariables.IntExpense = dt.AsEnumerable()
+        //        .Select(r => Convert.ToInt32(r["expense"] == DBNull.Value ? 0 : r["expense"]))
+        //        .ToArray();
+
+        //    AppGlobalVariables.IntOver = dt.AsEnumerable()
+        //        .Select(r => Convert.ToInt32(r["timeover"] == DBNull.Value ? 0 : r["timeover"]))
+        //        .ToArray();
+
+        //    int intPrice = 0;
+        //    intMin += intHour * 60;
+
+        //    // ✅ ตรวจสอบว่าตัวแปรสำคัญทั้งหมดไม่เป็น null
+        //    if (AppGlobalVariables.IntTime == null ||
+        //        AppGlobalVariables.IntPriceMin == null ||
+        //        AppGlobalVariables.IntPriceHour == null ||
+        //        AppGlobalVariables.IntHourRound == null ||
+        //        AppGlobalVariables.IntExpense == null ||
+        //        AppGlobalVariables.IntOver == null)
+        //    {
+        //        throw new ArgumentNullException("AppGlobalVariables contains null arrays. Make sure pricing data is initialized before calling CalPrice().");
+        //    }
+
+        //    int intDay = 1;
+        //    if (!UseNoDay && intMin > 1440)
+        //    {
+        //        intDay = (intMin / 1440) + 1;
+        //    }
+
+        //    int intMinDay = 0;
+
+        //    for (int d = 0; d < intDay; d++)
+        //    {
+        //        int intMinCal = 0;
+        //        int intHourCal = 0;
+
+        //        if (!UseNoDay)
+        //        {
+        //            if (intMin > 1440)
+        //            {
+        //                intMinDay = 1440;
+        //                intMin -= 1440;
+        //            }
+        //            else
+        //            {
+        //                intMinDay = intMin;
+        //                intMin = 0;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            intMinDay = intMin;
+        //        }
+
+        //        int intPriceB = intPrice;
+
+        //        int arrayLength = AppGlobalVariables.IntTime.Length;
+
+        //        for (int i = 0; i < arrayLength; i++)
+        //        {
+        //            // ✅ ป้องกันกรณี array แต่ละชุดมีขนาดไม่เท่ากัน
+        //            if (i >= AppGlobalVariables.IntPriceMin.Length ||
+        //                i >= AppGlobalVariables.IntPriceHour.Length ||
+        //                i >= AppGlobalVariables.IntHourRound.Length ||
+        //                i >= AppGlobalVariables.IntExpense.Length ||
+        //                i >= AppGlobalVariables.IntOver.Length)
+        //            {
+        //                break;
+        //            }
+
+        //            if (intMinDay > AppGlobalVariables.IntTime[i])
+        //            {
+        //                intMinCal = AppGlobalVariables.IntTime[i];
+        //                intMinDay -= intMinCal;
+        //            }
+        //            else
+        //            {
+        //                intMinCal = intMinDay;
+        //                intMinDay = 0;
+        //            }
+
+        //            if (UseNoDay)
+        //            {
+        //                intPriceB += intMinCal;
+        //                if (intPriceB >= 1440)
+        //                {
+        //                    intMinCal += intMinDay;
+        //                    intMinDay = 0;
+        //                }
+        //            }
+
+        //            if (AppGlobalVariables.IntPriceMin[i] > 0)
+        //            {
+        //                intPrice += AppGlobalVariables.IntPriceMin[i] * intMinCal;
+        //            }
+        //            else if (AppGlobalVariables.IntPriceHour[i] > 0)
+        //            {
+        //                if (intMinCal > 60)
+        //                {
+        //                    intHourCal = intMinCal / 60;
+        //                    intMinCal -= intHourCal * 60;
+        //                }
+
+        //                if (intMinCal >= AppGlobalVariables.IntHourRound[i])
+        //                    intHourCal++;
+
+        //                intPrice += AppGlobalVariables.IntPriceHour[i] * intHourCal;
+        //                intHourCal = 0;
+        //            }
+        //            else if (AppGlobalVariables.IntExpense[i] > 0)
+        //            {
+        //                intPrice += AppGlobalVariables.IntExpense[i];
+        //            }
+
+        //            if (AppGlobalVariables.IntOver[i] > 0 && intMinDay > 0)
+        //            {
+        //                intPrice = intPriceB + AppGlobalVariables.IntOver[i];
+        //                intMinDay = 0;
+        //            }
+
+        //            if (intMinDay < 1)
+        //                break;
+        //        }
+        //    }
+
+        //    if (intPrice < 0)
+        //        intPrice = 0;
+
+        //    return intPrice;
+        //}
 
         private void CaseReportPricePromotion13_12()
         {
@@ -5635,7 +5948,6 @@ namespace ParkingManagementReport
             ResultGridView.Columns[14].HeaderText = "รายได้";
             ResultGridView.Columns[15].HeaderText = "ส่วนลด";
             ResultGridView.Columns[16].HeaderText = "E-Stamp";
-
             ResultGridView.Columns[0].Width = 110;
             ResultGridView.Columns[1].Width = 110;
             ResultGridView.Columns[2].Width = 50;
@@ -5655,6 +5967,7 @@ namespace ParkingManagementReport
                 ResultGridView.Columns[15].HeaderText = "ภาษี 7%";
                 ResultGridView.Columns[16].HeaderText = "รายได้";
                 ResultGridView.Columns[17].HeaderText = "E-Stamp";
+                ResultGridView.Columns[18].HeaderText = "receipt";
                 if (Configs.Reports.UseReport13_3)
                     ResultGridView.Columns[18].HeaderText = "เก็บจริง";
             }
@@ -5976,7 +6289,6 @@ namespace ParkingManagementReport
             catch (Exception) { }
             return null;
         }
-
         public void ExportToExcel(DataGridView Tbl, string ExcelFilePath = null)
         {
             try
@@ -6051,8 +6363,6 @@ namespace ParkingManagementReport
                 //throw new Exception("ExportToExcel: \n" + ex.Message);
             }
         }
-
-
         private void SavePermission(object sender, System.EventArgs e)
         {
             string sql;
@@ -6308,7 +6618,7 @@ namespace ParkingManagementReport
 
         private void ResultGridViewAtRunning()
         {
-            if (selectedReportId == 0 || selectedReportId == 1 || selectedReportId == 2 || selectedReportId == 3 || selectedReportId == 4 || selectedReportId == 5 || selectedReportId == 12 || selectedReportId == 13 || selectedReportId == 30 || selectedReportId == 31 || selectedReportId == 8 || selectedReportId == 79 || selectedReportId == 90 || selectedReportId == 91 || selectedReportId == 92 || selectedReportId == 93 || selectedReportId == 94 || selectedReportId == 10) //Mac 2020/10/26
+            if ( selectedReportId == 1 || selectedReportId == 2 || selectedReportId == 3 || selectedReportId == 5 || selectedReportId == 30 || selectedReportId == 31 || selectedReportId == 8 || selectedReportId == 79 || selectedReportId == 90 || selectedReportId == 91 || selectedReportId == 92 || selectedReportId == 93 || selectedReportId == 94 || selectedReportId == 10) //Mac 2020/10/26
             {
                 if (this.ResultGridView.RowCount > 0)
                 {
@@ -6330,7 +6640,6 @@ namespace ParkingManagementReport
                 this.ResultGridView.TopLeftHeaderCell.Value = "";
             }
         }
-
         private string SetReportHeader()
         {
             string startDateLong = StartDatePicker.Value.ToLongDateString();
@@ -6362,7 +6671,7 @@ namespace ParkingManagementReport
                 case 48 when !Configs.IsSwitch:  // Note: 'when' clause is available in C# 7.0+
                     return $"รายงานภาษีขายค่าปรับประจำวัน จากวันที่ {startDateLong} เวลา {startTimeLong} ถึงวันที่ {endDateLong} เวลา {endTimeLong}";
 
-                case 163:
+                case 162:
                     string paymentChannelText = PaymentChannelComboBox.Text == Constants.TextBased.All ? "ทั้งหมด" : PaymentChannelComboBox.Text;
                     return $"{reportName}: {paymentChannelText} จากวันที่ {startDateLong} เวลา {startTimeLong} ถึงวันที่ {endDateLong} เวลา {endTimeLong}";
 
@@ -6415,7 +6724,7 @@ namespace ParkingManagementReport
 
                         pic1 = ResultGridView.Rows[e.RowIndex].Cells["iv"].Value.ToString();
                         pic2 = ResultGridView.Rows[e.RowIndex].Cells["il"].Value.ToString();
-                        
+
                         /* Old
                         pic1 = ResultGridView.Rows[e.RowIndex].Cells[11 + iVil].Value.ToString();
                         pic2 = ResultGridView.Rows[e.RowIndex].Cells[9 + iVil].Value.ToString();
@@ -6739,17 +7048,7 @@ namespace ParkingManagementReport
             else
                 ParkingTimeComparisonPanel.Visible = false;
 
-            /* if(selectedReportId == 162 && Configs.Reports.UseReportThanapoom)
-            {
-                ViewBlockerPanel.Location = new Point(9, 48);
-                ViewBlockerPanel.Width = 1115;
-                ViewBlockerPanel.Height = 138;
-                ViewBlockerPanel.Visible = true;
-            }
-            else */
-            ViewBlockerPanel.Visible = false;
-
-            if (selectedReportId == 163 || selectedReportId == 48 || selectedReportId == 49) //Mac 2025/03/07
+            if (selectedReportId == 162 || selectedReportId == 48 || selectedReportId == 49) //Mac 2025/03/07
             {
                 label42.Visible = true;
                 PaymentChannelComboBox.Visible = true;
@@ -6760,6 +7059,20 @@ namespace ParkingManagementReport
                 label42.Visible = false;
                 PaymentChannelComboBox.Visible = false;
             }
+            if (Configs.Reports.UseReportImpact)
+            {
+                if (selectedReportId == 0 || selectedReportId == 101 || selectedReportId == 162)
+                {
+                    label42.Visible = true;
+                    PaymentChannelComboBox.Visible = true;
+                    PaymentChannelComboBox.Text = Constants.TextBased.All;
+                }
+                else
+                {
+                    label42.Visible = false;
+                    PaymentChannelComboBox.Visible = false;
+                }
+            }
 
             if (selectedReportId == 20 || selectedReportId == 21 || selectedReportId == 161)
             {
@@ -6768,7 +7081,7 @@ namespace ParkingManagementReport
                 PromotionComboBox.SelectedIndex = 0;
 
                 PromotionIdRangePanel.Visible = true;
-                PromotionIdRangePanel.Location = new Point(347,85);
+                PromotionIdRangePanel.Location = new Point(347, 85);
             }
             else
                 PromotionIdRangePanel.Visible = false;
@@ -6949,6 +7262,16 @@ namespace ParkingManagementReport
             LoadPermission();
         }
 
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void UserComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void UpdateReportSearchCondition()
         {
 
@@ -7016,14 +7339,19 @@ namespace ParkingManagementReport
                 EndDatePicker.Value,
                 StartTimePicker.Value,
                 EndTimePicker.Value,
-              
+
                 MemberExpirationStartDatePicker.Value,
                 MemberExpirationEndDatePicker.Value
             );
 
-            if (selectedReportId == 16 || selectedReportId == 17 || selectedReportId == 18 || selectedReportId == 19 || selectedReportId == 20 || selectedReportId == 21
-                || selectedReportId == 164)
-                FuckingShit(selectedReportId, sql);
+                if (selectedReportId == 16 || selectedReportId == 17 || selectedReportId == 18 || selectedReportId == 19 || selectedReportId == 20 || selectedReportId == 21)
+                FunckingShit(selectedReportId, sql);
+
+            else if (selectedReportId == 29 || selectedReportId == 102)
+            {
+                ReportHeaderLabel.Text = AppGlobalVariables.Printings.Header = SetReportHeader().Replace("รายงานรายงาน", "รายงาน");
+                FucntionImpact(selectedReportId, sql);
+            }
             else
             {
                 ReportHeaderLabel.Text = AppGlobalVariables.Printings.Header = SetReportHeader().Replace("รายงานรายงาน", "รายงาน");
@@ -7032,7 +7360,7 @@ namespace ParkingManagementReport
 
             if (!Configs.Reports.ReportNoRunning)
                 ResultGridViewAtRunning();
-            
+
             ResultGridView.Visible = true;
 
             /* FOR TEST
@@ -7046,7 +7374,7 @@ namespace ParkingManagementReport
                 MessageBox.Show("ReportSource is not a ReportDocument.");
             }*/
 
-                        Cursor = Cursors.Default;
+            Cursor = Cursors.Default;
         }
         #endregion UI_EVENT_HANDLER_END
 
@@ -7093,8 +7421,176 @@ namespace ParkingManagementReport
                 comboBox.Items.Add(item);
         }
         #endregion
+        private void FucntionImpact(int selectedReportId, string sql)
+        {
+            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            path = path.Replace("\\bin\\Debug", "");
+            ReportDocument rpt = new ReportDocument();
+            DataTable dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
+            PrimaryCrystalReportViewer.ReportSource = null;
+            PrimaryCrystalReportViewer.Refresh();
+            switch (selectedReportId)
+            {
+                case 29:
+                    DataTable dtSource = DbController.LoadData(sql);
 
-        private void FuckingShit(int selectedReportId, string sql)
+                    DataTable result = new DataTable();
+                    result.Columns.Add("ตู้จ่ายบัตร", typeof(string));
+                    result.Columns.Add("วันที่เวลา", typeof(string));
+                    result.Columns.Add("Visitor", typeof(int));
+                    result.Columns.Add("Member", typeof(int));
+                    result.Columns.Add("จำนวนรถ", typeof(int));
+
+                    // ใช้ค่าที่คุณสร้างไว้
+                    DateTime startDate = DateTime.Parse(AppGlobalVariables.startDateTimeText);
+                    DateTime endDate = DateTime.Parse(AppGlobalVariables.endDateTimeText);
+
+                    string dateRange = $"{startDate:dd/MM/yyyy HH:mm:ss} - {endDate:dd/MM/yyyy HH:mm:ss}";
+
+                    var groups = dtSource.AsEnumerable()
+                        .Where(r => r["เวลาเข้า"] != DBNull.Value &&
+                                    Convert.ToDateTime(r["เวลาเข้า"]) >= startDate &&
+                                    Convert.ToDateTime(r["เวลาเข้า"]) <= endDate)
+                        .GroupBy(r => r.Field<string>("เจ้าหน้าที่ขาเข้า"));
+
+                    foreach (var g in groups)
+                    {
+                        int visitor = g.Count(r => (r["ประเภท"]?.ToString() ?? "") != "Member");
+                        int member = g.Count(r => (r["ประเภท"]?.ToString() ?? "") == "Member");
+                        int total = visitor + member;
+
+                        // ทุกตู้จ่ายบัตรจะใช้ช่วงเวลาที่คุณเลือก ไม่ใช่เวลาจริงจากข้อมูล
+                        result.Rows.Add(g.Key, dateRange, visitor, member, total);
+                    }
+
+                    ResultGridView.DataSource = result;
+
+                    ResultGridView.Columns[0].Width = 150;
+                    ResultGridView.Columns[1].Width = 350;
+
+                    CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
+                    ResultGridView.Refresh();
+
+                    rpt.Load(path + "\\CrystalReports\\Report29_Impact.rpt");
+                    rpt.SetDataSource(result);
+                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                    if (dtMap.Rows.Count > 0)
+                    {
+                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                    }
+
+                    PrimaryCrystalReportViewer.ReportSource = rpt;
+                    PrimaryCrystalReportViewer.Refresh();
+
+                    return;
+
+                case 102:
+                    DataTable dt = DbController.LoadData(sql); // column "estamp_data"
+
+                    // สร้าง list สำหรับเก็บข้อมูล
+                    var records = new List<dynamic>();
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (row["estamp_data"] == DBNull.Value) continue;
+
+                        string json = row["estamp_data"].ToString();
+                        if (string.IsNullOrWhiteSpace(json)) continue;
+
+                        JObject obj;
+                        try { obj = JObject.Parse(json); }
+                        catch { continue; }
+
+                        records.Add(new
+                        {
+                            promotion_name = (string)obj["promotion_name"],
+                            full_name = (string)obj["full_name"],
+                            code = (string)obj["code"],
+                            company_name = (string)obj["company_name"],
+                            department_name = (string)obj["department_name"],
+                            user_type = (string)obj["user_type"],
+                            event_code = (string)obj["event_code"],
+                            event_name = (string)obj["event_name"]
+                        });
+                    }
+
+                    // Group by และนับจำนวน
+                    var grouped = records
+                        .GroupBy(r => new { r.promotion_name, r.full_name, r.code, r.company_name, r.department_name, r.user_type, r.event_code, r.event_name })
+                        .Select(g => new
+                        {
+                            promotion_name = g.Key.promotion_name,
+                            full_name = g.Key.full_name,
+                            code = g.Key.code,
+                            company_name = g.Key.company_name,
+                            department_name = g.Key.department_name,
+                            user_type = g.Key.user_type,
+                            event_code = g.Key.event_code,
+                            event_name = g.Key.event_name,
+                            count = g.Count()
+                        }).ToList();
+
+                    // ✅ สร้าง DataTable สำหรับแสดงผล
+                    DataTable resultTable = new DataTable();
+                    resultTable.Columns.Add("E-Stamp-Name");
+                    resultTable.Columns.Add("ชื่อผู้ให้ตราประทับ");
+                    resultTable.Columns.Add("รหัสผู้ประทับตรา");
+                    resultTable.Columns.Add("บริษัท");
+                    resultTable.Columns.Add("แผนก");
+                    resultTable.Columns.Add("ประเภทการประทับ");
+                    resultTable.Columns.Add("รหัสอีเว้นท์");
+                    resultTable.Columns.Add("ชื่ออีเว้นท์");
+                    resultTable.Columns.Add("จำนวน", typeof(int));
+
+                    foreach (var item in grouped)
+                    {
+                        resultTable.Rows.Add(
+                            item.promotion_name,
+                            item.full_name,
+                            item.code,
+                            item.company_name,
+                            item.department_name,
+                            item.user_type,
+                            item.event_code,
+                            item.event_name,
+                            item.count
+                        );
+                    }
+
+                    // ✅ bind ข้อมูลเข้ากับ DataGridView
+                    ResultGridView.DataSource = resultTable;
+
+                    ResultGridView.Columns[1].Width = 140;
+                    ResultGridView.Columns[2].Width = 300;
+                    ResultGridView.Columns[3].Width = 400;
+                    ResultGridView.Columns[4].Width = 120;
+
+
+
+                    ResultGridView.Refresh();
+
+                    //ReportHeaderLabel.Text = AppGlobalVariables.Printings.Header = "รายงานการใช้งาน E-Stamp";
+
+                    rpt.Load(path + "\\CrystalReports\\RptEStampSummary.rpt");
+                    rpt.SetDataSource(resultTable); // <-- ใช้ resultTable ที่สร้างไว้
+                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                    if (dtMap.Rows.Count > 0)
+                    {
+                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                    }
+
+                    PrimaryCrystalReportViewer.ReportSource = rpt;
+                    PrimaryCrystalReportViewer.Refresh();
+
+                    PdfExportButton.Enabled = true;
+                    ExcelExportButton.Enabled = true;
+                    return;
+            }
+
+
+        }
+
+        private void FunckingShit(int selectedReportId, string sql)
         {
             string startDate = StartDatePicker.Value.ToString("yyyy-MM-dd");
             string endDate = EndDatePicker.Value.ToString("yyyy-MM-dd");
@@ -8662,73 +9158,84 @@ namespace ParkingManagementReport
                                         Configs.IsSwitch = true;
                                     }
                                 }
+                                else if (Configs.Reports.UseReportThanapoom)
+                                {
+                                    rpt.Load(path + "\\CrystalReports\\Report21_1_tnpt.rpt");
+                                }
                                 else
                                     rpt.Load(path + "\\CrystalReports\\Report21_1.rpt");
                             }
-                            
+
                             else
-                                rpt.Load(path + "\\CrystalReports\\Report21.rpt");
+                                rpt.Load(path + "\\CrystalReports\\Report21_1_Imapact.rpt");
 
                             rpt.SetDataSource(itemizedMap);
 
-                            string nTel = "";
+                            string nTel = AppGlobalVariables.Printings.Telephone; ;
                             string nFax = "";
-                            string nTax = "";
+                            string nTax = AppGlobalVariables.Printings.Tax1;
+
+                        try
+                        {
+                            //string tel = AppGlobalVariables.Printings.Telephone;
+                            //int t = tel.IndexOf(" แฟ") - tel.IndexOf("L: ");
+                            //nTel = tel.Substring(tel.IndexOf("L: ") + 2);
+                            //t = tel.IndexOf("AX:");
+                            ////nFax = tel.Substring(t + 3);
+                            //tel = AppGlobalVariables.Printings.Tax1;
+                            //t = tel.IndexOf("D. ");
+                            //nTax = tel.Substring(t + 3);
+                        }
+                        catch
+                        {
                             try
                             {
-                                string tel = AppGlobalVariables.ParamsLookup["tel"];
-                                int t = tel.IndexOf(" แฟ") - tel.IndexOf("L: ");
-                                nTel = tel.Substring(tel.IndexOf("L: ") + 2, t - 2);
-                                t = tel.IndexOf("AX:");
-                                nFax = tel.Substring(t + 3);
-                                tel = AppGlobalVariables.ParamsLookup["tax"];
-                                t = tel.IndexOf("D. ");
-                                nTax = tel.Substring(t + 3);
+                                nTel = AppGlobalVariables.Printings.Telephone.Split(':')[1].Trim().Replace("fax", "").Replace("FAX", "").Replace("Fax", "");
                             }
                             catch
                             {
+                                nTel = "";
+                            }
+                            try
+                            {
+                                nFax = AppGlobalVariables.Printings.Telephone.Split(':')[2].Trim();
+                            }
+                            catch
+                            {
+                                nFax = "";
+                            }
+                            try
+                            {
+                                nTax = AppGlobalVariables.Printings.Tax1.Split(':')[1].Trim();
+                            }
+                            catch
+                            {
+                                nTax = "";
+                            }
+                            if (nTax.Trim().Length == 0) //Mac 2022/08/31
+                            {
                                 try
                                 {
-                                    nTel = AppGlobalVariables.ParamsLookup["tel"].Split(':')[1].Trim().Replace("fax", "").Replace("FAX", "").Replace("Fax", "");
-                                }
-                                catch
-                                {
-                                    nTel = "";
-                                }
-                                try
-                                {
-                                    nFax = AppGlobalVariables.ParamsLookup["tel"].Split(':')[2].Trim();
-                                }
-                                catch
-                                {
-                                    nFax = "";
-                                }
-                                try
-                                {
-                                    nTax = AppGlobalVariables.ParamsLookup["tax"].Split(':')[1].Trim();
+                                    nTax = AppGlobalVariables.Printings.Tax1.Split(' ')[1].Trim();
                                 }
                                 catch
                                 {
                                     nTax = "";
                                 }
-                                if (nTax.Trim().Length == 0) //Mac 2022/08/31
-                                {
-                                    try
-                                    {
-                                        nTax = AppGlobalVariables.ParamsLookup["tax"].Split(' ')[1].Trim();
-                                    }
-                                    catch
-                                    {
-                                        nTax = "";
-                                    }
-                                }
                             }
+                        }
+                            rpt.SetParameterValue("compName", AppGlobalVariables.Printings.Company1.Trim());
+                            rpt.SetParameterValue("ComAddress1", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
+                            rpt.SetParameterValue("ComTel", nTel);
+                            //rpt.SetParameterValue("comFax", nFax);
+                            rpt.SetParameterValue("compTax", nTax);
+
                             if (MemberGroupMonthComboBox.SelectedIndex > 0) //Mac 2016/04/18
                             {
                                 TextObject txtReportHeader = rpt.ReportDefinition.ReportObjects["text7"] as TextObject;
                                 txtReportHeader.Text = "บัตรจอดรถ";
                             }
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
+                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'"; //Mac 2020/08/27
                             rpt.SetParameterValue("DateSearch", StartDatePicker.Text + " " + StartTimePicker.Text);
                             rpt.SetParameterValue("DateSearch2", EndDatePicker.Text + " " + EndTimePicker.Text);
 
@@ -8742,42 +9249,168 @@ namespace ParkingManagementReport
                     }
 
                 case 21:
-                    DataTable itemizedTable = CRUDManager.GetItemizedPromotionUsage(sql, Constants.TextBased.All);
-                    DataTable mappedTable = CRUDManager.GetItemizedDailyPromotionUsage(
-                        itemizedTable, 
-                        PromotionComboBox.Text, 
-                        PaymentStatusComboBox.Text, 
-                        StartDatePicker.Value, 
-                        EndDatePicker.Value);
-
-                    try
+                    if(Configs.Reports.UseReportImpact)
                     {
-                        PrimaryTabControl.SelectTab(1);
+                        //int[] promotionRange = NumericFormatters.GetPromotionRange(PromotionIdFrom.Text, PromotionIdTo.Text);
+                        DataTable itemizedMap = CRUDManager.GetItemizedPromotionUsage(sql, PaymentStatusComboBox.Text);
 
-                        string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                        path = path.Replace("\\bin\\Debug", "");
-                        ReportDocument rpt = new ReportDocument();
-                        rpt.Load(path + "\\CrystalReports\\Report22.rpt");
-                        rpt.SetDataSource(mappedTable);
+                        try
+                        {
+                            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                            path = path.Replace("\\bin\\Debug", "");
+                            ReportDocument rpt = new ReportDocument();
 
-                        string start_date = StartDatePicker.Value.ToString("yyyy-MM-dd");
-                        string end_date = EndDatePicker.Value.ToString("yyyy-MM-dd");
+                            if (Configs.Reports.UseReport21_3)
+                            {
+                                rpt.Load(path + "\\CrystalReports\\Report21_3.rpt");
+                            }
+                            else if (Configs.Reports.UseReport21_2)
+                            {
+                                rpt.Load(path + "\\CrystalReports\\Report21_2.rpt");
+                            }
+                            else if (Configs.Reports.UseReport21_1)
+                            {
+                                if (Configs.Reports.Report21_1_Switch)
+                                {
+                                    if (Configs.IsSwitch)
+                                    {
+                                        rpt.Load(path + "\\CrystalReports\\Report21_1_sw.rpt");
+                                        Configs.IsSwitch = false;
+                                    }
+                                    else
+                                    {
+                                        rpt.Load(path + "\\CrystalReports\\Report21_1.rpt");
+                                        Configs.IsSwitch = true;
+                                    }
+                                }
+                                else if (Configs.Reports.UseReportThanapoom)
+                                {
+                                    rpt.Load(path + "\\CrystalReports\\Report21_1_tnpt.rpt");
+                                }
+                                else
+                                    rpt.Load(path + "\\CrystalReports\\Report21_1.rpt");
+                            }
 
-                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                        rpt.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(end_date)}'";
-                        rpt.DataDefinition.FormulaFields["ReportSearchDate"].Text = $"'{start_date} ถึง {end_date}'";
-                        rpt.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
-                        rpt.DataDefinition.FormulaFields["Address"].Text = "'อาคารธนภูมิ'";
-                        rpt.DataDefinition.FormulaFields["PrintedByUser"].Text = $"'Printed By: {AppGlobalVariables.OperatingUser.Name}'";
-                        //rpt.DataDefinition.FormulaFields["PromotionName"].Text = $"'{PromotionComboBox?.Text}'";
-                        PrimaryCrystalReportViewer.ReportSource = rpt;
-                        PrimaryCrystalReportViewer.Refresh();
+                            else
+                                rpt.Load(path + "\\CrystalReports\\Report21_1_Imapact.rpt");
+
+                            rpt.SetDataSource(itemizedMap);
+
+                            string nTel = AppGlobalVariables.Printings.Telephone; ;
+                            string nFax = "";
+                            string nTax = AppGlobalVariables.Printings.Tax1;
+
+                            try
+                            {
+                                //string tel = AppGlobalVariables.Printings.Telephone;
+                                //int t = tel.IndexOf(" แฟ") - tel.IndexOf("L: ");
+                                //nTel = tel.Substring(tel.IndexOf("L: ") + 2);
+                                //t = tel.IndexOf("AX:");
+                                ////nFax = tel.Substring(t + 3);
+                                //tel = AppGlobalVariables.Printings.Tax1;
+                                //t = tel.IndexOf("D. ");
+                                //nTax = tel.Substring(t + 3);
+                            }
+                            catch
+                            {
+                                try
+                                {
+                                    nTel = AppGlobalVariables.Printings.Telephone.Split(':')[1].Trim().Replace("fax", "").Replace("FAX", "").Replace("Fax", "");
+                                }
+                                catch
+                                {
+                                    nTel = "";
+                                }
+                                try
+                                {
+                                    nFax = AppGlobalVariables.Printings.Telephone.Split(':')[2].Trim();
+                                }
+                                catch
+                                {
+                                    nFax = "";
+                                }
+                                try
+                                {
+                                    nTax = AppGlobalVariables.Printings.Tax1.Split(':')[1].Trim();
+                                }
+                                catch
+                                {
+                                    nTax = "";
+                                }
+                                if (nTax.Trim().Length == 0) //Mac 2022/08/31
+                                {
+                                    try
+                                    {
+                                        nTax = AppGlobalVariables.Printings.Tax1.Split(' ')[1].Trim();
+                                    }
+                                    catch
+                                    {
+                                        nTax = "";
+                                    }
+                                }
+                            }
+                            rpt.SetParameterValue("compName", AppGlobalVariables.Printings.Company1.Trim());
+                            rpt.SetParameterValue("ComAddress1", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
+                            rpt.SetParameterValue("ComTel", nTel);
+                            //rpt.SetParameterValue("comFax", nFax);
+                            rpt.SetParameterValue("compTax", nTax);
+
+                            if (MemberGroupMonthComboBox.SelectedIndex > 0) //Mac 2016/04/18
+                            {
+                                TextObject txtReportHeader = rpt.ReportDefinition.ReportObjects["text7"] as TextObject;
+                                txtReportHeader.Text = "บัตรจอดรถ";
+                            }
+                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'"; //Mac 2020/08/27
+                            rpt.SetParameterValue("DateSearch", StartDatePicker.Text + " " + StartTimePicker.Text);
+                            rpt.SetParameterValue("DateSearch2", EndDatePicker.Text + " " + EndTimePicker.Text);
+
+                            PrimaryTabControl.SelectTab(1);
+                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            PrimaryCrystalReportViewer.Refresh();
+                        }
+                        catch (Exception) { }
+                        Cursor = Cursors.Default;
+                        return;
+                    } 
+                    else
+                    {
+                        DataTable itemizedTable = CRUDManager.GetItemizedPromotionUsage(sql, Constants.TextBased.All);
+                        DataTable mappedTable = CRUDManager.GetItemizedDailyPromotionUsage(
+                            itemizedTable,
+                            PromotionComboBox.Text,
+                            PaymentStatusComboBox.Text,
+                            StartDatePicker.Value,
+                            EndDatePicker.Value);
+
+                        try
+                        {
+                            PrimaryTabControl.SelectTab(1);
+                            //////////////////////////////////////////////////////
+                            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                            path = path.Replace("\\bin\\Debug", "");
+                            ReportDocument rpt = new ReportDocument();
+                            rpt.Load(path + "\\CrystalReports\\Report22.rpt");
+                            //////////////////////////////////////////////////////
+                            rpt.SetDataSource(mappedTable);
+
+                            string start_date = StartDatePicker.Value.ToString("yyyy-MM-dd");
+                            string end_date = EndDatePicker.Value.ToString("yyyy-MM-dd");
+
+                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปการใช้ตราประทับ'";
+                            rpt.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(end_date)}'";
+                            rpt.DataDefinition.FormulaFields["ReportSearchDate"].Text = $"'{start_date} ถึง {end_date}'";
+                            rpt.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
+                            rpt.DataDefinition.FormulaFields["Address"].Text = "'อาคารธนภูมิ'";
+                            rpt.DataDefinition.FormulaFields["PrintedByUser"].Text = $"'Printed By: {AppGlobalVariables.OperatingUser.Name}'";
+                            //rpt.DataDefinition.FormulaFields["PromotionName"].Text = $"'{PromotionComboBox?.Text}'";
+                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            PrimaryCrystalReportViewer.Refresh();
+                        }
+                        catch (Exception) { }
+                        Cursor = Cursors.Default;
+                        return;
                     }
-                    catch (Exception) { }
-                    Cursor = Cursors.Default;
-                    return;
-
-                case 164: // 37.รายงานสรุปจำนวนรถและรายได้
+                case 163:
                     try
                     {
                         string start_date = StartDatePicker.Value.ToString("yyyy-MM-dd");
@@ -8790,7 +9423,7 @@ namespace ParkingManagementReport
                         rpt.Load(path + "\\CrystalReports\\TnptVehicleEarningSummary.rpt");
                         rpt.SetDataSource(dataTable);
 
-                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปจำนวนรถและรายได้'";
                         rpt.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
                         rpt.DataDefinition.FormulaFields["PrintedPersonnel"].Text = $"'Printed By: {AppGlobalVariables.OperatingUser.Name}'";
                         rpt.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(EndDatePicker.Value.ToString("yyyy-MM-dd"))}'";
