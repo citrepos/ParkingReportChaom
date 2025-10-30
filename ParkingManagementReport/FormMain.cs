@@ -4866,47 +4866,92 @@ namespace ParkingManagementReport
                     + " DROP TABLE IF EXISTS guardhouseout;  "
                     + " CALL dowhile4('" + strdst + "','" + strdfn + "');";
                     break;
-
                 case 29:
-                    strdst = dst.Year.ToString() + "-" + dst.ToString("MM'-'dd") + " " + timeStart.Value.ToLongTimeString();
-                    strdfn = dfn.Year.ToString() + "-" + dfn.ToString("MM'-'dd") + " " + timeFinish.Value.ToLongTimeString();
-                    sql = "DROP PROCEDURE IF EXISTS dowhile4; "
-                    + " CREATE PROCEDURE dowhile4(IN date_select DATETIME, IN date_finish DATE) "
-                    + " BEGIN "
-                     + "  CREATE TABLE perDay (days varchar(50),caroutVisitor INT(1),caroutMember INT(1),lostPro INT(1),price INT(1)); "
-                     + "  WHILE DATE(date_select) <= DATE(date_finish) DO "
-                     + "    INSERT INTO perDay VALUES(CONCAT(DATE_FORMAT(date_select,'%d-%m-%Y'),' ถึง ',DATE_FORMAT( DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND),'%d-%m-%Y')), "
-                     + "    (SELECT count(recordout.no) FROM recordout JOIN recordin ON recordin.no = recordout.no "
-                     + "      WHERE dateout BETWEEN date_select AND  "
-                     + "      DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)  "
-                     + "      AND recordin.cartype < 200  ), "
+                    strdst = dst.ToString("yyyy-MM-dd") + " " + timeStart.Value.ToLongTimeString();
+                    strdfn = dfn.ToString("yyyy-MM-dd") + " " + timeFinish.Value.ToLongTimeString();
 
-                     + "    (SELECT count(recordout.no) FROM recordout JOIN recordin ON recordin.no = recordout.no "
-                     + "      WHERE dateout BETWEEN date_select AND  "
-                     + "      DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)  "
-                     + "      AND recordin.cartype = 200), "
+                    sql =
+                    "DROP PROCEDURE IF EXISTS dowhile4; " +
 
-                    + "       (SELECT count(no) FROM recordout WHERE proid = 0  "
-                    + "       AND dateout BETWEEN date_select AND  "
-                    + "       DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)), "
+                    "CREATE PROCEDURE dowhile4(IN date_select DATETIME, IN date_finish DATETIME) " +
+                    "BEGIN " +
+                    "  CREATE TEMPORARY TABLE perDay (" +
+                    "     days VARCHAR(50)," +
+                    "     caroutVisitor INT," +
+                    "     caroutMember INT," +
+                    "     lostPro INT," +
+                    "     price INT" +
+                    "  ); " +
 
-                    + "      (SELECT SUM(price) FROM recordout WHERE "
-                    + "       dateout BETWEEN date_select AND  "
-                    + "       DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND))); "
+                    "  WHILE DATE(date_select) <= DATE(date_finish) DO " +
+                    "     INSERT INTO perDay VALUES( " +
+                    "        CONCAT(DATE_FORMAT(date_select,'%d-%m-%Y'), ' ถึง ', " +
+                    "               DATE_FORMAT(DATE_SUB(DATE_ADD(date_select, INTERVAL 1 DAY), INTERVAL 1 SECOND),'%d-%m-%Y')), " +
+                    "        (SELECT COUNT(ro.no) FROM recordout ro JOIN recordin ri ON ri.no = ro.no " +
+                    "           WHERE ro.dateout BETWEEN date_select AND DATE_SUB(DATE_ADD(date_select, INTERVAL 1 DAY), INTERVAL 1 SECOND) " +
+                    "             AND ri.cartype < 200), " +
+                    "        (SELECT COUNT(ro.no) FROM recordout ro JOIN recordin ri ON ri.no = ro.no " +
+                    "           WHERE ro.dateout BETWEEN date_select AND DATE_SUB(DATE_ADD(date_select, INTERVAL 1 DAY), INTERVAL 1 SECOND) " +
+                    "             AND ri.cartype = 200), " +
+                    "        (SELECT COUNT(no) FROM recordout " +
+                    "           WHERE proid = 0 AND dateout BETWEEN date_select AND DATE_SUB(DATE_ADD(date_select, INTERVAL 1 DAY), INTERVAL 1 SECOND)), " +
+                    "        (SELECT COALESCE(SUM(price),0) FROM recordout " +
+                    "           WHERE dateout BETWEEN date_select AND DATE_SUB(DATE_ADD(date_select, INTERVAL 1 DAY), INTERVAL 1 SECOND)) " +
+                    "     ); " +
+                    "     SET date_select = DATE_ADD(date_select, INTERVAL 1 DAY); " +
+                    "  END WHILE; " +
 
-                    + "     SET date_select = DATE_ADD(date_select,INTERVAL 1 DAY); "
-                    + "   END WHILE; "
-                    + "   SELECT days as วันที่ ,caroutVisitor as ผู้มาติดต่อ, caroutMember as สมาชิก, lostPro as ไม่ได้ประทับตรา,  "
-                    + "          CASE WHEN price IS NOT NULL  "
-                    + "               THEN price "
-                    + "               ELSE 0 "
-                    + "          END as  รายได้"
-                    + "   FROM perDay; "
-                    + " END; "
+                    "  SELECT days AS วันที่, " +
+                    "         caroutVisitor AS ผู้มาติดต่อ, " +
+                    "         caroutMember AS สมาชิก, " +
+                    "         lostPro AS ไม่ได้ประทับตรา, " +
+                    "         COALESCE(price,0) AS รายได้ " +
+                    "  FROM perDay; " +
+                    "END; " +
 
-                    + " DROP TABLE IF EXISTS perDay; "
-                    + " CALL dowhile4('" + strdst + "','" + strdfn + "');";
+                    "CALL dowhile4('" + strdst + "','" + strdfn + "');";
                     break;
+
+                //case 29:
+                //    strdst = dst.Year.ToString() + "-" + dst.ToString("MM'-'dd") + " " + timeStart.Value.ToLongTimeString();
+                //    strdfn = dfn.Year.ToString() + "-" + dfn.ToString("MM'-'dd") + " " + timeFinish.Value.ToLongTimeString();
+                //    sql = "DROP PROCEDURE IF EXISTS dowhile4; "
+                //    + " CREATE PROCEDURE dowhile4(IN date_select DATETIME, IN date_finish DATE) "
+                //    + " BEGIN "
+                //     + "  CREATE TABLE perDay (days varchar(50),caroutVisitor INT(1),caroutMember INT(1),lostPro INT(1),price INT(1)); "
+                //     + "  WHILE DATE(date_select) <= DATE(date_finish) DO "
+                //     + "    INSERT INTO perDay VALUES(CONCAT(DATE_FORMAT(date_select,'%d-%m-%Y'),' ถึง ',DATE_FORMAT( DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND),'%d-%m-%Y')), "
+                //     + "    (SELECT count(recordout.no) FROM recordout JOIN recordin ON recordin.no = recordout.no "
+                //     + "      WHERE dateout BETWEEN date_select AND  "
+                //     + "      DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)  "
+                //     + "      AND recordin.cartype < 200  ), "
+
+                //     + "    (SELECT count(recordout.no) FROM recordout JOIN recordin ON recordin.no = recordout.no "
+                //     + "      WHERE dateout BETWEEN date_select AND  "
+                //     + "      DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)  "
+                //     + "      AND recordin.cartype = 200), "
+
+                //    + "       (SELECT count(no) FROM recordout WHERE proid = 0  "
+                //    + "       AND dateout BETWEEN date_select AND  "
+                //    + "       DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND)), "
+
+                //    + "      (SELECT SUM(price) FROM recordout WHERE "
+                //    + "       dateout BETWEEN date_select AND  "
+                //    + "       DATE_SUB(DATE_ADD(date_select,INTERVAL 1 DAY),INTERVAL 1 SECOND))); "
+
+                //    + "     SET date_select = DATE_ADD(date_select,INTERVAL 1 DAY); "
+                //    + "   END WHILE; "
+                //    + "   SELECT days as วันที่ ,caroutVisitor as ผู้มาติดต่อ, caroutMember as สมาชิก, lostPro as ไม่ได้ประทับตรา,  "
+                //    + "          CASE WHEN price IS NOT NULL  "
+                //    + "               THEN price "
+                //    + "               ELSE 0 "
+                //    + "          END as  รายได้"
+                //    + "   FROM perDay; "
+                //    + " END; "
+
+                //    + " DROP TABLE IF EXISTS perDay; "
+                //    + " CALL dowhile4('" + strdst + "','" + strdfn + "');";
+                //    break;
 
                 case 30:
                     //sql = "SELECT t1.no AS ลำดับ, (SELECT typename FROM cartype WHERE typeid = t1.cartype) AS ประเภท, case when t1.license = 'NO' then t1.id when t1.license = '' then t1.id else t1.license end AS ทะเบียน";
@@ -13840,7 +13885,20 @@ namespace ParkingManagementReport
 
                     sql += " ORDER BY t1.dateout";
                     break;
-            }
+                case 163:
+                    int selectedYear = dateStart.Value.Year;
+                            sql = $@"
+                    SELECT 
+                        license,
+                        COUNT(*) AS license_count,
+                        MONTH(datein) AS month_no
+                    FROM recordin
+                    WHERE datein BETWEEN '{selectedYear}-01-01 00:00:00' AND '{selectedYear}-12-31 23:59:59'
+                    GROUP BY license, MONTH(datein)
+                    ORDER BY MONTH(datein);";
+                break;
+            
+        }
             if (intSelectedIndex == 13)
             {
                 strHead = "รายงาน" + comReport.Text + " จากวันที่ "
@@ -13869,7 +13927,7 @@ namespace ParkingManagementReport
                     + dateStart.Value.ToString("MMMM") + " "
                     + dateStart.Value.ToString("yyyy");
             }
-            else if ((intSelectedIndex == 42) || (intSelectedIndex == 46) || (intSelectedIndex == 47))
+            else if ((intSelectedIndex == 42) || (intSelectedIndex == 46) || (intSelectedIndex == 47) || (intSelectedIndex == 163))
             {
                 strHead = "รายงาน" + comReport.Text;
             }
@@ -13941,6 +13999,13 @@ namespace ParkingManagementReport
             {
                 if (dt.Rows.Count > 0)
                 {
+                    if (intSelectedIndex == 163)
+                    {
+                        CreateReportUsageByMonthYear();
+                        btnPdf.Enabled = true;
+                        btnExcel.Enabled = true;
+                        return;
+                    }
                     if (intSelectedIndex == 6)
                     {
                         CreateReportLicense(dt);
@@ -19591,6 +19656,76 @@ recordin.datein, recordin.userin
             sql += " ORDER BY license";
             return sql;
         }
+        private void CreateReportUsageByMonthYear()
+        {
+            // อ่านปีจาก DateTimePicker
+            int selectedYear = dateStart.Value.Year;
+
+            // สร้าง DataTable สำหรับรายงาน
+            DataTable dtTmp = new DataTable();
+            dtTmp.Columns.Add("เดือน", typeof(string));
+            dtTmp.Columns.Add("มาใช้บริการซ้ำ 2-5 ครั้ง", typeof(int));
+            dtTmp.Columns.Add("มาใช้บริการซ้ำ 6-10 ครั้ง", typeof(int));
+            dtTmp.Columns.Add("มาใช้บริการซ้ำ >10 ครั้ง", typeof(int));
+
+            // วนลูปเดือน 1-12 (ตามช่วงฟิกที่คุณกำหนด)
+            for (int m = 1; m <= 12; m++)
+            {
+                string monthName = new DateTime(selectedYear, m, 15)
+                    .ToString("MMMM", new System.Globalization.CultureInfo("th-TH"));
+
+                DataRow dr = dtTmp.NewRow();
+                dr["เดือน"] = monthName;
+                dr["มาใช้บริการซ้ำ 2-5 ครั้ง"] = 0;
+                dr["มาใช้บริการซ้ำ 6-10 ครั้ง"] = 0;
+                dr["มาใช้บริการซ้ำ >10 ครั้ง"] = 0;
+
+                // Query ดึงข้อมูลตามปีและเดือน
+                string sql = $@"
+                    SELECT license, COUNT(*) AS license_count
+                    FROM recordin
+                    WHERE datein BETWEEN '{selectedYear}-{m:00}-01 00:00:00' 
+                                      AND '{selectedYear}-{m:00}-{DateTime.DaysInMonth(selectedYear, m)} 23:59:59'
+                    GROUP BY license";
+
+                DataTable dtUsage = pm.LoadData(sql);
+
+                foreach (DataRow row in dtUsage.Rows)
+                {
+                    string license = row["license"].ToString().Trim().ToUpper();
+                    if (license == "NO" || string.IsNullOrEmpty(license))
+                        continue;
+                    int visitCount = Convert.ToInt32(row["license_count"]);
+
+                    if (visitCount >= 2 && visitCount <= 5)
+                        dr["มาใช้บริการซ้ำ 2-5 ครั้ง"] = Convert.ToInt32(dr["มาใช้บริการซ้ำ 2-5 ครั้ง"]) + 1;
+                    else if (visitCount >= 6 && visitCount <= 10)
+                        dr["มาใช้บริการซ้ำ 6-10 ครั้ง"] = Convert.ToInt32(dr["มาใช้บริการซ้ำ 6-10 ครั้ง"]) + 1;
+                    else if (visitCount > 10)
+                        dr["มาใช้บริการซ้ำ >10 ครั้ง"] = Convert.ToInt32(dr["มาใช้บริการซ้ำ >10 ครั้ง"]) + 1;
+                }
+
+                dtTmp.Rows.Add(dr);
+            }
+
+            // แสดงใน DataGridView
+            dgvResult.DataSource = dtTmp;
+            DataTable dtMap = FormMain.pm.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
+            // โหลด Crystal Report
+            ReportDocument rpt = new ReportDocument();
+            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            path = path.Replace("\\bin\\Debug", "");
+            rpt.Load(path + "\\CrystalReports\\ReportDonki164.rpt");
+            rpt.SetDataSource(dtTmp);
+            rpt.DataDefinition.FormulaFields["ReportName"].Text = $"'รายงานสัดส่วนลูกค้าที่เข้ามาใช้บริการซ้ำในปี {selectedYear}'";
+            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
+            if (dtMap.Rows.Count > 0)
+            {
+                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+            }
+            crvResult.ReportSource = rpt;
+            crvResult.Refresh();
+        }
 
         private void CreateReportLicense(DataTable dt)
         {
@@ -22191,7 +22326,6 @@ recordin.datein, recordin.userin
             /*if (intSelectedIndex == 20 || intSelectedIndex == 21)
                 comPromotion.SelectedIndex = 1;
             else comPromotion.SelectedIndex = 0;*/
-
             if (intSelectedIndex == 19) //Mac 2019/05/29
             {
 
@@ -22248,7 +22382,32 @@ recordin.datein, recordin.userin
                 label42.Visible = false;
                 cobChannel.Visible = false;
             }
+            //Report Donki Thonglor
+            if (intSelectedIndex == 163)
+            {
+                dateStart.Format = DateTimePickerFormat.Custom;
+                dateFinish.Visible = false;
+                label3.Visible = false;
+                dateStart.CustomFormat = "yyyy";
+                label2.Text = "ปีที่";
 
+                dateStart.ShowUpDown = true;
+                dateFinish.ShowUpDown = true;
+                timeStart.Visible = false;
+                timeFinish.Visible = false;
+            }
+            else
+            {
+                dateStart.Format = DateTimePickerFormat.Long;
+                dateFinish.Visible = true;
+                label3.Visible = true;
+                label2.Text = "จาก";
+
+                dateStart.ShowUpDown = false;
+                dateFinish.ShowUpDown = false;
+                timeStart.Visible = true;
+                timeFinish.Visible = true;
+            }
         }
 
         //bool UseNoDay >> Tabel - Param /Field - not_day
@@ -23242,6 +23401,41 @@ recordin.datein, recordin.userin
         {
             if (chkDateExpire.Checked)
                 chkDateRegis.Checked = false;
+        }
+
+        private void dateStart_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateFinish_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void timeStart_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void timeFinish_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox3_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void chkGreater_CheckedChanged(object sender, EventArgs e)

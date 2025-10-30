@@ -191,8 +191,8 @@
               <xs:element name="อ้างถึงเลขใบเสร็จ" msprop:Generator_ColumnPropNameInTable="อ้างถึงเลขใบเสร็จColumn" msprop:Generator_ColumnPropNameInRow="อ้างถึงเลขใบเสร็จ" msprop:Generator_UserColumnName="อ้างถึงเลขใบเสร็จ" msprop:Generator_ColumnVarNameInTable="columnอ้างถึงเลขใบเสร็จ" type="xs:string" minOccurs="0" />
               <xs:element name="ภาษี_x0020_7_x0025_" msprop:Generator_ColumnPropNameInTable="_ภาษี_7_Column" msprop:Generator_ColumnPropNameInRow="_ภาษี_7_" msprop:Generator_UserColumnName="ภาษี 7%" msprop:Generator_ColumnVarNameInTable="_columnภาษี_7_" type="xs:string" minOccurs="0" />
               <xs:element name="เครื่องรับเงิน_x0020_online" msprop:Generator_ColumnPropNameInTable="เครื่องรับเงิน_onlineColumn" msprop:Generator_ColumnPropNameInRow="เครื่องรับเงิน_online" msprop:Generator_UserColumnName="เครื่องรับเงิน online" msprop:Generator_ColumnVarNameInTable="columnเครื่องรับเงิน_online" type="xs:string" minOccurs="0" />
-              <xs:element name="เจ้าหน้าที่ขาเข้า" msprop:Generator_UserColumnName="เจ้าหน้าที่ขาเข้า" msprop:Generator_ColumnPropNameInTable="เจ้าหน้าที่ขาเข้าColumn" msprop:Generator_ColumnPropNameInRow="เจ้าหน้าที่ขาเข้า" msprop:Generator_ColumnVarNameInTable="columnเจ้าหน้าที่ขาเข้า" type="xs:string" minOccurs="0" />
-              <xs:element name="หมายเหตุ" msprop:Generator_UserColumnName="หมายเหตุ" msprop:Generator_ColumnPropNameInTable="หมายเหตุColumn" msprop:Generator_ColumnPropNameInRow="หมายเหตุ" msprop:Generator_ColumnVarNameInTable="columnหมายเหตุ" type="xs:string" minOccurs="0" />
+              <xs:element name="เจ้าหน้าที่ขาเข้า" msprop:Generator_ColumnPropNameInTable="เจ้าหน้าที่ขาเข้าColumn" msprop:Generator_ColumnPropNameInRow="เจ้าหน้าที่ขาเข้า" msprop:Generator_UserColumnName="เจ้าหน้าที่ขาเข้า" msprop:Generator_ColumnVarNameInTable="columnเจ้าหน้าที่ขาเข้า" type="xs:string" minOccurs="0" />
+              <xs:element name="หมายเหตุ" msprop:Generator_ColumnPropNameInTable="หมายเหตุColumn" msprop:Generator_ColumnPropNameInRow="หมายเหตุ" msprop:Generator_UserColumnName="หมายเหตุ" msprop:Generator_ColumnVarNameInTable="columnหมายเหตุ" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -1116,7 +1116,17 @@
               <xs:element name="rabbit_x0020_ID" msprop:Generator_ColumnPropNameInTable="rabbit_IDColumn" msprop:Generator_ColumnPropNameInRow="rabbit_ID" msprop:Generator_UserColumnName="rabbit ID" msprop:Generator_ColumnVarNameInTable="columnrabbit_ID" type="xs:string" minOccurs="0" />
               <xs:element name="Beam_x0020_ID" msprop:Generator_ColumnPropNameInTable="Beam_IDColumn" msprop:Generator_ColumnPropNameInRow="Beam_ID" msprop:Generator_UserColumnName="Beam ID" msprop:Generator_ColumnVarNameInTable="columnBeam_ID" type="xs:string" minOccurs="0" />
               <xs:element name="QR_x0020_Code" msprop:Generator_ColumnPropNameInTable="QR_CodeColumn" msprop:Generator_ColumnPropNameInRow="QR_Code" msprop:Generator_UserColumnName="QR Code" msprop:Generator_ColumnVarNameInTable="columnQR_Code" type="xs:string" minOccurs="0" />
-              <xs:element name="SCB_x0020_ID" msprop:Generator_ColumnPropNameInRow="SCB_ID" msprop:Generator_ColumnPropNameInTable="SCB_IDColumn" msprop:Generator_ColumnVarNameInTable="columnSCB_ID" msprop:Generator_UserColumnName="SCB ID" type="xs:string" minOccurs="0" />
+              <xs:element name="SCB_x0020_ID" msprop:Generator_UserColumnName="SCB ID" msprop:Generator_ColumnPropNameInTable="SCB_IDColumn" msprop:Generator_ColumnPropNameInRow="SCB_ID" msprop:Generator_ColumnVarNameInTable="columnSCB_ID" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="reportDonki164" msprop:Generator_RowEvHandlerName="reportDonki164RowChangeEventHandler" msprop:Generator_RowDeletedName="reportDonki164RowDeleted" msprop:Generator_RowDeletingName="reportDonki164RowDeleting" msprop:Generator_RowEvArgName="reportDonki164RowChangeEvent" msprop:Generator_TablePropName="reportDonki164" msprop:Generator_RowChangedName="reportDonki164RowChanged" msprop:Generator_RowChangingName="reportDonki164RowChanging" msprop:Generator_TableClassName="reportDonki164DataTable" msprop:Generator_RowClassName="reportDonki164Row" msprop:Generator_TableVarName="tablereportDonki164" msprop:Generator_UserTableName="reportDonki164">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="เดือน" msprop:Generator_ColumnPropNameInRow="เดือน" msprop:Generator_ColumnPropNameInTable="เดือนColumn" msprop:Generator_ColumnVarNameInTable="columnเดือน" msprop:Generator_UserColumnName="เดือน" type="xs:string" minOccurs="0" />
+              <xs:element name="มาใช้บริการซ้ำ_x0020_2-5_x0020_ครั้ง" msprop:Generator_ColumnPropNameInRow="_มาใช้บริการซ้ำ_2_5_ครั้ง" msprop:Generator_ColumnPropNameInTable="_มาใช้บริการซ้ำ_2_5_ครั้งColumn" msprop:Generator_ColumnVarNameInTable="_columnมาใช้บริการซ้ำ_2_5_ครั้ง" msprop:Generator_UserColumnName="มาใช้บริการซ้ำ 2-5 ครั้ง" type="xs:string" minOccurs="0" />
+              <xs:element name="มาใช้บริการซ้ำ_x0020_6-10_x0020_ครั้ง" msprop:Generator_ColumnPropNameInRow="_มาใช้บริการซ้ำ_6_10_ครั้ง" msprop:Generator_ColumnPropNameInTable="_มาใช้บริการซ้ำ_6_10_ครั้งColumn" msprop:Generator_ColumnVarNameInTable="_columnมาใช้บริการซ้ำ_6_10_ครั้ง" msprop:Generator_UserColumnName="มาใช้บริการซ้ำ 6-10 ครั้ง" type="xs:string" minOccurs="0" />
+              <xs:element name="มาใช้บริการซ้ำ_x0020__x003E_10_x0020_ครั้ง" msprop:Generator_ColumnPropNameInRow="_มาใช้บริการซ้ำ__10_ครั้ง" msprop:Generator_ColumnPropNameInTable="_มาใช้บริการซ้ำ__10_ครั้งColumn" msprop:Generator_ColumnVarNameInTable="_columnมาใช้บริการซ้ำ__10_ครั้ง" msprop:Generator_UserColumnName="มาใช้บริการซ้ำ &gt;10 ครั้ง" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

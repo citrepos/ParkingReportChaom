@@ -166,6 +166,8 @@ namespace ParkingManagementReport {
         
         private report163DataTable tablereport163;
         
+        private reportDonki164DataTable tablereportDonki164;
+        
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -406,6 +408,9 @@ namespace ParkingManagementReport {
                 }
                 if ((ds.Tables["report163"] != null)) {
                     base.Tables.Add(new report163DataTable(ds.Tables["report163"]));
+                }
+                if ((ds.Tables["reportDonki164"] != null)) {
+                    base.Tables.Add(new reportDonki164DataTable(ds.Tables["reportDonki164"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -1137,6 +1142,16 @@ namespace ParkingManagementReport {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public reportDonki164DataTable reportDonki164 {
+            get {
+                return this.tablereportDonki164;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         [global::System.ComponentModel.BrowsableAttribute(true)]
         [global::System.ComponentModel.DesignerSerializationVisibilityAttribute(global::System.ComponentModel.DesignerSerializationVisibility.Visible)]
         public override global::System.Data.SchemaSerializationMode SchemaSerializationMode {
@@ -1414,6 +1429,9 @@ namespace ParkingManagementReport {
                 }
                 if ((ds.Tables["report163"] != null)) {
                     base.Tables.Add(new report163DataTable(ds.Tables["report163"]));
+                }
+                if ((ds.Tables["reportDonki164"] != null)) {
+                    base.Tables.Add(new reportDonki164DataTable(ds.Tables["reportDonki164"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -1874,6 +1892,12 @@ namespace ParkingManagementReport {
                     this.tablereport163.InitVars();
                 }
             }
+            this.tablereportDonki164 = ((reportDonki164DataTable)(base.Tables["reportDonki164"]));
+            if ((initTable == true)) {
+                if ((this.tablereportDonki164 != null)) {
+                    this.tablereportDonki164.InitVars();
+                }
+            }
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2026,6 +2050,8 @@ namespace ParkingManagementReport {
             base.Tables.Add(this.tablereport162);
             this.tablereport163 = new report163DataTable();
             base.Tables.Add(this.tablereport163);
+            this.tablereportDonki164 = new reportDonki164DataTable();
+            base.Tables.Add(this.tablereportDonki164);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2456,6 +2482,12 @@ namespace ParkingManagementReport {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        private bool ShouldSerializereportDonki164() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         private void SchemaChanged(object sender, global::System.ComponentModel.CollectionChangeEventArgs e) {
             if ((e.Action == global::System.ComponentModel.CollectionChangeAction.Remove)) {
                 this.InitVars();
@@ -2721,6 +2753,9 @@ namespace ParkingManagementReport {
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
         public delegate void report163RowChangeEventHandler(object sender, report163RowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        public delegate void reportDonki164RowChangeEventHandler(object sender, reportDonki164RowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
@@ -29255,6 +29290,301 @@ namespace ParkingManagementReport {
         }
         
         /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class reportDonki164DataTable : global::System.Data.TypedTableBase<reportDonki164Row> {
+            
+            private global::System.Data.DataColumn columnเดือน;
+            
+            private global::System.Data.DataColumn _columnมาใช้บริการซ้ำ_2_5_ครั้ง;
+            
+            private global::System.Data.DataColumn _columnมาใช้บริการซ้ำ_6_10_ครั้ง;
+            
+            private global::System.Data.DataColumn _columnมาใช้บริการซ้ำ__10_ครั้ง;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public reportDonki164DataTable() {
+                this.TableName = "reportDonki164";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            internal reportDonki164DataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected reportDonki164DataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn เดือนColumn {
+                get {
+                    return this.columnเดือน;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn _มาใช้บริการซ้ำ_2_5_ครั้งColumn {
+                get {
+                    return this._columnมาใช้บริการซ้ำ_2_5_ครั้ง;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn _มาใช้บริการซ้ำ_6_10_ครั้งColumn {
+                get {
+                    return this._columnมาใช้บริการซ้ำ_6_10_ครั้ง;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataColumn _มาใช้บริการซ้ำ__10_ครั้งColumn {
+                get {
+                    return this._columnมาใช้บริการซ้ำ__10_ครั้ง;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public reportDonki164Row this[int index] {
+                get {
+                    return ((reportDonki164Row)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public event reportDonki164RowChangeEventHandler reportDonki164RowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public event reportDonki164RowChangeEventHandler reportDonki164RowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public event reportDonki164RowChangeEventHandler reportDonki164RowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public event reportDonki164RowChangeEventHandler reportDonki164RowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void AddreportDonki164Row(reportDonki164Row row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public reportDonki164Row AddreportDonki164Row(string เดือน, string _มาใช้บริการซ้ำ_2_5_ครั้ง, string _มาใช้บริการซ้ำ_6_10_ครั้ง, string _มาใช้บริการซ้ำ__10_ครั้ง) {
+                reportDonki164Row rowreportDonki164Row = ((reportDonki164Row)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        เดือน,
+                        _มาใช้บริการซ้ำ_2_5_ครั้ง,
+                        _มาใช้บริการซ้ำ_6_10_ครั้ง,
+                        _มาใช้บริการซ้ำ__10_ครั้ง};
+                rowreportDonki164Row.ItemArray = columnValuesArray;
+                this.Rows.Add(rowreportDonki164Row);
+                return rowreportDonki164Row;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                reportDonki164DataTable cln = ((reportDonki164DataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new reportDonki164DataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            internal void InitVars() {
+                this.columnเดือน = base.Columns["เดือน"];
+                this._columnมาใช้บริการซ้ำ_2_5_ครั้ง = base.Columns["มาใช้บริการซ้ำ 2-5 ครั้ง"];
+                this._columnมาใช้บริการซ้ำ_6_10_ครั้ง = base.Columns["มาใช้บริการซ้ำ 6-10 ครั้ง"];
+                this._columnมาใช้บริการซ้ำ__10_ครั้ง = base.Columns["มาใช้บริการซ้ำ >10 ครั้ง"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            private void InitClass() {
+                this.columnเดือน = new global::System.Data.DataColumn("เดือน", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnเดือน);
+                this._columnมาใช้บริการซ้ำ_2_5_ครั้ง = new global::System.Data.DataColumn("มาใช้บริการซ้ำ 2-5 ครั้ง", typeof(string), null, global::System.Data.MappingType.Element);
+                this._columnมาใช้บริการซ้ำ_2_5_ครั้ง.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnมาใช้บริการซ้ำ_2_5_ครั้ง");
+                this._columnมาใช้บริการซ้ำ_2_5_ครั้ง.ExtendedProperties.Add("Generator_UserColumnName", "มาใช้บริการซ้ำ 2-5 ครั้ง");
+                base.Columns.Add(this._columnมาใช้บริการซ้ำ_2_5_ครั้ง);
+                this._columnมาใช้บริการซ้ำ_6_10_ครั้ง = new global::System.Data.DataColumn("มาใช้บริการซ้ำ 6-10 ครั้ง", typeof(string), null, global::System.Data.MappingType.Element);
+                this._columnมาใช้บริการซ้ำ_6_10_ครั้ง.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnมาใช้บริการซ้ำ_6_10_ครั้ง");
+                this._columnมาใช้บริการซ้ำ_6_10_ครั้ง.ExtendedProperties.Add("Generator_UserColumnName", "มาใช้บริการซ้ำ 6-10 ครั้ง");
+                base.Columns.Add(this._columnมาใช้บริการซ้ำ_6_10_ครั้ง);
+                this._columnมาใช้บริการซ้ำ__10_ครั้ง = new global::System.Data.DataColumn("มาใช้บริการซ้ำ >10 ครั้ง", typeof(string), null, global::System.Data.MappingType.Element);
+                this._columnมาใช้บริการซ้ำ__10_ครั้ง.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_columnมาใช้บริการซ้ำ__10_ครั้ง");
+                this._columnมาใช้บริการซ้ำ__10_ครั้ง.ExtendedProperties.Add("Generator_UserColumnName", "มาใช้บริการซ้ำ >10 ครั้ง");
+                base.Columns.Add(this._columnมาใช้บริการซ้ำ__10_ครั้ง);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public reportDonki164Row NewreportDonki164Row() {
+                return ((reportDonki164Row)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new reportDonki164Row(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(reportDonki164Row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.reportDonki164RowChanged != null)) {
+                    this.reportDonki164RowChanged(this, new reportDonki164RowChangeEvent(((reportDonki164Row)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.reportDonki164RowChanging != null)) {
+                    this.reportDonki164RowChanging(this, new reportDonki164RowChangeEvent(((reportDonki164Row)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.reportDonki164RowDeleted != null)) {
+                    this.reportDonki164RowDeleted(this, new reportDonki164RowChangeEvent(((reportDonki164Row)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.reportDonki164RowDeleting != null)) {
+                    this.reportDonki164RowDeleting(this, new reportDonki164RowChangeEvent(((reportDonki164Row)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void RemovereportDonki164Row(reportDonki164Row row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                dbForReport ds = new dbForReport();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "reportDonki164DataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
         public partial class report1Row : global::System.Data.DataRow {
@@ -49420,6 +49750,136 @@ namespace ParkingManagementReport {
         }
         
         /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        public partial class reportDonki164Row : global::System.Data.DataRow {
+            
+            private reportDonki164DataTable tablereportDonki164;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            internal reportDonki164Row(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tablereportDonki164 = ((reportDonki164DataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string เดือน {
+                get {
+                    try {
+                        return ((string)(this[this.tablereportDonki164.เดือนColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'เดือน\' in table \'reportDonki164\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereportDonki164.เดือนColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string _มาใช้บริการซ้ำ_2_5_ครั้ง {
+                get {
+                    try {
+                        return ((string)(this[this.tablereportDonki164._มาใช้บริการซ้ำ_2_5_ครั้งColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'มาใช้บริการซ้ำ 2-5 ครั้ง\' in table \'reportDonki164\' is DBNu" +
+                                "ll.", e);
+                    }
+                }
+                set {
+                    this[this.tablereportDonki164._มาใช้บริการซ้ำ_2_5_ครั้งColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string _มาใช้บริการซ้ำ_6_10_ครั้ง {
+                get {
+                    try {
+                        return ((string)(this[this.tablereportDonki164._มาใช้บริการซ้ำ_6_10_ครั้งColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'มาใช้บริการซ้ำ 6-10 ครั้ง\' in table \'reportDonki164\' is DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tablereportDonki164._มาใช้บริการซ้ำ_6_10_ครั้งColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public string _มาใช้บริการซ้ำ__10_ครั้ง {
+                get {
+                    try {
+                        return ((string)(this[this.tablereportDonki164._มาใช้บริการซ้ำ__10_ครั้งColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'มาใช้บริการซ้ำ >10 ครั้ง\' in table \'reportDonki164\' is DBNu" +
+                                "ll.", e);
+                    }
+                }
+                set {
+                    this[this.tablereportDonki164._มาใช้บริการซ้ำ__10_ครั้งColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool IsเดือนNull() {
+                return this.IsNull(this.tablereportDonki164.เดือนColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void SetเดือนNull() {
+                this[this.tablereportDonki164.เดือนColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool Is_มาใช้บริการซ้ำ_2_5_ครั้งNull() {
+                return this.IsNull(this.tablereportDonki164._มาใช้บริการซ้ำ_2_5_ครั้งColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void Set_มาใช้บริการซ้ำ_2_5_ครั้งNull() {
+                this[this.tablereportDonki164._มาใช้บริการซ้ำ_2_5_ครั้งColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool Is_มาใช้บริการซ้ำ_6_10_ครั้งNull() {
+                return this.IsNull(this.tablereportDonki164._มาใช้บริการซ้ำ_6_10_ครั้งColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void Set_มาใช้บริการซ้ำ_6_10_ครั้งNull() {
+                this[this.tablereportDonki164._มาใช้บริการซ้ำ_6_10_ครั้งColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public bool Is_มาใช้บริการซ้ำ__10_ครั้งNull() {
+                return this.IsNull(this.tablereportDonki164._มาใช้บริการซ้ำ__10_ครั้งColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public void Set_มาใช้บริการซ้ำ__10_ครั้งNull() {
+                this[this.tablereportDonki164._มาใช้บริการซ้ำ__10_ครั้งColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
@@ -51819,6 +52279,40 @@ namespace ParkingManagementReport {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
             public report163Row Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+        public class reportDonki164RowChangeEvent : global::System.EventArgs {
+            
+            private reportDonki164Row eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public reportDonki164RowChangeEvent(reportDonki164Row row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
+            public reportDonki164Row Row {
                 get {
                     return this.eventRow;
                 }
