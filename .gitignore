@@ -13,9 +13,7 @@
 mono_crash.*
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
 [Rr]eleases/
 
 [Dd]ebug/x64/
@@ -423,3 +421,5 @@ FodyWeavers.xsd
 *.msp
 
 .vs
+*.zip
+/SetupReportThanapoom

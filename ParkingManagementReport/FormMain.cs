@@ -4596,7 +4596,9 @@ namespace ParkingManagementReport
                     return;
 
                 case 22:
-                    sql = "SELECT CAST(member.cardid AS char) AS หมายเลขบัตร, member.name AS 'ชื่อ - นามสกุล', (SELECT groupname FROM membergroup WHERE id = member.memgroupid) AS กลุ่มสมาชิก, ";
+                    sql = "SELECT CAST(member.cardid AS char) AS หมายเลขบัตร, member.name AS 'ชื่อ - นามสกุล',  ";
+                    sql += "(SELECT groupname FROM membergroupprice_month WHERE id = member.memgrouppriceid_month) AS กลุ่มสมาชิก, ";
+                    sql += "(SELECT groupname FROM membergroup WHERE id = member.memgroupid) AS ประเภทสมาชิก, ";
                     //sql += " license AS ทะเบียนรถ, tel AS เบอร์โทรศัพท์,'ชำระแล้ว' AS สถานะ, datestart AS วันที่สมัคร, ";
                     //sql += " license AS ทะเบียนรถ, tel AS เบอร์โทรศัพท์,'ชำระแล้ว' AS สถานะ, date_format(datestart, '%d/%m/%Y %H:%i:%s') AS วันที่สมัคร, "; //Mac 2018/12/21
                     //Mac 2019/05/07 ------
@@ -4613,21 +4615,23 @@ namespace ParkingManagementReport
                     sql += " left join cardmf t1 on member.cardid = t1.name";
                     sql += " left join cardpx t2 on member.cardid = t2.name";
 
-
                     sql += " WHERE member.license LIKE '%" + txtLicense.Text + "%' "; //Mac 2018/12/21
 
                     if (txtNameCard.Text.Trim().Length > 0) //Mac 2022/03/01
-                        sql += " and (t1.name_on_card like '%" + txtNameCard.Text + "%' or t2.name_on_card like '%" + txtNameCard.Text + "%')";
+                        sql += " AND (t1.name_on_card like '%" + txtNameCard.Text + "%' or t2.name_on_card like '%" + txtNameCard.Text + "%')";
 
-                    /*if (comPay.SelectedIndex == 1)
+                    if (comPay.SelectedIndex == 1)
                         sql += " AND pay = 'False' ";
                     else if (comPay.SelectedIndex == 2)
-                        sql += " AND pay = 'True' ";*/
+                        sql += " AND pay = 'True' ";
 
-                    if (FormMain.pm.print.ReportSearchMemGroup) //Mac 2021/06/23
+                    if (comMemGroupMonth.SelectedIndex > 0)
+                        sql += " AND member.memgrouppriceid_month = " + dicMemGroupMonthInt[comMemGroupMonth.Text];
+
+                    if (FormMain.pm.print.ReportSearchMemGroup)
                     {
                         if (comTypeMem.SelectedIndex > 0)
-                            sql += " and member.memgroupid = " + dicMemGroupInt[comTypeMem.Text];
+                            sql += " AND member.memgroupid = " + dicMemGroupInt[comTypeMem.Text];
                         if (comType.SelectedIndex == 1)
                             sql += " AND member.typeid != 200";
                         if (comType.SelectedIndex > 1)
@@ -4645,8 +4649,7 @@ namespace ParkingManagementReport
                                 sql += " AND member.typeid =" + dicCarTypeInt[comTypeMem.Text];
                         }
                     }
-
-
+                    
                     //Mac 2022/03/11
                     dst = dateStart.Value;
                     dfn = dateFinish.Value;
@@ -4661,11 +4664,8 @@ namespace ParkingManagementReport
 
                     Cursor = Cursors.Default;
                     break;
+
                 case 23:
-                    //sql = "SELECT id AS ลำดับ, name AS 'ชื่อ - นามสกุล', license AS ทะเบียนรถ, datepay AS วันที่ชำระ, price AS รายได้, discount as ส่วนลด, ";
-                    //sql = "SELECT id AS ลำดับ, name AS 'ชื่อ - นามสกุล', license AS ทะเบียนรถ, datepay AS วันที่ชำระ, dateexpire AS วันหมดอายุ, price AS รายได้, discount as ส่วนลด, "; //Mac 2018/03/10
-                    //sql = "SELECT id AS ลำดับ, name AS 'ชื่อ - นามสกุล', license AS ทะเบียนรถ, date_format(datepay, '%d/%m/%Y %H:%i:%s') AS วันที่ชำระ, date_format(dateexpire, '%d/%m/%Y %H:%i:%s') AS วันหมดอายุ, price AS รายได้, discount as ส่วนลด, "; //Mac 2018/12/21
-                    //Mac 2020/08/15--------
                     sql = "SELECT id AS ลำดับ";
                     if (pm.print.UseReport24_2) //Mac 2021/07/22
                     {
