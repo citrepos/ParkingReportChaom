@@ -5398,16 +5398,16 @@ namespace ParkingManagementReport
                 ResultGridView.Columns[14].HeaderText = "ภาษี 7%";
                 ResultGridView.Columns[15].HeaderText = "รายได้";
                 ResultGridView.Columns[16].HeaderText = "E-Stamp";
-                if (ResultGridView.Columns.Count <= 17)
-                {
-                    ResultGridView.Columns.Add("receipt", "receipt");
-                }
-                else
-                {
-                    ResultGridView.Columns[17].HeaderText = "receipt";
-                }
-                if (Configs.Reports.UseReport13_3)
-                    ResultGridView.Columns[17].HeaderText = "เก็บจริง";
+                //if (ResultGridView.Columns.Count <= 17)
+                //{
+                //    ResultGridView.Columns.Add("receipt", "receipt");
+                //}
+                //else
+                //{
+                //    ResultGridView.Columns[17].HeaderText = "receipt";
+                //}
+                //if (Configs.Reports.UseReport13_3)
+                //    ResultGridView.Columns[17].HeaderText = "เก็บจริง";
             }
 
             int intNo = ResultGridView.Rows.Count - 1;
@@ -5424,7 +5424,7 @@ namespace ParkingManagementReport
 
             for (int i = 0; i < intNo; i++)
             {
-                int intID = Convert.ToInt32(ResultGridView[1, i].Value);
+                int intID = Convert.ToInt32(ResultGridView[0, i].Value);
                 DateTime dto = DateTime.Parse(ResultGridView[6, i].Value.ToString());
                 if (intID > 0)
                 {
