@@ -13948,38 +13948,37 @@ namespace ParkingManagementReport
             Cursor = Cursors.Default;
 
         }
-        private void FillSequentialNumber(DataTable dt)
-        {
-            if (dt == null || dt.Rows.Count == 0) return;
+        //private void FillSequentialNumber(DataTable dt)
+        //{
+        //    if (dt == null || dt.Rows.Count == 0) return;
 
-            if (dt.Columns.Contains("no"))
-            {
-                int rowNumber = 1;
-                foreach (DataRow row in dt.Rows)
-                {
-                    row["no"] = rowNumber;
-                    rowNumber++;
-                }
-            }
-            // ตรวจสอบว่ามีคอลัมน์ "ลำดับ" หรือไม่
-            if (!dt.Columns.Contains("ลำดับ"))
-            {
-                // ไม่มีคอลัมน์ "ลำดับ" → ไม่สร้างใหม่, เลิกทำ
-                return;
-            }
+        //    if (dt.Columns.Contains("no"))
+        //    {
+        //        int rowNumber = 1;
+        //        foreach (DataRow row in dt.Rows)
+        //        {
+        //            row["no"] = rowNumber;
+        //            rowNumber++;
+        //        }
+        //    }
+        //    // ตรวจสอบว่ามีคอลัมน์ "ลำดับ" หรือไม่
+        //    if (!dt.Columns.Contains("ลำดับ"))
+        //    {
+        //        // ไม่มีคอลัมน์ "ลำดับ" → ไม่สร้างใหม่, เลิกทำ
+        //        return;
+        //    }
 
-            // แทนค่า 1,2,3,... ในคอลัมน์ "ลำดับ"
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                dt.Rows[i]["ลำดับ"] = i + 1;
-            }
-        }
+        //    // แทนค่า 1,2,3,... ในคอลัมน์ "ลำดับ"
+        //    for (int i = 0; i < dt.Rows.Count; i++)
+        //    {
+        //        dt.Rows[i]["ลำดับ"] = i + 1;
+        //    }
+        //}
         private void Display(string sql)
         {
             //   txtLicense.Text = sql;
             DataTable dt = pm.LoadData(sql);
             //
-            FillSequentialNumber(dt);
             Console.WriteLine(sql);
 
             dgvResult.Location = new Point(dgvX, dgvY);
@@ -20427,9 +20426,9 @@ recordin.datein, recordin.userin
             if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0) //Mac 2022/04/22
                 sql += " recordout.printno_second";
             else
-                sql += " recordout.no";
+                sql += " recordout.printno";
 
-            sql += " ,recordout.printno, ";
+            sql += " ,recordout.no, ";
             if (pm.print.UseMemType) //Mac 2018/01/16
             {
                 //sql += " case when recordin.cartype = 200 then member.typeid else ";
@@ -20533,9 +20532,9 @@ recordin.datein, recordin.userin
                 if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0) //Mac 2022/04/22
                     sql += " recordout.printno_second";
                 else
-                    sql += " recordout.no";
+                    sql += " recordout.printno";
 
-                sql += " ,recordout.printno,";
+                sql += " ,recordout.no,";
                 if (pm.print.UseMemType) //Mac 2018/01/16
                 {
                     //sql += " case when recordin.cartype = 200 then member.typeid else ";
@@ -20781,8 +20780,8 @@ recordin.datein, recordin.userin
 
         private void CaseReportPricePromotion()
         {
-            dgvResult.Columns[0].HeaderText = "ลำดับ";
-            dgvResult.Columns[1].HeaderText = "เลขที่ใบเสร็จ/ใบกำกับภาษี";
+            dgvResult.Columns[1].HeaderText = "ลำดับ";
+            dgvResult.Columns[0].HeaderText = "เลขที่ใบเสร็จ/ใบกำกับภาษี";
             dgvResult.Columns[2].HeaderText = "ประเภท";
             dgvResult.Columns[3].HeaderText = "ทะเบียน";
             dgvResult.Columns[4].HeaderText = "เวลาเข้า";
@@ -20803,8 +20802,8 @@ recordin.datein, recordin.userin
             dgvResult.Columns[14].HeaderText = "ส่วนลด"; //Mac 2016/03/05
             dgvResult.Columns[15].HeaderText = "E-Stamp";
             //dgvResult.Columns[14].HeaderText = "E-Stamp";
-            dgvResult.Columns[1].Width = 110;
-            dgvResult.Columns[0].Width = 50;
+            dgvResult.Columns[0].Width = 110;
+            dgvResult.Columns[1].Width = 50;
             dgvResult.Columns[4].Width = 120;
             dgvResult.Columns[5].Width = 160;
             dgvResult.Columns[6].Width = 120;
@@ -20845,7 +20844,7 @@ recordin.datein, recordin.userin
 
             for (int i = 0; i < intNo; i++)
             {
-                int intID = Convert.ToInt32(dgvResult[1, i].Value);
+                int intID = Convert.ToInt32(dgvResult[0, i].Value);
                 DateTime dto = DateTime.Parse(dgvResult[6, i].Value.ToString());
                 if (intID > 0)
                 {
@@ -20864,11 +20863,11 @@ recordin.datein, recordin.userin
                         if (pm.print.OutReceiptNameMonth) //Mac 2016/04/27
                         {
                             //dgvResult[0, i].Value = dgvResult[dgvResult.ColumnCount - 1, i].Value.ToString() + dto.ToString("yyMM") + intID.ToString("000#");
-                            dgvResult[1, i].Value = dgvResult[dgvResult.ColumnCount - 1, i].Value.ToString() + dto.ToString("yyMM") + intID.ToString("00000#"); //Mac 2022/04/26
+                            dgvResult[0, i].Value = dgvResult[dgvResult.ColumnCount - 1, i].Value.ToString() + dto.ToString("yyMM") + intID.ToString("00000#"); //Mac 2022/04/26
                         }
                         else
                         {
-                            dgvResult[1, i].Value = dgvResult[dgvResult.ColumnCount - 1, i].Value.ToString() + dto.ToString("yy") + intID.ToString("00000#");
+                            dgvResult[0, i].Value = dgvResult[dgvResult.ColumnCount - 1, i].Value.ToString() + dto.ToString("yy") + intID.ToString("00000#");
                         }
                     }
                     else
@@ -20880,7 +20879,7 @@ recordin.datein, recordin.userin
                             else
                                 dgvResult[0, i].Value = "IV" + dto.ToString("yyMM") + intID.ToString("000#");*/
                             //dgvResult[0, i].Value = fontSlip13 + dto.ToString("yyMM") + intID.ToString("000#"); //Mac 2018/05/13
-                            dgvResult[1, i].Value = fontSlip13 + dto.ToString("yyMM") + intID.ToString("00000#"); //Mac 2022/04/26
+                            dgvResult[0, i].Value = fontSlip13 + dto.ToString("yyMM") + intID.ToString("00000#"); //Mac 2022/04/26
                         }
                         else
                         {
@@ -20888,7 +20887,7 @@ recordin.datein, recordin.userin
                                 dgvResult[0, i].Value = strReceiptName + dto.ToString("yy") + intID.ToString("00000#");
                             else
                                 dgvResult[0, i].Value = "IV" + dto.ToString("yy") + intID.ToString("00000#");*/
-                            dgvResult[1, i].Value = fontSlip13 + dto.ToString("yy") + intID.ToString("00000#"); //Mac 2018/05/13
+                            dgvResult[0, i].Value = fontSlip13 + dto.ToString("yy") + intID.ToString("00000#"); //Mac 2018/05/13
                         }
                     }
                 }
