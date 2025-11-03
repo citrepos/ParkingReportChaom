@@ -489,6 +489,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_280C8BF657CB7407E122E0FD5D905BA2"
+        "OwnerKey" = "8:_D9629BC0F2CB4E2E95DE9F616F945C38"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2876C09848024A1CB891323971683AAE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -687,12 +693,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_344FC337CFAD4668A41FE172439B351A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_3469CDBE658C461385B003045693400F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -753,12 +753,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_39A0A87F5EF04C0C941C7B0F6D6781CA"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_3B1C2AE6CE07445EA4B3D6DF1C350E40"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -790,12 +784,6 @@
         "Entry"
         {
         "MsmKey" = "8:_3BD128C18FAD493BB9FD7EFA67E961F1"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3BEED373DFFE432B861098E552C70CD6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1053,6 +1041,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_4E5BBB742A3310BFF40AF4BDCA3A48B3"
+        "OwnerKey" = "8:_D9629BC0F2CB4E2E95DE9F616F945C38"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_4E901E68944A42B5975078A3CD5CAA0A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1180,12 +1174,6 @@
         "Entry"
         {
         "MsmKey" = "8:_54B78D22FBC84997BD85D975A34FF37E"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_54DD7133F650417A8CB98EA9A692CFA0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1499,12 +1487,6 @@
         {
         "MsmKey" = "8:_6A58A120275F4986A30BD8B8131EDE4B"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6A762B26FC2298255A823AC99901C37E"
-        "OwnerKey" = "8:_D9629BC0F2CB4E2E95DE9F616F945C38"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2199,12 +2181,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9BB05993FF5544D9B171A5D8A366F2B2"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9BE29504EC714966ABC301795F03430D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -2236,12 +2212,6 @@
         "Entry"
         {
         "MsmKey" = "8:_9F84ECF549E44B3BBB107024CD74CE3A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9F8A2C56E9A14284A86C447EF255C5E1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -2931,19 +2901,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D2557EE8FCE242639A389584CBA497D6"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_D2A18486EC7B45E98D453E6ED1BA968F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D2C0B7B1FC27493AB9EEE476B3EA58D4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -3207,12 +3165,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E5A908270ED140D79A7CAB033C22C3D3"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_E5C316E5DB174DB9A23FC30EB7D825A8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -3459,12 +3411,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F5537271ABC86F78D7CFD7514C4F0271"
-        "OwnerKey" = "8:_D9629BC0F2CB4E2E95DE9F616F945C38"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_F554663108594165B3E0D04735D359E6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -3652,13 +3598,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6A762B26FC2298255A823AC99901C37E"
+        "OwnerKey" = "8:_4E5BBB742A3310BFF40AF4BDCA3A48B3"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F5537271ABC86F78D7CFD7514C4F0271"
+        "OwnerKey" = "8:_280C8BF657CB7407E122E0FD5D905BA2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -5406,6 +5352,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_280C8BF657CB7407E122E0FD5D905BA2"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:BarcodeLib, Version=1.0.0.15, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_280C8BF657CB7407E122E0FD5D905BA2"
+                    {
+                    "Name" = "8:BarcodeLib.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:BarcodeLib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2876C09848024A1CB891323971683AAE"
             {
             "SourcePath" = "8:..\\ParkingManagementReport\\CrystalReports\\Report205.cs"
@@ -6066,26 +6043,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_344FC337CFAD4668A41FE172439B351A"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\dbForReport2.xsc"
-            "TargetName" = "8:dbForReport2.xsc"
-            "Tag" = "8:"
-            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3469CDBE658C461385B003045693400F"
             {
             "SourcePath" = "8:..\\ParkingManagementReport\\CrystalReports\\Report88.cs"
@@ -6286,26 +6243,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_39A0A87F5EF04C0C941C7B0F6D6781CA"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\ds_fortune.xsd"
-            "TargetName" = "8:ds_fortune.xsd"
-            "Tag" = "8:"
-            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3B1C2AE6CE07445EA4B3D6DF1C350E40"
             {
             "SourcePath" = "8:..\\ParkingManagementReport\\CrystalReports\\Report219.rpt"
@@ -6412,26 +6349,6 @@
             "TargetName" = "8:Report2logoNoRunning.rpt"
             "Tag" = "8:"
             "Folder" = "8:_D4AB07EE31AE4501B112811092D4C1F3"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3BEED373DFFE432B861098E552C70CD6"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\dbForReport2.xsd"
-            "TargetName" = "8:dbForReport2.xsd"
-            "Tag" = "8:"
-            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -7308,6 +7225,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4E5BBB742A3310BFF40AF4BDCA3A48B3"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_4E5BBB742A3310BFF40AF4BDCA3A48B3"
+                    {
+                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Newtonsoft.Json.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4E901E68944A42B5975078A3CD5CAA0A"
             {
             "SourcePath" = "8:..\\ParkingManagementReport\\CrystalReports\\Report105.cs"
@@ -7734,26 +7682,6 @@
             "TargetName" = "8:Report95NoRunning.cs"
             "Tag" = "8:"
             "Folder" = "8:_D4AB07EE31AE4501B112811092D4C1F3"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_54DD7133F650417A8CB98EA9A692CFA0"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\dbForReport2.Designer.cs"
-            "TargetName" = "8:dbForReport2.Designer.cs"
-            "Tag" = "8:"
-            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -8806,37 +8734,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6A762B26FC2298255A823AC99901C37E"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_6A762B26FC2298255A823AC99901C37E"
-                    {
-                    "Name" = "8:Newtonsoft.Json.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Newtonsoft.Json.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6A7E3A18E7D644C3BBCC65886C542D45"
@@ -11150,26 +11047,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9BB05993FF5544D9B171A5D8A366F2B2"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\dbForReport2.cs"
-            "TargetName" = "8:dbForReport2.cs"
-            "Tag" = "8:"
-            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9BE29504EC714966ABC301795F03430D"
             {
             "SourcePath" = "8:..\\ParkingManagementReport\\CrystalReports\\Report20 - Copy.rpt"
@@ -11287,26 +11164,6 @@
             "TargetName" = "8:Report207.rpt"
             "Tag" = "8:"
             "Folder" = "8:_D4AB07EE31AE4501B112811092D4C1F3"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9F8A2C56E9A14284A86C447EF255C5E1"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\ds_fortune.xss"
-            "TargetName" = "8:ds_fortune.xss"
-            "Tag" = "8:"
-            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -13634,52 +13491,12 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D2557EE8FCE242639A389584CBA497D6"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\ds_fortune.xsc"
-            "TargetName" = "8:ds_fortune.xsc"
-            "Tag" = "8:"
-            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D2A18486EC7B45E98D453E6ED1BA968F"
             {
             "SourcePath" = "8:..\\ParkingManagementReport\\CrystalReports\\Report79.rpt"
             "TargetName" = "8:Report79.rpt"
             "Tag" = "8:"
             "Folder" = "8:_D4AB07EE31AE4501B112811092D4C1F3"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D2C0B7B1FC27493AB9EEE476B3EA58D4"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\dbForReport2.xss"
-            "TargetName" = "8:dbForReport2.xss"
-            "Tag" = "8:"
-            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -14565,26 +14382,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E5A908270ED140D79A7CAB033C22C3D3"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\ds_fortune.Designer.cs"
-            "TargetName" = "8:ds_fortune.Designer.cs"
-            "Tag" = "8:"
-            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E5C316E5DB174DB9A23FC30EB7D825A8"
             {
             "SourcePath" = "8:..\\ParkingManagementReport\\CrystalReports\\Report49_1.rpt"
@@ -15394,37 +15191,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F5537271ABC86F78D7CFD7514C4F0271"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:BarcodeLib, Version=1.0.0.15, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_F5537271ABC86F78D7CFD7514C4F0271"
-                    {
-                    "Name" = "8:BarcodeLib.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:BarcodeLib.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_F89960CF56BC4C9CA44E5DDB11F135A0"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F554663108594165B3E0D04735D359E6"

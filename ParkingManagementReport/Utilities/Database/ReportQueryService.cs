@@ -10368,8 +10368,8 @@ WHERE 1 = 1 ";
                 sql += " ,recordin.memo";
             }
 
-            //if (Configs.UseReceiptFor1Out) //Mac 2018/11/14
-            //    sql += ", recordout.receipt";
+            if (Configs.UseReceiptFor1Out) //Mac 2018/11/14
+                sql += ", recordout.receipt";
 
             if (Configs.UseMemberLicensePlate) //Mac 2018/09/03
                 sql += " from recordin left join recordout on recordin.no = recordout.no left join member on member.license like concat('%',recordin.license,'%')"; //Mac 2025/03/14
@@ -10429,8 +10429,8 @@ WHERE 1 = 1 ";
                 if (Configs.Reports.UseReport13_3)
                     sql += " ,recordoutvoidpay.price";
 
-                //if (Configs.UseReceiptFor1Out)
-                //    sql += ", recordout.receipt";
+                if (Configs.UseReceiptFor1Out)
+                    sql += ", recordout.receipt";
 
                 if (Configs.UseMemberLicensePlate)
                     sql += " from recordin left join recordout on recordin.no = recordout.no left join member on member.license like concat('%',recordin.license,'%')";

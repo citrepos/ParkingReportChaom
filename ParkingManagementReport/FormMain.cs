@@ -5384,6 +5384,10 @@ namespace ParkingManagementReport
             ResultGridView.Columns[4].Width = 120;
             ResultGridView.Columns[5].Width = 160;
             ResultGridView.Columns[6].Width = 120;
+            if (ResultGridView.Columns.Count <= 17)
+            {
+                ResultGridView.Columns[16].Visible = false;
+            }
 
             if (Configs.UseMemo)
             {
@@ -5398,10 +5402,8 @@ namespace ParkingManagementReport
                 ResultGridView.Columns[14].HeaderText = "ภาษี 7%";
                 ResultGridView.Columns[15].HeaderText = "รายได้";
                 ResultGridView.Columns[16].HeaderText = "E-Stamp";
-                //if (ResultGridView.Columns.Count <= 17)
-                //{
-                //    ResultGridView.Columns.Add("receipt", "receipt");
-                //}
+                ResultGridView.Columns[17].Visible = false;
+
                 //else
                 //{
                 //    ResultGridView.Columns[17].HeaderText = "receipt";
@@ -5425,8 +5427,11 @@ namespace ParkingManagementReport
             for (int i = 0; i < intNo; i++)
             {
                 int intID = Convert.ToInt32(ResultGridView[0, i].Value);
+                object receiptValue = ResultGridView[ResultGridView.ColumnCount - 1, i].Value;
+                string strReceipt = receiptValue != null ? receiptValue.ToString().Trim() : "";
                 DateTime dto = DateTime.Parse(ResultGridView[6, i].Value.ToString());
-                if (intID > 0)
+
+                if (intID > 0 && !string.IsNullOrEmpty(strReceipt))
                 {
                     //Mac 2018/05/13
                     string fontSlip13 = "";
@@ -5457,24 +5462,28 @@ namespace ParkingManagementReport
                         }
                     }
                 }
-
-                try
+                else
                 {
-                    string x = ResultGridView[2, i].Value.ToString();
-                    int value;
-                    if (int.TryParse(x, out value))
+                    ResultGridView[0, i].Value = 0;
+                }
+
+                    try
                     {
-                        intID = value;
-                        ResultGridView[2, i].Value = AppGlobalVariables.CarTypesById[intID];
-                    }
-                    else
-                        ResultGridView[2, i].Value = x;
+                        string x = ResultGridView[2, i].Value.ToString();
+                        int value;
+                        if (int.TryParse(x, out value))
+                        {
+                            intID = value;
+                            ResultGridView[2, i].Value = AppGlobalVariables.CarTypesById[intID];
+                        }
+                        else
+                            ResultGridView[2, i].Value = x;
 
-                }
-                catch
-                {
-                    ResultGridView[2, i].Value = "";
-                }
+                    }
+                    catch
+                    {
+                        ResultGridView[2, i].Value = "";
+                    }
 
 
                 try
