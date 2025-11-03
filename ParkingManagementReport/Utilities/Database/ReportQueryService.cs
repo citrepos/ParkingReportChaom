@@ -230,7 +230,7 @@ namespace ParkingManagementReport.Utilities.Database
                     if (user != Constants.TextBased.All)
                     {
                         var userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-                        sql += " AND (recordin.userin = " + userId + " OR recordout.userout = " + userId + ")";
+                        sql += " AND (recordin.userin = " + userId + " OR COALESCE(recordout.usergateout, recordout.userout) = " + userId + " )";
                     }
                     if (promotionName != Constants.TextBased.All)
                         sql += " AND recordout.proid =" + promotionId;
@@ -524,7 +524,7 @@ namespace ParkingManagementReport.Utilities.Database
 
                     if (user != Constants.TextBased.All)
                     {
-                        sql += " AND recordout.userout =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        sql += " AND COALESCE(recordout.usergateout, recordout.userout) =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
                     }
                     if (Configs.Reports.ReportSearchMemberGroup)
                     {
@@ -836,6 +836,10 @@ namespace ParkingManagementReport.Utilities.Database
                         sql += " FROM recordin LEFT JOIN recordout ON recordin.no = recordout.no";
                         sql += " LEFT JOIN member ON member.license LIKE CONCAT('%', recordin.license, '%')";
                         sql += " WHERE COALESCE(recordout.dategateout, recordout.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+                        if (user != Constants.TextBased.All)
+                        {
+                            sql += " AND COALESCE(recordout.usergateout, recordout.userout) =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        }
                         sql += " GROUP BY recordout.no ORDER BY recordout.no;";
                     }
                     else
@@ -936,7 +940,7 @@ namespace ParkingManagementReport.Utilities.Database
                         sql += " and (t4.name_on_card like '%" + nameOnCard + "%' or t5.name_on_card like '%" + nameOnCard + "%')";
 
                     if (user != Constants.TextBased.All)
-                        sql += " AND t2.userout =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        sql += " AND t1.userin = '" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key + "' OR COALESCE(t2.usergateout, t2.userout) =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
 
                     if (Configs.Reports.ReportSearchMemberGroup) //Mac 2021/03/11
                     {
@@ -9353,7 +9357,7 @@ WHERE 1 = 1 ";
                     sql += "AND t1.price > 0";
 
                     if (user != Constants.TextBased.All)
-                        sql += " AND t1.userout = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        sql += " AND COALESCE(t1.usergateout, t1.userout) = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
                     if (promotionName != Constants.TextBased.All)
                         sql += " AND t1.proid =" + promotionId;
                     if (!String.IsNullOrEmpty(licensePlate))

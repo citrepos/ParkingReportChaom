@@ -7460,7 +7460,7 @@ namespace ParkingManagementReport
                         .Where(r => r["เวลาเข้า"] != DBNull.Value &&
                                     Convert.ToDateTime(r["เวลาเข้า"]) >= startDate &&
                                     Convert.ToDateTime(r["เวลาเข้า"]) <= endDate)
-                        .GroupBy(r => r.Field<string>("เจ้าหน้าที่ขาเข้า"));
+                        .GroupBy(r => r.Field<string>("เจ้าหน้าที่ขาออก"));
 
                     foreach (var g in groups)
                     {
