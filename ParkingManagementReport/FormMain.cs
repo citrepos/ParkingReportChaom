@@ -8734,7 +8734,6 @@ namespace ParkingManagementReport
 
                         PrimaryCrystalReportViewer.ReportSource = rpt;
                         PrimaryCrystalReportViewer.Refresh();
-
                     }
                     catch (Exception) { }
 
@@ -8760,6 +8759,10 @@ namespace ParkingManagementReport
                             {
                                 rpt.Load(path + "\\CrystalReports\\Report21_2.rpt");
                             }
+                            else if (Configs.Reports.UseReportThanapoom)
+                            {
+                                rpt.Load(path + "\\CrystalReports\\Report21_1_tnpt.rpt");
+                            }
                             else if (Configs.Reports.UseReport21_1)
                             {
                                 if (Configs.Reports.Report21_1_Switch)
@@ -8774,10 +8777,6 @@ namespace ParkingManagementReport
                                         rpt.Load(path + "\\CrystalReports\\Report21_1.rpt");
                                         Configs.IsSwitch = true;
                                     }
-                                }
-                                else if (Configs.Reports.UseReportThanapoom)
-                                {
-                                    rpt.Load(path + "\\CrystalReports\\Report21_1_tnpt.rpt");
                                 }
                                 else
                                     rpt.Load(path + "\\CrystalReports\\Report21_1.rpt");
