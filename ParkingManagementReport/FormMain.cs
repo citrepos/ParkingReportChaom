@@ -3913,7 +3913,6 @@ namespace ParkingManagementReport
                     return;
 
                 case 21:
-
                     string strdst2 = dst.Year.ToString() + "-" + dst.ToString("MM'-'dd");
                     string strdfn2 = dfn.Year.ToString() + "-" + dfn.ToString("MM'-'dd");
                     string ts = timeStart.Value.ToLongTimeString();
@@ -3923,19 +3922,19 @@ namespace ParkingManagementReport
                     double vat;
                     double beforeVat;
 
-                    if (comPromotion.Text == null || comPromotion.Text == "ALL")
+                    if (comPromotion.Text == null)
                     {
                         Cursor = Cursors.Default; //Mac 2018/07/04
                         return;
                     }
-                    int proid = dicProNameInt[comPromotion.Text];
+                    //int proid = dicProNameInt[comPromotion.Text];
                     //sql = "select DISTINCT DATE_FORMAT(dateout,'%Y-%m-%d')"
                     //+ " FROM recordin JOIN recordout ON recordin.no = recordout.no  WHERE dateout"
                     //+ " BETWEEN '" + strdst + "' AND '" + strdfn + "' AND recordout.proid = " + proid;
 
 
                     sql = " select * from "
-                     + "( select adddate('1970-01-01',t4.i*10000 + t3.i*1000 + t2.i*100 + t1.i*10 + t0.i) selected_date from "
+                     + " (select adddate('1970-01-01',t4.i*10000 + t3.i*1000 + t2.i*100 + t1.i*10 + t0.i) selected_date from "
                      + " (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t0, "
                      + " (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t1, "
                      + " (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2, "
@@ -3943,14 +3942,8 @@ namespace ParkingManagementReport
                      + " (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t4) v "
                      + " where selected_date between DATE_SUB('" + strdst + "',INTERVAL 1 DAY) and '" + strdfn + "'";
 
-
                     DataTable dtmp = pm.LoadData(sql);
                     int nRow = dtmp.Rows.Count;
-                    //if (ts != "0:00:00") //Mac 2016/04/18
-                    //{
-                    //    nRow--;
-                    //}
-
 
                     if (dtmp != null && dtmp.Rows.Count > 0)
                     {
@@ -3971,20 +3964,14 @@ namespace ParkingManagementReport
                         //////////////////
 
 
-                        //for (int k = 0; k < nRow - 1; k++)
                         for (int k = 0; k < nRow; k++) //Mac 2016/04/18
                         {
                             string startDate = dtmp.Rows[k].ItemArray[0].ToString() + " " + ts;
                             sql = "SELECT DATE_ADD(DATE_FORMAT('" + startDate + "','%Y-%m-%d %H:%i:%s'),INTERVAL 86399 SECOND)";
-                            //if (k == nRow - 2) sql = "SELECT DATE_ADD(DATE_FORMAT('" + dtmp.Rows[k].ItemArray[0].ToString() + " " + tf + "','%Y-%m-%d %H:%i:%s'),INTERVAL 1 DAY)"; //Mac 2016/04/18
                             DataTable dd = pm.LoadData(sql);
                             Console.WriteLine(sql + ";");
 
-                            /*if (comMemGroupMonth.SelectedIndex > 0) //Mac 2016/04/18
-                            {*/
-                            //sql = "select id from promotion where groupro = " + dicMemGroupMonthInt[comMemGroupMonth.Text];
                             sql = "select id from promotion";
-                            //Mac 2019/05/28
                             if (comMemGroupMonth.SelectedIndex > 0)
                                 sql += " where groupro = " + dicMemGroupMonthInt[comMemGroupMonth.Text];
                             else if (comPromotion.Text != "ALL")
@@ -4002,7 +3989,8 @@ namespace ParkingManagementReport
                                     sql = "select truncate(TIMESTAMPDIFF(minute,recordin.datein,recordout.dateout),0) as tdf, " //Mac 2017/02/07
                                                                                                                                 //+ " recordout.price, recordin.datein, recordout.dateout FROM recordin JOIN recordout ON recordin.no = recordout.no "
                                     + " recordout.price, recordin.datein, recordout.dateout, recordin.cartype FROM recordin JOIN recordout ON recordin.no = recordout.no " //Mac 2019/05/28
-                                    + " WHERE dateout  BETWEEN '" + startDate + "' AND '" + dd.Rows[0].ItemArray[0].ToString() + "' AND recordout.proid = " + dts.Rows[x].ItemArray[0].ToString();// Proid
+                                    + " WHERE dateout  BETWEEN '" + startDate + "' AND '" + dd.Rows[0].ItemArray[0].ToString()
+                                    + "' AND recordout.proid = " + dts.Rows[x].ItemArray[0].ToString(); // Proid
 
                                     Console.WriteLine(sql + ";");
                                     //Console.Write("#" + startDate + "-" + dd.Rows[0].ItemArray[0].ToString() + " ");
@@ -4457,40 +4445,35 @@ namespace ParkingManagementReport
                                         MemGrouptotalCredit += totalCredit;
                                         MemGrouptotalPrice += totalPrice;
                                         MemGroupnCar += nCar;
+
+                                        dr = Map.NewRow();
+                                        dr["datein"] = DateTime.Parse(startDate).ToString("dd/MM/yyyy HH:mm:ss");
+                                        dr["dateout"] = DateTime.Parse(dd.Rows[0].ItemArray[0].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                                        dr["PriceList"] = MemGrouptotalCredit;
+                                        try
+                                        {
+                                            vat = (double.Parse(MemGrouptotalCredit.ToString()) * 7) / 107;
+                                            vat = Math.Round(vat, 2);
+                                            beforeVat = double.Parse(MemGrouptotalCredit.ToString()) - vat;
+                                            dr["PayPrice"] = beforeVat;
+                                            dr["TimeDiff"] = vat;
+
+                                            //dr["Proname"] = comPromotion.Text.ToString();
+                                            //dr["proid"] = dicProNameInt[comPromotion.Text].ToString();
+                                            dr["Proname"] = dicProNameStr[Convert.ToInt16(dts.Rows[x].ItemArray[0])];
+                                            dr["proid"] = dts.Rows[x].ItemArray[0].ToString();
+                                            dr["ProDiscount"] = MemGrouptotalPrice;
+                                            dr["ParkTime"] = MemGroupnCar;
+                                            Map.Rows.Add(dr);
+                                        }
+                                        catch { }
+                                      
                                     }
                                     catch (Exception) { }//End Try Catch
                                 }
                             }
-                            dr = Map.NewRow();
-                            /*dr["datein"] = startDate;
-                            dr["dateout"] = dd.Rows[0].ItemArray[0].ToString();*/
-                            //Mac 2018/11/24
-                            dr["datein"] = DateTime.Parse(startDate).ToString("dd/MM/yyyy HH:mm:ss");
-                            dr["dateout"] = DateTime.Parse(dd.Rows[0].ItemArray[0].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
-                            dr["PriceList"] = MemGrouptotalCredit;
-                            try //Mac 2016/04/26
-                            {
-                                vat = (double.Parse(MemGrouptotalCredit.ToString()) * 7) / 107;
-                                vat = Math.Round(vat, 2);
-                                beforeVat = double.Parse(MemGrouptotalCredit.ToString()) - vat;
-                                dr["PayPrice"] = beforeVat;
-                                dr["TimeDiff"] = vat;
-                            }
-                            catch
-                            {
-                            }
-                            dr["ProDiscount"] = MemGrouptotalPrice;
-                            dr["ParkTime"] = MemGroupnCar;
-                            dr["Proname"] = comPromotion.Text.ToString();
-                            dr["proid"] = dicProNameInt[comPromotion.Text].ToString();
+                        }
 
-                            Map.Rows.Add(dr);
-
-
-
-
-                        }//End for k
-                        //     dgvResult.DataSource = Map;
                         tabControl1.SelectTab(1);
                         //////////////////////////////////////////////////////
                         string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -4560,7 +4543,6 @@ namespace ParkingManagementReport
                                     nTax = "";
                                 }
                             }
-
                         }
                         if (comMemGroupMonth.SelectedIndex > 0) //Mac 2016/04/02
                         {
@@ -4588,9 +4570,6 @@ namespace ParkingManagementReport
                         crvResult.ReportSource = rpt;
                         crvResult.Refresh();
                     }//End if
-
-
-
 
                     Cursor = Cursors.Default;
                     return;
@@ -14324,8 +14303,8 @@ namespace ParkingManagementReport
                         dgvResult.DataSource = ConvertTableType(dt);
                         dgvResult.Columns[0].HeaderText = "E-Stamp";
                         dgvResult.Columns[1].HeaderText = "ยอดรวม";
-                        dgvResult.Columns[0].Width = 160;
-                        dgvResult.Columns[1].Width = 100;
+                        dgvResult.Columns[0].Width = 1060;
+                        dgvResult.Columns[1].Width = 120;
                         int intNo = dgvResult.Rows.Count - 1;
                         int intSumEStamp = 0;
 
@@ -14340,7 +14319,7 @@ namespace ParkingManagementReport
                                     intSumEStamp += Convert.ToInt32(dgvResult[1, i].Value);
                                 }
                                 else
-                                    dgvResult[0, i].Value = "";
+                                    dgvResult[0, i].Value = "ไม่มีโปรโมชัน (E-Stamp)";
                             }
                             catch (Exception)
                             {
@@ -22216,8 +22195,8 @@ recordin.datein, recordin.userin
             //else if (intSelectedIndex == 20 || intSelectedIndex == 21)
             else if (intSelectedIndex == 21) //Mac 2022/09/30
             {
-                if (comPromotion.SelectedIndex == 0)
-                    comPromotion.SelectedIndex = 1;
+                //if (comPromotion.SelectedIndex == 0)
+                //    comPromotion.SelectedIndex = 1;
             }
             else
                 comPromotion.SelectedIndex = 0;
