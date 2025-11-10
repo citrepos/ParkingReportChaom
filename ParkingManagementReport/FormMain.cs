@@ -26,9 +26,6 @@ namespace ParkingManagementReport
         MifareReader mfReader;
         string startDateTime, endDateTime;
         int selectedReportId;
-        int intCase;
-        int intCase162 = 0;
-        int SumCalQuota109 = 0;
         int FlatRateM = 0;
         int FlatRateP = 0;
         int FlatRateX = 0;
@@ -654,7 +651,6 @@ namespace ParkingManagementReport
             if (strError != "")
                 MessageBox.Show(strError, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             #endregion
-
         }
         #endregion HARDWARES_END
 
@@ -1250,38 +1246,15 @@ namespace ParkingManagementReport
                     switch (selectedReportId)
                     {
                         case 0:
-                            if (Configs.Reports.ReportNoRunning) //Mac 2018/01/05
+                            if (Configs.Reports.ReportNoRunning)
                             {
-                                if (selectedReportId == 5 && Configs.Reports.UseReport6) //Mac 2019/05/03
+                                if (selectedReportId == 5) 
                                 {
-                                    if (Configs.Reports.UseReport1_6) //Mac 2019/05/16
-                                        rpt.Load(path + "\\CrystalReports\\Report6plus1_6NoRunning.rpt");
-                                    else
-                                        rpt.Load(path + "\\CrystalReports\\Report6NoRunning.rpt");
+                                    rpt.Load(path + "\\CrystalReports\\Report6NoRunning.rpt");
                                 }
                                 else
                                 {
-                                    if (Configs.IsVillage && Configs.Use2Camera) rpt.Load(path + "\\CrystalReports\\Report1_1NoRunning.rpt");
-                                    else if (((Configs.IsVillage) || (Configs.VisitorFillDetail)) && (selectedReportId == 0 || selectedReportId == 90)) rpt.Load(path + "\\CrystalReports\\Report1_2NoRunning.rpt"); //Mac 2020/10/26
-                                    else
-                                    {
-                                        if (Configs.Reports.UseReport1_3)
-                                            rpt.Load(path + "\\CrystalReports\\Report1_3NoRunning.rpt");
-                                        else if (Configs.Reports.UseReport1_4) //Mac 2018/02/21
-                                            rpt.Load(path + "\\CrystalReports\\Report1_4NoRunning.rpt");
-                                        else if (Configs.Reports.UseReport1_5) //Mac 2018/02/28
-                                            rpt.Load(path + "\\CrystalReports\\Report1_5NoRunning.rpt");
-                                        else if (Configs.Reports.UseReport1logo) //Mac 2018/05/07
-                                            rpt.Load(path + "\\CrystalReports\\Report1logoNoRunning.rpt");
-                                        else if (Configs.Reports.UseReport1_6) //Mac 2018/11/12
-                                            rpt.Load(path + "\\CrystalReports\\Report1_6NoRunning.rpt");
-                                        else if (Configs.Reports.UseReport1_7) //Mac 2019/07/26
-                                            rpt.Load(path + "\\CrystalReports\\Report1_7NoRunning.rpt");
-                                        else if (Configs.Reports.UseReport1_8) //Mac 2021/12/17
-                                            rpt.Load(path + "\\CrystalReports\\Report1_8NoRunning.rpt");
-                                        else
-                                            rpt.Load(path + "\\CrystalReports\\Report1NoRunning.rpt");
-                                    }
+                                    rpt.Load(path + "\\CrystalReports\\Report1_NoRunning.rpt");
                                 }
                             }
                             else
@@ -3259,34 +3232,7 @@ namespace ParkingManagementReport
                             PrimaryCrystalReportViewer.ReportSource = rpt;
                             PrimaryCrystalReportViewer.Refresh();
                             break;
-                        case 89:
-                            ResultGridView.Columns[0].Visible = false;
-
-                            if (intCase == 1)
-                            {
-                                rpt.Load(path + "\\CrystalReports\\Report90.rpt");
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'บัตรสมาชิก - ช่องจอด'";
-                            }
-                            else if (intCase == 2)
-                            {
-                                rpt.Load(path + "\\CrystalReports\\Report90_1.rpt");
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'บัตรสมาชิก - เลขที่บัตร'";
-                            }
-                            else if (intCase == 3)
-                            {
-                                rpt.Load(path + "\\CrystalReports\\Report90_2.rpt");
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'บัตรสมาชิก - เลขห้องชุด'";
-                            }
-                            else if (intCase == 4)
-                            {
-                                rpt.Load(path + "\\CrystalReports\\Report90_3.rpt");
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'บัตรสมาชิก - อายัดบัตร'";
-                            }
-                            rpt.SetDataSource(dt);
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
+                       
                         case 90: //Mac 2020/10/26
                             goto case 0;
                         case 91: //Mac 2020/10/26
