@@ -3258,8 +3258,7 @@ namespace ParkingManagementReport
                     }
                     else if (comPromotion.SelectedIndex == 0) //Mac 2022/09/30
                     {
-                        //sql += " recordout.proid > 0 and recordout.proid < 9999 order by recordout.proid, recordin.datein";
-                        sql += " recordout.proid > 0 and recordout.proid < 9999 order by recordout.proid, recordout.dateout"; //Mac 2023/08/21
+                        sql += " recordout.proid > 0 order by recordout.proid, recordout.dateout"; //Mac 2023/08/21
                     }
                     else
                     {
@@ -3281,7 +3280,8 @@ namespace ParkingManagementReport
                         Map.Columns.Add(new DataColumn("datein", typeof(string)));
                         Map.Columns.Add(new DataColumn("dateout", typeof(string)));
                         Map.Columns.Add(new DataColumn("ParkTime", typeof(string)));
-                        Map.Columns.Add(new DataColumn("PriceList", typeof(string)));// Credit
+                        Map.Columns.Add(new DataColumn("PriceList", typeof(string)));
+                        // Credit
                         // With Price
                         Map.Columns.Add(new DataColumn("printno", typeof(string)));
                         Map.Columns.Add(new DataColumn("Proname", typeof(string)));
