@@ -7,6 +7,10 @@ namespace ParkingManagementReport
 
     public partial class dbForReport
     {
+        partial class PromotionStatDataTable
+        {
+        }
+
         partial class reportEstampDataTable
         {
         }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using CrystalDecisions.Shared.Json;
 using ParkingManagementReport.Common;
 using ParkingManagementReport.Utilities.Formatters;
 
@@ -210,59 +211,73 @@ namespace ParkingManagementReport.Utilities.Database
                     if (Configs.Reports.UseReportImpact)
                     {
 
-                        sql = " SELECT recordout.no AS 'ลำดับ',";
-                    sql += " CASE WHEN recordin.cartype=200 THEN IFNULL((SELECT typename FROM cartype WHERE typeid=member.typeid),'Member')";
-                    sql += " ELSE (SELECT typename FROM cartype WHERE typeid=recordin.cartype) END AS 'ประเภท',";
-                    sql += " CASE WHEN recordin.license='NO' THEN recordin.id WHEN recordin.license='' THEN recordin.id ELSE recordin.license END AS 'ทะเบียน',";
-                    sql += " recordin.qrcode_park AS 'หมายเลขบัตร', DATE_FORMAT(recordin.datein,'%d/%m/%Y %H:%i:%s') AS 'เวลาเข้า', ";
-                    sql += " (SELECT name FROM user WHERE id = recordin.userin) AS 'เจ้าหน้าที่ขาเข้า', DATE_FORMAT(COALESCE(recordout.dategateout, recordout.dateout), '%d/%m/%Y %H:%i:%s') AS 'เวลาออก',";
-                    sql += " (SELECT name FROM user WHERE id = COALESCE(recordout.usergateout, recordout.userout)) as เจ้าหน้าที่ขาออก, ";
-                    sql += " CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC'";
-                    sql += " ELSE 'เงินสด' END AS ช่องทางการชำระเงิน,";
-                    sql += " recordout.price as รายได้, recordout.discount as ส่วนลด";
-                    sql += " FROM recordin LEFT JOIN recordout ON recordin.no = recordout.no";
-                    sql += " LEFT JOIN member ON member.license LIKE CONCAT('%',recordin.license,'%')";
-                    sql += " LEFT JOIN cardmf t1 ON recordin.id = t1.name LEFT JOIN cardpx t2 ON recordin.id = t2.name";
-                    sql += " LEFT JOIN (SELECT MAX(r1.no) as max_no, r1.no_recordin, r1.rabbit_id, r1.status, r2.qr";
-                    sql += " FROM rabbit_post r1 LEFT JOIN rabbit_get r2 ON r1.rabbit_id = r2.rabbit_id WHERE r1.status = 'Y' GROUP BY r1.no_recordin ) t3 ON recordout.no = t3.no_recordin";
-                    sql += " WHERE COALESCE(recordout.dategateout, recordout.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+                        sql = " SELECT ro.no , ri.qrcode_park , ri.datein , ro.dateout , ro.dategateout , ri.license , ro.price , ro.discount , ri.no_old ,";
+                        sql += " CASE WHEN ri.cartype=200 THEN IFNULL((SELECT typename FROM cartype WHERE typeid=member.typeid),'Member') ";
+                        sql += " ELSE (SELECT typename FROM cartype WHERE typeid=ri.cartype) END AS 'ประเภท',";
+                        sql += " CASE WHEN ri.license='NO' THEN ri.id WHEN ri.license='' THEN ri.id ELSE ri.license END AS 'ทะเบียน',";
+                        sql += " (SELECT name FROM user WHERE id = ri.userin) AS 'userin', ";
+                        sql += " (SELECT name FROM user WHERE id = ro.usergateout) AS 'usergateout',";
+                        sql += " (SELECT name FROM user WHERE id = ro.userout) AS 'userout',";
+                        sql += " (SELECT name FROM user WHERE id = ro.userpays) AS 'userpays',";
+                        sql += " CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ";
+                        sql += " ELSE 'เงินสด' END AS ช่องทางการชำระเงิน ";
+                        sql += " FROM recordout ro";
+                        sql += " JOIN recordin ri ON ro.no = ri.no";
+                        sql += " LEFT JOIN member ON member.license LIKE CONCAT('%',ri.license,'%')";
+                        sql += " LEFT JOIN cardmf t1 ON ri.id = t1.name LEFT JOIN cardpx t2 ON ri.id = t2.name";
+                        sql += " LEFT JOIN (SELECT MAX(r1.no) as max_no, r1.no_recordin, r1.rabbit_id, r1.status, r2.qr";
+                        sql += " FROM rabbit_post r1 LEFT JOIN rabbit_get r2 ON r1.rabbit_id = r2.rabbit_id WHERE r1.status = 'Y' GROUP BY r1.no_recordin ) t3 ON ro.no = t3.no_recordin";
 
-                    if (user != Constants.TextBased.All)
-                    {
-                        var userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-                        sql += " AND (recordin.userin = " + userId + " OR COALESCE(recordout.usergateout, recordout.userout) = " + userId + " )";
-                    }
-                    if (promotionName != Constants.TextBased.All)
-                        sql += " AND recordout.proid =" + promotionId;
+                        sql += " WHERE ( (ro.dategateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "' OR ro.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "') )";
+
+                        if (user != Constants.TextBased.All)
+                        {
+                            var userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                            sql += " AND (ri.userin = " + userId + " OR COALESCE(ro.userpays, ro.usergateout, ro.userout) = " + userId + ")";
+                        }
+                        if (promotionName != Constants.TextBased.All)   
+                        sql += " AND ro.proid =" + promotionId;
                     if (!String.IsNullOrEmpty(cardId))
-                        sql += " AND recordin.qrcode_park = " + cardId;
+                        sql += " AND ri.qrcode_park = " + cardId;
 
-                    if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
+                        if (paymentStatus != Constants.TextBased.All)
+                        {
+                            if (paymentStatus == Constants.TextBased.PaymentStatusPaid)
+                            {
+                                sql += " and ro.price > 0";
+                            }
+                            else if (paymentStatus == Constants.TextBased.PaymentStatusUnPaid)
+                            {
+                                sql += " and ro.price = 0";
+                            }
+                        }
+
+                        if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
                     {
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel = 'PromptPay'";
                         else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
                         else if (Configs.UsePaymentRabbit)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
                     }
                     else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
                     {
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel is null AND t1.pay_type = 'C'";
                         else if (Configs.UsePaymentRabbit)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                         else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                     }
                     else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                     {
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
                         else if (Configs.UsePaymentRabbit)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
                         else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
                     }
                     else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
                     {
@@ -274,9 +289,9 @@ namespace ParkingManagementReport.Utilities.Database
                             sql += " and member.memgroupid = " + AppGlobalVariables.MemberGroupsToId[memberType];
 
                         if (carType == Constants.TextBased.Visitor)
-                            sql += " AND recordin.cartype != 200";
+                            sql += " AND ri.cartype != 200";
                         if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                            sql += " AND recordin.cartype =" + carTypeId;
+                            sql += " AND ri.cartype =" + carTypeId;
                     }
                     else if (Configs.Member2Cartype) //Mac 2016/05/03
                     {
@@ -285,20 +300,20 @@ namespace ParkingManagementReport.Utilities.Database
                             {
                                 if (carType != Constants.TextBased.All)
                                 {
-                                    sql += " AND (recordin.cartype =" + carTypeId + " or member.typeid =" + carTypeId + ")";
+                                    sql += " AND (ri.cartype =" + carTypeId + " or member.typeid =" + carTypeId + ")";
                                 }
                             }
                             else if (memberTypeSelectedIndex == 1)
                             {
-                                sql += " AND recordin.cartype != 200";
+                                sql += " AND ri.cartype != 200";
                                 if (carType != Constants.TextBased.All)
                                 {
-                                    sql += " AND recordin.cartype =" + carTypeId;
+                                    sql += " AND ri.cartype =" + carTypeId;
                                 }
                             }
                             else if (memberTypeSelectedIndex == 2)
                             {
-                                sql += " AND recordin.cartype = 200";
+                                sql += " AND ri.cartype = 200";
                                 if (carType != Constants.TextBased.All)
                                 {
                                     sql += " AND member.typeid =" + carTypeId;
@@ -317,9 +332,9 @@ namespace ParkingManagementReport.Utilities.Database
                     else
                     {
                         if (carType == Constants.TextBased.Visitor)
-                            sql += " AND recordin.cartype != 200";
+                            sql += " AND ri.cartype != 200";
                         if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                            sql += " AND recordin.cartype =" + carTypeId;
+                            sql += " AND ri.cartype =" + carTypeId;
                         if (carType == Constants.TextBased.All) //Mac 2015/02/10
                         {
                             if (memberType != Constants.TextBased.All)
@@ -327,9 +342,9 @@ namespace ParkingManagementReport.Utilities.Database
                         }
                     }
                     if (licensePlate != "")
-                        sql += " AND recordin.license LIKE '%" + licensePlate + "%'";
+                        sql += " AND ri.license LIKE '%" + licensePlate + "%'";
                     if (cardId != "")
-                        sql += " AND recordin.id = " + cardId;
+                        sql += " AND ri.id = " + cardId;
                     if (selectedReportId == 5)
                         sql += " AND recordout.losscard > 0 ";
                     if (Configs.UseSettingNewMember)
@@ -343,7 +358,7 @@ namespace ParkingManagementReport.Utilities.Database
                             sql += " and member.memgrouppriceid_month = " + memberGroupMonthId;
                     }
 
-                    sql += " GROUP BY recordout.no ORDER BY recordout.no;";
+                    sql += " GROUP BY ro.no ORDER BY ro.no;";
             }
                     else
                     {
@@ -718,82 +733,178 @@ namespace ParkingManagementReport.Utilities.Database
                         + " DROP TABLE IF EXISTS perHour; ";
                     break;
                 case 25:
-                    sql = "DROP PROCEDURE IF EXISTS dowhile2; "
-                    + " CREATE PROCEDURE dowhile2(IN date_select DATETIME, IN date_finish DATETIME) "
-                    + " BEGIN "
-                    + "   DECLARE num INT DEFAULT 0; "
-                    + "   CREATE TABLE perHour (hours varchar(30),inVisitor INT(1),inMember INT(1), outVisitor INT(1), outMember INT(1)); "
-                    + "   WHILE num < 24 DO "
-                    + "     INSERT INTO perHour VALUES ( CONCAT(DATE_FORMAT(MAKETIME(num,0,0),'%H:%i'),' - ',DATE_FORMAT(MAKETIME(num,59,0),'%H:%i')), ";
-                    if (Configs.UseSettingNewMember && memberGroupMonth != Constants.TextBased.All) //Mac 2021/08/03
+                    sql = "DROP PROCEDURE IF EXISTS dowhile2; \n"
+                        + "DELIMITER // \n"
+                        + "CREATE PROCEDURE dowhile2(IN date_select DATETIME, IN date_finish DATETIME) \n"
+                        + "BEGIN \n"
+                        + "   DECLARE num INT DEFAULT 0; \n"
+                        + "   DROP TABLE IF EXISTS perHour; \n"
+                        + "   CREATE TABLE perHour ( \n"
+                        + "       hours VARCHAR(30), \n"
+                        + "       inVisitor INT, \n"
+                        + "       inMember INT, \n"
+                        + "       outVisitor INT, \n"
+                        + "       outMember INT \n"
+                        + "   ); \n"
+                        + "   WHILE num < 24 DO \n"
+                        + "       INSERT INTO perHour VALUES ( \n"
+                        + "           CONCAT(DATE_FORMAT(MAKETIME(num, 0, 0), '%H:%i'), ' - ', DATE_FORMAT(MAKETIME(num, 59, 0), '%H:%i')), \n";
+
+                    if (Configs.UseSettingNewMember && memberGroupMonth != Constants.TextBased.All) // Mac 2021/08/03
                     {
-                        sql += " (SELECT COUNT(t1.no)FROM recordin t1 left join member t2 on t1.id = t2.cardid WHERE HOUR(t1.datein) = num AND t1.datein BETWEEN date_select AND date_finish AND t1.cartype < 200";
-                        sql += " and t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += "), ";
-                        sql += " (SELECT COUNT(t1.no)FROM recordin t1 left join member t2 on t1.id = t2.cardid WHERE HOUR(t1.datein) = num AND t1.datein BETWEEN date_select AND date_finish AND t1.cartype = 200";
-                        sql += " and t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += "), ";
-                        sql += " (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no left join member t3 on t2.id = t3.cardid WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype < 200";
-                        sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += "), ";
-                        sql += " (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no left join member t3 on t2.id = t3.cardid WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype = 200";
-                        sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += ")); ";
+                        sql += "           (SELECT COUNT(t1.no) FROM recordin t1 \n"
+                             + "            LEFT JOIN member t2 ON t1.id = t2.cardid \n"
+                             + "            WHERE HOUR(t1.datein) = num \n"
+                             + "            AND t1.datein BETWEEN date_select AND date_finish \n"
+                             + "            AND t1.cartype < 200 \n"
+                             + "            AND t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth] + "), \n"
+
+                             + "           (SELECT COUNT(t1.no) FROM recordin t1 \n"
+                             + "            LEFT JOIN member t2 ON t1.id = t2.cardid \n"
+                             + "            WHERE HOUR(t1.datein) = num \n"
+                             + "            AND t1.datein BETWEEN date_select AND date_finish \n"
+                             + "            AND t1.cartype = 200 \n"
+                             + "            AND t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth] + "), \n"
+
+                             + "           (SELECT COUNT(t1.no) FROM recordout t1 \n"
+                             + "            LEFT JOIN recordin t2 ON t1.no = t2.no \n"
+                             + "            LEFT JOIN member t3 ON t2.id = t3.cardid \n"
+                             + "            WHERE HOUR(t1.dateout) = num \n"
+                             + "            AND t1.dateout BETWEEN date_select AND date_finish \n"
+                             + "            AND t2.cartype < 200 \n"
+                             + "            AND t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth] + "), \n"
+
+                             + "           (SELECT COUNT(t1.no) FROM recordout t1 \n"
+                             + "            LEFT JOIN recordin t2 ON t1.no = t2.no \n"
+                             + "            LEFT JOIN member t3 ON t2.id = t3.cardid \n"
+                             + "            WHERE HOUR(t1.dateout) = num \n"
+                             + "            AND t1.dateout BETWEEN date_select AND date_finish \n"
+                             + "            AND t2.cartype = 200 \n"
+                             + "            AND t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth] + ") \n"
+                             + "       ); \n";
                     }
                     else
                     {
-                        sql += "     (SELECT COUNT(no)FROM recordin WHERE HOUR(datein) = num AND datein BETWEEN date_select AND date_finish AND cartype < 200), "
-                        + "     (SELECT COUNT(no)FROM recordin WHERE HOUR(datein) = num AND datein BETWEEN date_select AND date_finish AND cartype = 200), "
-                        + "     (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype < 200), "
-                        + "     (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype = 200)); ";
+                        sql += "           (SELECT COUNT(no) FROM recordin \n"
+                             + "            WHERE HOUR(datein) = num \n"
+                             + "            AND datein BETWEEN date_select AND date_finish \n"
+                             + "            AND cartype < 200), \n"
+
+                             + "           (SELECT COUNT(no) FROM recordin \n"
+                             + "            WHERE HOUR(datein) = num \n"
+                             + "            AND datein BETWEEN date_select AND date_finish \n"
+                             + "            AND cartype = 200), \n"
+
+                             + "           (SELECT COUNT(t1.no) FROM recordout t1 \n"
+                             + "            LEFT JOIN recordin t2 ON t1.no = t2.no \n"
+                             + "            WHERE HOUR(t1.dateout) = num \n"
+                             + "            AND t1.dateout BETWEEN date_select AND date_finish \n"
+                             + "            AND t2.cartype < 200), \n"
+
+                             + "           (SELECT COUNT(t1.no) FROM recordout t1 \n"
+                             + "            LEFT JOIN recordin t2 ON t1.no = t2.no \n"
+                             + "            WHERE HOUR(t1.dateout) = num \n"
+                             + "            AND t1.dateout BETWEEN date_select AND date_finish \n"
+                             + "            AND t2.cartype = 200) \n"
+                             + "       ); \n";
                     }
-                    sql += "     SET num = num + 1; "
-                    + "   END WHILE; "
-                    + "   SELECT hours as ชั่วโมง, inVisitor as ลูกค้าทั่วไปเข้า, inMember as สมาชิกเข้า, outVisitor as ลูกค้าทั่วไปออก, outMember as สมาชิกออก FROM perHour; "
-                    + " END; "
-                    + " DROP TABLE IF EXISTS perHour; "
-                    + " CALL dowhile2('" + startDateTimeText + "','" + endDateTimeText + "');";
+
+                    sql += "       SET num = num + 1; \n"
+                        + "   END WHILE; \n"
+                        + "   SELECT hours AS 'ชั่วโมง', \n"
+                        + "          inVisitor AS 'ลูกค้าทั่วไปเข้า', \n"
+                        + "          inMember AS 'สมาชิกเข้า', \n"
+                        + "          outVisitor AS 'ลูกค้าทั่วไปออก', \n"
+                        + "          outMember AS 'สมาชิกออก' \n"
+                        + "   FROM perHour; \n"
+                        + "END // \n"
+                        + "DELIMITER ; \n"
+                        + "CALL dowhile2('" + startDateTimeText + "', '" + endDateTimeText + "');";
                     break;
                 case 26:
-                    startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd");
-                    endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd");
-                    sql = "DROP PROCEDURE IF EXISTS dowhile3; "
-                    + " CREATE PROCEDURE dowhile3(IN date_select DATE, IN date_finish DATE) "
-                    + " BEGIN "
-                    + "   CREATE TABLE perDay (days varchar(30),inVisitor INT(1),inMember INT(1), outVisitor INT(1), outMember INT(1)); "
-                    + "   WHILE DATE(date_select) <= DATE(date_finish) DO "
-                    + "     INSERT INTO perDay VALUES(date_select, ";
+                    startDateTimeText = startDate.ToString("yyyy-MM-dd");
+                    endDateTimeText = endDate.ToString("yyyy-MM-dd");
+
+                    sql = "DROP PROCEDURE IF EXISTS dowhile3; \n"
+                        + "DELIMITER // \n"
+                        + "CREATE PROCEDURE dowhile3(IN date_select DATE, IN date_finish DATE) \n"
+                        + "BEGIN \n"
+                        + "   DROP TABLE IF EXISTS perDay; \n"
+                        + "   CREATE TABLE perDay ( \n"
+                        + "       days VARCHAR(30), \n"
+                        + "       inVisitor INT, \n"
+                        + "       inMember INT, \n"
+                        + "       outVisitor INT, \n"
+                        + "       outMember INT \n"
+                        + "   ); \n"
+                        + "   WHILE DATE(date_select) <= DATE(date_finish) DO \n"
+                        + "       INSERT INTO perDay VALUES( \n"
+                        + "           date_select, \n";
 
                     if (Configs.UseSettingNewMember && (memberGroupMonth != Constants.TextBased.All))
                     {
-                        sql += " (SELECT count(t1.no) FROM recordin t1 left join member t2 on t1.id = t2.cardid WHERE t1.datein LIKE CONCAT(date_select,'%') AND t1.cartype < 200";
-                        sql += " and t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += "), ";
-                        sql += " (SELECT count(t1.no) FROM recordin t1 left join member t2 on t1.id = t2.cardid WHERE t1.datein LIKE CONCAT(date_select,'%') AND t1.cartype = 200";
-                        sql += " and t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += "), ";
-                        sql += " (SELECT count(t1.no) FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no left join member t3 on t2.id = t3.cardid WHERE t1.dateout LIKE CONCAT(date_select,'%') AND t2.cartype < 200";
-                        sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += "), ";
-                        sql += " (SELECT count(t1.no) FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no left join member t3 on t2.id = t3.cardid WHERE t1.dateout LIKE CONCAT(date_select,'%') AND t2.cartype = 200";
-                        sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += ")); ";
+                        sql += "           (SELECT COUNT(t1.no) FROM recordin t1 \n"
+                             + "            LEFT JOIN member t2 ON t1.id = t2.cardid \n"
+                             + "            WHERE t1.datein LIKE CONCAT(date_select, '%') \n"
+                             + "            AND t1.cartype < 200 \n"
+                             + "            AND t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth] + "), \n"
+
+                             + "           (SELECT COUNT(t1.no) FROM recordin t1 \n"
+                             + "            LEFT JOIN member t2 ON t1.id = t2.cardid \n"
+                             + "            WHERE t1.datein LIKE CONCAT(date_select, '%') \n"
+                             + "            AND t1.cartype = 200 \n"
+                             + "            AND t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth] + "), \n"
+
+                             + "           (SELECT COUNT(t1.no) FROM recordout t1 \n"
+                             + "            LEFT JOIN recordin t2 ON t1.no = t2.no \n"
+                             + "            LEFT JOIN member t3 ON t2.id = t3.cardid \n"
+                             + "            WHERE t1.dateout LIKE CONCAT(date_select, '%') \n"
+                             + "            AND t2.cartype < 200 \n"
+                             + "            AND t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth] + "), \n"
+
+                             + "           (SELECT COUNT(t1.no) FROM recordout t1 \n"
+                             + "            LEFT JOIN recordin t2 ON t1.no = t2.no \n"
+                             + "            LEFT JOIN member t3 ON t2.id = t3.cardid \n"
+                             + "            WHERE t1.dateout LIKE CONCAT(date_select, '%') \n"
+                             + "            AND t2.cartype = 200 \n"
+                             + "            AND t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth] + ") \n"
+                             + "       ); \n";
                     }
                     else
                     {
-                        sql += "     (SELECT count(no) FROM recordin WHERE datein LIKE CONCAT(date_select,'%') AND cartype < 200), "
-                        + "     (SELECT count(no) FROM recordin WHERE datein LIKE CONCAT(date_select,'%') AND cartype = 200), "
-                        + "     (SELECT count(t1.no) FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no WHERE t1.dateout LIKE CONCAT(date_select,'%') AND t2.cartype < 200), "
-                        + "     (SELECT count(t1.no) FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no WHERE t1.dateout LIKE CONCAT(date_select,'%') AND t2.cartype = 200)); ";
+                        sql += "           (SELECT COUNT(no) FROM recordin \n"
+                             + "            WHERE datein LIKE CONCAT(date_select, '%') \n"
+                             + "            AND cartype < 200), \n"
+
+                             + "           (SELECT COUNT(no) FROM recordin \n"
+                             + "            WHERE datein LIKE CONCAT(date_select, '%') \n"
+                             + "            AND cartype = 200), \n"
+
+                             + "           (SELECT COUNT(t1.no) FROM recordout t1 \n"
+                             + "            LEFT JOIN recordin t2 ON t1.no = t2.no \n"
+                             + "            WHERE t1.dateout LIKE CONCAT(date_select, '%') \n"
+                             + "            AND t2.cartype < 200), \n"
+
+                             + "           (SELECT COUNT(t1.no) FROM recordout t1 \n"
+                             + "            LEFT JOIN recordin t2 ON t1.no = t2.no \n"
+                             + "            WHERE t1.dateout LIKE CONCAT(date_select, '%') \n"
+                             + "            AND t2.cartype = 200) \n"
+                             + "       ); \n";
                     }
-                    sql += "     SET date_select = DATE_ADD(date_select,INTERVAL 1 DAY); "
-                    + "   END WHILE; "
-                    //+ "   SELECT days as วันที่ ,carin as รถเข้า ,carout as รถออก FROM perDay; "
-                    + "   SELECT days as วันที่, inVisitor as ลูกค้าทั่วไปเข้า, inMember as สมาชิกเข้า, outVisitor as ลูกค้าทั่วไปออก, outMember as สมาชิกออก FROM perDay; "
-                    + " END; "
-                    + " DROP TABLE IF EXISTS perDay; "
-                    + " CALL dowhile3('" + startDateTimeText + "','" + endDateTimeText + "');";
+
+                    sql += "       SET date_select = DATE_ADD(date_select, INTERVAL 1 DAY); \n"
+                        + "   END WHILE; \n"
+                        + "   SELECT days AS 'วันที่', \n"
+                        + "          inVisitor AS 'ลูกค้าทั่วไปเข้า', \n"
+                        + "          inMember AS 'สมาชิกเข้า', \n"
+                        + "          outVisitor AS 'ลูกค้าทั่วไปออก', \n"
+                        + "          outMember AS 'สมาชิกออก' \n"
+                        + "   FROM perDay; \n"
+                        + "END // \n"
+                        + "DELIMITER ; \n"
+                        + "CALL dowhile3('" + startDateTimeText + "', '" + endDateTimeText + "');";
                     break;
+
                 case 27:
                     sql = "select id as รหัส, name as รายการ,(SELECT count(no) "
                     + "FROM recordout WHERE proid = promotion.id AND recordout.dateout "
@@ -4799,12 +4910,14 @@ namespace ParkingManagementReport.Utilities.Database
                 case 101:
                     if (Configs.Reports.UseReportImpact)
                     {
-                        sql = " SELECT recordout.no AS 'ลำดับ',";
+                        sql = " SELECT recordout.no AS 'ลำดับ', recordin.no_old ,recordout.dategateout ,";
                         sql += " CASE WHEN recordin.cartype=200 THEN IFNULL((SELECT typename FROM cartype WHERE typeid=member.typeid),'Member')";
                         sql += " ELSE (SELECT typename FROM cartype WHERE typeid=recordin.cartype) END AS 'ประเภท',";
                         sql += " CASE WHEN recordin.license='NO' THEN recordin.id WHEN recordin.license='' THEN recordin.id ELSE recordin.license END AS 'ทะเบียน',";
-                        sql += " recordin.qrcode_park AS 'หมายเลขบัตร', DATE_FORMAT(COALESCE(recordout.dategateout, recordout.dateout),'%d/%m/%Y %H:%i:%s') AS 'เวลาออก', ";
-                        sql += " (SELECT name FROM user WHERE id= COALESCE(recordout.usergateout, recordout.userout)) AS 'เจ้าหน้าที่ขาออก', ";
+                        sql += " recordin.qrcode_park AS 'หมายเลขบัตร', recordout.dateout , ";
+                        sql += " (SELECT name FROM user WHERE id = recordout.userout) AS 'userout', ";
+                        sql += " (SELECT name FROM user WHERE id = recordout.usergateout) AS 'usergateout', ";
+                        sql += " (SELECT name FROM user WHERE id = recordout.userpays) AS 'userpays'  , ";
                         sql += " CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC'";
                         sql += " ELSE 'เงินสด' END AS ช่องทางการชำระเงิน,";
                         sql += " recordout.price as รายได้ ";
@@ -4816,10 +4929,10 @@ namespace ParkingManagementReport.Utilities.Database
 
 
 
-                        sql += " WHERE COALESCE(recordout.dategateout, recordout.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+                        sql += " WHERE ((recordout.dategateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "') OR (recordout.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'))";
 
                         if (user != Constants.TextBased.All)
-                            sql += " AND recordout.userout = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                            sql += " AND COALESCE(recordout.userpays, recordout.usergateout, recordout.userout) = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
                         if (promotionName != Constants.TextBased.All)
                             sql += " AND recordout.proid =" + promotionId;
                         if (!String.IsNullOrEmpty(cardId))
@@ -9310,7 +9423,7 @@ WHERE 1 = 1 ";
                             fontSlip162 = "IV";
                     }
 
-                    sql = "select cast(t2.no as char) as 'หมายเลขบัตร', t2.license as 'ทะเบียนรถ', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(COALESCE(t1.dategateout, t1.dateout), '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก',\n";
+                    sql = "select t2.no_old, cast(t2.no as char) as 'หมายเลขบัตร', t2.license as 'ทะเบียนรถ', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', t1.dategateout , t1.dateout ,\n";
                     if (Configs.UseReceiptFor1Out)
                     {
                         if (Configs.OutReceiptNameMonth)
@@ -9327,7 +9440,9 @@ WHERE 1 = 1 ";
                     }
 
                     sql += "t1.price as 'รายได้',\n";
-                    sql += "(SELECT name FROM user WHERE id = COALESCE(t1.usergateout, t1.userout)) as เจ้าหน้าที่ขาออก,";
+                    sql += "(SELECT name FROM user WHERE id = t1.userout) AS 'userout', ";
+                    sql += "(SELECT name FROM user WHERE id = t1.usergateout) AS 'usergateout', ";
+                    sql += "(SELECT name FROM user WHERE id = t1.userpays) AS 'userpays'  , ";
                     if (Configs.UsePaymentKsher)
                     {
                         sql += "case when t3.channel = 'TrueMoney' then 'TrueMoney' when t3.channel = 'promptpay' then 'PromptPay' when t1.pay_type = 'EDC' then 'EDC' else 'เงินสด' end as 'ช่องทางการชำระเงิน',\n";
@@ -9353,11 +9468,11 @@ WHERE 1 = 1 ";
                         sql += "from rabbit_post t1 left join rabbit_get t2 on t1.rabbit_id = t2.rabbit_id where t1.status = 'Y' group by t1.no_recordin) t3 on t1.no = t3.no_recordin\n";
                     }
 
-                    sql += "WHERE COALESCE(t1.dategateout, t1.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'\n";
+                    sql += "WHERE ( (t1.dategateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "') OR (t1.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "') )\n";
                     sql += "AND t1.price > 0";
 
                     if (user != Constants.TextBased.All)
-                        sql += " AND COALESCE(t1.usergateout, t1.userout) = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        sql += " AND COALESCE(t1.userpays, t1.usergateout, t1.userout) = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
                     if (promotionName != Constants.TextBased.All)
                         sql += " AND t1.proid =" + promotionId;
                     if (!String.IsNullOrEmpty(licensePlate))
@@ -10315,12 +10430,12 @@ WHERE 1 = 1 ";
             if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) //Mac 2022/04/22
                 sql += " recordout.printno_second";
             else
-                sql += " recordout.printno";
+                sql += " recordout.printno ";
 
-            sql += " ,recordout.no As ลำดับ, ";
+            sql += " ,recordout.no, recordout.dateout, recordin.no_old, recordout.dategateout, ";
             if (Configs.UseMemberType) //Mac 2018/01/16
             {
-                sql += " case when recordin.cartype = 200 then ifnull(member.typeid, '200') else "; //Mac 2022/03/02
+                sql += " CASE WHEN recordin.cartype=200 THEN IFNULL((SELECT typename FROM cartype WHERE typeid=member.typeid),'Member')   "; //Mac 2022/03/02
                 if (Configs.Reports.ReportCartypeFree15Min) //Mac 2018/01/16
                 {
                     sql += " case when TIMESTAMPDIFF(second,recordin.datein,recordout.dateout) <= 959 then 'ฟรี 15 นาที' else ";
@@ -10328,7 +10443,7 @@ WHERE 1 = 1 ";
                 }
                 else
                 {
-                    sql += " recordin.cartype end";
+                    sql += " ELSE (SELECT typename FROM cartype WHERE typeid=recordin.cartype) END AS 'ประเภท'";
                 }
             }
             else
@@ -10343,8 +10458,9 @@ WHERE 1 = 1 ";
                     sql += " recordin.cartype ";
                 }
             }
-            sql += " ,case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end,recordin.datein,recordout.userout,COALESCE(recordout.dategateout, recordout.dateout),recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard";
-
+            sql += " ,case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end AS 'ทะเบียน' ,recordin.datein,recordout.discount,recordout.losscard ";
+            sql += " ,(SELECT name FROM user WHERE id = recordout.userout) AS 'userout', (SELECT name FROM user WHERE id = recordout.usergateout) AS 'usergateout', (SELECT name FROM user WHERE id = recordout.userpays) AS 'userpays' ";
+            //sql += " ,(SELECT name FROM promotion WHERE id = recordout.proid) AS 'proid'";
             if (selectedReportId == 12 && Configs.Reports.UseReport13_11)
                 sql += " ,recordout.clearcard";
             else
@@ -10356,7 +10472,7 @@ WHERE 1 = 1 ";
                     sql += " ,(recordout.price - recordout.losscard)";
                 else
                     sql += " ,recordout.price";
-                sql += " ,recordout.discount,recordout.proid_all";
+                sql += " ,recordout.discount";
             }
             else
             {
@@ -10390,7 +10506,7 @@ WHERE 1 = 1 ";
                 if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) //Mac 2022/04/22
                     sql += " recordout.printno_second";
                 else
-                    sql += " recordout.printno";
+                    sql += " recordout.printno, recordin.no_old, recordout.dategateout ";
 
                 sql += " ,recordout.no As ลำดับ,";
                 if (Configs.UseMemberType) //Mac 2018/01/16
@@ -10403,7 +10519,7 @@ WHERE 1 = 1 ";
                     }
                     else
                     {
-                        sql += " recordin.cartype end";
+                        sql += " recordin.cartype end AS 'ประเภท'";
                     }
                 }
                 else
@@ -10418,7 +10534,8 @@ WHERE 1 = 1 ";
                         sql += " recordin.cartype ";
                     }
                 }
-                sql += " ,recordin.license,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard,recordout.overdate,recordout.price,recordout.price"; //Mac 2018/05/13
+                sql += " ,recordin.license,recordin.datein,recordout.dateout,recordout.proid,recordout.discount,recordout.losscard,recordout.overdate,recordout.price,recordout.price"; //Mac 2018/05/13
+                sql += " ,(SELECT name FROM user WHERE id = recordout.userout) AS 'userout', (SELECT name FROM user WHERE id = recordout.usergateout) AS 'usergateout', (SELECT name FROM user WHERE id = recordout.userpays) AS 'userpays' ";
                 if (Configs.Reports.ReportPriceSplitLosscard)
                     sql += " ,(recordout.price - recordout.losscard)";
                 else
@@ -10451,8 +10568,7 @@ WHERE 1 = 1 ";
             string startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
             string endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString();
 
-            sql += " WHERE COALESCE(recordout.dategateout, recordout.dateout) BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
-
+            sql += " WHERE ( (recordout.dategateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "' OR recordout.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "') )";
             if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) //Mac 2022/04/22
                 sql += " and recordin.notshow = 'N'";
 
@@ -10469,7 +10585,8 @@ WHERE 1 = 1 ";
 
             if (user != Constants.TextBased.All)
             {
-                sql += " AND recordout.userout =" + userId;
+                var userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                sql += " AND (recordin.userin = " + userId + " OR COALESCE(recordout.userpays, recordout.usergateout, recordout.userout) = " + userId + ")";
             }
 
             if (Configs.Reports.ReportSearchMemGroup) //Mac 2021/03/11

@@ -1070,6 +1070,7 @@
             this.CarTypeComboBox.Name = "CarTypeComboBox";
             this.CarTypeComboBox.Size = new System.Drawing.Size(150, 21);
             this.CarTypeComboBox.TabIndex = 12;
+            this.CarTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.CarTypeComboBox_SelectedIndexChanged);
             // 
             // label5
             // 

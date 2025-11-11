@@ -608,7 +608,7 @@ namespace ParkingManagementReport
                 DataTable allReports = DbController.LoadData("SELECT id, name, active FROM reports");
                 Console.WriteLine(AppGlobalVariables.OperatingUser.Id);
                 DataTable userReports = DbController.LoadData($"SELECT reports_id FROM usereport WHERE user_id = {AppGlobalVariables.OperatingUser.Id} ORDER BY reports_id");
-               
+
                 if (allReports?.Rows.Count > 0 && userReports?.Rows.Count > 0)
                 {
                     int[] specialReports = { 19, 20, 21, 46, 47, 67 }; // Special reports that affect visibility
@@ -3578,7 +3578,7 @@ namespace ParkingManagementReport
 
                                     PrimaryCrystalReportViewer.Refresh();
                                 }
-                                
+
                                 break;
 
                             case 103: //Mac 2020/01/23
@@ -5378,7 +5378,7 @@ namespace ParkingManagementReport
             ResultGridView.Columns[13].HeaderText = "รายได้";
             ResultGridView.Columns[14].HeaderText = "ส่วนลด"; //Mac 2016/03/05
             ResultGridView.Columns[15].HeaderText = "E-Stamp";
-            
+
             ResultGridView.Columns[0].Width = 110;
             ResultGridView.Columns[1].Width = 50;
             ResultGridView.Columns[4].Width = 120;
@@ -5467,23 +5467,23 @@ namespace ParkingManagementReport
                     ResultGridView[0, i].Value = 0;
                 }
 
-                    try
+                try
+                {
+                    string x = ResultGridView[2, i].Value.ToString();
+                    int value;
+                    if (int.TryParse(x, out value))
                     {
-                        string x = ResultGridView[2, i].Value.ToString();
-                        int value;
-                        if (int.TryParse(x, out value))
-                        {
-                            intID = value;
-                            ResultGridView[2, i].Value = AppGlobalVariables.CarTypesById[intID];
-                        }
-                        else
-                            ResultGridView[2, i].Value = x;
+                        intID = value;
+                        ResultGridView[2, i].Value = AppGlobalVariables.CarTypesById[intID];
+                    }
+                    else
+                        ResultGridView[2, i].Value = x;
 
-                    }
-                    catch
-                    {
-                        ResultGridView[2, i].Value = "";
-                    }
+                }
+                catch
+                {
+                    ResultGridView[2, i].Value = "";
+                }
 
 
                 try
@@ -5584,36 +5584,36 @@ namespace ParkingManagementReport
                         //else intID = Convert.ToInt32(ResultGridView[14, i].Value);
 
                         int intHourPro = 0;
-/*                        if (intID >= 5000)
-                        {
-                            DateTime timeIn = DateTime.Parse(ResultGridView[4, i].Value.ToString());
-                            DateTime timeOut = DateTime.Parse(ResultGridView[6, i].Value.ToString());
-                            TimeSpan diff = timeOut - timeIn;
+                        /*                        if (intID >= 5000)
+                                                {
+                                                    DateTime timeIn = DateTime.Parse(ResultGridView[4, i].Value.ToString());
+                                                    DateTime timeOut = DateTime.Parse(ResultGridView[6, i].Value.ToString());
+                                                    TimeSpan diff = timeOut - timeIn;
 
-                            int totalMinutes = (diff.Days * 24 * 60) + (diff.Hours * 60) + diff.Minutes;
+                                                    int totalMinutes = (diff.Days * 24 * 60) + (diff.Hours * 60) + diff.Minutes;
 
-                            // 🟦 ดึงค่านาทีฟรีจากตาราง promotion
-                            string sqlFreeMinute = $"SELECT minute FROM promotion WHERE promotion_id = {intID}";
-                            DataTable dtPromo = DbController.LoadData(sqlFreeMinute);
+                                                    // 🟦 ดึงค่านาทีฟรีจากตาราง promotion
+                                                    string sqlFreeMinute = $"SELECT minute FROM promotion WHERE promotion_id = {intID}";
+                                                    DataTable dtPromo = DbController.LoadData(sqlFreeMinute);
 
-                            int freeMinutes = 0;
-                            if (dtPromo != null && dtPromo.Rows.Count > 0)
-                                freeMinutes = Convert.ToInt32(dtPromo.Rows[0]["minute"]);
+                                                    int freeMinutes = 0;
+                                                    if (dtPromo != null && dtPromo.Rows.Count > 0)
+                                                        freeMinutes = Convert.ToInt32(dtPromo.Rows[0]["minute"]);
 
-                            // 🟨 หักนาทีฟรีออก
-                            totalMinutes -= freeMinutes;
-                            if (totalMinutes < 0) totalMinutes = 0;
+                                                    // 🟨 หักนาทีฟรีออก
+                                                    totalMinutes -= freeMinutes;
+                                                    if (totalMinutes < 0) totalMinutes = 0;
 
-                            // 🟩 แปลงกลับเป็นชั่วโมง/นาที เพื่อส่งให้ CalPrice
-                            int totalHours = totalMinutes / 60;
-                            int remainMinutes = totalMinutes % 60;
+                                                    // 🟩 แปลงกลับเป็นชั่วโมง/นาที เพื่อส่งให้ CalPrice
+                                                    int totalHours = totalMinutes / 60;
+                                                    int remainMinutes = totalMinutes % 60;
 
-                            // คำนวณราคาตาม pricerate0 ผ่าน CalPrice()
-                            int newPrice = CalPrice(totalHours, remainMinutes, false);
+                                                    // คำนวณราคาตาม pricerate0 ผ่าน CalPrice()
+                                                    int newPrice = CalPrice(totalHours, remainMinutes, false);
 
-                            // อัปเดตราคาใหม่ใน Grid
-                            ResultGridView[13, i].Value = newPrice.ToString();
-                        }*/
+                                                    // อัปเดตราคาใหม่ใน Grid
+                                                    ResultGridView[13, i].Value = newPrice.ToString();
+                                                }*/
                         if (intID > 0)
                             intHourPro = AppGlobalVariables.PromotionNamesMinuteMap[intID] / 60;
                         ResultGridView[8, i].Value = intHourPro.ToString();
@@ -6627,7 +6627,7 @@ namespace ParkingManagementReport
 
         private void ResultGridViewAtRunning()
         {
-            if ( selectedReportId == 1 || selectedReportId == 2 || selectedReportId == 3 || selectedReportId == 5 || selectedReportId == 30 || selectedReportId == 31 || selectedReportId == 8 || selectedReportId == 79 || selectedReportId == 90 || selectedReportId == 91 || selectedReportId == 92 || selectedReportId == 93 || selectedReportId == 94 || selectedReportId == 10) //Mac 2020/10/26
+            if (selectedReportId == 1 || selectedReportId == 2 || selectedReportId == 3 || selectedReportId == 5 || selectedReportId == 30 || selectedReportId == 31 || selectedReportId == 8 || selectedReportId == 79 || selectedReportId == 90 || selectedReportId == 91 || selectedReportId == 92 || selectedReportId == 93 || selectedReportId == 94 || selectedReportId == 10) //Mac 2020/10/26
             {
                 if (this.ResultGridView.RowCount > 0)
                 {
@@ -7286,6 +7286,11 @@ namespace ParkingManagementReport
 
         }
 
+        private void CarTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void SearchButton_Click(object sender, EventArgs e)
         {
             if (ReportComboBox.Items.Count < 1) return;
@@ -7353,13 +7358,18 @@ namespace ParkingManagementReport
                 MemberExpirationEndDatePicker.Value
             );
 
-                if (selectedReportId == 16 || selectedReportId == 17 || selectedReportId == 18 || selectedReportId == 19 || selectedReportId == 20 || selectedReportId == 21)
+            if (selectedReportId == 16 || selectedReportId == 17 || selectedReportId == 18 || selectedReportId == 19 || selectedReportId == 20 || selectedReportId == 21)
                 FunckingShit(selectedReportId, sql);
 
             else if (selectedReportId == 29 || selectedReportId == 102)
             {
                 ReportHeaderLabel.Text = AppGlobalVariables.Printings.Header = SetReportHeader().Replace("รายงานรายงาน", "รายงาน");
                 FucntionImpact(selectedReportId, sql);
+            }
+            else if (selectedReportId == 0 || selectedReportId == 12 || selectedReportId == 13 || selectedReportId == 101 || selectedReportId == 162)
+            {
+                ReportHeaderLabel.Text = AppGlobalVariables.Printings.Header = SetReportHeader().Replace("รายงานรายงาน", "รายงาน");
+                FucntionManyPay(selectedReportId, sql);
             }
             else
             {
@@ -7430,6 +7440,1792 @@ namespace ParkingManagementReport
                 comboBox.Items.Add(item);
         }
         #endregion
+
+        private void FucntionManyPay(int selectedReportId, string sql)
+
+        {
+            DataTable dt = DbController.LoadData(sql);
+            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            path = path.Replace("\\bin\\Debug", "");
+
+            ReportDocument rpt = new ReportDocument();
+
+            DataTable dtMap = DbController.LoadData("SELECT value FROM param WHERE name IN ('com1', 'add1', 'add2', 'tax')");
+
+            PrimaryCrystalReportViewer.ReportSource = null;
+            PrimaryCrystalReportViewer.Refresh();
+
+            switch (selectedReportId)
+            {
+                case 0:
+                    {
+                        if (dt.Rows.Count == 0)
+                        {
+                            MessageBox.Show("ไม่พบข้อมูล");
+                            return;
+                        }
+
+                        // 🧩 เตรียม list สำหรับ flag แถวที่ต้องอัปเดต
+                        List<string> flagList = new List<string>();
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string no_old = row["no_old"]?.ToString().Trim();
+
+                            if (!string.IsNullOrEmpty(no_old))
+                            {
+                                if (int.TryParse(no_old, out int noOldInt))
+                                {
+                                    flagList.Add(noOldInt.ToString());
+                                    Console.WriteLine($"เก็บ {noOldInt} รออัปเดตตอนท้าย");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"ข้าม no_old: {no_old} (ไม่ใช่ตัวเลข)");
+                                }
+                            }
+                        }
+
+                        // ✅ อัปเดตหลังจบลูป
+                        if (flagList.Count > 0)
+                        {
+                            string idList = string.Join(",", flagList.Distinct()); // กันซ้ำ
+                            string updateSql = $"UPDATE recordout SET userpays = 66 WHERE no IN ({idList})";
+
+                            try
+                            {
+                                DbController.SaveData(updateSql);
+                                Console.WriteLine($"✅ อัปเดต userpays = 66 ทั้งหมด {flagList.Count} แถว: {idList}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"❌ อัปเดตล้มเหลว: {ex.Message}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("ไม่มีรายการให้อัปเดต userpays");
+                        }
+
+                        // 🔁 ถ้ามีการอัปเดต userpays ให้โหลดข้อมูลใหม่
+                        if (flagList.Count > 0)
+                        {
+                            dt = DbController.LoadData(sql);
+                        }
+
+                        // ✅ สร้าง DataTable สำหรับรายงาน
+                        DataTable resultTable = new DataTable();
+                        resultTable.Columns.Add("ลำดับ");
+                        resultTable.Columns.Add("ประเภท");
+                        resultTable.Columns.Add("ทะเบียน");
+                        resultTable.Columns.Add("หมายเลขบัตร");
+                        resultTable.Columns.Add("เวลาเข้า");
+                        resultTable.Columns.Add("เจ้าหน้าที่ขาเข้า");
+                        resultTable.Columns.Add("เวลาออก");
+                        resultTable.Columns.Add("เจ้าหน้าที่ขาออก");
+                        resultTable.Columns.Add("ช่องทางการชำระเงิน");
+                        resultTable.Columns.Add("รายได้", typeof(decimal));
+                        resultTable.Columns.Add("ส่วนลด", typeof(decimal));
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string no = row["no"]?.ToString() ?? "";
+                            string cartype = row["ประเภท"]?.ToString() ?? "";
+                            string license = row["ทะเบียน"]?.ToString() ?? "";
+                            string qrcode = row["qrcode_park"]?.ToString() ?? "";
+                            string datein = row["datein"] != DBNull.Value
+                                ? Convert.ToDateTime(row["datein"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                : "";
+                            string userin = row["userin"]?.ToString() ?? "";
+                            string dateout = row["dategateout"] != DBNull.Value
+                                ? Convert.ToDateTime(row["dategateout"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                : (row["dateout"] != DBNull.Value
+                                    ? Convert.ToDateTime(row["dateout"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                    : "");
+
+                            string userout = "";
+                            if (row["userpays"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["userpays"].ToString()))
+                            {
+                                // 🔹 ถ้ามี userpays ให้ใช้ค่านี้ก่อนเลย
+                                userout = row["userpays"].ToString();
+                            }
+                            else if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
+                            {
+                                // 🔹 ถ้าไม่มี userpays แต่มี usergateout
+                                userout = row["usergateout"].ToString();
+                            }
+                            else if (row["userout"] != DBNull.Value)
+                            {
+                                // 🔹 ถ้าไม่มีทั้งหมดข้างบน → ใช้ userout ปกติ
+                                userout = row["userout"].ToString();
+                            }
+                            else
+                            {
+                                // 🔹 กรณีสุดท้าย ถ้าไม่มีอะไรเลย → ค่าเริ่มต้นว่าง
+                                userout = "";
+                            }
+
+                            string payment = row["ช่องทางการชำระเงิน"]?.ToString() ?? "เงินสด";
+                            decimal price = row["price"] != DBNull.Value ? Convert.ToDecimal(row["price"]) : 0;
+                            decimal discount = row["discount"] != DBNull.Value ? Convert.ToDecimal(row["discount"]) : 0;
+
+                            if (string.IsNullOrWhiteSpace(license) || license == "NO")
+                                license = row["id"]?.ToString() ?? "";
+
+                            resultTable.Rows.Add(
+                                no,
+                                cartype,
+                                license,
+                                qrcode,
+                                datein,
+                                userin,
+                                dateout,
+                                userout,
+                                payment,
+                                price,
+                                discount
+                            );
+                        }
+
+                        // ✅ ผูกข้อมูลเข้ากับ DataGridView
+                        ResultGridView.DataSource = resultTable;
+                        ResultGridView.Refresh();
+
+                        ResultGridView.Columns[0].Width = 50;
+                        ResultGridView.Columns[1].Width = 70;
+                        ResultGridView.Columns[2].Width = 80;
+                        ResultGridView.Columns[3].Width = 300;
+                        ResultGridView.Columns[4].Width = 120;
+                        ResultGridView.Columns[5].Width = 105;
+                        ResultGridView.Columns[6].Width = 120;
+                        ResultGridView.Columns[7].Width = 105;
+
+                        // ✅ โหลด Crystal Report
+                        rpt.Load(path + "\\CrystalReports\\Report1.rpt");
+                        rpt.SetDataSource(resultTable);
+
+                        // 🧩 ส่วนหัวรายงาน
+                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปการชำระเงิน'";
+                        if (dtMap.Rows.Count > 0)
+                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+
+                        PrimaryCrystalReportViewer.ReportSource = rpt;
+                        PrimaryCrystalReportViewer.Refresh();
+
+                        PdfExportButton.Enabled = true;
+                        ExcelExportButton.Enabled = true;
+                        break;
+                    }
+
+                case 12:
+                    {
+
+                        if (dt.Rows.Count == 0)
+                        {
+                            MessageBox.Show("ไม่พบข้อมูล");
+                            return;
+                        }
+
+                        // 🧩 เตรียม list สำหรับ flag แถวที่ต้องอัปเดต
+                        List<string> flagList = new List<string>();
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string no_old = row["no_old"]?.ToString().Trim();
+
+                            if (!string.IsNullOrEmpty(no_old))
+                            {
+                                if (int.TryParse(no_old, out int noOldInt))
+                                {
+                                    flagList.Add(noOldInt.ToString());
+                                    Console.WriteLine($"เก็บ {noOldInt} รออัปเดตตอนท้าย");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"ข้าม no_old: {no_old} (ไม่ใช่ตัวเลข)");
+                                }
+                            }
+                        }
+
+                        // ✅ อัปเดตหลังจบลูป
+                        if (flagList.Count > 0)
+                        {
+                            string idList = string.Join(",", flagList.Distinct()); // กันซ้ำ
+                            string updateSql = $"UPDATE recordout SET userpays = 66 WHERE no IN ({idList})";
+
+                            try
+                            {
+                                DbController.SaveData(updateSql);
+                                Console.WriteLine($"✅ อัปเดต userpays = 66 ทั้งหมด {flagList.Count} แถว: {idList}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"❌ อัปเดตล้มเหลว: {ex.Message}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("ไม่มีรายการให้อัปเดต userpays");
+                        }
+
+                        // 🔁 ถ้ามีการอัปเดต userpays ให้โหลดข้อมูลใหม่
+                        if (flagList.Count > 0)
+                        {
+                            dt = DbController.LoadData(sql);
+                        }
+
+                        // ✅ สร้าง DataTable สำหรับรายงาน
+                        DataTable resultTable = new DataTable();
+                        resultTable.Columns.Add("เลขที่ใบเสร็จ/ใบกำกับภาษี");
+                        resultTable.Columns.Add("ลำดับ");
+                        resultTable.Columns.Add("ประเภท");
+                        resultTable.Columns.Add("ทะเบียน");
+                        resultTable.Columns.Add("เวลาเข้า");
+                        resultTable.Columns.Add("เจ้าหน้าที่ขาออก");
+                        resultTable.Columns.Add("เวลาออก");
+                        resultTable.Columns.Add("ชม.จอด");
+                        resultTable.Columns.Add("ชม.ส่วนลดผู้มาติดต่อ");
+                        resultTable.Columns.Add("ชม.จ่าย");
+                        resultTable.Columns.Add("ชม.ลด");
+                        resultTable.Columns.Add("ค่าปรับบัตรหาย");
+                        resultTable.Columns.Add("ค่าปรับข้ามวัน");
+                        resultTable.Columns.Add("รายได้");
+                        resultTable.Columns.Add("ส่วนลด");
+                        resultTable.Columns.Add("E-Stamp");
+                        resultTable.Columns.Add("receipt");
+
+
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string printno = row["printno"]?.ToString() ?? "";
+                            string no = row["no"]?.ToString() ?? "";
+                            string cartype = row["ประเภท"]?.ToString() ?? "";
+                            string license = row["ทะเบียน"]?.ToString() ?? "";
+                            string datein = row["datein"] != DBNull.Value
+                                ? Convert.ToDateTime(row["datein"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                : "";
+                            string lostcard = row["losscard"]?.ToString() ?? "";
+                            string dateout = row["dategateout"] != DBNull.Value
+                                ? Convert.ToDateTime(row["dategateout"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                : (row["dateout"] != DBNull.Value
+                                    ? Convert.ToDateTime(row["dateout"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                    : "");
+                            string overdate = row["overdate"]?.ToString() ?? "";
+                            string userout = "";
+                            if (row["userpays"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["userpays"].ToString()))
+                            {
+                                // 🔹 ถ้ามี userpays ให้ใช้ค่านี้ก่อนเลย
+                                userout = row["userpays"].ToString();
+                            }
+                            else if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
+                            {
+                                // 🔹 ถ้าไม่มี userpays แต่มี usergateout
+                                userout = row["usergateout"].ToString();
+                            }
+                            else if (row["userout"] != DBNull.Value)
+                            {
+                                // 🔹 ถ้าไม่มีทั้งหมดข้างบน → ใช้ userout ปกติ
+                                userout = row["userout"].ToString();
+                            }
+                            else
+                            {
+                                // 🔹 กรณีสุดท้าย ถ้าไม่มีอะไรเลย → ค่าเริ่มต้นว่าง
+                                userout = "";
+                            }
+
+                            decimal price = row["price"] != DBNull.Value ? Convert.ToDecimal(row["price"]) : 0;
+                            decimal discount = row["discount"] != DBNull.Value ? Convert.ToDecimal(row["discount"]) : 0;
+                            string estamp = row["proid"]?.ToString() ?? "";
+                            string receipt = row["receipt"]?.ToString() ?? "";
+
+                            if (string.IsNullOrWhiteSpace(license) || license == "NO")
+                                license = row["id"]?.ToString() ?? "";
+
+                            DataRow newRow = resultTable.NewRow();
+                            newRow[0] = printno;           // ช่องที่ 0
+                            newRow[1] = no;
+                            newRow[2] = cartype;      // ช่องที่ 1
+                            newRow[3] = license;      // ช่องที่ 2
+                            newRow[4] = datein;       // ช่องที่ 3
+                            newRow[5] = userout;      // ช่องที่ 4
+                            newRow[6] = dateout;      // ช่องที่ 5
+                            newRow[11] = lostcard;       // ช่องที่ 10
+                            newRow[12] = overdate;    // ช่องที่ 12
+                            newRow[13] = price;
+                            newRow[14] = discount;
+                            newRow[15] = estamp;
+                            newRow[16] = receipt;
+                            resultTable.Rows.Add(newRow);
+                        }
+
+                        // ✅ ผูกข้อมูลเข้ากับ DataGridView
+                        ResultGridView.DataSource = resultTable;
+                        //ResultGridView.Refresh();
+                        //    ResultGridView.Columns[0].HeaderText = "เลขที่ใบเสร็จ/ใบกำกับภาษี";
+                        //    ResultGridView.Columns[2].HeaderText = "ประเภท";
+                        //    ResultGridView.Columns[3].HeaderText = "ทะเบียน";
+                        //    ResultGridView.Columns[4].HeaderText = "เวลาเข้า";
+                        //    ResultGridView.Columns[5].HeaderText = "เจ้าหน้าที่ขาออก";
+                        //    ResultGridView.Columns[6].HeaderText = "เวลาออก";
+                        //    ResultGridView.Columns[7].HeaderText = "ชม.จอด";
+                        //    ResultGridView.Columns[8].HeaderText = "ชม.ส่วนลดผู้มาติดต่อ";
+                        //    ResultGridView.Columns[9].HeaderText = "ชม.ลด";
+                        //    ResultGridView.Columns[10].HeaderText = "ชม.จ่าย";
+                        //    ResultGridView.Columns[11].HeaderText = "ค่าปรับบัตรหาย";
+
+                        ResultGridView.Columns[0].Width = 110;
+                        ResultGridView.Columns[1].Width = 50;
+                        ResultGridView.Columns[4].Width = 120;
+                        ResultGridView.Columns[5].Width = 110;
+                        ResultGridView.Columns[6].Width = 120;
+
+                        if (ResultGridView.Columns.Count <= 17)
+                        {
+                            ResultGridView.Columns[16].Visible = false;
+                        }
+                        int intNo = ResultGridView.Rows.Count - 1;
+                        ResultGridView.Columns[11].Width = 105;
+                        ResultGridView.Columns[15].Width = 160;
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView.Columns[16].Width = 160;
+                        int intSumPrice = 0;
+                        int intSumPriceLoss = 0;
+                        int intSumPriceOver = 0;
+                        int intSumDiscount = 0; //Mac 2016/03/05
+                        double doubleSumBeforeVat = 0;
+                        double doubleSumVat = 0;
+
+
+                        for (int i = 0; i < intNo; i++)
+                        {
+                            int intID = Convert.ToInt32(ResultGridView[0, i].Value);
+                            DateTime dto = DateTime.Parse(ResultGridView[6, i].Value.ToString());
+
+                            if (intID > 0)
+                            {
+                                //Mac 2018/05/13
+                                string fontSlip13 = "";
+                                if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
+                                    fontSlip13 = AppGlobalVariables.Printings.ReceiptName;
+                                else
+                                {
+                                    if (!Configs.UseReceiptName)
+                                        fontSlip13 = "IV";
+                                }
+
+                                if (Configs.UseReceiptFor1Out) //Mac 2018/11/14
+                                {
+                                    if (Configs.OutReceiptNameMonth) //Mac 2016/04/27
+                                        ResultGridView[0, i].Value = ResultGridView[ResultGridView.ColumnCount - 1, i].Value.ToString() + dto.ToString("yyMM") + intID.ToString("00000#");
+                                    else
+                                        ResultGridView[0, i].Value = ResultGridView[ResultGridView.ColumnCount - 1, i].Value.ToString() + dto.ToString("yy") + intID.ToString("00000#");
+                                }
+                                else
+                                {
+                                    if (Configs.OutReceiptNameMonth) //Mac 2016/04/27
+                                    {
+                                        ResultGridView[0, i].Value = fontSlip13 + dto.ToString("yyMM") + intID.ToString("00000#"); //Mac 2022/04/26
+                                    }
+                                    else
+                                    {
+                                        ResultGridView[0, i].Value = fontSlip13 + dto.ToString("yy") + intID.ToString("00000#"); //Mac 2018/05/13
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                ResultGridView[0, i].Value = 0;
+                            }
+
+                            try
+                            {
+                                string x = ResultGridView[2, i].Value.ToString();
+                                int value;
+                                if (int.TryParse(x, out value))
+                                {
+                                    intID = value;
+                                    ResultGridView[2, i].Value = AppGlobalVariables.CarTypesById[intID];
+                                }
+                                else
+                                    ResultGridView[2, i].Value = x;
+
+                            }
+                            catch
+                            {
+                                ResultGridView[2, i].Value = "";
+                            }
+
+                            DateTime dti = DateTime.Parse(ResultGridView[4, i].Value.ToString());
+                            TimeSpan diffTime = dto - dti;
+                            int intHour = diffTime.Hours;
+                            if (diffTime.Days > 0)
+                                intHour += diffTime.Days * 24;
+                            if (diffTime.Minutes > 0) //Mac 2022/11/03
+                                intHour++;
+                            ResultGridView[7, i].Value = intHour.ToString();
+
+                            //Mac 2017/06/07
+                            string totalInOut = "";
+                            if (diffTime.Days == 0 && diffTime.Hours == 0 && diffTime.Minutes == 0)
+                                totalInOut = "0";
+                            else
+                                totalInOut = (diffTime.Days * 24) + diffTime.Hours + "." + diffTime.Minutes.ToString("00");
+
+                            ResultGridView[7, i].Value = totalInOut;
+
+                            try //Mac 2018/01/16
+                            {
+                                if (Configs.UseProIDAll) //Mac 2015/10/16
+                                {
+                                    string[] ProIDAll;
+                                    int intHourPro = 0;
+
+                                    //if (selectedReportId == 13)
+                                    if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/23
+                                    {
+                                        ProIDAll = ResultGridView[16, i].Value.ToString().Split(',');
+                                        ResultGridView[16, i].Value = "";
+                                    }
+                                    else
+                                    {
+                                        /*ProIDAll = ResultGridView[14, i].Value.ToString().Split(',');
+                                        ResultGridView[14, i].Value = "";*/
+                                        ProIDAll = ResultGridView[15, i].Value.ToString().Split(',');
+                                    }
+
+                                    for (int n = 0; n < ProIDAll.Length; n++)
+                                    {
+                                        if (ProIDAll[n].Length > 0)
+                                        {
+                                            intHourPro += AppGlobalVariables.PromotionNamesMinuteMap[Convert.ToInt16(ProIDAll[n])];
+
+                                            //if (selectedReportId == 13)
+                                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/23
+                                                ResultGridView[16, i].Value += AppGlobalVariables.PromotionNamesById[Convert.ToInt16(ProIDAll[n])];
+                                            else
+                                                ResultGridView[15, i].Value += AppGlobalVariables.PromotionNamesById[Convert.ToInt16(ProIDAll[n])]; //Mac 2016/03/05
+
+                                            if (n < (ProIDAll.Length - 2))
+                                            {
+                                                if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/23
+                                                    ResultGridView[16, i].Value += "|"; //Mac 2016/03/05
+                                                else
+                                                    ResultGridView[15, i].Value += "|"; //Mac 2016/03/05
+                                            }
+
+                                        }
+                                    }
+
+                                    intHourPro = intHourPro / 60;
+
+                                    ResultGridView[8, i].Value = intHourPro.ToString();
+                                    if (intHourPro < intHour)
+                                    {
+                                        ResultGridView[9, i].Value = intHourPro.ToString();//ลด
+                                        ResultGridView[10, i].Value = (intHour - intHourPro).ToString();//จ่าย
+                                    }
+                                    else
+                                    {
+                                        ResultGridView[9, i].Value = intHour.ToString();//ลด
+                                        ResultGridView[10, i].Value = "0";//จ่าย
+                                    }
+                                }
+                                else
+                                {
+                                    //if (selectedReportId == 13) intID = Convert.ToInt32(ResultGridView[16, i].Value);
+                                    //Mac 2018/02/23
+                                    if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) intID = Convert.ToInt32(ResultGridView[16, i].Value); //Mac 2018/02/23
+                                    else intID = Convert.ToInt32(ResultGridView[15, i].Value); //Mac 2016/03/05
+                                                                                               //else intID = Convert.ToInt32(ResultGridView[14, i].Value);
+
+                                    int intHourPro = 0;
+                                    /*                        if (intID >= 5000)
+                                                            {
+                                                                DateTime timeIn = DateTime.Parse(ResultGridView[4, i].Value.ToString());
+                                                                DateTime timeOut = DateTime.Parse(ResultGridView[6, i].Value.ToString());
+                                                                TimeSpan diff = timeOut - timeIn;
+
+                                                                int totalMinutes = (diff.Days * 24 * 60) + (diff.Hours * 60) + diff.Minutes;
+
+                                                                // 🟦 ดึงค่านาทีฟรีจากตาราง promotion
+                                                                string sqlFreeMinute = $"SELECT minute FROM promotion WHERE promotion_id = {intID}";
+                                                                DataTable dtPromo = DbController.LoadData(sqlFreeMinute);
+
+                                                                int freeMinutes = 0;
+                                                                if (dtPromo != null && dtPromo.Rows.Count > 0)
+                                                                    freeMinutes = Convert.ToInt32(dtPromo.Rows[0]["minute"]);
+
+                                                                // 🟨 หักนาทีฟรีออก
+                                                                totalMinutes -= freeMinutes;
+                                                                if (totalMinutes < 0) totalMinutes = 0;
+
+                                                                // 🟩 แปลงกลับเป็นชั่วโมง/นาที เพื่อส่งให้ CalPrice
+                                                                int totalHours = totalMinutes / 60;
+                                                                int remainMinutes = totalMinutes % 60;
+
+                                                                // คำนวณราคาตาม pricerate0 ผ่าน CalPrice()
+                                                                int newPrice = CalPrice(totalHours, remainMinutes, false);
+
+                                                                // อัปเดตราคาใหม่ใน Grid
+                                                                ResultGridView[13, i].Value = newPrice.ToString();
+                                                            }*/
+                                    if (intID > 0)
+                                        intHourPro = AppGlobalVariables.PromotionNamesMinuteMap[intID] / 60;
+                                    ResultGridView[8, i].Value = intHourPro.ToString();
+                                    if (intHourPro < intHour)
+                                    {
+                                        ResultGridView[9, i].Value = intHourPro.ToString();//ลด
+                                        ResultGridView[10, i].Value = (intHour - intHourPro).ToString();//จ่าย
+                                    }
+                                    else
+                                    {
+                                        ResultGridView[9, i].Value = intHour.ToString();//ลด
+                                        ResultGridView[10, i].Value = "0";//จ่าย
+                                    }
+
+                                    if (intID > 0)
+                                    {
+                                        //if (selectedReportId == 13) ResultGridView[16, i].Value = AppGlobalVariables.PromotionNamesById[intID];
+                                        //Mac 2018/02/24
+                                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView[16, i].Value = AppGlobalVariables.PromotionNamesById[intID];
+                                        else ResultGridView[15, i].Value = AppGlobalVariables.PromotionNamesById[intID]; //Mac 2016/03/05
+                                                                                                                         //else ResultGridView[14, i].Value = AppGlobalVariables.PromotionNamesById[intID];
+                                    }
+                                    else
+                                    {
+                                        //if (selectedReportId == 13) ResultGridView[16, i].Value = "";
+                                        //Mac 2018/02/24
+                                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView[16, i].Value = "";
+                                        else ResultGridView[15, i].Value = ""; //Mac 2016/03/05
+                                                                               //else ResultGridView[14, i].Value = "";
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                ResultGridView[8, i].Value = "0";
+                                ResultGridView[9, i].Value = "0";
+                                ResultGridView[10, i].Value = "0";
+                                //if (selectedReportId == 13)
+                                if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                                    ResultGridView[16, i].Value = "";
+                                else
+                                    ResultGridView[15, i].Value = "";
+                            }
+
+                            //Golf2014/10/08
+                            // (selectedReportId == 13)
+                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                            {
+                                try
+                                {
+                                    /*double beforeVat = double.Parse(ResultGridView[15, i].Value.ToString()) * 100 / 107;
+                                    beforeVat = Math.Round(beforeVat, 2);
+                                    double vat = double.Parse(ResultGridView[15, i].Value.ToString()) - beforeVat;*/
+
+                                    double vat = (double.Parse(ResultGridView[15, i].Value.ToString()) * 7) / 107;
+
+                                    if (Configs.Reports.Report3Decimal) //Mac 2016/10/06
+                                        vat = Math.Round(vat, 3);
+                                    else
+                                        vat = Math.Round(vat, 2);
+
+                                    double beforeVat = double.Parse(ResultGridView[15, i].Value.ToString()) - vat;
+
+                                    if (Configs.Reports.Report3Decimal) //Mac 2016/10/06
+                                    {
+                                        ResultGridView[13, i].Value = beforeVat.ToString("#,###,##0.000");
+                                        ResultGridView[14, i].Value = vat.ToString("#,###,##0.000");
+                                    }
+                                    else
+                                    {
+                                        ResultGridView[13, i].Value = beforeVat.ToString("#,###,##0.00");
+                                        ResultGridView[14, i].Value = vat.ToString("#,###,##0.00");
+                                    }
+
+                                    /*ResultGridView[13, i].Value = beforeVat.ToString("#0.0000");
+                                    ResultGridView[14, i].Value = vat.ToString("#0.0000");*/
+                                    doubleSumBeforeVat += beforeVat;
+                                    doubleSumVat += vat;
+                                }
+                                catch (Exception) { }
+                            }
+
+
+                            intSumPriceLoss += Convert.ToInt32(ResultGridView[11, i].Value);
+                            if (selectedReportId == 12 && Configs.Reports.UseReport13_11) //Mac 2017/11/30
+                            {
+
+                            }
+                            else
+                                intSumPriceOver += Convert.ToInt32(ResultGridView[12, i].Value);
+                            //if (selectedReportId == 13)
+                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                            {
+                                intSumPrice += Convert.ToInt32(ResultGridView[15, i].Value);
+
+                                if (Convert.ToInt32(ResultGridView[15, i].Value) == 0) //Mac 2017/07/12
+                                    ResultGridView[10, i].Value = "0";
+
+                                if (Configs.Reports.UseReport13_3) //Mac 2018/04/18
+                                {
+                                    if (ResultGridView[17, i].Value.ToString().Trim() == "")
+                                        ResultGridView[17, i].Value = ResultGridView[15, i].Value;
+                                }
+
+                            }
+                            else
+                            {
+                                intSumPrice += Convert.ToInt32(ResultGridView[13, i].Value);
+                                intSumDiscount += Convert.ToInt32(ResultGridView[14, i].Value); //Mac 2016/03/05
+
+                                if (Convert.ToInt32(ResultGridView[13, i].Value) == 0) //Mac 2017/07/12
+                                    ResultGridView[10, i].Value = "0";
+                            }
+                        }
+                        ResultGridView[5, intNo].Value = "จำนวนรถ";
+                        ResultGridView[6, intNo].Value = intNo.ToString("#,###,##0") + " คัน";
+                        //ResultGridView[6, intNo].Value = intNo + " คัน";
+                        ResultGridView[10, intNo].Value = "รายได้รวม";
+                        ResultGridView[11, intNo].Value = intSumPriceLoss.ToString("#,###,##0");
+                        ResultGridView[12, intNo].Value = intSumPriceOver.ToString("#,###,##0");
+                        /*ResultGridView[11, intNo].Value = intSumPriceLoss;
+                        ResultGridView[12, intNo].Value = intSumPriceOver;*/
+                        //if (selectedReportId == 13)
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                        {
+                            if (Configs.UseCalVatFromTotal) //Mac 2022/09/30
+                            {
+                                ResultGridView[13, intNo].Value = (Convert.ToDouble(intSumPrice) - (Convert.ToDouble(intSumPrice) * 7 / 107)).ToString("#,###,##0.00");
+                                ResultGridView[14, intNo].Value = (Convert.ToDouble(intSumPrice) * 7 / 107).ToString("#,###,##0.00");
+                                ResultGridView[15, intNo].Value = intSumPrice.ToString("#,###,##0");
+                            }
+                            else
+                            {
+                                if (Configs.Reports.Report3Decimal) //Mac 2016/10/06
+                                {
+                                    ResultGridView[13, intNo].Value = doubleSumBeforeVat.ToString("#,###,##0.000");
+                                    ResultGridView[14, intNo].Value = doubleSumVat.ToString("#,###,##0.000");
+                                    //ResultGridView[15, intNo].Value = intSumPrice.ToString("#,###,##0.000");
+                                }
+                                else
+                                {
+                                    ResultGridView[13, intNo].Value = doubleSumBeforeVat.ToString("#,###,##0.00");
+                                    ResultGridView[14, intNo].Value = doubleSumVat.ToString("#,###,##0.00");
+                                    //ResultGridView[15, intNo].Value = intSumPrice.ToString("#,###,##0.00");
+                                }
+                                ResultGridView[15, intNo].Value = intSumPrice.ToString("#,###,##0");
+                            }
+                            /*ResultGridView[13, intNo].Value = doubleSumBeforeVat.ToString("#0.0000");
+                            ResultGridView[14, intNo].Value = doubleSumVat.ToString("#0.0000"); ;
+                            ResultGridView[15, intNo].Value = intSumPrice;*/
+                        }
+                        else
+                        {
+                            ResultGridView[13, intNo].Value = intSumPrice.ToString("#,###,##0");
+                            ResultGridView[14, intNo].Value = intSumDiscount.ToString("#,###,##0"); //Mac 2016/03/05
+                        }
+                        //else ResultGridView[13, intNo].Value = intSumPrice;
+                        //      
+                        totalLoss = intSumPriceLoss;
+                        totalOver = intSumPriceOver;
+                        totalPrice = intSumPrice;
+                        totalDiscount = intSumDiscount; //Mac 2016/03/05
+                        totalBeforeVat = doubleSumBeforeVat;
+                        totalVat = doubleSumVat;
+
+                        //if (Configs.UseReceiptFor1Out) //Mac 2018/11/14
+                        //    ResultGridView.Columns[ResultGridView.ColumnCount - 1].Visible = false;
+                    }
+
+                    // ✅ โหลด Crystal Report
+                    path = path.Replace("\\bin\\Debug", "");
+                    PrimaryCrystalReportViewer.ReportSource = null;
+                    PrimaryCrystalReportViewer.Refresh();
+
+                    dt = new DataTable();
+                    foreach (DataGridViewColumn col in ResultGridView.Columns)
+                    {
+                        dt.Columns.Add(col.HeaderText);
+                    }
+
+                    for (int i = 0; i < ResultGridView.Rows.Count - 1; i++)
+                    {
+                        DataRow dRow = dt.NewRow();
+                        for (int j = 0; j < ResultGridView.Columns.Count; j++)
+                        {
+                            dRow[j] = ResultGridView.Rows[i].Cells[j].Value;
+                        }
+                        dt.Rows.Add(dRow);
+                    }
+                    //////////////////////////////
+
+                    string p0, p1, p2, p3, p4;
+                    if (selectedReportId == 13 && Configs.Reports.UseReport13_12) //Mac 2023/08/09
+                    {
+                        p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[7].Value.ToString();
+                        p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[12].Value.ToString();
+                        p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[13].Value.ToString();
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[16].Value.ToString();
+                        else p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString();
+                        p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString();
+                    }
+                    else
+                    {
+                        p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[6].Value.ToString();
+                        p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
+                        p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[12].Value.ToString();
+                        //if (selectedReportId == 13) p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString();
+                        //Mac 2018/02/24
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString();
+                        else p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[13].Value.ToString();
+                        p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString(); //Mac 2017/06/12
+                    }
+                    /////////////////////////////
+                    ////
+                    if (selectedReportId == 12)
+                    {
+                        rpt.Load(path + "\\CrystalReports\\Report13.rpt");
+                    }
+                    else
+                    {
+
+                    }
+
+
+                    rpt.SetDataSource(dt);
+
+                    //if (selectedReportId == 12)
+                    //    ReportHeaderLabel.Text = ReportHeaderLabel.Text.Replace("แสดงโปรโมชั่น", "");
+
+                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                    if (dtMap.Rows.Count > 0)
+                    {
+                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                        //if (selectedReportId == 13)
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                        {
+                            try
+                            {
+                                rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                                rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
+                                rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                            }
+                            catch (Exception)
+                            {
+                                rpt.DataDefinition.FormulaFields["Address1"].Text = "''";
+                                rpt.DataDefinition.FormulaFields["Address2"].Text = "''";
+                                rpt.DataDefinition.FormulaFields["TaxID"].Text = "''";
+                            }
+                        }
+
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                        {
+                            if (Configs.Reports.UseReport13_12) //Mac 2023/08/09
+                            {
+                                rpt.DataDefinition.FormulaFields["Pa4"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString() + "'";
+                                rpt.DataDefinition.FormulaFields["Pa5"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString() + "'";
+                                if (Configs.Reports.UseReport13_3)
+                                    rpt.DataDefinition.FormulaFields["Sender"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "'";
+                            }
+                            else
+                            {
+                                rpt.DataDefinition.FormulaFields["Pa4"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[13].Value.ToString() + "'";
+                                rpt.DataDefinition.FormulaFields["Pa5"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString() + "'";
+                                if (Configs.Reports.UseReport13_3) //Mac 2017/11/06
+                                    rpt.DataDefinition.FormulaFields["Sender"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "'";
+                            }
+                        }
+
+                        if (Configs.Reports.UseReport13logo) //Mac 2018/05/08
+                        {
+                            rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                            rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
+                            rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                        }
+
+                    }
+                    PrimaryCrystalReportViewer.ReportSource = rpt;
+                    PrimaryCrystalReportViewer.Refresh();
+
+                    //ResultGridView.Columns[5].Visible = false;
+
+                    ////
+
+                    PdfExportButton.Enabled = true;
+                    ExcelExportButton.Enabled = true;
+                    break;
+
+                case 13:
+                    {
+
+                        // 🧩 เตรียม list สำหรับ flag แถวที่ต้องอัปเดต
+                        List<string> flagList = new List<string>();
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string no_old = row["no_old"]?.ToString().Trim();
+
+                            if (!string.IsNullOrEmpty(no_old))
+                            {
+                                if (int.TryParse(no_old, out int noOldInt))
+                                {
+                                    flagList.Add(noOldInt.ToString());
+                                    Console.WriteLine($"เก็บ {noOldInt} รออัปเดตตอนท้าย");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"ข้าม no_old: {no_old} (ไม่ใช่ตัวเลข)");
+                                }
+                            }
+                        }
+
+                        // ✅ อัปเดตหลังจบลูป
+                        if (flagList.Count > 0)
+                        {
+                            string idList = string.Join(",", flagList.Distinct()); // กันซ้ำ
+                            string updateSql = $"UPDATE recordout SET userpays = 66 WHERE no IN ({idList})";
+
+                            try
+                            {
+                                DbController.SaveData(updateSql);
+                                Console.WriteLine($"✅ อัปเดต userpays = 66 ทั้งหมด {flagList.Count} แถว: {idList}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"❌ อัปเดตล้มเหลว: {ex.Message}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("ไม่มีรายการให้อัปเดต userpays");
+                        }
+
+                        // 🔁 ถ้ามีการอัปเดต userpays ให้โหลดข้อมูลใหม่
+                        if (flagList.Count > 0)
+                        {
+                            dt = DbController.LoadData(sql);
+                        }
+
+                        // ✅ สร้าง DataTable สำหรับรายงาน
+                        DataTable resultTable = new DataTable();
+                        resultTable.Columns.Add("เลขที่ใบเสร็จ/ใบกำกับภาษี");
+                        resultTable.Columns.Add("ลำดับ");
+                        resultTable.Columns.Add("ประเภท");
+                        resultTable.Columns.Add("ทะเบียน");
+                        resultTable.Columns.Add("เวลาเข้า");
+                        resultTable.Columns.Add("เจ้าหน้าที่ขาออก");
+                        resultTable.Columns.Add("เวลาออก");
+                        resultTable.Columns.Add("ชม.จอด");
+                        resultTable.Columns.Add("ชม.ส่วนลดผู้มาติดต่อ");
+                        resultTable.Columns.Add("ชม.จ่าย");
+                        resultTable.Columns.Add("ชม.ลด");
+                        resultTable.Columns.Add("ค่าปรับบัตรหาย");
+                        resultTable.Columns.Add("ค่าปรับข้ามวัน");
+                        resultTable.Columns.Add("รายได้หลังภาษี");
+                        resultTable.Columns.Add("ภาษี 7%");
+                        resultTable.Columns.Add("รายได้");
+
+                        resultTable.Columns.Add("E-Stamp");
+                        resultTable.Columns.Add("receipt");
+
+
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string printno = row["printno"]?.ToString() ?? "";
+                            string no = row["ลำดับ"]?.ToString() ?? "";
+                            string cartype = row["ประเภท"]?.ToString() ?? "";
+                            string license = row["license"]?.ToString() ?? "";
+                            string datein = row["datein"] != DBNull.Value
+                                ? Convert.ToDateTime(row["datein"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                : "";
+                            string lostcard = row["losscard"]?.ToString() ?? "";
+                            string dateout = row["dategateout"] != DBNull.Value
+                                ? Convert.ToDateTime(row["dategateout"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                : (row["dateout"] != DBNull.Value
+                                    ? Convert.ToDateTime(row["dateout"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                    : "");
+                            string overdate = row["overdate"]?.ToString() ?? "";
+                            string userout = "";
+                            if (row["userpays"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["userpays"].ToString()))
+                            {
+                                // 🔹 ถ้ามี userpays ให้ใช้ค่านี้ก่อนเลย
+                                userout = row["userpays"].ToString();
+                            }
+                            else if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
+                            {
+                                // 🔹 ถ้าไม่มี userpays แต่มี usergateout
+                                userout = row["usergateout"].ToString();
+                            }
+                            else if (row["userout"] != DBNull.Value)
+                            {
+                                // 🔹 ถ้าไม่มีทั้งหมดข้างบน → ใช้ userout ปกติ
+                                userout = row["userout"].ToString();
+                            }
+                            else
+                            {
+                                // 🔹 กรณีสุดท้าย ถ้าไม่มีอะไรเลย → ค่าเริ่มต้นว่าง
+                                userout = "";
+                            }
+
+                            decimal price = row["price"] != DBNull.Value ? Convert.ToDecimal(row["price"]) : 0;
+                            decimal discount = row["discount"] != DBNull.Value ? Convert.ToDecimal(row["discount"]) : 0;
+                            string estamp = row["proid"]?.ToString() ?? "";
+                            string receipt = row["receipt"]?.ToString() ?? "";
+
+                            if (string.IsNullOrWhiteSpace(license) || license == "NO")
+                                license = row["license"]?.ToString() ?? "";
+
+                            DataRow newRow = resultTable.NewRow();
+                            newRow[0] = printno;           // ช่องที่ 0
+                            newRow[1] = no;
+                            newRow[2] = cartype;      // ช่องที่ 1
+                            newRow[3] = license;      // ช่องที่ 2
+                            newRow[4] = datein;       // ช่องที่ 3
+                            newRow[5] = userout;      // ช่องที่ 4
+                            newRow[6] = dateout;      // ช่องที่ 5
+                            newRow[11] = lostcard;       // ช่องที่ 10
+                            newRow[12] = overdate;    // ช่องที่ 12
+                            newRow[13] = "";
+                            newRow[14] = "";
+                            newRow[15] = price;
+                            newRow[16] = estamp;
+                            newRow[17] = receipt;
+                            resultTable.Rows.Add(newRow);
+                        }
+
+                        // ✅ ผูกข้อมูลเข้ากับ DataGridView
+                        ResultGridView.DataSource = resultTable;
+                        //ResultGridView.Refresh();
+                        //    ResultGridView.Columns[0].HeaderText = "เลขที่ใบเสร็จ/ใบกำกับภาษี";
+                        //    ResultGridView.Columns[2].HeaderText = "ประเภท";
+                        //    ResultGridView.Columns[3].HeaderText = "ทะเบียน";
+                        //    ResultGridView.Columns[4].HeaderText = "เวลาเข้า";
+                        //    ResultGridView.Columns[5].HeaderText = "เจ้าหน้าที่ขาออก";
+                        //    ResultGridView.Columns[6].HeaderText = "เวลาออก";
+                        //    ResultGridView.Columns[7].HeaderText = "ชม.จอด";
+                        //    ResultGridView.Columns[8].HeaderText = "ชม.ส่วนลดผู้มาติดต่อ";
+                        //    ResultGridView.Columns[9].HeaderText = "ชม.ลด";
+                        //    ResultGridView.Columns[10].HeaderText = "ชม.จ่าย";
+                        //    ResultGridView.Columns[11].HeaderText = "ค่าปรับบัตรหาย";
+
+                        ResultGridView.Columns[0].Width = 110;
+                        ResultGridView.Columns[1].Width = 50;
+                        ResultGridView.Columns[4].Width = 120;
+                        ResultGridView.Columns[5].Width = 110;
+                        ResultGridView.Columns[6].Width = 120;
+
+                        if (ResultGridView.Columns.Count <= 18)
+                        {
+                            ResultGridView.Columns[17].Visible = false;
+                        }
+                        int intNo = ResultGridView.Rows.Count - 1;
+                        ResultGridView.Columns[11].Width = 105;
+                        ResultGridView.Columns[15].Width = 160;
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView.Columns[16].Width = 160;
+                        int intSumPrice = 0;
+                        int intSumPriceLoss = 0;
+                        int intSumPriceOver = 0;
+                        int intSumDiscount = 0; //Mac 2016/03/05
+                        double doubleSumBeforeVat = 0;
+                        double doubleSumVat = 0;
+
+
+                        for (int i = 0; i < intNo; i++)
+                        {
+                            int intID = Convert.ToInt32(ResultGridView[0, i].Value);
+                            DateTime dto = DateTime.Parse(ResultGridView[6, i].Value.ToString());
+
+                            if (intID > 0)
+                            {
+                                //Mac 2018/05/13
+                                string fontSlip13 = "";
+                                if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
+                                    fontSlip13 = AppGlobalVariables.Printings.ReceiptName;
+                                else
+                                {
+                                    if (!Configs.UseReceiptName)
+                                        fontSlip13 = "IV";
+                                }
+
+                                if (Configs.UseReceiptFor1Out) //Mac 2018/11/14
+                                {
+                                    if (Configs.OutReceiptNameMonth) //Mac 2016/04/27
+                                        ResultGridView[0, i].Value = ResultGridView[ResultGridView.ColumnCount - 1, i].Value.ToString() + dto.ToString("yyMM") + intID.ToString("00000#");
+                                    else
+                                        ResultGridView[0, i].Value = ResultGridView[ResultGridView.ColumnCount - 1, i].Value.ToString() + dto.ToString("yy") + intID.ToString("00000#");
+                                }
+                                else
+                                {
+                                    if (Configs.OutReceiptNameMonth) //Mac 2016/04/27
+                                    {
+                                        ResultGridView[0, i].Value = fontSlip13 + dto.ToString("yyMM") + intID.ToString("00000#"); //Mac 2022/04/26
+                                    }
+                                    else
+                                    {
+                                        ResultGridView[0, i].Value = fontSlip13 + dto.ToString("yy") + intID.ToString("00000#"); //Mac 2018/05/13
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                ResultGridView[0, i].Value = 0;
+                            }
+
+                            try
+                            {
+                                string x = ResultGridView[2, i].Value.ToString();
+                                int value;
+                                if (int.TryParse(x, out value))
+                                {
+                                    intID = value;
+                                    ResultGridView[2, i].Value = AppGlobalVariables.CarTypesById[intID];
+                                }
+                                else
+                                    ResultGridView[2, i].Value = x;
+
+                            }
+                            catch
+                            {
+                                ResultGridView[2, i].Value = "";
+                            }
+
+                            DateTime dti = DateTime.Parse(ResultGridView[4, i].Value.ToString());
+                            TimeSpan diffTime = dto - dti;
+                            int intHour = diffTime.Hours;
+                            if (diffTime.Days > 0)
+                                intHour += diffTime.Days * 24;
+                            if (diffTime.Minutes > 0) //Mac 2022/11/03
+                                intHour++;
+                            ResultGridView[7, i].Value = intHour.ToString();
+
+                            //Mac 2017/06/07
+                            string totalInOut = "";
+                            if (diffTime.Days == 0 && diffTime.Hours == 0 && diffTime.Minutes == 0)
+                                totalInOut = "0";
+                            else
+                                totalInOut = (diffTime.Days * 24) + diffTime.Hours + "." + diffTime.Minutes.ToString("00");
+
+                            ResultGridView[7, i].Value = totalInOut;
+                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                            {
+                                try
+                                {
+                                    /*double beforeVat = double.Parse(ResultGridView[15, i].Value.ToString()) * 100 / 107;
+                                    beforeVat = Math.Round(beforeVat, 2);
+                                    double vat = double.Parse(ResultGridView[15, i].Value.ToString()) - beforeVat;*/
+
+                                    double vat = (double.Parse(ResultGridView[15, i].Value.ToString()) * 7) / 107;
+
+                                    if (Configs.Reports.Report3Decimal) //Mac 2016/10/06
+                                        vat = Math.Round(vat, 3);
+                                    else
+                                        vat = Math.Round(vat, 2);
+
+                                    double beforeVat = double.Parse(ResultGridView[15, i].Value.ToString()) - vat;
+
+                                    if (Configs.Reports.Report3Decimal) //Mac 2016/10/06
+                                    {
+                                        ResultGridView[13, i].Value = beforeVat.ToString("#,###,##0.000");
+                                        ResultGridView[14, i].Value = vat.ToString("#,###,##0.000");
+                                    }
+                                    else
+                                    {
+                                        ResultGridView[13, i].Value = beforeVat.ToString("#,###,##0.00");
+                                        ResultGridView[14, i].Value = vat.ToString("#,###,##0.00");
+                                    }
+
+                                    /*ResultGridView[13, i].Value = beforeVat.ToString("#0.0000");
+                                    ResultGridView[14, i].Value = vat.ToString("#0.0000");*/
+                                    doubleSumBeforeVat += beforeVat;
+                                    doubleSumVat += vat;
+                                }
+                                catch (Exception) { }
+                            }
+                            try //Mac 2018/01/16
+                            {
+                                if (Configs.UseProIDAll) //Mac 2015/10/16
+                                {
+                                    string[] ProIDAll;
+                                    int intHourPro = 0;
+
+                                    //if (selectedReportId == 13)
+                                    if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/23
+                                    {
+                                        ProIDAll = ResultGridView[16, i].Value.ToString().Split(',');
+                                        ResultGridView[16, i].Value = "";
+                                    }
+                                    else
+                                    {
+                                        /*ProIDAll = ResultGridView[14, i].Value.ToString().Split(',');
+                                        ResultGridView[14, i].Value = "";*/
+                                        ProIDAll = ResultGridView[15, i].Value.ToString().Split(',');
+                                    }
+
+                                    for (int n = 0; n < ProIDAll.Length; n++)
+                                    {
+                                        if (ProIDAll[n].Length > 0)
+                                        {
+                                            intHourPro += AppGlobalVariables.PromotionNamesMinuteMap[Convert.ToInt16(ProIDAll[n])];
+
+                                            //if (selectedReportId == 13)
+                                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/23
+                                                ResultGridView[16, i].Value += AppGlobalVariables.PromotionNamesById[Convert.ToInt16(ProIDAll[n])];
+                                            else
+                                                ResultGridView[15, i].Value += AppGlobalVariables.PromotionNamesById[Convert.ToInt16(ProIDAll[n])]; //Mac 2016/03/05
+
+                                            if (n < (ProIDAll.Length - 2))
+                                            {
+                                                if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/23
+                                                    ResultGridView[16, i].Value += "|"; //Mac 2016/03/05
+                                                else
+                                                    ResultGridView[15, i].Value += "|"; //Mac 2016/03/05
+                                            }
+
+                                        }
+                                    }
+
+                                    intHourPro = intHourPro / 60;
+
+                                    ResultGridView[8, i].Value = intHourPro.ToString();
+                                    if (intHourPro < intHour)
+                                    {
+                                        ResultGridView[9, i].Value = intHourPro.ToString();//ลด
+                                        ResultGridView[10, i].Value = (intHour - intHourPro).ToString();//จ่าย
+                                    }
+                                    else
+                                    {
+                                        ResultGridView[9, i].Value = intHour.ToString();//ลด
+                                        ResultGridView[10, i].Value = "0";//จ่าย
+                                    }
+                                }
+                                else
+                                {
+                                    //if (selectedReportId == 13) intID = Convert.ToInt32(ResultGridView[16, i].Value);
+                                    //Mac 2018/02/23
+                                    if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) intID = Convert.ToInt32(ResultGridView[16, i].Value); //Mac 2018/02/23
+                                    else intID = Convert.ToInt32(ResultGridView[15, i].Value); //Mac 2016/03/05
+                                                                                               //else intID = Convert.ToInt32(ResultGridView[14, i].Value);
+
+                                    int intHourPro = 0;
+                                    /*                        if (intID >= 5000)
+                                                            {
+                                                                DateTime timeIn = DateTime.Parse(ResultGridView[4, i].Value.ToString());
+                                                                DateTime timeOut = DateTime.Parse(ResultGridView[6, i].Value.ToString());
+                                                                TimeSpan diff = timeOut - timeIn;
+
+                                                                int totalMinutes = (diff.Days * 24 * 60) + (diff.Hours * 60) + diff.Minutes;
+
+                                                                // 🟦 ดึงค่านาทีฟรีจากตาราง promotion
+                                                                string sqlFreeMinute = $"SELECT minute FROM promotion WHERE promotion_id = {intID}";
+                                                                DataTable dtPromo = DbController.LoadData(sqlFreeMinute);
+
+                                                                int freeMinutes = 0;
+                                                                if (dtPromo != null && dtPromo.Rows.Count > 0)
+                                                                    freeMinutes = Convert.ToInt32(dtPromo.Rows[0]["minute"]);
+
+                                                                // 🟨 หักนาทีฟรีออก
+                                                                totalMinutes -= freeMinutes;
+                                                                if (totalMinutes < 0) totalMinutes = 0;
+
+                                                                // 🟩 แปลงกลับเป็นชั่วโมง/นาที เพื่อส่งให้ CalPrice
+                                                                int totalHours = totalMinutes / 60;
+                                                                int remainMinutes = totalMinutes % 60;
+
+                                                                // คำนวณราคาตาม pricerate0 ผ่าน CalPrice()
+                                                                int newPrice = CalPrice(totalHours, remainMinutes, false);
+
+                                                                // อัปเดตราคาใหม่ใน Grid
+                                                                ResultGridView[13, i].Value = newPrice.ToString();
+                                                            }*/
+                                    if (intID > 0)
+                                        intHourPro = AppGlobalVariables.PromotionNamesMinuteMap[intID] / 60;
+                                    ResultGridView[8, i].Value = intHourPro.ToString();
+                                    if (intHourPro < intHour)
+                                    {
+                                        ResultGridView[9, i].Value = intHourPro.ToString();//ลด
+                                        ResultGridView[10, i].Value = (intHour - intHourPro).ToString();//จ่าย
+                                    }
+                                    else
+                                    {
+                                        ResultGridView[9, i].Value = intHour.ToString();//ลด
+                                        ResultGridView[10, i].Value = "0";//จ่าย
+                                    }
+
+                                    if (intID > 0)
+                                    {
+                                        //if (selectedReportId == 13) ResultGridView[16, i].Value = AppGlobalVariables.PromotionNamesById[intID];
+                                        //Mac 2018/02/24
+                                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView[16, i].Value = AppGlobalVariables.PromotionNamesById[intID];
+                                        else ResultGridView[15, i].Value = AppGlobalVariables.PromotionNamesById[intID]; //Mac 2016/03/05
+                                                                                                                         //else ResultGridView[14, i].Value = AppGlobalVariables.PromotionNamesById[intID];
+                                    }
+                                    else
+                                    {
+                                        //if (selectedReportId == 13) ResultGridView[16, i].Value = "";
+                                        //Mac 2018/02/24
+                                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView[16, i].Value = "";
+                                        else ResultGridView[15, i].Value = ""; //Mac 2016/03/05
+                                                                               //else ResultGridView[14, i].Value = "";
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                ResultGridView[8, i].Value = "0";
+                                ResultGridView[9, i].Value = "0";
+                                ResultGridView[10, i].Value = "0";
+                                //if (selectedReportId == 13)
+                                if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                                    ResultGridView[16, i].Value = "";
+                                else
+                                    ResultGridView[15, i].Value = "";
+                            }
+
+                            //Golf2014/10/08
+                            // (selectedReportId == 13)
+                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                            {
+                                try
+                                {
+                                    /*double beforeVat = double.Parse(ResultGridView[15, i].Value.ToString()) * 100 / 107;
+                                    beforeVat = Math.Round(beforeVat, 2);
+                                    double vat = double.Parse(ResultGridView[15, i].Value.ToString()) - beforeVat;*/
+
+                                    double vat = (double.Parse(ResultGridView[15, i].Value.ToString()) * 7) / 107;
+
+                                    if (Configs.Reports.Report3Decimal) //Mac 2016/10/06
+                                        vat = Math.Round(vat, 3);
+                                    else
+                                        vat = Math.Round(vat, 2);
+
+                                    double beforeVat = double.Parse(ResultGridView[15, i].Value.ToString()) - vat;
+
+                                    if (Configs.Reports.Report3Decimal) //Mac 2016/10/06
+                                    {
+                                        ResultGridView[13, i].Value = beforeVat.ToString("#,###,##0.000");
+                                        ResultGridView[14, i].Value = vat.ToString("#,###,##0.000");
+                                    }
+                                    else
+                                    {
+                                        ResultGridView[13, i].Value = beforeVat.ToString("#,###,##0.00");
+                                        ResultGridView[14, i].Value = vat.ToString("#,###,##0.00");
+                                    }
+
+                                    /*ResultGridView[13, i].Value = beforeVat.ToString("#0.0000");
+                                    ResultGridView[14, i].Value = vat.ToString("#0.0000");*/
+                                    doubleSumBeforeVat += beforeVat;
+                                    doubleSumVat += vat;
+                                }
+                                catch (Exception) { }
+                            }
+
+
+                            intSumPriceLoss += Convert.ToInt32(ResultGridView[11, i].Value);
+                            if (selectedReportId == 12 && Configs.Reports.UseReport13_11) //Mac 2017/11/30
+                            {
+
+                            }
+                            else
+                                intSumPriceOver += Convert.ToInt32(ResultGridView[12, i].Value);
+                            //if (selectedReportId == 13)
+                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                            {
+                                intSumPrice += Convert.ToInt32(ResultGridView[15, i].Value);
+
+                                if (Convert.ToInt32(ResultGridView[15, i].Value) == 0) //Mac 2017/07/12
+                                    ResultGridView[10, i].Value = "0";
+
+                                if (Configs.Reports.UseReport13_3) //Mac 2018/04/18
+                                {
+                                    if (ResultGridView[17, i].Value.ToString().Trim() == "")
+                                        ResultGridView[17, i].Value = ResultGridView[15, i].Value;
+                                }
+
+                            }
+                            else
+                            {
+                                intSumPrice += Convert.ToInt32(ResultGridView[13, i].Value);
+                                intSumDiscount += Convert.ToInt32(ResultGridView[14, i].Value); //Mac 2016/03/05
+
+                                if (Convert.ToInt32(ResultGridView[13, i].Value) == 0) //Mac 2017/07/12
+                                    ResultGridView[10, i].Value = "0";
+                            }
+                        }
+                        ResultGridView[5, intNo].Value = "จำนวนรถ";
+                        ResultGridView[6, intNo].Value = intNo.ToString("#,###,##0") + " คัน";
+                        //ResultGridView[6, intNo].Value = intNo + " คัน";
+                        ResultGridView[10, intNo].Value = "รายได้รวม";
+                        ResultGridView[11, intNo].Value = intSumPriceLoss.ToString("#,###,##0");
+                        ResultGridView[12, intNo].Value = intSumPriceOver.ToString("#,###,##0");
+                        /*ResultGridView[11, intNo].Value = intSumPriceLoss;
+                        ResultGridView[12, intNo].Value = intSumPriceOver;*/
+                        //if (selectedReportId == 13)
+
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                        {
+                            if (Configs.UseCalVatFromTotal) //Mac 2022/09/30
+                            {
+                                ResultGridView[13, intNo].Value = (Convert.ToDouble(intSumPrice) - (Convert.ToDouble(intSumPrice) * 7 / 107)).ToString("#,###,##0.00");
+                                ResultGridView[14, intNo].Value = (Convert.ToDouble(intSumPrice) * 7 / 107).ToString("#,###,##0.00");
+                                ResultGridView[15, intNo].Value = intSumPrice.ToString("#,###,##0");
+                            }
+                            else
+                            {
+                                if (Configs.Reports.Report3Decimal) //Mac 2016/10/06
+                                {
+                                    ResultGridView[13, intNo].Value = doubleSumBeforeVat.ToString("#,###,##0.000");
+                                    ResultGridView[14, intNo].Value = doubleSumVat.ToString("#,###,##0.000");
+                                    //ResultGridView[15, intNo].Value = intSumPrice.ToString("#,###,##0.000");
+                                }
+                                else
+                                {
+                                    ResultGridView[13, intNo].Value = doubleSumBeforeVat.ToString("#,###,##0.00");
+                                    ResultGridView[14, intNo].Value = doubleSumVat.ToString("#,###,##0.00");
+                                    //ResultGridView[15, intNo].Value = intSumPrice.ToString("#,###,##0.00");
+                                }
+                                ResultGridView[15, intNo].Value = intSumPrice.ToString("#,###,##0");
+                            }
+                            /*ResultGridView[13, intNo].Value = doubleSumBeforeVat.ToString("#0.0000");
+                            ResultGridView[14, intNo].Value = doubleSumVat.ToString("#0.0000"); ;
+                            ResultGridView[15, intNo].Value = intSumPrice;*/
+                        }
+                        else
+                        {
+                            ResultGridView[13, intNo].Value = intSumPrice.ToString("#,###,##0");
+                            ResultGridView[14, intNo].Value = intSumDiscount.ToString("#,###,##0"); //Mac 2016/03/05
+                        }
+                        //else ResultGridView[13, intNo].Value = intSumPrice;
+                        //      
+                        totalLoss = intSumPriceLoss;
+                        totalOver = intSumPriceOver;
+                        totalPrice = intSumPrice;
+                        totalDiscount = intSumDiscount; //Mac 2016/03/05
+                        totalBeforeVat = doubleSumBeforeVat;
+                        totalVat = doubleSumVat;
+
+                        //if (Configs.UseReceiptFor1Out) //Mac 2018/11/14
+                        //    ResultGridView.Columns[ResultGridView.ColumnCount - 1].Visible = false;
+                    }
+
+                    // ✅ โหลด Crystal Report
+                    path = path.Replace("\\bin\\Debug", "");
+                    PrimaryCrystalReportViewer.ReportSource = null;
+                    PrimaryCrystalReportViewer.Refresh();
+
+                    dt = new DataTable();
+                    foreach (DataGridViewColumn col in ResultGridView.Columns)
+                    {
+                        dt.Columns.Add(col.HeaderText);
+                    }
+
+                    for (int i = 0; i < ResultGridView.Rows.Count - 1; i++)
+                    {
+                        DataRow dRow = dt.NewRow();
+                        for (int j = 0; j < ResultGridView.Columns.Count; j++)
+                        {
+                            dRow[j] = ResultGridView.Rows[i].Cells[j].Value;
+                        }
+                        dt.Rows.Add(dRow);
+                    }
+                    //////////////////////////////
+
+                    if (selectedReportId == 13 && Configs.Reports.UseReport13_12) //Mac 2023/08/09
+                    {
+                        p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[7].Value.ToString();
+                        p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[12].Value.ToString();
+                        p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[13].Value.ToString();
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[16].Value.ToString();
+                        else p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString();
+                        p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString();
+                    }
+                    else
+                    {
+                        p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[6].Value.ToString();
+                        p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
+                        p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[12].Value.ToString();
+                        //if (selectedReportId == 13) p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString();
+                        //Mac 2018/02/24
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString();
+                        else p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[13].Value.ToString();
+                        p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString(); //Mac 2017/06/12
+                    }
+                    /////////////////////////////
+                    ////
+                    if (selectedReportId == 13)
+                    {
+                        rpt.Load(path + "\\CrystalReports\\Report13_1.rpt");
+                    }
+                    else
+                    {
+
+                    }
+
+
+                    rpt.SetDataSource(dt);
+
+                    //if (selectedReportId == 12)
+                    //    ReportHeaderLabel.Text = ReportHeaderLabel.Text.Replace("แสดงโปรโมชั่น", "");
+
+                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+                    if (dtMap.Rows.Count > 0)
+                    {
+                        rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                        //if (selectedReportId == 13)
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                        {
+                            try
+                            {
+                                rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                                rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
+                                rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                            }
+                            catch (Exception)
+                            {
+                                rpt.DataDefinition.FormulaFields["Address1"].Text = "''";
+                                rpt.DataDefinition.FormulaFields["Address2"].Text = "''";
+                                rpt.DataDefinition.FormulaFields["TaxID"].Text = "''";
+                            }
+                        }
+
+                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                        {
+                            if (Configs.Reports.UseReport13_12) //Mac 2023/08/09
+                            {
+                                rpt.DataDefinition.FormulaFields["Pa4"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString() + "'";
+                                rpt.DataDefinition.FormulaFields["Pa5"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString() + "'";
+                                if (Configs.Reports.UseReport13_3)
+                                    rpt.DataDefinition.FormulaFields["Sender"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "'";
+                            }
+                            else
+                            {
+                                rpt.DataDefinition.FormulaFields["Pa4"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[13].Value.ToString() + "'";
+                                rpt.DataDefinition.FormulaFields["Pa5"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString() + "'";
+                                if (Configs.Reports.UseReport13_3) //Mac 2017/11/06
+                                    rpt.DataDefinition.FormulaFields["Sender"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "'";
+                            }
+                        }
+
+                        if (Configs.Reports.UseReport13logo) //Mac 2018/05/08
+                        {
+                            rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                            rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
+                            rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                        }
+
+                    }
+                    PrimaryCrystalReportViewer.ReportSource = rpt;
+                    PrimaryCrystalReportViewer.Refresh();
+
+                    //ResultGridView.Columns[5].Visible = false;
+
+                    ////
+
+                    PdfExportButton.Enabled = true;
+                    ExcelExportButton.Enabled = true;
+                    break;
+
+                case 101:
+                    {
+
+                        // 🧩 เตรียม list สำหรับ flag แถวที่ต้องอัปเดต
+                        List<string> flagList = new List<string>();
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string no_old = row["no_old"]?.ToString().Trim();
+
+                            if (!string.IsNullOrEmpty(no_old))
+                            {
+                                if (int.TryParse(no_old, out int noOldInt))
+                                {
+                                    flagList.Add(noOldInt.ToString());
+                                    Console.WriteLine($"เก็บ {noOldInt} รออัปเดตตอนท้าย");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"ข้าม no_old: {no_old} (ไม่ใช่ตัวเลข)");
+                                }
+                            }
+                        }
+
+                        // ✅ อัปเดตหลังจบลูป
+                        if (flagList.Count > 0)
+                        {
+                            string idList = string.Join(",", flagList.Distinct()); // กันซ้ำ
+                            string updateSql = $"UPDATE recordout SET userpays = 66 WHERE no IN ({idList})";
+
+                            try
+                            {
+                                DbController.SaveData(updateSql);
+                                Console.WriteLine($"✅ อัปเดต userpays = 66 ทั้งหมด {flagList.Count} แถว: {idList}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"❌ อัปเดตล้มเหลว: {ex.Message}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("ไม่มีรายการให้อัปเดต userpays");
+                        }
+
+                        // 🔁 ถ้ามีการอัปเดต userpays ให้โหลดข้อมูลใหม่
+                        if (flagList.Count > 0)
+                        {
+                            dt = DbController.LoadData(sql);
+                        }
+
+                        // ✅ สร้าง DataTable สำหรับรายงาน
+                        DataTable resultTable = new DataTable();
+                        resultTable.Columns.Add("ลำดับ");
+                        resultTable.Columns.Add("ประเภท");
+                        resultTable.Columns.Add("ทะเบียน");
+                        resultTable.Columns.Add("หมายเลขบัตร");
+                        resultTable.Columns.Add("เวลาออก");
+                        resultTable.Columns.Add("เจ้าหน้าที่ขาออก");
+                        resultTable.Columns.Add("ช่องทางการชำระเงิน");
+                        resultTable.Columns.Add("รายได้");
+
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string no = row["ลำดับ"]?.ToString() ?? "";
+                            string cartype = row["ประเภท"]?.ToString() ?? "";
+                            string license = row["ทะเบียน"]?.ToString() ?? "";
+                            string cardId = row["หมายเลขบัตร"]?.ToString() ?? "";
+                            string dateout = row["dategateout"] != DBNull.Value
+                                ? Convert.ToDateTime(row["dategateout"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                : (row["dateout"] != DBNull.Value
+                                    ? Convert.ToDateTime(row["dateout"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                    : "");
+                            string paytype = row["ช่องทางการชำระเงิน"]?.ToString() ?? "";
+                            string userout = "";
+                            if (row["userpays"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["userpays"].ToString()))
+                            {
+                                // 🔹 ถ้ามี userpays ให้ใช้ค่านี้ก่อนเลย
+                                userout = row["userpays"].ToString();
+                            }
+                            else if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
+                            {
+                                // 🔹 ถ้าไม่มี userpays แต่มี usergateout
+                                userout = row["usergateout"].ToString();
+                            }
+                            else if (row["userout"] != DBNull.Value)
+                            {
+                                // 🔹 ถ้าไม่มีทั้งหมดข้างบน → ใช้ userout ปกติ
+                                userout = row["userout"].ToString();
+                            }
+                            else
+                            {
+                                // 🔹 กรณีสุดท้าย ถ้าไม่มีอะไรเลย → ค่าเริ่มต้นว่าง
+                                userout = "";
+                            }
+
+                            decimal price = row["รายได้"] != DBNull.Value ? Convert.ToDecimal(row["รายได้"]) : 0;
+
+                            if (string.IsNullOrWhiteSpace(license) || license == "NO")
+                                license = row["ทะเบียน"]?.ToString() ?? "";
+
+                            DataRow newRow = resultTable.NewRow();
+                            newRow[0] = no;
+                            newRow[1] = cartype;
+                            newRow[2] = license;
+                            newRow[3] = cardId;
+                            newRow[4] = dateout;
+                            newRow[5] = userout;
+                            newRow[6] = paytype;
+                            newRow[7] = price;
+
+                            resultTable.Rows.Add(newRow);
+                        }
+
+                        ResultGridView.DataSource = resultTable;
+                        ResultGridView.Refresh();
+
+                        //ResultGridView.Columns[0].Width = 50;
+                        //ResultGridView.Columns[1].Width = 70;
+                        ResultGridView.Columns[3].Width = 500;
+                        ResultGridView.Columns[4].Width = 120;
+                        //ResultGridView.Columns[5].Width = 105;
+                        //ResultGridView.Columns[6].Width = 200;
+                        //ResultGridView.Columns[7].Width = 200;
+
+                        // ✅ โหลด Crystal Report
+                        rpt.Load(path + "\\CrystalReports\\Report1_ImpactOut.rpt");
+                        rpt.SetDataSource(resultTable);
+
+                        // 🧩 ส่วนหัวรายงาน
+                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปการชำระเงิน'";
+                        if (dtMap.Rows.Count > 0)
+                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+
+                        PrimaryCrystalReportViewer.ReportSource = rpt;
+                        PrimaryCrystalReportViewer.Refresh();
+
+                        PdfExportButton.Enabled = true;
+                        ExcelExportButton.Enabled = true;
+                        break;
+                    }
+
+                case 162:
+                    {
+
+                        // 🧩 เตรียม list สำหรับ flag แถวที่ต้องอัปเดต
+                        List<string> flagList = new List<string>();
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string no_old = row["no_old"]?.ToString().Trim();
+
+                            if (!string.IsNullOrEmpty(no_old))
+                            {
+                                if (int.TryParse(no_old, out int noOldInt))
+                                {
+                                    flagList.Add(noOldInt.ToString());
+                                    Console.WriteLine($"เก็บ {noOldInt} รออัปเดตตอนท้าย");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"ข้าม no_old: {no_old} (ไม่ใช่ตัวเลข)"); 
+                                }
+                            }
+                        }
+
+                        // ✅ อัปเดตหลังจบลูป
+                        if (flagList.Count > 0)
+                        {
+                            string idList = string.Join(",", flagList.Distinct()); // กันซ้ำ
+                            string updateSql = $"UPDATE recordout SET userpays = 66 WHERE no IN ({idList})";
+
+                            try
+                            {
+                                DbController.SaveData(updateSql);
+                                Console.WriteLine($"✅ อัปเดต userpays = 66 ทั้งหมด {flagList.Count} แถว: {idList}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"❌ อัปเดตล้มเหลว: {ex.Message}");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("ไม่มีรายการให้อัปเดต userpays");
+                        }
+
+                        // 🔁 ถ้ามีการอัปเดต userpays ให้โหลดข้อมูลใหม่
+                        if (flagList.Count > 0)
+                        {
+                            dt = DbController.LoadData(sql);
+                        }
+
+                        // ✅ สร้าง DataTable สำหรับรายงาน
+                        DataTable resultTable = new DataTable();
+                        resultTable.Columns.Add("หมายเลขบัตร");
+                        resultTable.Columns.Add("ทะเบียนรถ");
+                        resultTable.Columns.Add("วัน-เวลาเข้า");
+                        resultTable.Columns.Add("วัน-เวลาออก");
+                        resultTable.Columns.Add("ใบกำกับภาษี");
+                        resultTable.Columns.Add("รายได้");
+                        resultTable.Columns.Add("เจ้าหน้าที่ขาออก");
+                        resultTable.Columns.Add("ช่องทางการชำระเงิน");
+                        resultTable.Columns.Add("QR");
+                        resultTable.Columns.Add("rabbit ID");
+
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string cardId = row["หมายเลขบัตร"]?.ToString() ?? "";
+                            string license = row["ทะเบียนรถ"]?.ToString() ?? "";
+                            string printno = row["ใบกำกับภาษี"]?.ToString() ?? "";
+                            string datein = row["วัน-เวลาเข้า"] != DBNull.Value
+                                ? Convert.ToDateTime(row["วัน-เวลาเข้า"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                : "";
+                            string dateout = row["dategateout"] != DBNull.Value
+                                ? Convert.ToDateTime(row["dategateout"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                : (row["dateout"] != DBNull.Value
+                                    ? Convert.ToDateTime(row["dateout"]).ToString("dd/MM/yyyy HH:mm:ss")
+                                    : "");
+                            string paytype = row["ช่องทางการชำระเงิน"]?.ToString() ?? "";
+                            string userout = "";
+                            if (row["userpays"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["userpays"].ToString()))
+                            {
+                                // 🔹 ถ้ามี userpays ให้ใช้ค่านี้ก่อนเลย
+                                userout = row["userpays"].ToString();
+                            }
+                            else if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
+                            {
+                                // 🔹 ถ้าไม่มี userpays แต่มี usergateout
+                                userout = row["usergateout"].ToString();
+                            }
+                            else if (row["userout"] != DBNull.Value)
+                            {
+                                // 🔹 ถ้าไม่มีทั้งหมดข้างบน → ใช้ userout ปกติ
+                                userout = row["userout"].ToString();
+                            }
+                            else
+                            {
+                                // 🔹 กรณีสุดท้าย ถ้าไม่มีอะไรเลย → ค่าเริ่มต้นว่าง
+                                userout = "";
+                            }
+
+                            decimal price = row["รายได้"] != DBNull.Value ? Convert.ToDecimal(row["รายได้"]) : 0;
+                            string QR = row["QR"]?.ToString() ?? "";
+                            string rabbitId = row["rabbit ID"]?.ToString() ?? "";
+
+                            if (string.IsNullOrWhiteSpace(license) || license == "NO")
+                                license = row["ทะเบียนรถ"]?.ToString() ?? "";
+
+                            DataRow newRow = resultTable.NewRow();
+                            newRow[0] = cardId;
+                            newRow[1] = license;
+                            newRow[2] = datein;
+                            newRow[3] = dateout;
+                            newRow[4] = printno;
+                            newRow[5] = price;
+                            newRow[6] = userout;
+                            newRow[7] = paytype;
+                            newRow[8] = QR;
+                            newRow[9] = rabbitId;
+                            resultTable.Rows.Add(newRow);
+                        }
+
+                        ResultGridView.DataSource = resultTable;
+                        ResultGridView.Refresh();
+
+                        //ResultGridView.Columns[0].Width = 50;
+                        //ResultGridView.Columns[1].Width = 70;
+                        //ResultGridView.Columns[2].Width = 80;
+                        ResultGridView.Columns[2].Width = 120;
+                        ResultGridView.Columns[3].Width = 120;
+                        //ResultGridView.Columns[5].Width = 105;
+                        ResultGridView.Columns[8].Width = 200;
+                        ResultGridView.Columns[9].Width = 200;
+
+                        // ✅ โหลด Crystal Report
+                        rpt.Load(path + "\\CrystalReports\\Report163.rpt");
+                        rpt.SetDataSource(resultTable);
+
+                        // 🧩 ส่วนหัวรายงาน
+                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปการชำระเงิน'";
+                        if (dtMap.Rows.Count > 0)
+                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+
+                        PrimaryCrystalReportViewer.ReportSource = rpt;
+                        PrimaryCrystalReportViewer.Refresh();
+
+                        PdfExportButton.Enabled = true;
+                        ExcelExportButton.Enabled = true;
+                        break;
+                    }
+            }
+
+            CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
+
+        }
+
+
         private void FucntionImpact(int selectedReportId, string sql)
         {
             string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -9446,5 +11242,7 @@ namespace ParkingManagementReport
                     break;
             }
         }
+
+
     }
 }
