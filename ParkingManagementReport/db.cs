@@ -31,8 +31,8 @@ namespace ParkingManagementReport
         public static bool Connect(string strIP, string strDatabase = "carpark2")
         {
             string strConnMySQL;
-            strConnMySQL = $"Database={strDatabase};Data Source={strIP};User Id=cit;Password=db13apr;Charset=utf8;";
-            //strConnMySQL = $"Database={strDatabase};Data Source={strIP};User Id=cit;Password=Psk9Cmt854;Charset=utf8;";
+            //strConnMySQL = $"Database={strDatabase};Data Source={strIP};User Id=cit;Password=db13apr;Charset=utf8;";
+            strConnMySQL = $"Database={strDatabase};Data Source={strIP};User Id=cit;Password=Psk9Cmt854;Charset=utf8;";
             bool booConnect = false;
             try
             {

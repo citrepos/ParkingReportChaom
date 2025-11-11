@@ -4467,7 +4467,7 @@ namespace ParkingManagementReport
                                             Map.Rows.Add(dr);
                                         }
                                         catch { }
-                                      
+
                                     }
                                     catch (Exception) { }//End Try Catch
                                 }
@@ -4628,7 +4628,7 @@ namespace ParkingManagementReport
                                 sql += " AND member.typeid =" + dicCarTypeInt[comTypeMem.Text];
                         }
                     }
-                    
+
                     //Mac 2022/03/11
                     dst = dateStart.Value;
                     dfn = dateFinish.Value;
@@ -20295,17 +20295,16 @@ recordin.datein, recordin.userin
                 UseMemo = false;
             }
             string sql = "SELECT DISTINCT ";
-            if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0) //Mac 2022/04/22
+            if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0)
                 sql += " recordout.printno_second";
             else
                 sql += " recordout.printno";
 
             sql += " ,recordout.no, ";
-            if (pm.print.UseMemType) //Mac 2018/01/16
+            if (pm.print.UseMemType) 
             {
-                //sql += " case when recordin.cartype = 200 then member.typeid else ";
-                sql += " case when recordin.cartype = 200 then ifnull(member.typeid, '200') else "; //Mac 2022/03/02
-                if (pm.print.ReportCartypeFree15Min) //Mac 2018/01/16
+                sql += " case when recordin.cartype = 200 then ifnull(member.typeid, '200') else "; 
+                if (pm.print.ReportCartypeFree15Min)
                 {
                     sql += " case when TIMESTAMPDIFF(second,recordin.datein,recordout.dateout) <= 959 then 'ฟรี 15 นาที' else ";
                     sql += " recordin.cartype end end";
@@ -20317,7 +20316,7 @@ recordin.datein, recordin.userin
             }
             else
             {
-                if (pm.print.ReportCartypeFree15Min) //Mac 2018/01/16
+                if (pm.print.ReportCartypeFree15Min)
                 {
                     sql += " case when (recordin.cartype != 200) and TIMESTAMPDIFF(second,recordin.datein,recordout.dateout) <= 959 then 'ฟรี 15 นาที' else ";
                     sql += "  recordin.cartype end";
@@ -20329,42 +20328,22 @@ recordin.datein, recordin.userin
             }
             sql += " ,case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end as ทะเบียน,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard";
 
-            if (intSelectedIndex == 12 && pm.print.UseReport13_11) //Mac 2017/11/30
+            if (intSelectedIndex == 12 && pm.print.UseReport13_11)
                 sql += " ,recordout.clearcard";
             else
                 sql += " ,recordout.overdate";
 
-            //sql += " ,recordout.price,recordout.discount,recordout.proid";
-            /*if (UseMemo)
-            {
-                if (comTypeMem.SelectedIndex > 0) //Mac 2015/02/10
-                    sql += " ,recordin.memo FROM recordin,recordout,member";
-                else
-                    sql += " ,recordin.memo FROM recordin,recordout";
-            }
-            else
-            {
-                if (comTypeMem.SelectedIndex > 0) //Mac 2015/02/10
-                    sql += " FROM recordin,recordout,member";
-                else
-                    sql += " FROM recordin,recordout";
-            }*/
-
-            //Mac 2015/10/06 ------------
             if (pm.print.UseProIDAll)
             {
-                //sql = "SELECT recordout.printno,recordout.no,recordin.cartype,case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard,recordout.overdate,recordout.price,recordout.discount,recordout.proid_all";
-                //sql += " ,recordout.price,recordout.discount,recordout.proid_all"; //Mac 2018/01/16
-                if (pm.print.ReportPriceSplitLosscard) //Mac 2018/05/13
+                if (pm.print.ReportPriceSplitLosscard)
                     sql += " ,(recordout.price - recordout.losscard)";
                 else
                     sql += " ,recordout.price";
                 sql += " ,recordout.discount,recordout.proid_all";
             }
-            else //Mac 2018/01/24
+            else
             {
-                //sql += " ,recordout.price,recordout.discount,recordout.proid";
-                if (pm.print.ReportPriceSplitLosscard) //Mac 2018/05/13
+                if (pm.print.ReportPriceSplitLosscard)
                     sql += " ,(recordout.price - recordout.losscard)";
                 else
                     sql += " ,recordout.price";
@@ -20376,42 +20355,32 @@ recordin.datein, recordin.userin
                 sql += " ,recordin.memo";
             }
 
-            /*if (comTypeMem.SelectedIndex > 0)
-                sql += " FROM recordin,recordout,member";
-            else
-                sql += " FROM recordin,recordout";*/
-            /*sql += " FROM recordin,recordout,member";*/
-
-            if (pm.print.UseReceiptFor1Out) //Mac 2018/11/14
+            if (pm.print.UseReceiptFor1Out)
                 sql += ", recordout.receipt";
 
-            if (pm.print.UseMemLicensePlate) //Mac 2018/09/03
-                //sql += " from recordin left join recordout on recordin.no = recordout.no left join member on recordin.license = member.license"; //Mac 2016/05/21
-                sql += " from recordin left join recordout on recordin.no = recordout.no left join member on member.license like concat('%',recordin.license,'%')"; //Mac 2025/03/14
+            if (pm.print.UseMemLicensePlate)
+                sql += " from recordin left join recordout on recordin.no = recordout.no left join member on member.license like concat('%',recordin.license,'%')";
             else
-                sql += " from recordin left join recordout on recordin.no = recordout.no left join member on recordin.id = member.cardid"; //Mac 2016/05/21
+                sql += " from recordin left join recordout on recordin.no = recordout.no left join member on recordin.id = member.cardid";
 
             //---------------------------
-            //if (intSelectedIndex == 13)
-            if (intSelectedIndex == 13 && !pm.print.UseReport14like13) //Mac 2018/02/23
+            if (intSelectedIndex == 13 && !pm.print.UseReport14like13)
             {
-                //sql = "SELECT recordout.printno,recordout.no,recordin.cartype,recordin.license,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard,recordout.overdate,recordout.price,recordout.price,recordout.price";
                 sql = "SELECT DISTINCT ";
-                if (pm.print.UseReport13_12) //Mac 2023/08/09
+                if (pm.print.UseReport13_12)
                 {
                     sql += " recordout.posid, ";
                 }
-                if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0) //Mac 2022/04/22
+                if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0)
                     sql += " recordout.printno_second";
                 else
                     sql += " recordout.printno";
 
                 sql += " ,recordout.no,";
-                if (pm.print.UseMemType) //Mac 2018/01/16
+                if (pm.print.UseMemType)
                 {
-                    //sql += " case when recordin.cartype = 200 then member.typeid else ";
-                    sql += " case when recordin.cartype = 200 then ifnull(member.typeid, '200') else "; //Mac 2022/03/02
-                    if (pm.print.ReportCartypeFree15Min) //Mac 2018/01/16
+                    sql += " case when recordin.cartype = 200 then ifnull(member.typeid, '200') else ";
+                    if (pm.print.ReportCartypeFree15Min)
                     {
                         sql += " case when TIMESTAMPDIFF(second,recordin.datein,recordout.dateout) <= 959 then 'ฟรี 15 นาที' else ";
                         sql += " recordin.cartype end end";
@@ -20423,7 +20392,7 @@ recordin.datein, recordin.userin
                 }
                 else
                 {
-                    if (pm.print.ReportCartypeFree15Min) //Mac 2018/01/16
+                    if (pm.print.ReportCartypeFree15Min)
                     {
                         sql += " case when (recordin.cartype != 200) and TIMESTAMPDIFF(second,recordin.datein,recordout.dateout) <= 959 then 'ฟรี 15 นาที' else ";
                         sql += "  recordin.cartype end";
@@ -20433,63 +20402,54 @@ recordin.datein, recordin.userin
                         sql += " recordin.cartype ";
                     }
                 }
-                //sql += " ,recordin.license,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard,recordout.overdate,recordout.price,recordout.price,recordout.price"; 
                 sql += " ,recordin.license,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard,recordout.overdate,recordout.price,recordout.price"; //Mac 2018/05/13
-                if (pm.print.ReportPriceSplitLosscard) //Mac 2018/05/13
+                if (pm.print.ReportPriceSplitLosscard)
                     sql += " ,(recordout.price - recordout.losscard)";
                 else
                     sql += " ,recordout.price";
 
-                if (pm.print.UseProIDAll) //Mac 2015/10/06
+                if (pm.print.UseProIDAll)
                 {
-                    //sql = "SELECT recordout.printno,recordout.no,recordin.cartype,recordin.license,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard,recordout.overdate,recordout.price,recordout.price,recordout.price,recordout.proid_all";
-                    sql += " ,recordout.proid_all"; //Mac 2018/01/16
+                    sql += " ,recordout.proid_all";
                 }
                 else
-                    sql += " ,recordout.proid"; //Mac 2018/01/16
-                /*if (comTypeMem.SelectedIndex > 0) //Mac 2015/02/10
-                    sql += " FROM recordin,recordout,member";
-                else
-                    sql += " FROM recordin,recordout";*/
-                /*sql += " FROM recordin,recordout,member";*/
-                if (pm.print.UseReport13_3) //Mac 2018/04/18
+                    sql += " ,recordout.proid";
+
+                if (pm.print.UseReport13_3)
                     sql += " ,recordoutvoidpay.price";
 
-                if (pm.print.UseReceiptFor1Out) //Mac 2018/11/14
+                if (pm.print.UseReceiptFor1Out)
                     sql += ", recordout.receipt";
 
-                if (pm.print.UseMemLicensePlate) //Mac 2018/09/03
-                    //sql += " from recordin left join recordout on recordin.no = recordout.no left join member on recordin.license = member.license"; //Mac 2016/05/21
-                    sql += " from recordin left join recordout on recordin.no = recordout.no left join member on member.license like concat('%',recordin.license,'%')"; //Mac 2025/03/14
-                else
-                    sql += " from recordin left join recordout on recordin.no = recordout.no left join member on recordin.id = member.cardid"; //Mac 2016/05/21
+                sql += ", mg.id AS group_pro_id";
 
-                if (pm.print.UseReport13_3) //Mac 2018/04/18
+                if (pm.print.UseMemLicensePlate)
+                    sql += " from recordin left join recordout on recordin.no = recordout.no left join member on member.license like concat('%',recordin.license,'%')";
+                else
+                    sql += " from recordin left join recordout on recordin.no = recordout.no left join member on recordin.id = member.cardid";
+
+                if (pm.print.UseReport13_3)
                     sql += " left join recordoutvoidpay on recordout.no = recordoutvoidpay.no";
             }
 
-            //Mac 2022/03/01
             sql += " left join cardmf t1 on recordin.id = t1.name";
             sql += " left join cardpx t2 on recordin.id = t2.name";
+
+            sql += " LEFT JOIN promotion p ON recordout.proid = p.id LEFT JOIN membergroupprice_month mg ON p.groupro = mg.id";
 
             DateTime dst = dateStart.Value;
             DateTime dfn = dateFinish.Value;
             string strdst = dst.Year.ToString() + "-" + dst.ToString("MM'-'dd") + " " + timeStart.Value.ToLongTimeString();
-            string strdfn = dfn.Year.ToString() + "-" + dfn.ToString("MM'-'dd") + " " + timeFinish.Value.ToLongTimeString();// + " 23:59:59";
-            //sql += " WHERE dateout BETWEEN '" + strdst + "' AND '" + strdfn + "'";
-            sql += " WHERE recordout.dateout BETWEEN '" + strdst + "' AND '" + strdfn + "'"; //Mac 2018/04/18
-            //sql += " AND recordin.no = recordout.no";
-            ///*if (comTypeMem.SelectedIndex > 0) //Mac 2015/02/10
-            //    sql += " AND recordin.id = member.cardid";*/
-            //sql += " AND recordin.id = member.cardid";
+            string strdfn = dfn.Year.ToString() + "-" + dfn.ToString("MM'-'dd") + " " + timeFinish.Value.ToLongTimeString();
+            sql += " WHERE recordout.dateout BETWEEN '" + strdst + "' AND '" + strdfn + "'";
 
-            if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0) //Mac 2022/04/22
+            if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0)
                 sql += " and recordin.notshow = 'N'";
 
-            if (txtNameCard.Text.Trim().Length > 0) //Mac 2022/03/01
+            if (txtNameCard.Text.Trim().Length > 0)
                 sql += " and (t1.name_on_card like '%" + txtNameCard.Text + "%' or t2.name_on_card like '%" + txtNameCard.Text + "%')";
 
-            if (intSelectedIndex == 12 && pm.print.Report13Pro_SwitchPriceNot0) //Mac 2021/01/26
+            if (intSelectedIndex == 12 && pm.print.Report13Pro_SwitchPriceNot0)
             {
                 if (MessageBox.Show("ต้องการรายงานเข้าออกของรถแสดงโปรโมชั่น แบบค่าจอดมากกว่า 0 ?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                 {
@@ -20499,10 +20459,10 @@ recordin.datein, recordin.userin
 
             if (comUser.SelectedIndex > 0)
             {
-                sql += " AND recordout.userout =" + dicUserInt[comUser.Text];// +" OR recordout.userout =" + dicUserInt[cobUserName.Text];
+                sql += " AND recordout.userout =" + dicUserInt[comUser.Text];
             }
 
-            if (FormMain.pm.print.ReportSearchMemGroup) //Mac 2021/03/11
+            if (FormMain.pm.print.ReportSearchMemGroup)
             {
                 if (comTypeMem.SelectedIndex > 0)
                     sql += " and member.memgroupid = " + dicMemGroupInt[comTypeMem.Text];
@@ -20511,7 +20471,7 @@ recordin.datein, recordin.userin
                 if (comType.SelectedIndex > 1)
                     sql += " AND recordin.cartype =" + dicCarTypeInt[comType.Text];
             }
-            else if (FormMain.pm.print.Member2Cartype) //Mac 2016/05/03
+            else if (FormMain.pm.print.Member2Cartype)
             {
                 if (comTypeMem.SelectedIndex == 0)
                 {
@@ -20538,7 +20498,6 @@ recordin.datein, recordin.userin
                 }
                 else
                 {
-                    //sql += " AND recordin.cartype = 200";
                     sql += " AND member.memgroupid =" + dicMemGroupInt[comTypeMem.Text];
                     if (comType.SelectedIndex > 0)
                     {
@@ -20558,34 +20517,22 @@ recordin.datein, recordin.userin
                         sql += " AND member.typeid =" + dicCarTypeInt[comTypeMem.Text];
                 }
             }
-            /*if (comType.SelectedIndex > 1)
-            {
-                sql += " AND recordin.cartype =" + dicCarTypeInt[comType.Text];
-            }
-            if (comType.SelectedIndex == 1)
-            {
-                sql += " AND recordin.cartype != 200";
-            }
-            if (comType.SelectedIndex == 0) //Mac 2015/02/10
-            {
-                if (comTypeMem.SelectedIndex > 0)
-                    sql += " AND member.typeid =" + dicCarTypeInt[comTypeMem.Text];
-            }*/
+
             if (comPromotion.SelectedIndex > 0)
             {
-                if (pm.print.UseProIDAll) //Mac 2015/10/06
+                if (pm.print.UseProIDAll)
                 {
                     sql += " AND recordout.proid_all like '%" + dicProNameInt[comPromotion.Text] + ",%'";
                 }
                 else
                 {
-                    sql += " AND recordout.proid =" + dicProNameInt[comPromotion.Text];// +" OR recordout.userout =" + dicUserInt[cobUserName.Text];
+                    sql += " AND recordout.proid =" + dicProNameInt[comPromotion.Text];
                 }
             }
-            //if (booTax)
-            if ((booTax) && (!pm.print.UseAsiaTriqPrice)) //Mac 2016/10/04
+           
+            if ((booTax) && (!pm.print.UseAsiaTriqPrice))
             {
-                if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0) //Mac 2022/04/22
+                if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0)
                     sql += " AND recordout.printno_second > 0";
                 else
                     sql += " AND recordout.printno > 0";
@@ -20594,30 +20541,30 @@ recordin.datein, recordin.userin
                 sql += " AND recordin.license LIKE '%" + txtLicense.Text + "%'";
             if (txtCardID.Text != "")
                 sql += " AND recordin.id = " + txtCardID.Text;
-            if (cobGuardhouse.SelectedIndex > 0) //Mac 2019/11/14
-                sql += " and recordout.guardhouse = '" + cobGuardhouse.Text + "' ";
-
-            if (pm.print.UseSettingNewMem && comMemGroupMonth.SelectedIndex > 0) //Mac 2021/08/03
-                sql += " and member.storeid = " + dicMemGroupMonthInt[comMemGroupMonth.Text];
+            if (cobGuardhouse.SelectedIndex > 0)
+                sql += " AND recordout.guardhouse = '" + cobGuardhouse.Text + "' ";
+            if (comMemGroupMonth.SelectedIndex > 0)
+                sql += " AND mg.id = " + dicMemGroupMonthInt[comMemGroupMonth.Text];
+            else if (pm.print.UseSettingNewMem && comMemGroupMonth.SelectedIndex > 0)
+                sql += " AND member.storeid = " + dicMemGroupMonthInt[comMemGroupMonth.Text];
 
             if (intSelectedIndex == 13)
             {
                 if (pm.print.UseVoidSlip)
                     sql += " AND recordout.status = 'N'";
 
-                if (pm.print.UseReceiptFor1Out) //Mac 2018/11/14
+                if (pm.print.UseReceiptFor1Out)
                 {
                     if (pm.print.OutReceiptNameMonth)
                     {
-                        //sql += " order by recordout.receipt, concat(concat(date_format(dateout,'%y%m') ,lpad(printno,4,'0')))";
-                        if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0) //Mac 2022/04/22
+                        if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0)
                             sql += " order by recordout.receipt, concat(concat(date_format(dateout,'%y%m') ,lpad(printno_second,6,'0')))";
                         else
-                            sql += " order by recordout.receipt, concat(concat(date_format(dateout,'%y%m') ,lpad(printno,6,'0')))"; //Mac 2022/04/26
+                            sql += " order by recordout.receipt, concat(concat(date_format(dateout,'%y%m') ,lpad(printno,6,'0')))";
                     }
                     else
                     {
-                        if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0) //Mac 2022/04/22
+                        if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0)
                             sql += " ORDER BY recordout.receipt, recordout.printno_second";
                         else
                             sql += " ORDER BY recordout.receipt, recordout.printno";
@@ -20625,17 +20572,16 @@ recordin.datein, recordin.userin
                 }
                 else
                 {
-                    if (pm.print.OutReceiptNameMonth) //Mac 2016/04/27
+                    if (pm.print.OutReceiptNameMonth)
                     {
-                        //sql += " order by concat(concat(date_format(dateout,'%y%m') ,lpad(printno,4,'0')))";
-                        if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0) //Mac 2022/04/22
+                        if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0)
                             sql += " order by concat(concat(date_format(dateout,'%y%m') ,lpad(printno_second,6,'0')))";
                         else
-                            sql += " order by concat(concat(date_format(dateout,'%y%m') ,lpad(printno,6,'0')))"; //Mac 2022/04/26
+                            sql += " order by concat(concat(date_format(dateout,'%y%m') ,lpad(printno,6,'0')))";
                     }
                     else
                     {
-                        if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0) //Mac 2022/04/22
+                        if (pm.print.NotShowNoString.Trim().Length > 0 && pm.user.Level == 0)
                             sql += " ORDER BY recordout.printno_second";
                         else
                             sql += " ORDER BY recordout.printno";
@@ -20644,7 +20590,6 @@ recordin.datein, recordin.userin
             }
             else
                 sql += " GROUP BY recordout.no ORDER BY recordout.dateout";
-            //sql += " ORDER BY recordout.no";
 
             return sql;
         }
