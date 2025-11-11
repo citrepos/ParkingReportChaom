@@ -5314,7 +5314,6 @@ namespace ParkingManagementReport
                 ResultGridView.Columns[16].Width = 160;
             }
 
-            //if (selectedReportId == 13)
             if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/23
             {
                 ResultGridView.Columns[13].HeaderText = "รายได้ก่อนภาษี";
