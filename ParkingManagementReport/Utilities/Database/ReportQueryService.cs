@@ -170,6 +170,10 @@ namespace ParkingManagementReport.Utilities.Database
             this.promotionId = AppGlobalVariables.PromotionNamesById.First(kvp => kvp.Value == promotionName).Key;
             this.userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
             this.memberTypeId = AppGlobalVariables.MemberGroupsToId[memberType];
+            AppGlobalVariables.CurrentUserId = TextFormatters.RemoveSpecialCharacters(user);
+            AppGlobalVariables.CurrentCartype = TextFormatters.RemoveSpecialCharacters(carType);
+            AppGlobalVariables.CurrentPaytype = TextFormatters.RemoveSpecialCharacters(paymentChannel);
+            
             //this.startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
             //this.endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString();
             AppGlobalVariables.startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
@@ -218,7 +222,6 @@ namespace ParkingManagementReport.Utilities.Database
                         sql += " (SELECT name FROM user WHERE id = ri.userin) AS 'userin', ";
                         sql += " (SELECT name FROM user WHERE id = ro.usergateout) AS 'usergateout',";
                         sql += " (SELECT name FROM user WHERE id = ro.userout) AS 'userout',";
-                        sql += " (SELECT name FROM user WHERE id = ro.userpays) AS 'userpays',";
                         sql += " CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ";
                         sql += " ELSE 'เงินสด' END AS ช่องทางการชำระเงิน ";
                         sql += " FROM recordout ro";
@@ -230,11 +233,11 @@ namespace ParkingManagementReport.Utilities.Database
 
                         sql += " WHERE ( (ro.dategateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "' OR ro.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "') )";
 
-                        if (user != Constants.TextBased.All)
-                        {
-                            var userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-                            sql += " AND (ri.userin = " + userId + " OR COALESCE(ro.userpays, ro.usergateout, ro.userout) = " + userId + ")";
-                        }
+                        //if (user != Constants.TextBased.All)
+                        //{
+                        //    var userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        //    sql += " AND (ri.userin = " + userId + " OR COALESCE(ro.userpays, ro.usergateout, ro.userout) = " + userId + ")";
+                        //}
                         if (promotionName != Constants.TextBased.All)   
                         sql += " AND ro.proid =" + promotionId;
                     if (!String.IsNullOrEmpty(cardId))
@@ -252,95 +255,95 @@ namespace ParkingManagementReport.Utilities.Database
                             }
                         }
 
-                        if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
-                    {
-                        if (Configs.UsePaymentKsher)
-                            sql += " AND t3.channel = 'PromptPay'";
-                        else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
-                        else if (Configs.UsePaymentRabbit)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
-                    }
-                    else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
-                    {
-                        if (Configs.UsePaymentKsher)
-                            sql += " AND t3.channel is null AND t1.pay_type = 'C'";
-                        else if (Configs.UsePaymentRabbit)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
-                        else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
-                    }
-                    else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
-                    {
-                        if (Configs.UsePaymentKsher)
-                            sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
-                        else if (Configs.UsePaymentRabbit)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
-                        else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
-                    }
-                    else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
-                    {
-                        sql += " AND t3.channel = 'TrueMoney'";
-                    }
-                    if (Configs.Reports.ReportSearchMemGroup) //Mac 2021/03/11
-                    {
-                        if (memberType != Constants.TextBased.All)
-                            sql += " and member.memgroupid = " + AppGlobalVariables.MemberGroupsToId[memberType];
+                    //    if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
+                    //{
+                    //    if (Configs.UsePaymentKsher)
+                    //        sql += " AND t3.channel = 'PromptPay'";
+                    //    else if (Configs.UsePaymentBeam)
+                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                    //    else if (Configs.UsePaymentRabbit)
+                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                    //}
+                    //else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
+                    //{
+                    //    if (Configs.UsePaymentKsher)
+                    //        sql += " AND t3.channel is null AND t1.pay_type = 'C'";
+                    //    else if (Configs.UsePaymentRabbit)
+                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                    //    else if (Configs.UsePaymentBeam)
+                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                    //}
+                    //else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
+                    //{
+                    //    if (Configs.UsePaymentKsher)
+                    //        sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
+                    //    else if (Configs.UsePaymentRabbit)
+                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                    //    else if (Configs.UsePaymentBeam)
+                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                    //}
+                    //else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
+                    //{
+                    //    sql += " AND t3.channel = 'TrueMoney'";
+                    //}
+                    //if (Configs.Reports.ReportSearchMemGroup) //Mac 2021/03/11
+                    //{
+                    //    if (memberType != Constants.TextBased.All)
+                    //        sql += " and member.memgroupid = " + AppGlobalVariables.MemberGroupsToId[memberType];
 
-                        if (carType == Constants.TextBased.Visitor)
-                            sql += " AND ri.cartype != 200";
-                        if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                            sql += " AND ri.cartype =" + carTypeId;
-                    }
-                    else if (Configs.Member2Cartype) //Mac 2016/05/03
-                    {
-                        if (memberType == Constants.TextBased.All)
-                            if (memberType == Constants.TextBased.All)
-                            {
-                                if (carType != Constants.TextBased.All)
-                                {
-                                    sql += " AND (ri.cartype =" + carTypeId + " or member.typeid =" + carTypeId + ")";
-                                }
-                            }
-                            else if (memberTypeSelectedIndex == 1)
-                            {
-                                sql += " AND ri.cartype != 200";
-                                if (carType != Constants.TextBased.All)
-                                {
-                                    sql += " AND ri.cartype =" + carTypeId;
-                                }
-                            }
-                            else if (memberTypeSelectedIndex == 2)
-                            {
-                                sql += " AND ri.cartype = 200";
-                                if (carType != Constants.TextBased.All)
-                                {
-                                    sql += " AND member.typeid =" + carTypeId;
-                                }
-                            }
-                            else
-                            {
-                                //sql += " AND recordin.cartype = 200";
-                                sql += " AND member.memgroupid =" + AppGlobalVariables.MemberGroupsToId[memberType];
-                                if (carType != Constants.TextBased.All)
-                                {
-                                    sql += " AND member.typeid =" + carTypeId;
-                                }
-                            }
-                    }
-                    else
-                    {
-                        if (carType == Constants.TextBased.Visitor)
-                            sql += " AND ri.cartype != 200";
-                        if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                            sql += " AND ri.cartype =" + carTypeId;
-                        if (carType == Constants.TextBased.All) //Mac 2015/02/10
-                        {
-                            if (memberType != Constants.TextBased.All)
-                                sql += " AND member.typeid =" + memberTypeId;
-                        }
-                    }
+                    //    if (carType == Constants.TextBased.Visitor)
+                    //        sql += " AND ri.cartype != 200";
+                    //    if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                    //        sql += " AND ri.cartype =" + carTypeId;
+                    //}
+                    //else if (Configs.Member2Cartype) //Mac 2016/05/03
+                    //{
+                    //    if (memberType == Constants.TextBased.All)
+                    //        if (memberType == Constants.TextBased.All)
+                    //        {
+                    //            if (carType != Constants.TextBased.All)
+                    //            {
+                    //                sql += " AND (ri.cartype =" + carTypeId + " or member.typeid =" + carTypeId + ")";
+                    //            }
+                    //        }
+                    //        else if (memberTypeSelectedIndex == 1)
+                    //        {
+                    //            sql += " AND ri.cartype != 200";
+                    //            if (carType != Constants.TextBased.All)
+                    //            {
+                    //                sql += " AND ri.cartype =" + carTypeId;
+                    //            }
+                    //        }
+                    //        else if (memberTypeSelectedIndex == 2)
+                    //        {
+                    //            sql += " AND ri.cartype = 200";
+                    //            if (carType != Constants.TextBased.All)
+                    //            {
+                    //                sql += " AND member.typeid =" + carTypeId;
+                    //            }
+                    //        }
+                    //        else
+                    //        {
+                    //            //sql += " AND recordin.cartype = 200";
+                    //            sql += " AND member.memgroupid =" + AppGlobalVariables.MemberGroupsToId[memberType];
+                    //            if (carType != Constants.TextBased.All)
+                    //            {
+                    //                sql += " AND member.typeid =" + carTypeId;
+                    //            }
+                    //        }
+                    //}
+                    //else
+                    //{
+                    //    if (carType == Constants.TextBased.Visitor)
+                    //        sql += " AND ri.cartype != 200";
+                    //    if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                    //        sql += " AND ri.cartype =" + carTypeId;
+                    //    if (carType == Constants.TextBased.All) //Mac 2015/02/10
+                    //    {
+                    //        if (memberType != Constants.TextBased.All)
+                    //            sql += " AND member.typeid =" + memberTypeId;
+                    //    }
+                    //}
                     if (licensePlate != "")
                         sql += " AND ri.license LIKE '%" + licensePlate + "%'";
                     if (cardId != "")
@@ -4917,7 +4920,6 @@ namespace ParkingManagementReport.Utilities.Database
                         sql += " recordin.qrcode_park AS 'หมายเลขบัตร', recordout.dateout , ";
                         sql += " (SELECT name FROM user WHERE id = recordout.userout) AS 'userout', ";
                         sql += " (SELECT name FROM user WHERE id = recordout.usergateout) AS 'usergateout', ";
-                        sql += " (SELECT name FROM user WHERE id = recordout.userpays) AS 'userpays'  , ";
                         sql += " CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC'";
                         sql += " ELSE 'เงินสด' END AS ช่องทางการชำระเงิน,";
                         sql += " recordout.price as รายได้ ";
@@ -4932,7 +4934,7 @@ namespace ParkingManagementReport.Utilities.Database
                         sql += " WHERE ((recordout.dategateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "') OR (recordout.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'))";
 
                         if (user != Constants.TextBased.All)
-                            sql += " AND COALESCE(recordout.userpays, recordout.usergateout, recordout.userout) = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                            sql += " AND COALESCE( recordout.usergateout, recordout.userout) = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
                         if (promotionName != Constants.TextBased.All)
                             sql += " AND recordout.proid =" + promotionId;
                         if (!String.IsNullOrEmpty(cardId))
@@ -9442,7 +9444,6 @@ WHERE 1 = 1 ";
                     sql += "t1.price as 'รายได้',\n";
                     sql += "(SELECT name FROM user WHERE id = t1.userout) AS 'userout', ";
                     sql += "(SELECT name FROM user WHERE id = t1.usergateout) AS 'usergateout', ";
-                    sql += "(SELECT name FROM user WHERE id = t1.userpays) AS 'userpays'  , ";
                     if (Configs.UsePaymentKsher)
                     {
                         sql += "case when t3.channel = 'TrueMoney' then 'TrueMoney' when t3.channel = 'promptpay' then 'PromptPay' when t1.pay_type = 'EDC' then 'EDC' else 'เงินสด' end as 'ช่องทางการชำระเงิน',\n";
@@ -9472,7 +9473,7 @@ WHERE 1 = 1 ";
                     sql += "AND t1.price > 0";
 
                     if (user != Constants.TextBased.All)
-                        sql += " AND COALESCE(t1.userpays, t1.usergateout, t1.userout) = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        sql += " AND COALESCE( t1.usergateout, t1.userout) = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
                     if (promotionName != Constants.TextBased.All)
                         sql += " AND t1.proid =" + promotionId;
                     if (!String.IsNullOrEmpty(licensePlate))
@@ -10459,7 +10460,7 @@ WHERE 1 = 1 ";
                 }
             }
             sql += " ,case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end AS 'ทะเบียน' ,recordin.datein,recordout.discount,recordout.losscard ";
-            sql += " ,(SELECT name FROM user WHERE id = recordout.userout) AS 'userout', (SELECT name FROM user WHERE id = recordout.usergateout) AS 'usergateout', (SELECT name FROM user WHERE id = recordout.userpays) AS 'userpays' ";
+            sql += " ,(SELECT name FROM user WHERE id = recordout.userout) AS 'userout', (SELECT name FROM user WHERE id = recordout.usergateout) AS 'usergateout' ";
             //sql += " ,(SELECT name FROM promotion WHERE id = recordout.proid) AS 'proid'";
             if (selectedReportId == 12 && Configs.Reports.UseReport13_11)
                 sql += " ,recordout.clearcard";
@@ -10535,7 +10536,7 @@ WHERE 1 = 1 ";
                     }
                 }
                 sql += " ,recordin.license,recordin.datein,recordout.dateout,recordout.proid,recordout.discount,recordout.losscard,recordout.overdate,recordout.price,recordout.price"; //Mac 2018/05/13
-                sql += " ,(SELECT name FROM user WHERE id = recordout.userout) AS 'userout', (SELECT name FROM user WHERE id = recordout.usergateout) AS 'usergateout', (SELECT name FROM user WHERE id = recordout.userpays) AS 'userpays' ";
+                sql += " ,(SELECT name FROM user WHERE id = recordout.userout) AS 'userout', (SELECT name FROM user WHERE id = recordout.usergateout) AS 'usergateout' ";
                 if (Configs.Reports.ReportPriceSplitLosscard)
                     sql += " ,(recordout.price - recordout.losscard)";
                 else
@@ -10586,7 +10587,7 @@ WHERE 1 = 1 ";
             if (user != Constants.TextBased.All)
             {
                 var userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-                sql += " AND (recordin.userin = " + userId + " OR COALESCE(recordout.userpays, recordout.usergateout, recordout.userout) = " + userId + ")";
+                sql += " AND (recordin.userin = " + userId + " OR COALESCE( recordout.usergateout, recordout.userout) = " + userId + ")";
             }
 
             if (Configs.Reports.ReportSearchMemGroup) //Mac 2021/03/11

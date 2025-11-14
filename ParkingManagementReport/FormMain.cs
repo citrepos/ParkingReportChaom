@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.AccessControl;
 using System.Windows.Forms;
-using Newtonsoft.Json.Linq;
-using Excel = Microsoft.Office.Interop.Excel;
 using CrystalDecisions.CrystalReports.Engine;
+using Newtonsoft.Json.Linq;
 using ParkingManagementReport.Common;
 using ParkingManagementReport.Utilities;
 using ParkingManagementReport.Utilities.Database;
 using ParkingManagementReport.Utilities.Formatters;
 using ParkingManagementReport.Utilities.Hardwares;
-using System.Diagnostics;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ParkingManagementReport
 {
@@ -37,6 +38,7 @@ namespace ParkingManagementReport
         int totalReceived, totalDiscount, totalAmount, totalLoss, totalOver, totalPrice;
         double totalBeforeVat, totalVat;
         int dgvX, dgvY, dgvH;
+
         #endregion
 
         public FormMain()
@@ -7291,6 +7293,11 @@ namespace ParkingManagementReport
 
         }
 
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void SearchButton_Click(object sender, EventArgs e)
         {
             if (ReportComboBox.Items.Count < 1) return;
@@ -7444,7 +7451,17 @@ namespace ParkingManagementReport
         private void FucntionManyPay(int selectedReportId, string sql)
 
         {
+            if (String.IsNullOrEmpty(sql))
+                return;
+
+            ResultGridView.Location = new Point(dgvX, dgvY);
+            ResultGridView.Height = dgvH;
+            groupBox3.Visible = false;
+            string userId = AppGlobalVariables.CurrentUserId;
+            string carType = AppGlobalVariables.CurrentCartype;
+            string payType = AppGlobalVariables.CurrentPaytype;
             DataTable dt = DbController.LoadData(sql);
+                        groupBox3.Visible = false;
             string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             path = path.Replace("\\bin\\Debug", "");
 
@@ -7459,60 +7476,6 @@ namespace ParkingManagementReport
             {
                 case 0:
                     {
-                        if (dt.Rows.Count == 0)
-                        {
-                            MessageBox.Show("ไม่พบข้อมูล");
-                            return;
-                        }
-
-                        // 🧩 เตรียม list สำหรับ flag แถวที่ต้องอัปเดต
-                        List<string> flagList = new List<string>();
-
-                        foreach (DataRow row in dt.Rows)
-                        {
-                            string no_old = row["no_old"]?.ToString().Trim();
-
-                            if (!string.IsNullOrEmpty(no_old))
-                            {
-                                if (int.TryParse(no_old, out int noOldInt))
-                                {
-                                    flagList.Add(noOldInt.ToString());
-                                    Console.WriteLine($"เก็บ {noOldInt} รออัปเดตตอนท้าย");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"ข้าม no_old: {no_old} (ไม่ใช่ตัวเลข)");
-                                }
-                            }
-                        }
-
-                        // ✅ อัปเดตหลังจบลูป
-                        if (flagList.Count > 0)
-                        {
-                            string idList = string.Join(",", flagList.Distinct()); // กันซ้ำ
-                            string updateSql = $"UPDATE recordout SET userpays = 66 WHERE no IN ({idList})";
-
-                            try
-                            {
-                                DbController.SaveData(updateSql);
-                                Console.WriteLine($"✅ อัปเดต userpays = 66 ทั้งหมด {flagList.Count} แถว: {idList}");
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"❌ อัปเดตล้มเหลว: {ex.Message}");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("ไม่มีรายการให้อัปเดต userpays");
-                        }
-
-                        // 🔁 ถ้ามีการอัปเดต userpays ให้โหลดข้อมูลใหม่
-                        if (flagList.Count > 0)
-                        {
-                            dt = DbController.LoadData(sql);
-                        }
-
                         // ✅ สร้าง DataTable สำหรับรายงาน
                         DataTable resultTable = new DataTable();
                         resultTable.Columns.Add("ลำดับ");
@@ -7527,10 +7490,31 @@ namespace ParkingManagementReport
                         resultTable.Columns.Add("รายได้", typeof(decimal));
                         resultTable.Columns.Add("ส่วนลด", typeof(decimal));
 
+                        // สร้าง Dictionary id -> DataRow
+                        Dictionary<string, DataRow> idRowMap = dt.Rows
+                            .Cast<DataRow>()
+                            .ToDictionary(r => r["no"].ToString(), r => r);
+                        dt.Columns.Add("final_userout", typeof(string));
+                        // loop ทุกแถวที่มี no_old
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string no_old = row["no_old"]?.ToString()?.Trim();
+                            string usergateoutCurrent = row["usergateout"]?.ToString() ?? "";
+
+                            if (!string.IsNullOrEmpty(no_old) && idRowMap.ContainsKey(no_old) && !string.IsNullOrEmpty(usergateoutCurrent))
+                            {
+                                // 🔹 override แถวที่ no_old
+                                idRowMap[no_old]["final_userout"] = usergateoutCurrent;
+
+                                // ✔️ แถวปัจจุบันก็เซ็ตเหมือนกัน
+                                row["final_userout"] = usergateoutCurrent;
+                            }
+                        }
+
                         foreach (DataRow row in dt.Rows)
                         {
                             string no = row["no"]?.ToString() ?? "";
-                            string cartype = row["ประเภท"]?.ToString() ?? "";
+                            string cartype = row["ประเภท"]?.ToString()?.Trim() ?? "";
                             string license = row["ทะเบียน"]?.ToString() ?? "";
                             string qrcode = row["qrcode_park"]?.ToString() ?? "";
                             string datein = row["datein"] != DBNull.Value
@@ -7543,27 +7527,14 @@ namespace ParkingManagementReport
                                     ? Convert.ToDateTime(row["dateout"]).ToString("dd/MM/yyyy HH:mm:ss")
                                     : "");
 
-                            string userout = "";
-                            if (row["userpays"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["userpays"].ToString()))
-                            {
-                                // 🔹 ถ้ามี userpays ให้ใช้ค่านี้ก่อนเลย
-                                userout = row["userpays"].ToString();
-                            }
-                            else if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
-                            {
-                                // 🔹 ถ้าไม่มี userpays แต่มี usergateout
-                                userout = row["usergateout"].ToString();
-                            }
-                            else if (row["userout"] != DBNull.Value)
-                            {
-                                // 🔹 ถ้าไม่มีทั้งหมดข้างบน → ใช้ userout ปกติ
-                                userout = row["userout"].ToString();
-                            }
-                            else
-                            {
-                                // 🔹 กรณีสุดท้าย ถ้าไม่มีอะไรเลย → ค่าเริ่มต้นว่าง
-                                userout = "";
-                            }
+                            // ✅ แค่เอา userout จาก DataRow ที่ถูก override แล้ว
+                            string userout = !string.IsNullOrWhiteSpace(row["final_userout"]?.ToString())
+                                ? row["final_userout"].ToString()
+                                : !string.IsNullOrWhiteSpace(row["usergateout"]?.ToString())
+                                    ? row["usergateout"].ToString()
+                                    : !string.IsNullOrWhiteSpace(row["userout"]?.ToString())
+                                        ? row["userout"].ToString()
+                                        : "";
 
                             string payment = row["ช่องทางการชำระเงิน"]?.ToString() ?? "เงินสด";
                             decimal price = row["price"] != DBNull.Value ? Convert.ToDecimal(row["price"]) : 0;
@@ -7586,9 +7557,36 @@ namespace ParkingManagementReport
                                 discount
                             );
                         }
+                        DataTable filteredTable = resultTable.Clone(); // โครงสร้างเหมือนกัน
+
+                        if (userId != Constants.TextBased.All || carType != Constants.TextBased.All || payType != Constants.TextBased.All)
+                        {
+                            foreach (DataRow row in resultTable.Rows)
+                            {
+                                string userout = row["เจ้าหน้าที่ขาออก"]?.ToString() ?? "";
+                                string userin = row["เจ้าหน้าที่ขาเข้า"]?.ToString() ?? "";
+                                string cartype = row["ประเภท"]?.ToString()?.Trim() ?? "";
+                                string payment = row["ช่องทางการชำระเงิน"]?.ToString() ?? "";
+
+                                bool matchUser = (userId == Constants.TextBased.All) || (userout == userId || userin == userId);
+                                bool matchCarType = (carType == Constants.TextBased.All) || (cartype == carType);
+                                bool matchPayType = (payType == Constants.TextBased.All) || (payment == payType);
+
+                                // ✅ ถ้าเข้าทุกเงื่อนไขพร้อมกัน (AND)
+                                if (matchUser && matchCarType && matchPayType)
+                                {
+                                    filteredTable.ImportRow(row);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // แสดงทุกแถว
+                            filteredTable = resultTable.Copy();
+                        }
 
                         // ✅ ผูกข้อมูลเข้ากับ DataGridView
-                        ResultGridView.DataSource = resultTable;
+                        ResultGridView.DataSource = filteredTable;
                         ResultGridView.Refresh();
 
                         ResultGridView.Columns[0].Width = 50;
@@ -7620,59 +7618,8 @@ namespace ParkingManagementReport
                 case 12:
                     {
 
-                        if (dt.Rows.Count == 0)
-                        {
-                            MessageBox.Show("ไม่พบข้อมูล");
-                            return;
-                        }
-
                         // 🧩 เตรียม list สำหรับ flag แถวที่ต้องอัปเดต
-                        List<string> flagList = new List<string>();
-
-                        foreach (DataRow row in dt.Rows)
-                        {
-                            string no_old = row["no_old"]?.ToString().Trim();
-
-                            if (!string.IsNullOrEmpty(no_old))
-                            {
-                                if (int.TryParse(no_old, out int noOldInt))
-                                {
-                                    flagList.Add(noOldInt.ToString());
-                                    Console.WriteLine($"เก็บ {noOldInt} รออัปเดตตอนท้าย");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"ข้าม no_old: {no_old} (ไม่ใช่ตัวเลข)");
-                                }
-                            }
-                        }
-
-                        // ✅ อัปเดตหลังจบลูป
-                        if (flagList.Count > 0)
-                        {
-                            string idList = string.Join(",", flagList.Distinct()); // กันซ้ำ
-                            string updateSql = $"UPDATE recordout SET userpays = 66 WHERE no IN ({idList})";
-
-                            try
-                            {
-                                DbController.SaveData(updateSql);
-                                Console.WriteLine($"✅ อัปเดต userpays = 66 ทั้งหมด {flagList.Count} แถว: {idList}");
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"❌ อัปเดตล้มเหลว: {ex.Message}");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("ไม่มีรายการให้อัปเดต userpays");
-                        }
-
-                        // 🔁 ถ้ามีการอัปเดต userpays ให้โหลดข้อมูลใหม่
-                        if (flagList.Count > 0)
-                        {
-                            dt = DbController.LoadData(sql);
-                        }
+    
 
                         // ✅ สร้าง DataTable สำหรับรายงาน
                         DataTable resultTable = new DataTable();
@@ -7713,12 +7660,8 @@ namespace ParkingManagementReport
                                     : "");
                             string overdate = row["overdate"]?.ToString() ?? "";
                             string userout = "";
-                            if (row["userpays"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["userpays"].ToString()))
-                            {
-                                // 🔹 ถ้ามี userpays ให้ใช้ค่านี้ก่อนเลย
-                                userout = row["userpays"].ToString();
-                            }
-                            else if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
+   
+                            if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
                             {
                                 // 🔹 ถ้าไม่มี userpays แต่มี usergateout
                                 userout = row["usergateout"].ToString();
@@ -8258,55 +8201,6 @@ namespace ParkingManagementReport
 
                 case 13:
                     {
-
-                        // 🧩 เตรียม list สำหรับ flag แถวที่ต้องอัปเดต
-                        List<string> flagList = new List<string>();
-
-                        foreach (DataRow row in dt.Rows)
-                        {
-                            string no_old = row["no_old"]?.ToString().Trim();
-
-                            if (!string.IsNullOrEmpty(no_old))
-                            {
-                                if (int.TryParse(no_old, out int noOldInt))
-                                {
-                                    flagList.Add(noOldInt.ToString());
-                                    Console.WriteLine($"เก็บ {noOldInt} รออัปเดตตอนท้าย");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"ข้าม no_old: {no_old} (ไม่ใช่ตัวเลข)");
-                                }
-                            }
-                        }
-
-                        // ✅ อัปเดตหลังจบลูป
-                        if (flagList.Count > 0)
-                        {
-                            string idList = string.Join(",", flagList.Distinct()); // กันซ้ำ
-                            string updateSql = $"UPDATE recordout SET userpays = 66 WHERE no IN ({idList})";
-
-                            try
-                            {
-                                DbController.SaveData(updateSql);
-                                Console.WriteLine($"✅ อัปเดต userpays = 66 ทั้งหมด {flagList.Count} แถว: {idList}");
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"❌ อัปเดตล้มเหลว: {ex.Message}");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("ไม่มีรายการให้อัปเดต userpays");
-                        }
-
-                        // 🔁 ถ้ามีการอัปเดต userpays ให้โหลดข้อมูลใหม่
-                        if (flagList.Count > 0)
-                        {
-                            dt = DbController.LoadData(sql);
-                        }
-
                         // ✅ สร้าง DataTable สำหรับรายงาน
                         DataTable resultTable = new DataTable();
                         resultTable.Columns.Add("เลขที่ใบเสร็จ/ใบกำกับภาษี");
@@ -8348,12 +8242,8 @@ namespace ParkingManagementReport
                                     : "");
                             string overdate = row["overdate"]?.ToString() ?? "";
                             string userout = "";
-                            if (row["userpays"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["userpays"].ToString()))
-                            {
-                                // 🔹 ถ้ามี userpays ให้ใช้ค่านี้ก่อนเลย
-                                userout = row["userpays"].ToString();
-                            }
-                            else if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
+
+                            if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
                             {
                                 // 🔹 ถ้าไม่มี userpays แต่มี usergateout
                                 userout = row["usergateout"].ToString();
@@ -8928,55 +8818,6 @@ namespace ParkingManagementReport
 
                 case 101:
                     {
-
-                        // 🧩 เตรียม list สำหรับ flag แถวที่ต้องอัปเดต
-                        List<string> flagList = new List<string>();
-
-                        foreach (DataRow row in dt.Rows)
-                        {
-                            string no_old = row["no_old"]?.ToString().Trim();
-
-                            if (!string.IsNullOrEmpty(no_old))
-                            {
-                                if (int.TryParse(no_old, out int noOldInt))
-                                {
-                                    flagList.Add(noOldInt.ToString());
-                                    Console.WriteLine($"เก็บ {noOldInt} รออัปเดตตอนท้าย");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"ข้าม no_old: {no_old} (ไม่ใช่ตัวเลข)");
-                                }
-                            }
-                        }
-
-                        // ✅ อัปเดตหลังจบลูป
-                        if (flagList.Count > 0)
-                        {
-                            string idList = string.Join(",", flagList.Distinct()); // กันซ้ำ
-                            string updateSql = $"UPDATE recordout SET userpays = 66 WHERE no IN ({idList})";
-
-                            try
-                            {
-                                DbController.SaveData(updateSql);
-                                Console.WriteLine($"✅ อัปเดต userpays = 66 ทั้งหมด {flagList.Count} แถว: {idList}");
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"❌ อัปเดตล้มเหลว: {ex.Message}");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("ไม่มีรายการให้อัปเดต userpays");
-                        }
-
-                        // 🔁 ถ้ามีการอัปเดต userpays ให้โหลดข้อมูลใหม่
-                        if (flagList.Count > 0)
-                        {
-                            dt = DbController.LoadData(sql);
-                        }
-
                         // ✅ สร้าง DataTable สำหรับรายงาน
                         DataTable resultTable = new DataTable();
                         resultTable.Columns.Add("ลำดับ");
@@ -9002,12 +8843,7 @@ namespace ParkingManagementReport
                                     : "");
                             string paytype = row["ช่องทางการชำระเงิน"]?.ToString() ?? "";
                             string userout = "";
-                            if (row["userpays"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["userpays"].ToString()))
-                            {
-                                // 🔹 ถ้ามี userpays ให้ใช้ค่านี้ก่อนเลย
-                                userout = row["userpays"].ToString();
-                            }
-                            else if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
+                            if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
                             {
                                 // 🔹 ถ้าไม่มี userpays แต่มี usergateout
                                 userout = row["usergateout"].ToString();
@@ -9071,55 +8907,6 @@ namespace ParkingManagementReport
 
                 case 162:
                     {
-
-                        // 🧩 เตรียม list สำหรับ flag แถวที่ต้องอัปเดต
-                        List<string> flagList = new List<string>();
-
-                        foreach (DataRow row in dt.Rows)
-                        {
-                            string no_old = row["no_old"]?.ToString().Trim();
-
-                            if (!string.IsNullOrEmpty(no_old))
-                            {
-                                if (int.TryParse(no_old, out int noOldInt))
-                                {
-                                    flagList.Add(noOldInt.ToString());
-                                    Console.WriteLine($"เก็บ {noOldInt} รออัปเดตตอนท้าย");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"ข้าม no_old: {no_old} (ไม่ใช่ตัวเลข)"); 
-                                }
-                            }
-                        }
-
-                        // ✅ อัปเดตหลังจบลูป
-                        if (flagList.Count > 0)
-                        {
-                            string idList = string.Join(",", flagList.Distinct()); // กันซ้ำ
-                            string updateSql = $"UPDATE recordout SET userpays = 66 WHERE no IN ({idList})";
-
-                            try
-                            {
-                                DbController.SaveData(updateSql);
-                                Console.WriteLine($"✅ อัปเดต userpays = 66 ทั้งหมด {flagList.Count} แถว: {idList}");
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"❌ อัปเดตล้มเหลว: {ex.Message}");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("ไม่มีรายการให้อัปเดต userpays");
-                        }
-
-                        // 🔁 ถ้ามีการอัปเดต userpays ให้โหลดข้อมูลใหม่
-                        if (flagList.Count > 0)
-                        {
-                            dt = DbController.LoadData(sql);
-                        }
-
                         // ✅ สร้าง DataTable สำหรับรายงาน
                         DataTable resultTable = new DataTable();
                         resultTable.Columns.Add("หมายเลขบัตร");
@@ -9149,12 +8936,7 @@ namespace ParkingManagementReport
                                     : "");
                             string paytype = row["ช่องทางการชำระเงิน"]?.ToString() ?? "";
                             string userout = "";
-                            if (row["userpays"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["userpays"].ToString()))
-                            {
-                                // 🔹 ถ้ามี userpays ให้ใช้ค่านี้ก่อนเลย
-                                userout = row["userpays"].ToString();
-                            }
-                            else if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
+                             if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
                             {
                                 // 🔹 ถ้าไม่มี userpays แต่มี usergateout
                                 userout = row["usergateout"].ToString();

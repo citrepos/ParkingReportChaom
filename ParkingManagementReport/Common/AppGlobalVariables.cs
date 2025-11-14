@@ -10,7 +10,10 @@ namespace ParkingManagementReport.Common
         public static string IdText { get; set; }
         public static string IdTextUser { get; set; }
         public static string ConditionText { get; set; }
-
+  
+        public static string CurrentUserId { get; set; }
+        public static string CurrentPaytype { get; set; }
+        public static string CurrentCartype { get; set; }
         public static string startDateTimeText { get; set; }
         public static string endDateTimeText { get; set; }
 

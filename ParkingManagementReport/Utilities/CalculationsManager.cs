@@ -472,7 +472,6 @@ namespace ParkingManagementReport.Utilities
         {
             if (ResultGridView.Rows.Count <= 0)
                 return;
-
             int rowCount = ResultGridView.Rows.Count - 1;
             int totalPrice = 0, totalDiscount = 0, totalCusin = 0, totalMemin = 0, totalCusout = 0, totalMemout = 0;
             int villageOffset = 0;
@@ -493,7 +492,41 @@ namespace ParkingManagementReport.Utilities
 
             switch (selectedReportId)
             {
+
                 case 0:
+                    if (Configs.Reports.UseReportImpact)
+                    {
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            if (int.TryParse(ResultGridView.Rows[i].Cells[9 + villageOffset].Value?.ToString(), out int price))
+                                totalPrice += price;
+
+                            if (int.TryParse(ResultGridView.Rows[i].Cells[10 + villageOffset].Value?.ToString(), out int discount))
+                                totalDiscount += discount;
+                        }
+                        var qrList = ResultGridView.Rows
+                            .Cast<DataGridViewRow>()
+                            .Where(r => !r.IsNewRow)
+                            .Select(r => r.Cells[3].Value?.ToString()?.Trim())
+                            .ToList();
+
+                        int totalRows = qrList.Count; // จำนวนทั้งหมด
+                        int nonEmptyQR = qrList.Count(q => !string.IsNullOrEmpty(q)); // QR ที่ไม่ว่าง
+                        int uniqueNonEmptyQR = qrList.Where(q => !string.IsNullOrEmpty(q)).Distinct().Count(); // QR ไม่ซ้ำ
+
+                        int duplicatedQR = nonEmptyQR - uniqueNonEmptyQR; // จำนวนซ้ำ
+
+                        int realCarCount = totalRows - duplicatedQR; // จำนวนรถจริง
+
+                        // 3) แสดงผล
+                        ResultGridView.Rows[rowCount].Cells[3 + villageOffset].Value = "จำนวนรถ";
+                        ResultGridView.Rows[rowCount].Cells[4 + villageOffset].Value = $"{realCarCount:#,###,##0} คัน";
+                        ResultGridView.Rows[rowCount].Cells[5 + villageOffset].Value = "รวม";
+                        ResultGridView.Rows[rowCount].Cells[9 + villageOffset].Value = totalPrice.ToString("#,###,##0");
+                        ResultGridView.Rows[rowCount].Cells[10 + villageOffset].Value = totalDiscount.ToString("#,###,##0");
+                    }
+                    break;
+               
                 case 1:
                 case 8:
                 case 90:
