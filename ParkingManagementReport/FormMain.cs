@@ -7600,7 +7600,7 @@ namespace ParkingManagementReport
 
                         // ✅ โหลด Crystal Report
                         rpt.Load(path + "\\CrystalReports\\Report1.rpt");
-                        rpt.SetDataSource(resultTable);
+                        rpt.SetDataSource(filteredTable);
 
                         // 🧩 ส่วนหัวรายงาน
                         rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปการชำระเงิน'";
