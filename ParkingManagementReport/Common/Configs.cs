@@ -130,7 +130,7 @@ namespace ParkingManagementReport.Common
         {
             public static bool UseReportDateString { get; internal set; }
             public static bool UseReportHourUse { get; internal set; }
-            public static bool UseReportThanapoom { get; internal set; }
+            //public static bool UseReportThanapoom { get; internal set; }
 
             public static bool Report3Decimal { get; internal set; }
             public static bool ReportPriceSplitLosscard { get; internal set; }

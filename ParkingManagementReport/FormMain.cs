@@ -6,13 +6,15 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
 using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Windows.Forms;
 using ParkingManagementReport.Common;
 using ParkingManagementReport.Utilities;
 using ParkingManagementReport.Utilities.Database;
 using ParkingManagementReport.Utilities.Formatters;
 using ParkingManagementReport.Utilities.Hardwares;
+using static System.Net.WebRequestMethods;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ParkingManagementReport
 {
@@ -157,7 +159,7 @@ namespace ParkingManagementReport
             lbPic5.Visible = showSecondCamera;
 
             // Configure report condition visibility
-            if (Configs.Reports.ReportSearchMemberGroup || Configs.Reports.UseReport24_2)
+            if (Configs.Reports.ReportSearchMemberGroup)
             {
                 label17.Text = "กลุ่มสมาชิก";
                 MemberTypeComboBox.Visible = true;
@@ -429,7 +431,7 @@ namespace ParkingManagementReport
             AddToComboBoxIfNotExists(MemberTypeComboBox, Constants.TextBased.All);
 
 
-            if (Configs.Reports.ReportSearchMemberGroup || Configs.Reports.UseReport24_2)
+            if (Configs.Reports.ReportSearchMemberGroup)
             {
                 label17.Text = "กลุ่มสมาชิก";
                 MemberTypeComboBox.Visible = label17.Visible = true;
@@ -522,7 +524,6 @@ namespace ParkingManagementReport
             }
         }
 
-
         private void LoadUsers()
         {
             if (!AppGlobalVariables.UsersById.ContainsKey(0))
@@ -558,7 +559,6 @@ namespace ParkingManagementReport
             }
         }
 
-
         private void LoadPromotions()
         {
             AppGlobalVariables.PromotionNamesById.Add(0, Constants.TextBased.All);
@@ -585,11 +585,6 @@ namespace ParkingManagementReport
                         {
                             PromotionComboBox.Items.Add(promotionName);
                         }
-                    }
-
-                    if (Configs.Reports.UseReportThanapoom)
-                    {
-                        ConfigsManager.UpdateEmptyTnptIdBackToDb();
                     }
                 }
             }
@@ -661,9 +656,9 @@ namespace ParkingManagementReport
             if (String.IsNullOrEmpty(sql))
                 return;
 
-            DataTable dt = DbController.LoadData(sql);
+            DataTable dataFromQuery = DbController.LoadData(sql);
             DataTable dtMap = new DataTable();
-            ReportDocument rpt = new ReportDocument();
+            ReportDocument reportDocument = new ReportDocument();
 
             ResultGridView.Location = new Point(dgvX, dgvY);
             ResultGridView.Height = dgvH;
@@ -676,1606 +671,409 @@ namespace ParkingManagementReport
 
             try
             {
-                if (dt.Rows.Count > 0)
+                if (dataFromQuery.Rows.Count > 0)
                 {
-                    if (selectedReportId == 6)
-                    {
-                        CreateReportLicense(dt);
-                        PdfExportButton.Enabled = true;
-                        ExcelExportButton.Enabled = true;
-                        return;
-                    }
-
-                    if (selectedReportId == 9)
-                    {
-                        ResultGridView.DataSource = ConvertTableType(dt);
-                        CaseReportTax();
-                        PdfExportButton.Enabled = true;
-                        ExcelExportButton.Enabled = true;
-
-                        dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
-                        PrimaryCrystalReportViewer.ReportSource = null;
-                        PrimaryCrystalReportViewer.Refresh();
-
-                        dt = new DataTable();
-                        foreach (DataGridViewColumn col in ResultGridView.Columns)
-                        {
-                            dt.Columns.Add(col.HeaderText);
-                        }
-                        for (int i = 0; i < ResultGridView.Rows.Count - 1; i++)
-                        {
-                            DataRow dRow = dt.NewRow();
-                            for (int j = 0; j < ResultGridView.Columns.Count; j++)
-                            {
-                                dRow[j] = ResultGridView.Rows[i].Cells[j].Value;
-                            }
-                            dt.Rows.Add(dRow);
-                        }
-                        string p0, p1, p2, p3, p4, p5;
-                        p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[4].Value.ToString();
-                        p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[7].Value.ToString();
-                        p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[8].Value.ToString();
-                        p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[9].Value.ToString();
-                        p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[10].Value.ToString();
-                        p5 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
-
-                        rpt.Load(path + "\\CrystalReports\\Report10.rpt");
-                        rpt.SetDataSource(dt);
-                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                        if (dtMap.Rows.Count > 0)
-                        {
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + p0 + "'";
-                            rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + p1 + "'";
-                            rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + p2 + "'";
-                            rpt.DataDefinition.FormulaFields["Pa3"].Text = "'" + p3 + "'";
-                            rpt.DataDefinition.FormulaFields["Pa4"].Text = "'" + p4 + "'";
-                            rpt.DataDefinition.FormulaFields["Pa5"].Text = "'" + p5 + "'";
-                        }
-                        PrimaryCrystalReportViewer.ReportSource = rpt;
-                        PrimaryCrystalReportViewer.Refresh();
-
-                        return;
-                    }
-
-                    if (selectedReportId == 11)
-                    {
-                        ResultGridView.DataSource = ConvertTableType(dt);
-                        CaseReportGroupPrice();
-                        dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
-                        PrimaryCrystalReportViewer.ReportSource = null;
-                        PrimaryCrystalReportViewer.Refresh();
-
-                        dt = new DataTable();
-                        foreach (DataGridViewColumn col in ResultGridView.Columns)
-                        {
-                            dt.Columns.Add(col.HeaderText);
-                        }
-                        for (int i = 0; i < ResultGridView.Rows.Count - 1; i++)
-                        {
-                            DataRow dRow = dt.NewRow();
-                            for (int j = 0; j < ResultGridView.Columns.Count; j++)
-                            {
-                                dRow[j] = ResultGridView.Rows[i].Cells[j].Value;
-                            }
-                            dt.Rows.Add(dRow);
-                        }
-                        //////////////////////////////
-
-                        string p0, p1, p2, p3, p4, p5, p6;
-                        p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[4].Value.ToString();
-                        p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[6].Value.ToString();
-                        p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[7].Value.ToString();
-                        p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[8].Value.ToString();
-                        p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[9].Value.ToString();
-                        p5 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[10].Value.ToString();
-                        p6 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
-                        /////////////////////////////
-                        ////
-                        rpt.Load(path + "\\CrystalReports\\Report12.rpt");
-                        rpt.SetDataSource(dt);
-                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                        if (dtMap.Rows.Count > 0)
-                        {
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + p0 + "'";
-                            rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + p1 + "'";
-                            rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + p2 + "'";
-                            rpt.DataDefinition.FormulaFields["Pa3"].Text = "'" + p3 + "'";
-                            rpt.DataDefinition.FormulaFields["Pa4"].Text = "'" + p4 + "'";
-                            rpt.DataDefinition.FormulaFields["Pa5"].Text = "'" + p5 + "'";
-                            rpt.DataDefinition.FormulaFields["Pa6"].Text = "'" + p6 + "'";
-
-                        }
-                        PrimaryCrystalReportViewer.ReportSource = rpt;
-                        PrimaryCrystalReportViewer.Refresh();
-
-                        ////
-
-                        PdfExportButton.Enabled = true;
-                        ExcelExportButton.Enabled = true;
-                        return;
-                    }
-
-                    if (selectedReportId == 12 || selectedReportId == 13 || selectedReportId == 14)
-                    {
-                        ResultGridView.DataSource = ConvertTableType(dt);
-                        if (selectedReportId == 13 && Configs.Reports.UseReport13_12) //Mac 2023/08/09
-                            CaseReportPricePromotion13_12();
-                        else
-                            CaseReportPricePromotion();
-
-                        //////////////
-                        dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
-                        PrimaryCrystalReportViewer.ReportSource = null;
-                        PrimaryCrystalReportViewer.Refresh();
-
-                        dt = new DataTable();
-                        foreach (DataGridViewColumn col in ResultGridView.Columns)
-                        {
-                            dt.Columns.Add(col.HeaderText);
-                        }
-
-                        for (int i = 0; i < ResultGridView.Rows.Count - 1; i++)
-                        {
-                            DataRow dRow = dt.NewRow();
-                            for (int j = 0; j < ResultGridView.Columns.Count; j++)
-                            {
-                                dRow[j] = ResultGridView.Rows[i].Cells[j].Value;
-                            }
-                            dt.Rows.Add(dRow);
-                        }
-                        //////////////////////////////
-
-                        string p0, p1, p2, p3, p4;
-                        if (selectedReportId == 13 && Configs.Reports.UseReport13_12) //Mac 2023/08/09
-                        {
-                            p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[7].Value.ToString();
-                            p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[12].Value.ToString();
-                            p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[13].Value.ToString();
-                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[16].Value.ToString();
-                            else p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString();
-                            p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString();
-                        }
-                        else
-                        {
-                            p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[6].Value.ToString();
-                            p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
-                            p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[12].Value.ToString();
-                            //if (selectedReportId == 13) p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString();
-                            //Mac 2018/02/24
-                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString();
-                            else p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[13].Value.ToString();
-                            p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString(); //Mac 2017/06/12
-                        }
-                        /////////////////////////////
-                        ////
-
-
-                        if (Configs.Reports.ReportNoRunning) //Mac 2018/01/05
-                        {
-                            if (selectedReportId == 12)
-                            {
-                                if (Configs.UseMemo)
-                                    rpt.Load(path + "\\CrystalReports\\Report13_2NoRunning.rpt");
-                                else
-                                {
-                                    if (Configs.Reports.UseReport13_13) //Mac 2024/12/06
-                                        rpt.Load(path + "\\CrystalReports\\Report13_13NoRunning.rpt");
-                                    else if (Configs.Reports.UseReport13_11)
-                                        rpt.Load(path + "\\CrystalReports\\Report13_11NoRunning.rpt");
-                                    else if (Configs.Reports.UseReport13_10)
-                                        rpt.Load(path + "\\CrystalReports\\Report13_10NoRunning.rpt");
-                                    else if (Configs.Reports.UseReport13logo) //Mac 2018/05/08
-                                        rpt.Load(path + "\\CrystalReports\\Report13logoNoRunning.rpt");
-                                    else
-                                        rpt.Load(path + "\\CrystalReports\\Report13NoRunning.rpt");
-                                }
-                            }
-                            else if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
-                            {
-                                if (Configs.Reports.UseReport13_12) //Mac 2023/08/09
-                                {
-                                    if (Configs.IsSwitch) //Mac 2023/11/28
-                                    {
-                                        rpt.Load(path + "\\CrystalReports\\Report13_12_sw.rpt");
-                                        rpt.DataDefinition.FormulaFields["Condition"].Text = "'ประจำวันที่ " + StartDatePicker.Value.ToString("dd/MM/yyyy") + " " + StartTimePicker.Value.ToLongTimeString() + " ถึงวันที่ " + EndDatePicker.Value.ToString("dd/MM/yyyy") + " " + EndTimePicker.Value.ToLongTimeString() + "'";
-                                        rpt.DataDefinition.FormulaFields["ReportCon"].Text = "'เดือนภาษี" + StartDatePicker.Value.ToString(" MMMM ") + "ปี " + (StartDatePicker.Value.Year + 543) + "'";
-                                        rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
-                                        Configs.IsSwitch = false;
-                                    }
-                                    else
-                                    {
-                                        rpt.Load(path + "\\CrystalReports\\Report13_12NoRunning.rpt");
-                                        Configs.IsSwitch = true;
-                                    }
-                                }
-                                else if (Configs.Reports.UseReport13_3)
-                                    rpt.Load(path + "\\CrystalReports\\Report13_3NoRunning.rpt");
-                                else if (Configs.Reports.UseReport13_1logo) //Mac 2018/05/08
-                                    rpt.Load(path + "\\CrystalReports\\Report13_1logoNoRunning.rpt");
-                                else if (Configs.Reports.UseReport13_7) //Mac 2019/02/15
-                                    rpt.Load(path + "\\CrystalReports\\Report13_7NoRunning.rpt");
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report13_1NoRunning.rpt");
-                            }
-                            else rpt.Load(path + "\\CrystalReports\\Report13NoRunning.rpt");
-                        }
-                        else
-                        {
-                            if (selectedReportId == 12)
-                            {
-                                if (Configs.UseMemo)
-                                    rpt.Load(path + "\\CrystalReports\\Report13_2.rpt");
-                                else
-                                {
-                                    if (Configs.Reports.UseReport13_13) //Mac 2024/12/06
-                                        rpt.Load(path + "\\CrystalReports\\Report13_13.rpt");
-                                    else if (Configs.Reports.UseReport13_11) //Mac 2017/11/30
-                                        rpt.Load(path + "\\CrystalReports\\Report13_11.rpt");
-                                    else if (Configs.Reports.UseReport13_10) //Mac 2017/11/03
-                                        rpt.Load(path + "\\CrystalReports\\Report13_10.rpt");
-                                    else if (Configs.Reports.UseReport13logo) //Mac 2018/05/08
-                                        rpt.Load(path + "\\CrystalReports\\Report13logo.rpt");
-                                    else
-                                        rpt.Load(path + "\\CrystalReports\\Report13.rpt");
-                                }
-                            }
-                            //else if (selectedReportId == 13)
-                            else if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
-                            {
-                                if (Configs.Reports.UseReport13_12) //Mac 2023/08/09
-                                {
-                                    //rpt.Load(path + "\\CrystalReports\\Report13_12.rpt");
-                                    if (Configs.IsSwitch) //Mac 2023/11/28
-                                    {
-                                        rpt.Load(path + "\\CrystalReports\\Report13_12_sw.rpt");
-                                        rpt.DataDefinition.FormulaFields["Condition"].Text = "'ประจำวันที่ " + StartDatePicker.Value.ToString("dd/MM/yyyy") + " " + StartTimePicker.Value.ToLongTimeString() + " ถึงวันที่ " + EndDatePicker.Value.ToString("dd/MM/yyyy") + " " + EndTimePicker.Value.ToLongTimeString() + "'";
-                                        rpt.DataDefinition.FormulaFields["ReportCon"].Text = "'เดือนภาษี" + StartDatePicker.Value.ToString(" MMMM ") + "ปี " + (StartDatePicker.Value.Year + 543) + "'";
-                                        rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
-
-                                        Configs.IsSwitch = false;
-                                    }
-                                    else
-                                    {
-                                        rpt.Load(path + "\\CrystalReports\\Report13_12.rpt");
-                                        Configs.IsSwitch = true;
-                                    }
-                                }
-                                else if (Configs.Reports.UseReport13_3) //Mac 2017/11/03
-                                    rpt.Load(path + "\\CrystalReports\\Report13_3.rpt");
-                                else if (Configs.Reports.UseReport13_1logo) //Mac 2018/05/08
-                                    rpt.Load(path + "\\CrystalReports\\Report13_1logo.rpt");
-                                else if (Configs.Reports.UseReport13_7) //Mac 2019/02/15
-                                    rpt.Load(path + "\\CrystalReports\\Report13_7.rpt");
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report13_1.rpt");
-                            }
-                            else rpt.Load(path + "\\CrystalReports\\Report13.rpt");
-                        }
-
-                        rpt.SetDataSource(dt);
-
-                        if (selectedReportId == 12)
-                            ReportHeaderLabel.Text = ReportHeaderLabel.Text.Replace("แสดงโปรโมชั่น", "");
-
-                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                        if (dtMap.Rows.Count > 0)
-                        {
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                            //if (selectedReportId == 13)
-                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
-                            {
-                                try
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                }
-                                catch (Exception)
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "''";
-                                }
-                            }
-
-                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
-                            {
-                                if (Configs.Reports.UseReport13_12) //Mac 2023/08/09
-                                {
-                                    rpt.DataDefinition.FormulaFields["Pa4"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString() + "'";
-                                    rpt.DataDefinition.FormulaFields["Pa5"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[15].Value.ToString() + "'";
-                                    if (Configs.Reports.UseReport13_3)
-                                        rpt.DataDefinition.FormulaFields["Sender"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "'";
-                                }
-                                else
-                                {
-                                    rpt.DataDefinition.FormulaFields["Pa4"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[13].Value.ToString() + "'";
-                                    rpt.DataDefinition.FormulaFields["Pa5"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString() + "'";
-                                    if (Configs.Reports.UseReport13_3) //Mac 2017/11/06
-                                        rpt.DataDefinition.FormulaFields["Sender"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "'";
-                                }
-                            }
-
-                            if (Configs.Reports.UseReport13logo) //Mac 2018/05/08
-                            {
-                                rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-
-                        }
-                        PrimaryCrystalReportViewer.ReportSource = rpt;
-                        PrimaryCrystalReportViewer.Refresh();
-
-                        ResultGridView.Columns[5].Visible = false;
-
-                        ////
-
-                        PdfExportButton.Enabled = true;
-                        ExcelExportButton.Enabled = true;
-                        return;
-                    }
-
-                    if (selectedReportId == 15)
-                    {
-                        PdfExportButton.Enabled = true;
-                        ExcelExportButton.Enabled = true;
-                        ResultGridView.DataSource = ConvertTableType(dt);
-                        ResultGridView.Columns[0].HeaderText = "E-Stamp";
-                        ResultGridView.Columns[1].HeaderText = "ยอดรวม";
-                        ResultGridView.Columns[0].Width = 160;
-                        ResultGridView.Columns[1].Width = 100;
-                        int intNo = ResultGridView.Rows.Count - 1;
-                        int intSumEStamp = 0;
-
-                        for (int i = 0; i < intNo; i++)
-                        {
-                            int intID = Convert.ToInt32(ResultGridView[0, i].Value);
-                            try
-                            {
-                                if (intID > 0)
-                                {
-                                    ResultGridView[0, i].Value = AppGlobalVariables.PromotionNamesById[intID];
-                                    intSumEStamp += Convert.ToInt32(ResultGridView[1, i].Value);
-                                }
-                                else
-                                    ResultGridView[0, i].Value = "";
-                            }
-                            catch (Exception)
-                            {
-                                ResultGridView[0, i].Value = "E-Stamp เลิกใช้";
-                            }
-                        }
-                        ResultGridView[0, intNo].Value = "E-Stamp ทั้งหมด";
-                        ResultGridView[1, intNo].Value = intSumEStamp.ToString();
-                        
-                        dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
-                        PrimaryCrystalReportViewer.ReportSource = null;
-                        PrimaryCrystalReportViewer.Refresh();
-
-                        dt = new DataTable();
-                        foreach (DataGridViewColumn col in ResultGridView.Columns)
-                        {
-                            dt.Columns.Add(col.HeaderText);
-                        }
-                        if (PromotionComboBox.SelectedIndex > 0) //Mac 2019/12/12
-                        {
-                            DataRow dRow = dt.NewRow();
-                            for (int j = 0; j < ResultGridView.Columns.Count; j++)
-                            {
-                                dRow[j] = ResultGridView.Rows[0].Cells[j].Value;
-                            }
-                            dt.Rows.Add(dRow);
-                        }
-                        else
-                        {
-                            for (int i = 1; i < ResultGridView.Rows.Count - 1; i++)
-                            {
-                                DataRow dRow = dt.NewRow();
-                                for (int j = 0; j < ResultGridView.Columns.Count; j++)
-                                {
-                                    dRow[j] = ResultGridView.Rows[i].Cells[j].Value;
-                                }
-                                dt.Rows.Add(dRow);
-                            }
-                        }
-                        ////
-                        if (Configs.Reports.UseReport16logo) //Mac 2018/05/08
-                            rpt.Load(path + "\\CrystalReports\\Report16logo.rpt");
-                        else
-                            rpt.Load(path + "\\CrystalReports\\Report16.rpt");
-                        rpt.SetDataSource(dt);
-                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                        if (dtMap.Rows.Count > 0)
-                        {
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[1].Value.ToString() + "'";
-                            if (PromotionComboBox.SelectedIndex > 0) //Mac 2019/12/12
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'0'";
-                            else
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + ResultGridView.Rows[0].Cells[1].Value.ToString() + "'";
-
-                            if (Configs.Reports.UseReport16logo) //Mac 2018/05/08
-                            {
-                                rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                        }
-                        PrimaryCrystalReportViewer.ReportSource = rpt;
-                        PrimaryCrystalReportViewer.Refresh();
-
-                        return;
-                    }
-
-                    PdfExportButton.Enabled = true;
-                    ExcelExportButton.Enabled = true;
-
-                    if (Configs.Reports.UseReportThanapoom)
-                        ResultGridView.DataSource = dt = DataTableManager.EditedThanapoomDataTable(dt, selectedReportId);
-                    else
-                        ResultGridView.DataSource = dt;
-
-                    ResultGridView.AutoResizeColumns();
-
-                    for (int i = 0; i < ResultGridView.Columns.Count; i++)
-                    {
-                        ResultGridView.Columns[i].Width = ResultGridView.Columns[i].Width + 30;
-                    }
-
-                    if ((Configs.VisitorFillDetail) && (selectedReportId == 0 || selectedReportId == 8 || selectedReportId == 90)) //Mac 2020/10/26
-                        ResultGridView.Columns[9].HeaderText = "ติดต่อ (เรื่อง/ชื่อ)";
-
-                    if (selectedReportId == 1 || selectedReportId == 91) //Mac 2020/10/26
-                    {
-                        int iVil = 0;
-                        if (Configs.Use2Camera)
-                        {
-                            if (Configs.IsVillage && Configs.Use2Camera) iVil = 5;
-                            if (Configs.NoPanelUp2U == "2") //Mac 2017/03/13
-                                iVil += 4;
-                            if (Configs.Reports.UseReport1_6 || Configs.Reports.UseReport1_8) //Mac 2024/07/25
-                                iVil = 1;
-                            ResultGridView.Columns[9 + iVil].Visible = false;
-                            ResultGridView.Columns[10 + iVil].Visible = false;
-                            ResultGridView.Columns[11 + iVil].Visible = false;
-                            ResultGridView.Columns[12 + iVil].Visible = false;
-                            if (Configs.IsVillage && Configs.Use2Camera)
-                                ResultGridView.Columns[13 + iVil].Visible = false;
-                            else if (Configs.Use2Camera && Configs.IPIn3.Trim().Length > 0) //Mac 2015/02/04
-                                ResultGridView.Columns[13 + iVil].Visible = false;
-                            ResultGridView.Location = new Point(ResultGridView.Location.X, ResultGridView.Location.Y + 150);
-                            ResultGridView.Height = ResultGridView.Height - 150;
-                            groupBox3.Visible = true;
-                            lbPic1.Text = "รูปคนขับขาเข้า";
-                            lbPic2.Text = "รูปทะเบียนขาเข้า";
-                            lbPic3.Visible = true;
-                            lbPic4.Visible = true;
-                            pictureBox3.Visible = true;
-                            pictureBox4.Visible = true;
-                            if ((Configs.IsVillage && Configs.Use2Camera) || (Configs.Use2Camera && Configs.IPIn3.Trim().Length > 0)) //Mac 2015/02/04
-                            {
-                                pictureBox5.Visible = true;
-                                lbPic5.Visible = true;
-                            }
-                        }
-                        else
-                        {
-                            ResultGridView.Location = new Point(ResultGridView.Location.X, ResultGridView.Location.Y + 150);
-                            ResultGridView.Height = ResultGridView.Height - 150;
-                            groupBox3.Visible = true;
-                            lbPic1.Text = "รูปขาเข้า";
-                            lbPic2.Text = "รูปขาออก";
-                            pictureBox1.Visible = true;
-                            pictureBox2.Visible = true;
-                            pictureBox3.Visible = false;
-                            pictureBox4.Visible = false;
-                            pictureBox5.Visible = false;
-                            ResultGridView.Columns[9].Visible = false;
-                            ResultGridView.Columns[10].Visible = false;
-                        }
-                    }
-
-                    if (selectedReportId == 7)
-                    {
-                        ResultGridView.Columns[4].Visible = false;
-                        try
-                        {
-                            ResultGridView.Columns[5].Visible = false;
-                        }
-                        catch (Exception) { }
-
-                        ResultGridView.Location = new Point(ResultGridView.Location.X, ResultGridView.Location.Y + 150);
-                        ResultGridView.Height = ResultGridView.Height - 150;
-                        groupBox3.Visible = true;
-                        pictureBox3.Visible = false;
-                        pictureBox4.Visible = false;
-                        if (Configs.IsVillage && Configs.Use2Camera)
-                        {
-                            pictureBox5.Visible = false;
-                            lbPic5.Visible = false;
-                        }
-                        lbPic1.Text = "รูปคนขับ";
-                        lbPic2.Text = "รูปทะเบียน";
-                        lbPic3.Visible = false;
-                        lbPic4.Visible = false;
-                    }
-
-                    if (selectedReportId == 31 || selectedReportId == 93) //Mac 2020/10/26
-                    {
-                        if (Configs.NoPanelUp2U == "2") //Mac 2017/03/13
-                        {
-                            ResultGridView.Columns[9].Visible = false;
-                            try
-                            {
-                                ResultGridView.Columns[10].Visible = false;
-                            }
-                            catch (Exception) { }
-                        }
-                        else
-                        {
-                            ResultGridView.Columns[5].Visible = false;
-                            try
-                            {
-                                ResultGridView.Columns[6].Visible = false;
-                            }
-                            catch (Exception) { }
-                        }
-
-                        ResultGridView.Location = new Point(ResultGridView.Location.X, ResultGridView.Location.Y + 150);
-                        ResultGridView.Height = ResultGridView.Height - 150;
-                        groupBox3.Visible = true;
-                        pictureBox3.Visible = false;
-                        pictureBox4.Visible = false;
-                        if (Configs.IsVillage && Configs.Use2Camera)
-                        {
-                            pictureBox5.Visible = false;
-                            lbPic5.Visible = false;
-                        }
-                        lbPic1.Text = "รูปคนขับ";
-                        lbPic2.Text = "รูปทะเบียน";
-                        lbPic3.Visible = false;
-                        lbPic4.Visible = false;
-                    }
-
-                    dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax' or name ='footerreport1' or name ='footerreport2' or name ='footerreport3' or name = 'branch'");
                     PrimaryCrystalReportViewer.ReportSource = null;
                     PrimaryCrystalReportViewer.Refresh();
                     switch (selectedReportId)
                     {
-                        case 0:
-                            if (Configs.Reports.ReportNoRunning)
-                            {
-                                if (selectedReportId == 5) 
-                                {
-                                    rpt.Load(path + "\\CrystalReports\\Report6NoRunning.rpt");
-                                }
-                                else
-                                {
-                                    rpt.Load(path + "\\CrystalReports\\Report1_NoRunning.rpt");
-                                }
-                            }
-                            else
-                            {
-                                if (selectedReportId == 5 && Configs.Reports.UseReport6) //Mac 2019/05/03
-                                {
-                                    if (Configs.Reports.UseReport1_6) //Mac 2019/05/16
-                                        rpt.Load(path + "\\CrystalReports\\Report6plus1_6.rpt");
-                                    else
-                                        rpt.Load(path + "\\CrystalReports\\Report6.rpt");
-                                }
-                                else
-                                {
-                                    if (Configs.IsVillage && Configs.Use2Camera)
-                                        rpt.Load(path + "\\CrystalReports\\Report1_1.rpt");
-                                    else if ((Configs.IsVillage || Configs.VisitorFillDetail) && (selectedReportId == 0 || selectedReportId == 90))
-                                        rpt.Load(path + "\\CrystalReports\\Report1_2.rpt");
-                                    else
-                                    {
-                                        if (Configs.Reports.UseReport1_3) //Mac 2017/11/03
-                                            rpt.Load(path + "\\CrystalReports\\Report1_3.rpt");
-                                        else if (Configs.Reports.UseReport1_4) //Mac 2018/02/21
-                                            rpt.Load(path + "\\CrystalReports\\Report1_4.rpt");
-                                        else if (Configs.Reports.UseReport1_5) //Mac 2018/02/28
-                                            rpt.Load(path + "\\CrystalReports\\Report1_5.rpt");
-                                        else if (Configs.Reports.UseReport1logo) //Mac 2018/05/07
-                                            rpt.Load(path + "\\CrystalReports\\Report1logo.rpt");
-                                        else if (Configs.Reports.UseReport1_6) //Mac 2018/11/12
-                                            rpt.Load(path + "\\CrystalReports\\Report1_6.rpt");
-                                        else if (Configs.Reports.UseReport1_7) //Mac 2019/07/26
-                                            rpt.Load(path + "\\CrystalReports\\Report1_7.rpt");
-                                        else if (Configs.Reports.UseReport1_8) //Mac 2021/12/17
-                                            rpt.Load(path + "\\CrystalReports\\Report1_8.rpt");
-                                        else
-                                            rpt.Load(path + "\\CrystalReports\\Report1.rpt");
-                                    }
-                                }
-                            }
-                            rpt.SetDataSource(dt);
-
-                            if ((Configs.VisitorFillDetail) && (selectedReportId == 0 || selectedReportId == 90))
-                            {
-                                CrystalDecisions.CrystalReports.Engine.TextObject txtReportCol;
-                                txtReportCol = rpt.ReportDefinition.ReportObjects["text21"] as TextObject;
-                                txtReportCol.Text = "ติดต่อ (เรื่อง/ชื่อ)";
-                            }
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                if (Configs.Reports.UseReport1logo)
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                }
-                            }
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh(); ;
-                            break;
-
                         case 1:
-
-                            //////////////////////////////////////////////
-
-                            DataTable Map = new DataTable("myMember");  //*** DataTable Map DataSet.xsd ***//
-
-                            DataRow dr = null;
-                            Map.Columns.Add(new DataColumn("ลำดับ", typeof(string)));
-                            Map.Columns.Add(new DataColumn("ประเภท", typeof(string)));
-                            Map.Columns.Add(new DataColumn("ทะเบียน", typeof(string)));
-                            if (Configs.IsVillage && Configs.Use2Camera)
-                            {
-                                Map.Columns.Add(new DataColumn("ชื่อผู้มาติดต่อ", typeof(string)));
-                                Map.Columns.Add(new DataColumn("ประเภทบัตร", typeof(string)));
-                                Map.Columns.Add(new DataColumn("เบอร์โทรศัพท์", typeof(string)));
-                                Map.Columns.Add(new DataColumn("ติดต่อ", typeof(string)));
-                                Map.Columns.Add(new DataColumn("ที่อยู่", typeof(string)));
-                            }
-                            Map.Columns.Add(new DataColumn("เวลาเข้า", typeof(string)));
-                            Map.Columns.Add(new DataColumn("เจ้าหน้าที่ขาเข้า", typeof(string)));
-                            Map.Columns.Add(new DataColumn("เวลาออก", typeof(string)));
-                            Map.Columns.Add(new DataColumn("รายได้", typeof(string)));
-                            Map.Columns.Add(new DataColumn("ส่วนลด", typeof(string)));
-                            Map.Columns.Add(new DataColumn("เจ้าหน้าที่ขาออก", typeof(string)));
-                            Map.Columns.Add(new DataColumn("il", typeof(System.Byte[]))); // เข้า-ทะเบียน
-                            Map.Columns.Add(new DataColumn("ol", typeof(System.Byte[]))); // ออก-ทะเบียน
-                            Map.Columns.Add(new DataColumn("iv", typeof(System.Byte[]))); // เข้า-หน้าคน
-                            Map.Columns.Add(new DataColumn("ov", typeof(System.Byte[]))); // ออก-หน้าคน
-                            if (Configs.Reports.UseReport1_6) //Mac 2018/12/14
-                                Map.Columns.Add(new DataColumn("เลขที่บัตร", typeof(string)));
-                            //else if (Configs.Reports.UseReport1_8) //Mac 2024/07/25
-                            else if (Configs.Reports.UseReport1_8 || Configs.Reports.UseReport2_4) //Mac 2025/03/06
-                                Map.Columns.Add(new DataColumn("ผู้ถือบัตร", typeof(string)));
-                            if (Configs.Reports.UseReport2_4) //Mac 2025/03/06
-                                Map.Columns.Add(new DataColumn("ชม.จอด", typeof(string)));
-
-                            if (Configs.IsVillage && Configs.Use2Camera)
-                                Map.Columns.Add(new DataColumn("vi", typeof(System.Byte[])));
-                            else if (Configs.Use2Camera && Configs.IPIn3.Trim().Length > 0) //Mac 2015/02/04
-                                Map.Columns.Add(new DataColumn("io", typeof(System.Byte[])));
-                            int i = 0;
-                            ///////////////////////////////////////////////////
-                            for (i = 0; i < dt.Rows.Count; i++)
-                            {
-                                FileStream fiStream;
-                                BinaryReader binReader;
-                                byte[] pic = { };
-                                try
-                                {
-
-                                    dr = Map.NewRow();
-                                    dr["ลำดับ"] = dt.Rows[i]["ลำดับ"];
-                                    dr["ประเภท"] = dt.Rows[i]["ประเภท"];
-                                    dr["ทะเบียน"] = dt.Rows[i]["ทะเบียน"];
-                                    if (Configs.Reports.UseReport1_6) //Mac 2018/11/12
-                                        dr["เลขที่บัตร"] = dt.Rows[i]["เลขที่บัตร"];
-                                    //else if (Configs.Reports.UseReport1_8) //Mac 2024/07/25
-                                    else if (Configs.Reports.UseReport1_8 || Configs.Reports.UseReport2_4) //Mac 2025/03/06
-                                        dr["ผู้ถือบัตร"] = dt.Rows[i]["ผู้ถือบัตร"];
-                                    if (Configs.Reports.UseReport2_4) //Mac 2025/03/06
-                                        dr["ชม.จอด"] = dt.Rows[i]["ชม.จอด"];
-                                    dr["เวลาเข้า"] = dt.Rows[i]["เวลาเข้า"];
-                                    dr["เจ้าหน้าที่ขาเข้า"] = dt.Rows[i]["เจ้าหน้าที่ขาเข้า"];
-                                    dr["เวลาออก"] = dt.Rows[i]["เวลาออก"];
-                                    dr["รายได้"] = dt.Rows[i]["รายได้"];
-                                    dr["ส่วนลด"] = dt.Rows[i]["ส่วนลด"];
-                                    dr["เจ้าหน้าที่ขาออก"] = dt.Rows[i]["เจ้าหน้าที่ขาออก"];
-                                    if (Configs.IsVillage && Configs.Use2Camera)
-                                    {
-                                        dr["ชื่อผู้มาติดต่อ"] = dt.Rows[i]["ชื่อผู้มาติดต่อ"];
-                                        dr["ประเภทบัตร"] = dt.Rows[i]["ประเภทบัตร"];
-                                        dr["เบอร์โทรศัพท์"] = dt.Rows[i]["เบอร์โทรศัพท์"];
-                                        dr["ติดต่อ"] = dt.Rows[i]["ติดต่อ"];
-                                        dr["ที่อยู่"] = dt.Rows[i]["ที่อยู่"];
-                                    }
-
-                                    try
-                                    {
-                                        fiStream = new FileStream(dt.Rows[i]["il"].ToString(), FileMode.Open);
-                                        binReader = new BinaryReader(fiStream);
-                                        pic = binReader.ReadBytes((int)fiStream.Length);
-                                        dr["il"] = pic;
-                                        fiStream.Close();
-                                        binReader.Close();
-
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        dr["il"] = null;
-                                    }
-
-
-                                    try
-                                    {
-                                        fiStream = new FileStream(dt.Rows[i]["ol"].ToString(), FileMode.Open);
-                                        binReader = new BinaryReader(fiStream);
-                                        pic = binReader.ReadBytes((int)fiStream.Length);
-                                        dr["ol"] = pic;
-                                        fiStream.Close();
-                                        binReader.Close();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        dr["ol"] = null;
-                                    }
-
-                                    try
-                                    {
-                                        fiStream = new FileStream(dt.Rows[i]["iv"].ToString(), FileMode.Open);
-                                        binReader = new BinaryReader(fiStream);
-                                        pic = binReader.ReadBytes((int)fiStream.Length);
-                                        dr["iv"] = pic;
-                                        fiStream.Close();
-                                        binReader.Close();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        dr["iv"] = null;
-                                    }
-
-                                    try
-                                    {
-                                        fiStream = new FileStream(dt.Rows[i]["ov"].ToString(), FileMode.Open);
-                                        binReader = new BinaryReader(fiStream);
-                                        pic = binReader.ReadBytes((int)fiStream.Length);
-                                        dr["ov"] = pic;
-                                        fiStream.Close();
-                                        binReader.Close();
-
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        dr["ov"] = null;
-                                    }
-                                    if (Configs.IsVillage && Configs.Use2Camera)
-                                    {
-                                        try
-                                        {
-                                            fiStream = new FileStream(dt.Rows[i]["vi"].ToString(), FileMode.Open);
-                                            binReader = new BinaryReader(fiStream);
-                                            pic = binReader.ReadBytes((int)fiStream.Length);
-                                            dr["vi"] = pic;
-                                            fiStream.Close();
-                                            binReader.Close();
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            dr["vi"] = null;
-                                        }
-                                    }
-
-                                    if (Configs.Use2Camera && Configs.IPIn3.Trim().Length > 0)
-                                    {
-                                        try //Mac 2015/02/04
-                                        {
-                                            fiStream = new FileStream(dt.Rows[i]["io"].ToString(), FileMode.Open);
-                                            binReader = new BinaryReader(fiStream);
-                                            pic = binReader.ReadBytes((int)fiStream.Length);
-                                            dr["io"] = pic;
-                                            fiStream.Close();
-                                            binReader.Close();
-
-                                        }
-                                        catch (Exception)
-                                        {
-                                            dr["io"] = null;
-                                        }
-                                    }
-
-                                    Map.Rows.Add(dr);
-
-                                }
-                                catch (Exception ex)
-                                {
-                                    //   Console.WriteLine(ex.ToString());
-                                }
-                            }
-
-
-                            if (Configs.Reports.ReportNoRunning) //Mac 2018/01/05
-                            {
-                                if (Configs.Reports.UseReport2_4) //Mac 2025/03/06
-                                    rpt.Load(path + "\\CrystalReports\\Report2_4NoRunning.rpt");
-                                else
-                                {
-                                    rpt.Load(path + "\\CrystalReports\\Report2NoRunning.rpt");
-                                    if (Configs.IsVillage && Configs.Use2Camera) rpt.Load(path + "\\CrystalReports\\Report2_2NoRunning.rpt");
-                                    else if (!Configs.Use2Camera) rpt.Load(path + "\\CrystalReports\\Report2_1NoRunning.rpt");
-                                    else if (Configs.Use2Camera && Configs.IPIn3.Trim().Length > 0) rpt.Load(path + "\\CrystalReports\\Report2_3NoRunning.rpt");
-                                    else if (Configs.Reports.UseReport2logo) //Mac 2018/05/07
-                                        rpt.Load(path + "\\CrystalReports\\Report2logoNoRunning.rpt");
-                                }
-                            }
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report1_NoRunning.rpt");
                             else
-                            {
-                                if (Configs.Reports.UseReport2_4) //Mac 2025/03/06
-                                    rpt.Load(path + "\\CrystalReports\\Report2_4.rpt");
-                                else
-                                {
-                                    rpt.Load(path + "\\CrystalReports\\Report2.rpt");
-                                    if (Configs.IsVillage && Configs.Use2Camera) rpt.Load(path + "\\CrystalReports\\Report2_2.rpt");
-                                    else if (!Configs.Use2Camera) rpt.Load(path + "\\CrystalReports\\Report2_1.rpt");
-                                    else if (Configs.Use2Camera && Configs.IPIn3.Trim().Length > 0) rpt.Load(path + "\\CrystalReports\\Report2_3.rpt"); //Mac 2015/02/04
-                                    else if (Configs.Reports.UseReport2logo) //Mac 2018/05/07
-                                        rpt.Load(path + "\\CrystalReports\\Report2logo.rpt");
-                                }
-                            }
-                            rpt.SetDataSource(Map);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                //      rpt.DataDefinition.FormulaFields["PaCar"].Text = "'" + (ResultGridView.Rows.Count - 1) + "'";
-                                if (Configs.Reports.UseReport2logo) //Mac 2018/05/07
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                }
-                            }
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                                reportDocument.Load(path + "\\CrystalReports\\Report1.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
                         case 2:
-                            //rpt.Load(path + "\\CrystalReports\\Report3.rpt");
-                            if (Configs.Reports.UseReport3_1) //Mac 2017/11/07
-                                rpt.Load(path + "\\CrystalReports\\Report3_1.rpt");
-                            else if (Configs.Reports.UseReport3logo) //Mac 2018/05/07
-                                rpt.Load(path + "\\CrystalReports\\Report3logo.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report3.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                // rpt.DataDefinition.FormulaFields["PaCar"].Text = "'" + (ResultGridView.Rows.Count - 1) + "'";
-                                if (Configs.Reports.UseReport3logo) //Mac 2018/05/07
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                }
-                            }
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            DataTable dataTable2 = การเข้าออกแสดงรูปภาพ(dataFromQuery);
 
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report2_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report2.rpt");
+
+                            TrySetReportData(reportDocument, dataTable2);
                             break;
 
                         case 3:
-                            if (Configs.Reports.ReportNoRunning) //Mac 2018/11/08
-                            {
-                                if (Configs.Reports.UseReport4logo) //Mac 2018/05/08
-                                    rpt.Load(path + "\\CrystalReports\\Report4logoNoRunning.rpt");
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report4NoRunning.rpt");
-                            }
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report3_NoRunning.rpt");
                             else
-                            {
-                                if (Configs.Reports.UseReport4logo) //Mac 2018/05/08
-                                    rpt.Load(path + "\\CrystalReports\\Report4logo.rpt");
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report4.rpt");
-                            }
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                // rpt.DataDefinition.FormulaFields["PaCar"].Text = "'" + (ResultGridView.Rows.Count - 1) + "'";
-                                if (Configs.Reports.UseReport4logo) //Mac 2018/05/08
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                }
-                            }
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                                reportDocument.Load(path + "\\CrystalReports\\Report3.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
                         case 4:
-                            if (Configs.Reports.ReportNoRunning) //Mac 2018/01/05
-                            {
-                                if (Configs.UseNameOnCard) //Mac 2018/12/13
-                                    rpt.Load(path + "\\CrystalReports\\Report5_5NoRunning.rpt");
-                                //else if (Configs.Reports.UseReport5_1)
-                                else if (Configs.Reports.UseReport5_1 || Configs.IsVillage) //Mac 2024/12/18
-                                    rpt.Load(path + "\\CrystalReports\\Report5_1NoRunning.rpt");
-                                else if (Configs.Reports.UseReport5_2) //Mac 2018/02/23
-                                    rpt.Load(path + "\\CrystalReports\\Report5_2NoRunning.rpt");
-                                else if (Configs.Reports.UseReport5_3) //Mac 2018/02/28
-                                    rpt.Load(path + "\\CrystalReports\\Report5_3NoRunning.rpt");
-                                else if (Configs.Reports.UseReport5logo) //Mac 2018/05/08
-                                    rpt.Load(path + "\\CrystalReports\\Report5logoNoRunning.rpt");
-                                else if (Configs.Reports.UseReport5_4) //Mac 2018/11/12
-                                    rpt.Load(path + "\\CrystalReports\\Report5_4NoRunning.rpt");
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report5NoRunning.rpt");
-                            }
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report4_NoRunning.rpt");
                             else
-                            {
-                                if (Configs.UseNameOnCard) //Mac 2018/12/13
-                                    rpt.Load(path + "\\CrystalReports\\Report5_5.rpt");
-                                //else if (Configs.Reports.UseReport5_1) //Mac 2017/06/19
-                                else if (Configs.Reports.UseReport5_1 || Configs.IsVillage) //Mac 2024/12/18
-                                    rpt.Load(path + "\\CrystalReports\\Report5_1.rpt");
-                                else if (Configs.Reports.UseReport5_2) //Mac 2018/02/23
-                                    rpt.Load(path + "\\CrystalReports\\Report5_2.rpt");
-                                else if (Configs.Reports.UseReport5_3) //Mac 2018/02/23
-                                    rpt.Load(path + "\\CrystalReports\\Report5_3.rpt");
-                                else if (Configs.Reports.UseReport5logo) //Mac 2018/05/08
-                                    rpt.Load(path + "\\CrystalReports\\Report5logo.rpt");
-                                else if (Configs.Reports.UseReport5_4) //Mac 2018/11/12
-                                    rpt.Load(path + "\\CrystalReports\\Report5_4.rpt");
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report5.rpt");
-                            }
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["PaCar"].Text = "'" + (ResultGridView.Rows.Count - 1) + "'";
-                                rpt.DataDefinition.FormulaFields["typeReport"].Text = "'จำนวนรถ '";
-                                rpt.DataDefinition.FormulaFields["typeReport2"].Text = "' คัน'";
-                                if (Configs.Reports.UseReport5logo) //Mac 2018/05/08
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                }
-                            }
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                                reportDocument.Load(path + "\\CrystalReports\\Report4.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
                         case 5:
-                            if (Configs.Reports.UseReportThanapoom)
-                            {
-                                rpt.Load(path + "\\CrystalReports\\Report1NoOfficer.rpt");
-                                rpt.SetDataSource(dt);
-
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                                if (dtMap.Rows.Count > 0)
-                                {
-                                    rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                    if (Configs.Reports.UseReport1logo)
-                                    {
-                                        rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                        rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                        rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                    }
-                                }
-                                PrimaryCrystalReportViewer.ReportSource = rpt;
-                                PrimaryCrystalReportViewer.Refresh(); ;
-                            }
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report5_NoRunning.rpt");
                             else
-                                goto case 0;
+                                reportDocument.Load(path + "\\CrystalReports\\Report5.rpt");
 
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            break;
+
+                        case 6:
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report6_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report6.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
                         case 7:
-                            DataTable Map2 = new DataTable("myMember");  //*** DataTable Map DataSet.xsd ***//
+                            reportDocument.Load(path + "\\CrystalReports\\Report7.rpt");
 
-                            DataRow dr2 = null;
-                            Map2.Columns.Add(new DataColumn("เวลายก", typeof(string)));
-                            Map2.Columns.Add(new DataColumn("พนักงาน", typeof(string)));
-                            Map2.Columns.Add(new DataColumn("ประตู", typeof(string)));
-                            Map2.Columns.Add(new DataColumn("บันทึก", typeof(string)));
-                            Map2.Columns.Add(new DataColumn("picdiv", typeof(System.Byte[])));
-                            Map2.Columns.Add(new DataColumn("piclic", typeof(System.Byte[])));
+                            DataTable dataTable7 = CreateReportLicense(dataFromQuery);
 
-                            ///////////////////////////////////////////////////
-                            for (int j = 0; j < dt.Rows.Count; j++)
+                            TrySetReportData(reportDocument, dataTable7);
+                            break;
+
+                        case 8:
+                            DataTable dataTable8 = การยกไม้แสดงรูปภาพ(dataFromQuery);
+
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report8_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report8.rpt");
+
+                            TrySetReportData(reportDocument, dataTable8);
+                            break;
+
+                        case 9:
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report9_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report9.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            break;
+
+                        case 10:
+                            reportDocument.Load(path + "\\CrystalReports\\Report10.rpt");
+
+                            DataTable dataTable10 = ConvertTableType(dataFromQuery);
+                            CaseReportTax();
+
+                            #region cal sum 10
+                            try
                             {
-                                dr2 = Map2.NewRow();
-                                dr2["เวลายก"] = dt.Rows[j]["เวลายก"];
-                                dr2["พนักงาน"] = dt.Rows[j]["พนักงาน"];
-                                dr2["ประตู"] = dt.Rows[j]["ประตู"];
-                                try
-                                {
-                                    dr2["บันทึก"] = dt.Rows[j]["บันทึก"];
-                                }
-                                catch (Exception) { }
-                                FileStream fiStream;
-                                BinaryReader binReader;
-                                byte[] pic = { };
+                                string p0, p1, p2, p3, p4, p5;
+                                p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[4].Value.ToString();
+                                p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[7].Value.ToString();
+                                p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[8].Value.ToString();
+                                p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[9].Value.ToString();
+                                p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[10].Value.ToString();
+                                p5 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
 
+                                if (dtMap.Rows.Count > 0)
+                                {
+                                    reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + p0 + "'";
+                                    reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + p1 + "'";
+                                    reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + p2 + "'";
+                                    reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + p3 + "'";
+                                    reportDocument.DataDefinition.FormulaFields["Pa4"].Text = "'" + p4 + "'";
+                                    reportDocument.DataDefinition.FormulaFields["Pa5"].Text = "'" + p5 + "'";
+                                }
+                            }
+                            catch { }
+                            #endregion
+
+                            TrySetReportData(reportDocument, dataTable10);
+                            break;
+
+                        case 11:
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report11_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report11.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            break;
+
+                        case 12:
+                            reportDocument.Load(path + "\\CrystalReports\\Report12.rpt");
+                            ResultGridView.DataSource = ConvertTableType(dataFromQuery);
+                            CaseReportGroupPrice();
+
+                            /* DataTable wtfDataTable = new DataTable();
+                            foreach (DataGridViewColumn col in ResultGridView.Columns)
+                            {
+                                wtfDataTable.Columns.Add(col.HeaderText);
+                            }
+                            for (int i = 0; i < ResultGridView.Rows.Count - 1; i++)
+                            {
+                                DataRow dRow = wtfDataTable.NewRow();
+                                for (int j = 0; j < ResultGridView.Columns.Count; j++)
+                                {
+                                    dRow[j] = ResultGridView.Rows[i].Cells[j].Value;
+                                }
+                                wtfDataTable.Rows.Add(dRow);
+                            } */
+
+                            #region cal sum 12
+                            try
+                            {
+                                string p0, p1, p2, p3, p4, p5, p6;
+                                p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[4].Value.ToString();
+                                p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[6].Value.ToString();
+                                p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[7].Value.ToString();
+                                p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[8].Value.ToString();
+                                p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[9].Value.ToString();
+                                p5 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[10].Value.ToString();
+                                p6 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
+                                /////////////////////////////
+                                if (dtMap.Rows.Count > 0)
+                                {
+                                    reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + p0 + "'";
+                                    reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + p1 + "'";
+                                    reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + p2 + "'";
+                                    reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + p3 + "'";
+                                    reportDocument.DataDefinition.FormulaFields["Pa4"].Text = "'" + p4 + "'";
+                                    reportDocument.DataDefinition.FormulaFields["Pa5"].Text = "'" + p5 + "'";
+                                    reportDocument.DataDefinition.FormulaFields["Pa6"].Text = "'" + p6 + "'";
+
+                                }
+                            }
+                            catch { }
+                            #endregion
+
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            break;
+
+                        case 13:
+                        case 14:
+                        case 15:
+                            Handle131415(reportDocument, dataFromQuery);
+                            break;
+
+                        case 16:
+                            reportDocument.Load(path + "\\CrystalReports\\Report16.rpt");
+
+                            ResultGridView.DataSource = ConvertTableType(dataFromQuery);
+
+                            ResultGridView.Columns[0].HeaderText = "E-Stamp";
+                            ResultGridView.Columns[1].HeaderText = "ยอดรวม";
+                            ResultGridView.Columns[0].Width = 160;
+                            ResultGridView.Columns[1].Width = 100;
+
+                            int intNo = ResultGridView.Rows.Count - 1;
+                            int intSumEStamp = 0;
+
+                            for (int i = 0; i < intNo; i++)
+                            {
+                                int intID = Convert.ToInt32(ResultGridView[0, i].Value);
                                 try
                                 {
-                                    fiStream = new FileStream(dt.Rows[j]["picdiv"].ToString(), FileMode.Open);
-                                    binReader = new BinaryReader(fiStream);
-                                    pic = binReader.ReadBytes((int)fiStream.Length);
-                                    dr2["picdiv"] = pic;
-                                    fiStream.Close();
-                                    binReader.Close();
+                                    if (intID > 0)
+                                    {
+                                        ResultGridView[0, i].Value = AppGlobalVariables.PromotionNamesById[intID];
+                                        intSumEStamp += Convert.ToInt32(ResultGridView[1, i].Value);
+                                    }
+                                    else
+                                        ResultGridView[0, i].Value = "";
                                 }
                                 catch (Exception)
                                 {
-                                    dr2["picdiv"] = null;
-                                }
-
-                                try
-                                {
-                                    fiStream = new FileStream(dt.Rows[j]["piclic"].ToString(), FileMode.Open);
-                                    binReader = new BinaryReader(fiStream);
-                                    pic = binReader.ReadBytes((int)fiStream.Length);
-                                    dr2["piclic"] = pic;
-                                    fiStream.Close();
-                                    binReader.Close();
-                                }
-                                catch (Exception ex)
-                                {
-                                    dr2["piclic"] = null;
-                                }
-
-                                Map2.Rows.Add(dr2);
-                            }
-
-
-                            if (Configs.Reports.UseReport8logo) //Mac 2018/05/08
-                                rpt.Load(path + "\\CrystalReports\\Report8logo.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report8.rpt");
-                            rpt.SetDataSource(Map2);
-                            dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                if (Configs.Reports.UseReport8logo) //Mac 2018/05/08
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                    ResultGridView[0, i].Value = "E-Stamp เลิกใช้";
                                 }
                             }
+                            ResultGridView[0, intNo].Value = "E-Stamp ทั้งหมด";
+                            ResultGridView[1, intNo].Value = intSumEStamp.ToString();
 
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
 
-                            break;
-
-                        case 8: //Mac 2018/01/17
-                            if (Configs.Reports.ReportNoRunning)
-                            {
-                                if (Configs.IsVillage && Configs.Use2Camera) rpt.Load(path + "\\CrystalReports\\Report1_1NoRunning.rpt");
-                                else if ((Configs.IsVillage) || (Configs.VisitorFillDetail)) rpt.Load(path + "\\CrystalReports\\Report1_2NoRunning.rpt");
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report1NoRunning.rpt");
-                            }
-                            else
-                            {
-                                if (Configs.IsVillage && Configs.Use2Camera) rpt.Load(path + "\\CrystalReports\\Report1_1.rpt");
-                                else if ((Configs.IsVillage) || (Configs.VisitorFillDetail)) rpt.Load(path + "\\CrystalReports\\Report1_2.rpt");
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report1.rpt");
-                            }
-
-                            rpt.SetDataSource(dt);
-
-                            if (Configs.VisitorFillDetail)
-                            {
-                                CrystalDecisions.CrystalReports.Engine.TextObject txtReportCol;
-                                txtReportCol = rpt.ReportDefinition.ReportObjects["text21"] as TextObject;
-                                txtReportCol.Text = "ติดต่อ (เรื่อง/ชื่อ)";
-                            }
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["PaCar"].Text = "'" + (ResultGridView.Rows.Count - 1) + "'";
-                            }
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 10: //Mac 2021/05/21
-                            rpt.Load(path + "\\CrystalReports\\Report11.rpt");
-                            rpt.SetDataSource(dt);
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 22:
-                            if (Configs.Reports.UseReport23_1) //Mac 2019/05/07
-                                rpt.Load(path + "\\CrystalReports\\Report23_1.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report23.rpt");
-
-                            rpt.SetDataSource(dt);
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
                         case 23:
-                            if (Configs.Reports.UseReport24_1) //Mac 2020/08/15
-                                rpt.Load(path + "\\CrystalReports\\Report24_1.rpt");
-                            else if (Configs.Reports.UseReport24_2) //Mac 2021/07/22
-                                rpt.Load(path + "\\CrystalReports\\Report24_2.rpt");
-                            else if (Configs.Reports.UseReport24_3) //Mac 2021/10/20
-                                rpt.Load(path + "\\CrystalReports\\Report24_3.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report24.rpt");
-                            rpt.SetDataSource(dt);
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                            reportDocument.Load(path + "\\CrystalReports\\Report23.rpt");
 
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            /*int intSumprice = 0;
-                            for (i = 0; i < (ResultGridView.Rows.Count - 1); i++)
-                            {
-                                //intSumprice += Convert.ToInt32(dt.Rows[i].ItemArray[4]);
-                                intSumprice += Convert.ToInt32(dt.Rows[i].ItemArray[5]); //Mac 2018/03/10
-                            }
-                            rpt.DataDefinition.FormulaFields["SumRow"].Text = "'" + intSumprice.ToString("#,###,##0.00") + "'";*/ //Mac 2019/05/14
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
                         case 24:
-                            rpt.Load(path + "\\CrystalReports\\Report25.rpt");
-                            rpt.SetDataSource(dt);
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report24_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report24.rpt");
 
-                            string address = "";
-                            dtMap = DbController.LoadData("Select value FROM param Where name = 'add1'");
-                            if (dtMap.Rows.Count > 0)
-                                address = dtMap.Rows[0][0].ToString() + " ";
-
-                            dtMap = DbController.LoadData("Select value FROM param Where name = 'add2'");
-                            if (dtMap.Rows.Count > 0)
-                                address += dtMap.Rows[0][0].ToString();
-
-                            rpt.DataDefinition.FormulaFields["address"].Text = "'" + address + "'";
-
-                            dtMap = DbController.LoadData("Select value FROM param Where name = 'tel'");
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["tel"].Text = "'" + dtMap.Rows[0][0].ToString() + "'";
-
-                            DateTime dst = StartDatePicker.Value;
-                            dst = StartDatePicker.Value;
-                            string startDateTime = dst.ToString("dd MMMM ") + dst.Year.ToString();
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'ตั้งแต่ " + startDateTime + " 00:00:00 ถึง " + startDateTime + " 23:59:59'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
                         case 25:
+                            reportDocument.Load(path + "\\CrystalReports\\Report25.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
+
+                            DateTime dst = StartDatePicker.Value;
+                            string startDateTime = dst.ToString("dd MMMM ") + dst.Year.ToString();
+                            reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'ตั้งแต่ " + startDateTime + " 00:00:00 ถึง " + startDateTime + " 23:59:59'";
+                            break;
+
+                        case 26:
+                            reportDocument.Load(path + "\\CrystalReports\\Report26.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             dst = StartDatePicker.Value;
                             startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
                             DateTime dfn = EndDatePicker.Value;
                             string endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-
-                            rpt.Load(path + "\\CrystalReports\\Report26.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 26:
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-
-                            rpt.Load(path + "\\CrystalReports\\Report27.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'"; //Mac 2023/06/28
-                            rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
                             break;
 
                         case 27:
+                            reportDocument.Load(path + "\\CrystalReports\\Report27.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             dst = StartDatePicker.Value;
                             startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
                             dfn = EndDatePicker.Value;
                             endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-
-                            rpt.Load(path + "\\CrystalReports\\Report28.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
                             break;
 
                         case 28:
+                            reportDocument.Load(path + "\\CrystalReports\\Report28.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             dst = StartDatePicker.Value;
                             startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
                             dfn = EndDatePicker.Value;
                             endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-
-                            rpt.Load(path + "\\CrystalReports\\Report29.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
                             break;
 
-                        case 30:
-                            if (Configs.Reports.ReportNoRunning) //Mac 2018/01/05
-                                rpt.Load(path + "\\CrystalReports\\Report31NoRunning.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report31.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                            }
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                        case 29:
+                            reportDocument.Load(path + "\\CrystalReports\\Report29.rpt");
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            TrySetReportData(reportDocument, dataFromQuery);
+
+                            dst = StartDatePicker.Value;
+                            startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                            dfn = EndDatePicker.Value;
+                            endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
                             break;
 
                         case 31:
-                            DataTable Map3 = new DataTable("myMember");  //*** DataTable Map DataSet.xsd ***//
-
-                            DataRow dr3 = null;
-                            Map3.Columns.Add(new DataColumn("ลำดับ", typeof(string)));
-                            Map3.Columns.Add(new DataColumn("ประเภท", typeof(string)));
-                            Map3.Columns.Add(new DataColumn("ทะเบียน", typeof(string)));
-                            Map3.Columns.Add(new DataColumn("เวลาเข้า", typeof(string)));
-                            Map3.Columns.Add(new DataColumn("เจ้าหน้าที่ขาเข้า", typeof(string)));
-                            Map3.Columns.Add(new DataColumn("picdiv", typeof(System.Byte[])));
-                            Map3.Columns.Add(new DataColumn("piclic", typeof(System.Byte[])));
-
-                            if (Configs.UseNameOnCard) //Mac 2018/12/13
-                                Map3.Columns.Add(new DataColumn("ชื่อบัตร", typeof(string)));
-
-                            ///////////////////////////////////////////////////
-                            for (int j = 0; j < dt.Rows.Count; j++)
-                            {
-                                dr3 = Map3.NewRow();
-                                dr3["ลำดับ"] = dt.Rows[j]["ลำดับ"];
-                                dr3["ประเภท"] = dt.Rows[j]["ประเภท"];
-                                dr3["เวลาเข้า"] = dt.Rows[j]["เวลาเข้า"];
-                                dr3["เจ้าหน้าที่ขาเข้า"] = dt.Rows[j]["เจ้าหน้าที่ขาเข้า"];
-                                try
-                                {
-                                    dr3["ทะเบียน"] = dt.Rows[j]["ทะเบียน"];
-                                }
-                                catch (Exception) { }
-                                FileStream fiStream;
-                                BinaryReader binReader;
-                                byte[] pic = { };
-
-                                try
-                                {
-                                    fiStream = new FileStream(dt.Rows[j]["picdiv"].ToString(), FileMode.Open);
-                                    binReader = new BinaryReader(fiStream);
-                                    pic = binReader.ReadBytes((int)fiStream.Length);
-                                    dr3["picdiv"] = pic;
-                                    fiStream.Close();
-                                    binReader.Close();
-                                }
-                                catch (Exception)
-                                {
-                                    dr3["picdiv"] = null;
-                                }
-
-
-                                try
-                                {
-                                    fiStream = new FileStream(dt.Rows[j]["piclic"].ToString(), FileMode.Open);
-                                    binReader = new BinaryReader(fiStream);
-                                    pic = binReader.ReadBytes((int)fiStream.Length);
-                                    dr3["piclic"] = pic;
-                                    fiStream.Close();
-                                    binReader.Close();
-                                }
-                                catch (Exception ex)
-                                {
-                                    dr3["piclic"] = null;
-                                }
-
-                                if (Configs.UseNameOnCard) //Mac 2018/12/13
-                                    dr3["ชื่อบัตร"] = dt.Rows[j]["ชื่อบัตร"];
-
-                                Map3.Rows.Add(dr3);
-                            }
-
-                            if (Configs.Reports.ReportNoRunning) //Mac 2018/01/05
-                            {
-                                if (Configs.UseNameOnCard) //Mac 2018/12/13
-                                    rpt.Load(path + "\\CrystalReports\\Report32_1NoRunning.rpt");
-                                else if (Configs.Reports.UseReport32logo) //Mac 2018/05/08
-                                    rpt.Load(path + "\\CrystalReports\\Report32logoNoRunning.rpt");
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report32NoRunning.rpt");
-                            }
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report31_NoRunning.rpt");
                             else
-                            {
-                                if (Configs.UseNameOnCard) //Mac 2018/12/13
-                                    rpt.Load(path + "\\CrystalReports\\Report32_1.rpt");
-                                else if (Configs.Reports.UseReport32logo) //Mac 2018/05/08
-                                    rpt.Load(path + "\\CrystalReports\\Report32logo.rpt");
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report32.rpt");
-                            }
-                            rpt.SetDataSource(Map3);
-                            dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                if (Configs.Reports.UseReport32logo) //Mac 2018/05/08
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                }
-                            }
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                                reportDocument.Load(path + "\\CrystalReports\\Report31.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
                         case 32:
-                            rpt.Load(path + "\\CrystalReports\\Report33.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานยกเลิกใบกำกับภาษีอย่างย่อประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.ToString("yyyy") + " ถึงวันที่ " + EndDatePicker.Value.ToString("d MMMM ") + EndDatePicker.Value.ToString("yyyy") + "'"; //Mac 2019/01/03
+                            DataTable dataTable32 = คงค้างแสดงรูปภาพ(dataFromQuery);
 
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                try
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                    try
-                                    {
-                                        rpt.DataDefinition.FormulaFields["FooterName1"].Text = "'" + dtMap.Rows[4][0].ToString().Trim() + "'";
-                                    }
-                                    catch { }
-                                    try
-                                    {
-                                        rpt.DataDefinition.FormulaFields["FooterName2"].Text = "'" + dtMap.Rows[5][0].ToString().Trim() + "'";
-                                    }
-                                    catch { }
-                                    try
-                                    {
-                                        rpt.DataDefinition.FormulaFields["FooterName3"].Text = "'" + dtMap.Rows[6][0].ToString().Trim() + "'";
-                                    }
-                                    catch { }
-                                    try
-                                    {
-                                        rpt.DataDefinition.FormulaFields["FooterName4"].Text = "'" + AppGlobalVariables.Printings.ReportFooter4 + "'";
-                                    }
-                                    catch { }
-                                    try
-                                    {
-                                        rpt.DataDefinition.FormulaFields["FooterName5"].Text = "'" + AppGlobalVariables.Printings.ReportFooter5 + "'";
-                                    }
-                                    catch { }
-                                }
-                                catch (Exception)
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "''";
-                                }
-                            }
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report32_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report32.rpt");
 
-
-                            double sumTotalV = 0;
-
-                            for (int j = 0; j < dt.Rows.Count; j++)
-                            {
-                                sumTotalV += Convert.ToDouble(dt.Rows[j]["จำนวนเงิน"]);
-                            }
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-
+                            TrySetReportData(reportDocument, dataTable32);
                             break;
 
                         case 33:
+                            reportDocument.Load(path + "\\CrystalReports\\Report33.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานยกเลิกใบกำกับภาษีอย่างย่อประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.ToString("yyyy") + " ถึงวันที่ " + EndDatePicker.Value.ToString("d MMMM ") + EndDatePicker.Value.ToString("yyyy") + "'";
+                            break;
 
-                            rpt.Load(path + "\\CrystalReports\\Report34.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                try
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.AddYears(543).ToString("yyyy") + "'";
-                                    rpt.DataDefinition.FormulaFields["FooterName1"].Text = "'" + dtMap.Rows[4][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["FooterName2"].Text = "'" + dtMap.Rows[5][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["FooterName3"].Text = "'" + dtMap.Rows[6][0].ToString().Trim() + "'";
-                                }
-                                catch (Exception)
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["DatePrint"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["FooterName1"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["FooterName2"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["FooterName3"].Text = "''";
-                                }
-                            }
+                        case 34:
+                            reportDocument.Load(path + "\\CrystalReports\\Report34.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
 
+                            #region cal sum 34
                             double sumVat = 0;
                             double sumBefore = 0;
                             double sumTotal = 0;
                             double sumCntSlip = 0;
 
-                            for (int j = 0; j < dt.Rows.Count; j++)
+                            for (int j = 0; j < dataFromQuery.Rows.Count; j++)
                             {
-                                sumVat += Convert.ToDouble(dt.Rows[j]["VAT"]);
-                                sumBefore += Convert.ToDouble(dt.Rows[j]["ค่าบริการ"]);
-                                sumTotal += Convert.ToDouble(dt.Rows[j]["รวมเงิน"]);
-                                sumCntSlip += Convert.ToDouble(dt.Rows[j]["จำนวนใบ"]);
+                                sumVat += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
+                                sumBefore += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
+                                sumTotal += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
+                                sumCntSlip += Convert.ToDouble(dataFromQuery.Rows[j]["จำนวนใบ"]);
                             }
 
-                            if (Configs.UseCalVatFromTotal) //Mac 2022/09/30
+                            if (Configs.UseCalVatFromTotal)
                             {
-                                rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotal - (sumTotal * 7 / 107)).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotal * 7 / 107).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotal - (sumTotal * 7 / 107)).ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotal * 7 / 107).ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal.ToString("#,###,##0.00") + "'";
                             }
                             else
                             {
-                                rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBefore.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVat.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBefore.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVat.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal.ToString("#,###,##0.00") + "'";
                             }
-                            rpt.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumCntSlip.ToString("#,###,##0") + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumCntSlip.ToString("#,###,##0") + "'";
+                            #endregion
 
                             break;
 
-                        case 34:
-                            if (Configs.Reports.UseReport35_1) //Mac 2021/10/15
-                                rpt.Load(path + "\\CrystalReports\\Report35_1.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report35.rpt");
+                        case 35:
+                            reportDocument.Load(path + "\\CrystalReports\\Report35.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถประจำเดือน " + StartDatePicker.Value.ToString("MMMM") + " " + StartDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
 
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถประจำเดือน " + StartDatePicker.Value.ToString("MMMM") + " " + StartDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                try
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.AddYears(543).ToString("yyyy") + "'";
-                                    rpt.DataDefinition.FormulaFields["FooterName1"].Text = "'" + dtMap.Rows[4][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["FooterName2"].Text = "'" + dtMap.Rows[5][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["FooterName3"].Text = "'" + dtMap.Rows[6][0].ToString().Trim() + "'";
-                                }
-                                catch (Exception)
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["DatePrint"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["FooterName1"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["FooterName2"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["FooterName3"].Text = "''";
-                                }
-                            }
-
+                            #region cal sum
                             double sumVatM = 0;
                             double sumBeforeM = 0;
                             double sumTotalM = 0;
                             double sumCountSlip = 0;
 
-                            for (int j = 0; j < dt.Rows.Count; j++)
+                            for (int j = 0; j < dataFromQuery.Rows.Count; j++)
                             {
-                                sumVatM += Convert.ToDouble(dt.Rows[j]["VAT"]);
-                                sumBeforeM += Convert.ToDouble(dt.Rows[j]["ค่าบริการ"]);
-                                sumTotalM += Convert.ToDouble(dt.Rows[j]["รวมเงิน"]);
-                                sumCountSlip += Convert.ToDouble(dt.Rows[j]["จำนวนใบ"]);
+                                sumVatM += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
+                                sumBeforeM += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
+                                sumTotalM += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
+                                sumCountSlip += Convert.ToDouble(dataFromQuery.Rows[j]["จำนวนใบ"]);
                             }
 
-                            if (Configs.UseCalVatFromTotal) //Mac 2022/09/30
+                            if (Configs.UseCalVatFromTotal)
                             {
-                                rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotalM - (sumTotalM * 7 / 107)).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotalM * 7 / 107).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalM.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotalM - (sumTotalM * 7 / 107)).ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotalM * 7 / 107).ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalM.ToString("#,###,##0.00") + "'";
                             }
                             else
                             {
-                                rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBeforeM.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVatM.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalM.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBeforeM.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVatM.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalM.ToString("#,###,##0.00") + "'";
                             }
-                            rpt.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumCountSlip.ToString("#,###,##0") + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumCountSlip.ToString("#,###,##0") + "'";
+                            #endregion
 
                             break;
 
-                        case 35:
-                            if (Configs.Reports.UseReport36_1) //Mac 2021/10/15
-                                rpt.Load(path + "\\CrystalReports\\Report36_1.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report36.rpt");
+                        case 36:
+                            reportDocument.Load(path + "\\CrystalReports\\Report36.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปรายได้ประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.AddYears(543).ToString("yyyy") + " ถึงวันที่ " + EndDatePicker.Value.ToString("d MMMM ") + EndDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
 
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปรายได้ประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.AddYears(543).ToString("yyyy") + " ถึงวันที่ " + EndDatePicker.Value.ToString("d MMMM ") + EndDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                try
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.AddYears(543).ToString("yyyy") + "'";
-                                    rpt.DataDefinition.FormulaFields["FooterName1"].Text = "'" + dtMap.Rows[4][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["FooterName2"].Text = "'" + dtMap.Rows[5][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["FooterName3"].Text = "'" + dtMap.Rows[6][0].ToString().Trim() + "'";
-                                }
-                                catch (Exception)
-                                {
-                                    rpt.DataDefinition.FormulaFields["Address1"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["Address2"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["TaxID"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["DatePrint"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["FooterName1"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["FooterName2"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["FooterName3"].Text = "''";
-                                }
-                            }
-
+                            #region cal sum 36
                             double sumVatT = 0;
                             double sumBeforeT = 0;
                             double sumTotalT = 0;
@@ -2283,2514 +1081,631 @@ namespace ParkingManagementReport
                             double sumLossCardT = 0;
                             double sumOverdateT = 0;
 
-                            for (int j = 0; j < dt.Rows.Count; j++)
+                            for (int j = 0; j < dataFromQuery.Rows.Count; j++)
                             {
-                                sumVatT += Convert.ToDouble(dt.Rows[j]["VAT"]);
-                                sumBeforeT += Convert.ToDouble(dt.Rows[j]["ค่าบริการ"]);
-                                sumTotalT += Convert.ToDouble(dt.Rows[j]["รวมเงิน"]);
-                                sumPriceT += Convert.ToDouble(dt.Rows[j]["ค่าจอดรถ"]);
-                                sumLossCardT += Convert.ToDouble(dt.Rows[j]["ค่าปรับบัตรหาย"]);
-                                sumOverdateT += Convert.ToDouble(dt.Rows[j]["ค่าปรับค้างคืน"]);
+                                sumVatT += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
+                                sumBeforeT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
+                                sumTotalT += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
+                                sumPriceT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าจอดรถ"]);
+                                sumLossCardT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าปรับบัตรหาย"]);
+                                sumOverdateT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าปรับค้างคืน"]);
                             }
 
-                            if (Configs.UseCalVatFromTotal) //Mac 2022/09/30
+                            if (Configs.UseCalVatFromTotal)
                             {
-                                rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotalT - (sumTotalT * 7 / 107)).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotalT * 7 / 107).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalT.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa3"].Text = "'" + (sumTotalT - (sumTotalT * 7 / 107)).ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotalT - (sumTotalT * 7 / 107)).ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotalT * 7 / 107).ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalT.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + (sumTotalT - (sumTotalT * 7 / 107)).ToString("#,###,##0.00") + "'";
                             }
                             else
                             {
-                                rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBeforeT.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVatT.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalT.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumPriceT.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBeforeT.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVatT.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalT.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumPriceT.ToString("#,###,##0.00") + "'";
                             }
 
-                            rpt.DataDefinition.FormulaFields["Pa4"].Text = "'" + sumLossCardT.ToString("#,###,##0.00") + "'";
-                            rpt.DataDefinition.FormulaFields["Pa5"].Text = "'" + sumOverdateT.ToString("#,###,##0.00") + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.DataDefinition.FormulaFields["Pa4"].Text = "'" + sumLossCardT.ToString("#,###,##0.00") + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa5"].Text = "'" + sumOverdateT.ToString("#,###,##0.00") + "'";
+                            #endregion
 
                             break;
 
-                        case 36:
+                        case 37:
+                            reportDocument.Load(path + "\\CrystalReports\\Report37.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             dst = StartDatePicker.Value;
                             startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
                             dfn = EndDatePicker.Value;
                             endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-
-                            rpt.Load(path + "\\CrystalReports\\Report37.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 37:
-
-                            rpt.Load(path + "\\CrystalReports\\Report38.rpt");
-                            rpt.SetDataSource(dt);
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                try
-                                {
-                                    rpt.DataDefinition.FormulaFields["Branch"].Text = "'Branch: " + dtMap.Rows[7][0].ToString().Trim() + "'";
-                                    rpt.DataDefinition.FormulaFields["Date"].Text = "'Date:  " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.ToString("yyyy") + "'";
-                                }
-                                catch (Exception)
-                                {
-                                    rpt.DataDefinition.FormulaFields["Branch"].Text = "''";
-                                    rpt.DataDefinition.FormulaFields["Date"].Text = "''";
-                                }
-                            }
-
-                            int sumCoupon = 0;
-                            int sumPrice = 0;
-
-                            for (int j = 0; j < dt.Rows.Count; j++)
-                            {
-                                sumCoupon += Convert.ToInt32(dt.Rows[j]["No of Coupon"]);
-                                sumPrice += Convert.ToInt32(dt.Rows[j]["Actual Payment"]);
-                            }
-
-                            rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumCoupon + "'";
-                            rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumPrice + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-
+                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
                             break;
 
                         case 38:
+                            reportDocument.Load(path + "\\CrystalReports\\Report38.rpt");
 
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            break;
+                            #region cal sum 38
+                            int sumCoupon = 0;
+                            int sumPrice = 0;
 
-                        case 39:
-
-                            /*for (int j = 0; j < dt.Rows.Count; j++)
+                            for (int j = 0; j < dataFromQuery.Rows.Count; j++)
                             {
-                                sumCoupon += Convert.ToInt32(dt.Rows[j]["No of Coupon"]);
-                                sumPrice += Convert.ToInt32(dt.Rows[j]["Actual Payment"]);
-                            }*/
-
-                            break;
-
-                        case 40:
-                            rpt.Load(path + "\\CrystalReports\\Report41.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["SumCar"].Text = "'" + (ResultGridView.Rows.Count - 1).ToString("#,###,##0") + "'";
+                                sumCoupon += Convert.ToInt32(dataFromQuery.Rows[j]["No of Coupon"]);
+                                sumPrice += Convert.ToInt32(dataFromQuery.Rows[j]["Actual Payment"]);
                             }
 
-                            ResultGridView.Columns[3].Visible = false;
-                            ResultGridView.Columns[4].Visible = false;
+                            reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumCoupon + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumPrice + "'";
+                            #endregion
 
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
                             break;
 
                         case 41:
-                            DataTable Map4 = new DataTable("myMember");  //*** DataTable Map DataSet.xsd ***//
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report41_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report41.rpt");
 
-                            DataRow dr4 = null;
-                            Map4.Columns.Add(new DataColumn("ลำดับ", typeof(string)));
-                            Map4.Columns.Add(new DataColumn("ชื่อ", typeof(string)));
-                            Map4.Columns.Add(new DataColumn("ทะเบียน", typeof(string)));
-                            Map4.Columns.Add(new DataColumn("วันที่", typeof(string)));
-                            Map4.Columns.Add(new DataColumn("ประตู", typeof(string)));
-                            Map4.Columns.Add(new DataColumn("picdiv", typeof(System.Byte[])));
-                            Map4.Columns.Add(new DataColumn("piclic", typeof(System.Byte[])));
-
-                            ///////////////////////////////////////////////////
-                            for (int j = 0; j < dt.Rows.Count; j++)
-                            {
-                                dr4 = Map4.NewRow();
-                                try
-                                {
-                                    dr4["ลำดับ"] = dt.Rows[j]["ลำดับ"];
-                                    dr4["ชื่อ"] = dt.Rows[j]["ชื่อ"];
-                                    dr4["ทะเบียน"] = dt.Rows[j]["ทะเบียน"];
-                                    dr4["วันที่"] = dt.Rows[j]["วันที่"];
-                                    dr4["ประตู"] = dt.Rows[j]["ประตู"];
-                                }
-                                catch (Exception) { }
-                                FileStream fiStream;
-                                BinaryReader binReader;
-                                byte[] pic = { };
-
-                                try
-                                {
-                                    fiStream = new FileStream(dt.Rows[j]["picdiv"].ToString(), FileMode.Open);
-                                    binReader = new BinaryReader(fiStream);
-                                    pic = binReader.ReadBytes((int)fiStream.Length);
-                                    dr4["picdiv"] = pic;
-                                    fiStream.Close();
-                                    binReader.Close();
-                                }
-                                catch (Exception)
-                                {
-                                    dr4["picdiv"] = null;
-                                }
-
-
-                                try
-                                {
-                                    fiStream = new FileStream(dt.Rows[j]["piclic"].ToString(), FileMode.Open);
-                                    binReader = new BinaryReader(fiStream);
-                                    pic = binReader.ReadBytes((int)fiStream.Length);
-                                    dr4["piclic"] = pic;
-                                    fiStream.Close();
-                                    binReader.Close();
-                                }
-                                catch (Exception)
-                                {
-                                    dr4["piclic"] = null;
-                                }
-
-                                Map4.Rows.Add(dr4);
-                            }
-
-                            rpt.Load(path + "\\CrystalReports\\Report42.rpt");
-                            rpt.SetDataSource(Map4);
-                            dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                            TrySetReportData(reportDocument, dataFromQuery);
 
                             ResultGridView.Columns[3].Visible = false;
                             ResultGridView.Columns[4].Visible = false;
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-
                             break;
-                        case 46:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report47.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสมาชิก'";
-                            rpt.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
-                            rpt.DataDefinition.FormulaFields["Address"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
-                            rpt.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(end_date)}'";
-                            rpt.DataDefinition.FormulaFields["PrintedByUser"].Text = $"'{AppGlobalVariables.OperatingUser.Name}'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
 
-                            PrimaryCrystalReportViewer.Refresh();
+                        case 42:
+                            DataTable dataTable42 = การเข้าออกMemberแสดงรูปภาพ(dataFromQuery);
+                            TrySetReportData(reportDocument, dataTable42);
+
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report42_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report42.rpt");
+
+                            ResultGridView.Columns[3].Visible = false;
+                            ResultGridView.Columns[4].Visible = false;
                             break;
+
                         case 47:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report48.rpt");
-                            rpt.SetDataSource(dt);
-                            dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report47.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
-                        case 48:
-                            PrimaryTabControl.SelectTab(1);
 
+                        case 48:
+                            reportDocument.Load(path + "\\CrystalReports\\Report48.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
+                            PrimaryTabControl.SelectTab(1);
+                            break;
+
+                        case 49:
+                            reportDocument.Load(path + "\\CrystalReports\\Report49.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
+                            #region cal sum 49
                             double sumVat48 = 0;
                             double sumBefore48 = 0;
                             double sumTotal48 = 0;
 
-                            if (Configs.Reports.Report49_LossCard_NoVat) //Mac 2021/05/28
+                            for (int j = 0; j < dataFromQuery.Rows.Count; j++)
                             {
-                                if (!Configs.IsSwitch)
-                                {
-                                    rpt.Load(path + "\\CrystalReports\\Report49_losscard_novat.rpt");
-                                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าปรับประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.ToString("yyyy") + "'";
-                                }
-                                else
-                                {
-                                    rpt.Load(path + "\\CrystalReports\\Report49.rpt");
-                                    rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถยนต์ประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.ToString("yyyy") + "'";
-                                }
-                            }
-                            else
-                            {
-
-                                if (Configs.Reports.UseReport49_1) //Mac 2021/10/14
-                                    rpt.Load(path + "\\CrystalReports\\Report49_1.rpt");
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report49.rpt");
-
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = $"'รายงานภาษีขายค่าบริการที่จอด{AppGlobalVariables.Database.VehicleTypeTh}ประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.ToString("yyyy") + "'";
-                            }
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + AppGlobalVariables.Printings.Address1.Trim() + " " + AppGlobalVariables.Printings.Address2.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + AppGlobalVariables.Printings.Tax1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-
-                            for (int j = 0; j < dt.Rows.Count; j++)
-                            {
-                                sumVat48 += Convert.ToDouble(dt.Rows[j]["VAT"]);
-                                sumBefore48 += Convert.ToDouble(dt.Rows[j]["ค่าบริการ"]);
-                                sumTotal48 += Convert.ToDouble(dt.Rows[j]["จำนวนเงิน"]);
+                                sumVat48 += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
+                                sumBefore48 += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
+                                sumTotal48 += Convert.ToDouble(dataFromQuery.Rows[j]["จำนวนเงิน"]);
                             }
 
                             if (Configs.UseCalVatFromTotal) //Mac 2022/09/30
                             {
-                                rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotal48 - (sumTotal48 * 7 / 107)).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotal48 * 7 / 107).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal48.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotal48 - (sumTotal48 * 7 / 107)).ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotal48 * 7 / 107).ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal48.ToString("#,###,##0.00") + "'";
                             }
-                            else if (Configs.Reports.UseReport49_1) //Mac 2021/10/14
-                            {
-                                rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotal48 - (sumTotal48 * 7 / 107)).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotal48 * 7 / 107).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal48.ToString("#,###,##0.00") + "'";
-                            }
+
                             else
                             {
-                                rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBefore48.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVat48.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal48.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBefore48.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVat48.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal48.ToString("#,###,##0.00") + "'";
                             }
+                            #endregion
 
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                        case 49:
                             PrimaryTabControl.SelectTab(1);
-                            if (Configs.Reports.UseReport50logo) //Mac 2018/05/23
-                                rpt.Load(path + "\\CrystalReports\\Report50logo.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report50.rpt");
-                            rpt.SetDataSource(dt);
-                            if (Configs.Reports.UseReport50logo) //Mac 2018/05/08
-                            {
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงาน" + ReportComboBox.Text + "ประจำเดือน " + StartDatePicker.Value.ToString("MMMM") + " " + StartDatePicker.Value.ToString("yyyy") + "'";
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            }
-                            else
-                            {
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถประจำเดือน " + StartDatePicker.Value.ToString("MMMM") + " " + StartDatePicker.Value.ToString("yyyy") + "'";
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + AppGlobalVariables.Printings.Address1.Trim() + " " + AppGlobalVariables.Printings.Address2.Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + AppGlobalVariables.Printings.Tax1.Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            }
+                            break;
 
+                        case 50:
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report50_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report50.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
+
+                            #region cal sum 50
                             double sumVat49 = 0;
                             double sumBefore49 = 0;
                             double sumTotal49 = 0;
 
-                            for (int j = 0; j < dt.Rows.Count; j++)
+                            for (int j = 0; j < dataFromQuery.Rows.Count; j++)
                             {
-                                sumVat49 += Convert.ToDouble(dt.Rows[j]["VAT"]);
-                                sumBefore49 += Convert.ToDouble(dt.Rows[j]["ค่าบริการ"]);
-                                sumTotal49 += Convert.ToDouble(dt.Rows[j]["รวมเงิน"]);
+                                sumVat49 += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
+                                sumBefore49 += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
+                                sumTotal49 += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
                             }
 
-                            if (Configs.UseCalVatFromTotal) //Mac 2022/09/30
+                            if (Configs.UseCalVatFromTotal)
                             {
-                                rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotal49 - (sumTotal49 * 7 / 107)).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotal49 * 7 / 107).ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal49.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotal49 - (sumTotal49 * 7 / 107)).ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotal49 * 7 / 107).ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal49.ToString("#,###,##0.00") + "'";
                             }
                             else
                             {
-                                rpt.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBefore49.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVat49.ToString("#,###,##0.00") + "'";
-                                rpt.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal49.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBefore49.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVat49.ToString("#,###,##0.00") + "'";
+                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal49.ToString("#,###,##0.00") + "'";
                             }
+                            #endregion
 
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 51:
                             PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report52.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขาย'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Address"].Text = "'ที่อยู่ : " + AppGlobalVariables.Printings.Address1.Trim() + " " + AppGlobalVariables.Printings.Address2.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + AppGlobalVariables.Printings.Tax1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานภาษีขาย " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
                             break;
+
                         case 52:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report53.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปรายรับ (รายวัน)'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานสรุปรายรับ (รายวัน) " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report52.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 53:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report54.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปรายรับ (รายเดือน)'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานสรุปรายรับ (รายเดือน) " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report53.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 54:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report55.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานรถคงค้าง'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานรถคงค้าง " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report54.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 55:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report56.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานบัตรหาย'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานบัตรหาย " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report55.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 56:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report57.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสถิติชั่วโมงการจอด'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานสถิติชั่วโมงการจอด " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report56.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 57:
+                            reportDocument.Load(path + "\\CrystalReports\\Report57.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report58.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานข้อมูลบัตรสมาชิก'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานข้อมูลบัตรสมาชิก " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
                             break;
+
                         case 58:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report58.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานประวัติการบันทึกบัตร'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานประวัติการบันทึกบัตร " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report58.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 59:
+                            reportDocument.Load(path + "\\CrystalReports\\Report59.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             PrimaryTabControl.SelectTab(1);
-                            if (Configs.IsSwitch)
-                                rpt.Load(path + "\\CrystalReports\\Report60_1.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report60.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานการใช้บริการลานจอด/วัน'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานการใช้บริการลานจอด/วัน " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-
-                            if (Configs.IsSwitch)
-                                Configs.IsSwitch = false;
-                            else
-                                Configs.IsSwitch = true;
-
                             break;
+
                         case 60:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report61.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานการใช้บริการสรุปรายเดือน'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["Month"].Text = "'ประจำเดือน" + StartDatePicker.Value.ToString("MMMM") + "'";
-                            ReportHeaderLabel.Text = "รายงานการใช้บริการสรุปรายเดือน " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report60.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 61:
                             PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report62.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานการใช้บริการลานจอดของกลุ่มสมาชิก (เพศ)'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานการใช้บริการลานจอดของกลุ่มสมาชิก (เพศ) " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report61.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
 
                         case 62:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report63.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานการใช้บริการลานจอดของกลุ่มสมาชิก (วันหยุด)'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานการใช้บริการลานจอดของกลุ่มสมาชิก (วันหยุด) " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report62.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
 
                         case 63:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report64.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสมาชิกที่ไม่เคยใช้บริการ'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานสมาชิกที่ไม่เคยใช้บริการ " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report63.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
 
                         case 64:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report65.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปสมาชิกที่ไม่เคยใช้บริการ'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานสรุปสมาชิกที่ไม่เคยใช้บริการ " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report64.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 65:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report66.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานการใช้บริการลานจอดแยกตามช่วงเวลา'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานการใช้บริการลานจอดแยกตามช่วงเวลา " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report65.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 66:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report67.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปการขายประจำวัน/สำเนาใบกำกับภาษีอย่างย่อ'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Address"].Text = "'" + AppGlobalVariables.Printings.Address1.Trim() + " " + AppGlobalVariables.Printings.Address2.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + AppGlobalVariables.Printings.Telephone.Trim() + " " + AppGlobalVariables.Printings.Tax1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานสรุปการขายประจำวัน/สำเนาใบกำกับภาษีอย่างย่อ" + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report66.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 67:
+                            reportDocument.Load(path + "\\CrystalReports\\Report67.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report68.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานการใช้บริการที่จอดรถ เฉพาะรายการแจ้งหนี้'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Address"].Text = "'" + AppGlobalVariables.Printings.Address1.Trim() + " " + AppGlobalVariables.Printings.Address2.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + AppGlobalVariables.Printings.Telephone.Trim() + " " + AppGlobalVariables.Printings.Tax1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            if (MemberGroupMonthComboBox.SelectedIndex > 0)
-                                rpt.DataDefinition.FormulaFields["Grouppro"].Text = "'ชื่อลูกค้า : " + MemberGroupMonthComboBox.Text + "'";
-                            else
-                                rpt.DataDefinition.FormulaFields["Grouppro"].Text = "'โปรโมชั่น : " + PromotionComboBox.Text + "'";
-
-                            ReportHeaderLabel.Text = "รายงานการใช้บริการที่จอดรถ เฉพาะรายการแจ้งหนี้" + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
                             break;
-                        case 68:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report69.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานรถเข้าออกประจำวัน'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Address"].Text = "'" + AppGlobalVariables.Printings.Address1.Trim() + " " + AppGlobalVariables.Printings.Address2.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + AppGlobalVariables.Printings.Telephone.Trim() + " " + AppGlobalVariables.Printings.Tax1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานรถเข้าออกประจำวัน" + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
 
-                            PrimaryCrystalReportViewer.Refresh();
+                        case 68:
+                            reportDocument.Load(path + "\\CrystalReports\\Report68.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
+                            PrimaryTabControl.SelectTab(1);
                             break;
 
                         case 69:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report70.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานรถค้างคืน'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Address"].Text = "'" + AppGlobalVariables.Printings.Address1.Trim() + " " + AppGlobalVariables.Printings.Address2.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + AppGlobalVariables.Printings.Telephone.Trim() + " " + AppGlobalVariables.Printings.Tax1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานรถค้างคืน" + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.Load(path + "\\CrystalReports\\Report69.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 70:
+                            reportDocument.Load(path + "\\CrystalReports\\Report70.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             PrimaryTabControl.SelectTab(1);
-                            if (Configs.Reports.UseReport71_1)
-                                rpt.Load(path + "\\CrystalReports\\Report71_1.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report71.rpt");
-
-                            rpt.SetDataSource(dt);
-                            if (Configs.Reports.UseReport71_1)
-                            {
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานค่าบริการที่จอดรถประจำวัน'";
-                            }
-                            else
-                            {
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขาย'";
-                                rpt.DataDefinition.FormulaFields["ReportCon"].Text = "'เดือนภาษี" + StartDatePicker.Value.ToString(" MMMM ") + (StartDatePicker.Value.Year + 543) + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Address"].Text = "'" + AppGlobalVariables.Printings.Address1.Trim() + " " + AppGlobalVariables.Printings.Address2.Trim() + "'";
-                            if (Configs.Reports.UseReport71_1)
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + AppGlobalVariables.Printings.Tax1.Trim() + "'";
-                            else
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + AppGlobalVariables.Printings.Tax1.Split(' ')[1].Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานภาษีขาย" + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
                             break;
+
                         case 71:
+                            reportDocument.Load(path + "\\CrystalReports\\Report71.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             PrimaryTabControl.SelectTab(1);
-                            if (Configs.Reports.UseReport72_1)
-                                rpt.Load(path + "\\CrystalReports\\Report72_1.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report72.rpt");
-
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขาย(แบบสรุป)'";
-                            rpt.DataDefinition.FormulaFields["ReportCon"].Text = "'เดือนภาษี" + StartDatePicker.Value.ToString(" MMMM ") + (StartDatePicker.Value.Year + 543) + "'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Address"].Text = "'" + AppGlobalVariables.Printings.Address1.Trim() + " " + AppGlobalVariables.Printings.Address2.Trim() + "'";
-                            if (Configs.Reports.UseReport72_1)
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + AppGlobalVariables.Printings.Tax1.Trim() + "'";
-                            else
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + AppGlobalVariables.Printings.Tax1.Split(' ')[1].Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานภาษีขาย" + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
                             break;
-                        case 72:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report73.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
 
-                            PrimaryCrystalReportViewer.Refresh();
+                        case 72:
+                            reportDocument.Load(path + "\\CrystalReports\\Report72.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
+                            PrimaryTabControl.SelectTab(1);
                             break;
 
                         case 73:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report74.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
+                            reportDocument.Load(path + "\\CrystalReports\\Report73.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
 
                         case 74:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report75.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
+                            reportDocument.Load(path + "\\CrystalReports\\Report74.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
 
                         case 75:
-                            rpt.Load(path + "\\CrystalReports\\Report76.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงาน" + ReportComboBox.Text + "ประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.AddYears(543).ToString("yyyy") + " ถึงวันที่ " + EndDatePicker.Value.ToString("d MMMM ") + EndDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Sender"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "'";
-                            }
+                            reportDocument.Load(path + "\\CrystalReports\\Report75.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
 
                         case 76:
-                            rpt.Load(path + "\\CrystalReports\\Report77.rpt");
-                            rpt.SetDataSource(dt);
+                            reportDocument.Load(path + "\\CrystalReports\\Report76.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["SumCar"].Text = "'" + (ResultGridView.Rows.Count - 1).ToString("#,###,##0") + "'";
-                            }
-
-                            ResultGridView.Columns[2].Visible = false;
-                            ResultGridView.Columns[3].Visible = false;
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 77:
-                            DataTable Map77 = new DataTable("myMember");  //*** DataTable Map DataSet.xsd ***//
+                            reportDocument.Load(path + "\\CrystalReports\\Report77.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            DataRow dr77 = null;
-                            Map77.Columns.Add(new DataColumn("ลำดับ", typeof(string)));
-                            Map77.Columns.Add(new DataColumn("ทะเบียน", typeof(string)));
-                            Map77.Columns.Add(new DataColumn("วันที่", typeof(string)));
-                            Map77.Columns.Add(new DataColumn("ประตู", typeof(string)));
-                            Map77.Columns.Add(new DataColumn("picdiv", typeof(System.Byte[])));
-                            Map77.Columns.Add(new DataColumn("piclic", typeof(System.Byte[])));
-                            Map77.Columns.Add(new DataColumn("ชื่อจุดผ่าน", typeof(string)));
-                            Map77.Columns.Add(new DataColumn("ลำดับทางเข้าหลัก", typeof(string)));
-
-                            ///////////////////////////////////////////////////
-                            for (int j = 0; j < dt.Rows.Count; j++)
-                            {
-                                dr77 = Map77.NewRow();
-                                try
-                                {
-                                    dr77["ลำดับ"] = dt.Rows[j]["ลำดับ"];
-                                    dr77["ทะเบียน"] = dt.Rows[j]["ทะเบียน"];
-                                    dr77["วันที่"] = dt.Rows[j]["วันที่"];
-                                    dr77["ประตู"] = dt.Rows[j]["ประตู"];
-                                    dr77["ชื่อจุดผ่าน"] = dt.Rows[j]["ชื่อจุดผ่าน"];
-                                    dr77["ลำดับทางเข้าหลัก"] = dt.Rows[j]["ลำดับทางเข้าหลัก"];
-                                }
-                                catch (Exception) { }
-                                FileStream fiStream;
-                                BinaryReader binReader;
-                                byte[] pic = { };
-
-                                try
-                                {
-                                    fiStream = new FileStream(dt.Rows[j]["picdiv"].ToString(), FileMode.Open);
-                                    binReader = new BinaryReader(fiStream);
-                                    pic = binReader.ReadBytes((int)fiStream.Length);
-                                    dr77["picdiv"] = pic;
-                                    fiStream.Close();
-                                    binReader.Close();
-                                }
-                                catch (Exception)
-                                {
-                                    dr77["picdiv"] = null;
-                                }
-
-
-                                try
-                                {
-                                    fiStream = new FileStream(dt.Rows[j]["piclic"].ToString(), FileMode.Open);
-                                    binReader = new BinaryReader(fiStream);
-                                    pic = binReader.ReadBytes((int)fiStream.Length);
-                                    dr77["piclic"] = pic;
-                                    fiStream.Close();
-                                    binReader.Close();
-                                }
-                                catch (Exception ex)
-                                {
-                                    dr77["piclic"] = null;
-                                }
-
-                                Map77.Rows.Add(dr77);
-                            }
-
-                            rpt.Load(path + "\\CrystalReports\\Report78.rpt");
-                            rpt.SetDataSource(Map77);
-                            dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                            reportDocument.DataDefinition.FormulaFields["SumCar"].Text = "'" + (ResultGridView.Rows.Count - 1).ToString("#,###,##0") + "'";
 
                             ResultGridView.Columns[2].Visible = false;
                             ResultGridView.Columns[3].Visible = false;
 
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-
+                            PrimaryTabControl.SelectTab(1);
                             break;
-                        case 78:
+
+                        case 79:
+                            reportDocument.Load(path + "\\CrystalReports\\Report79.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             dst = StartDatePicker.Value;
                             startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
                             dfn = EndDatePicker.Value;
                             endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
 
-                            rpt.Load(path + "\\CrystalReports\\Report79.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
                             break;
-                        case 79: //Mac 2018/05/13
-                            if (Configs.Reports.ReportNoRunning)
-                                rpt.Load(path + "\\CrystalReports\\Report80NoRunning.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report80.rpt");
-                            rpt.SetDataSource(dt);
 
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address1"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address2"].Text = "'" + dtMap.Rows[2][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["TaxID"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-
-                            ResultGridView.Columns[2].Visible = false;
-                            ResultGridView.Columns[3].Visible = false;
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
                         case 80:
-                            rpt.Load(path + "\\CrystalReports\\Report81.rpt");
-                            rpt.SetDataSource(dt);
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report80_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report80.rpt");
 
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            ResultGridView.Columns[2].Visible = false;
+                            ResultGridView.Columns[3].Visible = false;
                             break;
+
                         case 81:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report82.rpt");
-                            rpt.SetDataSource(dt);
-                            dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.Load(path + "\\CrystalReports\\Report81.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
+
                         case 82:
+                            reportDocument.Load(path + "\\CrystalReports\\Report82.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            PrimaryTabControl.SelectTab(1);
+                            break;
+
+                        case 83:
+                            reportDocument.Load(path + "\\CrystalReports\\Report83.rpt");
+
                             dst = StartDatePicker.Value;
                             startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
                             dfn = EndDatePicker.Value;
                             endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
 
-                            rpt.Load(path + "\\CrystalReports\\Report83.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
 
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                        case 83:
-                            PrimaryTabControl.SelectTab(1);
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString() + " " + StartTimePicker.Value.ToLongTimeString();
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString() + " " + EndTimePicker.Value.ToLongTimeString();
-
-                            rpt.Load(path + "\\CrystalReports\\Report84.rpt");
-                            rpt.SetDataSource(dt);
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'ประจำวันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
                         case 84:
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                            reportDocument.Load(path + "\\CrystalReports\\Report84.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            rpt.Load(path + "\\CrystalReports\\Report85.rpt");
-                            rpt.SetDataSource(dt);
-                            if (GuardhouseComboBox.SelectedIndex > 0)
-                                rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
-                            else
-                                rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
+
                         case 85:
                             dst = StartDatePicker.Value;
                             startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
                             dfn = EndDatePicker.Value;
                             endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-
-                            rpt.Load(path + "\\CrystalReports\\Report86.rpt");
-                            rpt.SetDataSource(dt);
                             if (GuardhouseComboBox.SelectedIndex > 0)
-                                rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
+                                reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
                             else
-                                rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                                reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.Load(path + "\\CrystalReports\\Report85.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
+
                         case 86:
                             dst = StartDatePicker.Value;
                             startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
                             dfn = EndDatePicker.Value;
                             endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
 
-                            rpt.Load(path + "\\CrystalReports\\Report87.rpt");
-                            rpt.SetDataSource(dt);
                             if (GuardhouseComboBox.SelectedIndex > 0)
-                                rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
+                                reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
                             else
-                                rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                                reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.Load(path + "\\CrystalReports\\Report86.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
+
                         case 87:
                             dst = StartDatePicker.Value;
                             startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
                             dfn = EndDatePicker.Value;
                             endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
 
-                            rpt.Load(path + "\\CrystalReports\\Report88.rpt");
-                            rpt.SetDataSource(dt);
                             if (GuardhouseComboBox.SelectedIndex > 0)
-                                rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
+                                reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
                             else
-                                rpt.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                                reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
 
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.Load(path + "\\CrystalReports\\Report87.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
+
                         case 88:
-                            rpt.Load(path + "\\CrystalReports\\Report89.rpt");
-                            rpt.SetDataSource(dt);
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                            dst = StartDatePicker.Value;
+                            startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                            dfn = EndDatePicker.Value;
+                            endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
 
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                       
-                        case 90: //Mac 2020/10/26
-                            goto case 0;
-                        case 91: //Mac 2020/10/26
-                            goto case 1;
-                        case 92: //Mac 2020/10/26
-                            goto case 4;
-                        case 93: //Mac 2020/10/26
-                            goto case 31;
-                        case 94: //Mac 2021/02/05
-                            if (Configs.Reports.ReportNoRunning)
-                                rpt.Load(path + "\\CrystalReports\\Report95NoRunning.rpt");
+                            if (GuardhouseComboBox.SelectedIndex > 0)
+                                reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
                             else
-                                rpt.Load(path + "\\CrystalReports\\Report95.rpt");
+                                reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
 
-                            rpt.SetDataSource(dt);
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.Load(path + "\\CrystalReports\\Report88.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
-                        case 95: //Mac 2022/03/17
+
+                        case 89:
+                            reportDocument.Load(path + "\\CrystalReports\\Report89.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            break;
+
+                        case 94:
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report95_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report95.rpt");
+
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            break;
+
+                        case 96:
+                            reportDocument.Load(path + "\\CrystalReports\\Report96.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report96.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานการจอดรถแบบมีเงื่อนไข'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานการจอดรถแบบมีเงื่อนไข " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
                             break;
-                        case 96: //Mac 2022/03/29
+
+                        case 97:
+                            reportDocument.Load(path + "\\CrystalReports\\Report97.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+
                             PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report97.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานการเก็บ Log'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            ReportHeaderLabel.Text = "รายงานการเก็บ Log " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
                             break;
-                        case 97: //Mac 2020/06/26
+
+                        /*case 97: //Mac 2020/06/26
                             dst = StartDatePicker.Value;
                             startDateTime = dst.ToString("dd/MM/yyyy");
                             dfn = EndDatePicker.Value;
                             endDateTime = dfn.ToString("dd/MM/yyyy");
 
-                            rpt.Load(path + "\\CrystalReports\\Report100.rpt");
-                            rpt.SetDataSource(dt);
+                            reportDocument.Load(path + "\\CrystalReports\\Report100.rpt");
+                            reportDocument.SetDataSource(dt);
 
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
                             if (dtMap.Rows.Count > 0)
                             {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                reportDocument.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                                reportDocument.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                                reportDocument.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
                             }
 
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
+                            reportDocument.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
+                            reportDocument.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
+                            reportDocument.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
 
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            PrimaryCrystalReportViewer.ReportSource = reportDocument;
 
                             PrimaryCrystalReportViewer.Refresh();
                             break;
+
                         case 98: //Mac 2020/06/26
                             dst = StartDatePicker.Value;
                             startDateTime = dst.ToString("dd/MM/yyyy");
                             dfn = EndDatePicker.Value;
                             endDateTime = dfn.ToString("dd/MM/yyyy");
 
-                            rpt.Load(path + "\\CrystalReports\\Report100.rpt");
-                            rpt.SetDataSource(dt);
+                            reportDocument.Load(path + "\\CrystalReports\\Report100.rpt");
+                            reportDocument.SetDataSource(dt);
 
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
+                            reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
+                            reportDocument.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
+                            reportDocument.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
                             if (dtMap.Rows.Count > 0)
                             {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
+                                reportDocument.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                                reportDocument.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
+                                reportDocument.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
                             }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
+                            reportDocument.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
+                            reportDocument.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
+                            reportDocument.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
 
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            PrimaryCrystalReportViewer.ReportSource = reportDocument;
 
                             PrimaryCrystalReportViewer.Refresh();
                             break;
-                        case 99: //Mac 2020/06/26
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
+                        */
 
-                            rpt.Load(path + "\\CrystalReports\\Report100.rpt");
-                            rpt.SetDataSource(dt);
+                        case 100:
+                            reportDocument.Load(path + "\\CrystalReports\\Report100.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
 
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                        case 100: //Mac 2019/12/24
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report101.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                        case 101: //Mac 2020/01/20
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report102.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            PrimaryTabControl.SelectTab(1);
                             break;
 
-                        case 102: //Mac 2020/01/23
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report103.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                        case 101:
+                            reportDocument.Load(path + "\\CrystalReports\\Report101.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
-                        case 103: //Mac 2020/01/23
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report104.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                        case 102:
+                            reportDocument.Load(path + "\\CrystalReports\\Report102.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
-                        case 104: //Mac 2020/01/24
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
 
-                            rpt.Load(path + "\\CrystalReports\\Report105.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                        case 103:
+                            reportDocument.Load(path + "\\CrystalReports\\Report103.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
+
+                        case 104:
+                            reportDocument.Load(path + "\\CrystalReports\\Report104.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            break;
+
                         case 105: //Mac 2020/03/09
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report106.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            reportDocument.Load(path + "\\CrystalReports\\Report105.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
-                        case 106: //Mac 2020/03/12
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
 
-                            rpt.Load(path + "\\CrystalReports\\Report107.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                        case 106:
+                            reportDocument.Load(path + "\\CrystalReports\\Report106.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
-                        case 107: //Mac 2020/06/04
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
 
-                            if (Configs.Reports.UseReportHourUse) //Mac 2023/02/22
-                                rpt.Load(path + "\\CrystalReports\\Report108_houruse.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report108.rpt");
+                        case 107:
+                            reportDocument.Load(path + "\\CrystalReports\\Report107.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
+                            break;
 
-                            rpt.SetDataSource(dt);
+                        case 108:
+                            reportDocument.Load(path + "\\CrystalReports\\Report108.rpt");
 
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
                             if (MemberGroupMonthComboBox.Text.Trim() == Constants.TextBased.All)
-                                rpt.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : ทั้งหมด'";
+                                reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : ทั้งหมด'";
                             else
-                                rpt.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : " + AppGlobalVariables.MemberGroupMonthsToId[MemberGroupMonthComboBox.Text] + " " + MemberGroupMonthComboBox.Text + "'";
+                                reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : " + AppGlobalVariables.MemberGroupMonthsToId[MemberGroupMonthComboBox.Text] + " " + MemberGroupMonthComboBox.Text + "'";
 
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
-                        case 108: //Mac 2020/06/09
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
 
-                            rpt.Load(path + "\\CrystalReports\\Report109.rpt");
-                            rpt.SetDataSource(dt);
+                        case 109:
+                            reportDocument.Load(path + "\\CrystalReports\\Report109.rpt");
 
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
                             if (MemberGroupMonthComboBox.Text.Trim() == Constants.TextBased.All)
-                                rpt.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : ทั้งหมด'";
+                                reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : ทั้งหมด'";
                             else
-                                rpt.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : " + AppGlobalVariables.MemberGroupMonthsToId[MemberGroupMonthComboBox.Text] + " " + MemberGroupMonthComboBox.Text + "'";
+                                reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : " + AppGlobalVariables.MemberGroupMonthsToId[MemberGroupMonthComboBox.Text] + " " + MemberGroupMonthComboBox.Text + "'";
 
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                        case 109: //Mac 2020/06/09
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report110.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            if (MemberGroupMonthComboBox.Text.Trim() == Constants.TextBased.All)
-                                rpt.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : ทั้งหมด'";
-                            else
-                                rpt.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : " + AppGlobalVariables.MemberGroupMonthsToId[MemberGroupMonthComboBox.Text] + " " + MemberGroupMonthComboBox.Text + "'";
-
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            rpt.DataDefinition.FormulaFields["SumCalQuota"].Text = "'" + SumCalQuota109.ToString("#,###,##0") + "'";
-                            rpt.DataDefinition.FormulaFields["SumCalPriceQuota"].Text = "'" + (SumCalQuota109 * 10).ToString("#,###,##0") + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-
-                            break;
-                        case 110: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report200.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
-                        case 111: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report201.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
+                        case 161:
+                            reportDocument.Load(path + "\\CrystalReports\\Report161.rpt");
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
-                        case 112: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report202.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 113: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report203.rpt");
-                            dt.Columns.Add(new DataColumn("เวลาจอด", typeof(string)));
-
-                            for (int x = 0; x < dt.Rows.Count; x++)
-                            {
-                                string dateinStr = dt.Rows[x]["วันที่-เวลาเข้า"].ToString();
-                                string dateoutStr = dt.Rows[x]["วันที่-เวลาออก"].ToString();
-                                DateTime datein = DateTime.ParseExact(dateinStr, "dd/MM/yyyy HH:mm:ss", null);
-                                DateTime dateout = DateTime.ParseExact(dateoutStr, "dd/MM/yyyy HH:mm:ss", null);
-                                TimeSpan dateall = dateout - datein;
-                                int hours = dateall.Hours;
-                                int mins = dateall.Minutes;
-                                dt.Rows[x]["เวลาจอด"] = hours + "." + mins;
-                            }
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 114: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report204.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 115: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report205.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 116: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report206.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 117: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report207.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 118: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report208.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 119: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report209.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 120: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report210.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            //rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            //rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            //rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 121: //ouan 2020/02/11
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("dd/MM/yyyy");
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("dd/MM/yyyy");
-
-                            rpt.Load(path + "\\CrystalReports\\Report211.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'วันที่พิมพ์ :   " + DateTime.Now.ToString("dd/MM/yyyy") + " เวลา " + DateTime.Now.ToString("HH:mm:ss") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            //rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            //rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            //rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                        case 122:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report212.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Guardhouse"].Text = "'" + GuardhouseComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 123:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report213.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Guardhouse"].Text = "'" + GuardhouseComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 124:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report214.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Guardhouse"].Text = "'" + GuardhouseComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 125:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report215.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 126:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report216.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 127:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report217.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 128:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report217.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 129:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report219.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                        case 130:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report220.rpt");
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 131:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report221.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                        case 132:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report222.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 133:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report223.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 134:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report224.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 135:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report225.rpt");
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 136:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report226.rpt");
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 137:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report227.rpt");
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 138:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report228.rpt");
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 139:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report229.rpt");
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 140:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report230.rpt");
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 141:
-                            PrimaryTabControl.SelectTab(1);
-
-                            if (Configs.Reports.UseReportHourUse) //Mac 2023/03/16
-                                rpt.Load(path + "\\CrystalReports\\Report231_houruse.rpt");
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report231.rpt");
-
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 142:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report232.rpt");
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 143:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report233.rpt");
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 144:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report234.rpt");
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            //rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Guardhouse"].Text = "'" + GuardhouseComboBox.Text + "'";
-
-                            rpt.DataDefinition.FormulaFields["Building"].Text = "'" + AppGlobalVariables.Printings.Building + "'";
-                            rpt.DataDefinition.FormulaFields["Office"].Text = "'" + AppGlobalVariables.Printings.Office + "'";
-                            rpt.DataDefinition.FormulaFields["TaxMonth"].Text = "'" + StartDatePicker.Value.ToString("MMMM ปี ") + StartDatePicker.Value.Year + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 145:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report235.rpt");
-                            rpt.SetDataSource(dt);
-                            //dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            //rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            //rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 146:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report236.rpt");
-                            rpt.SetDataSource(dt);
-                            ////dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            //rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            //rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            ////rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 147:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report237.rpt");
-                            rpt.SetDataSource(dt);
-                            ////dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            //rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            //rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            ////rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            ////rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 148:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report238.rpt");
-                            rpt.SetDataSource(dt);
-                            ////dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            //rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            //rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            ////rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 149:
-
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report239.rpt");
-                            rpt.SetDataSource(dt);
-                            ////dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            //rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 150:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report240.rpt");
-                            rpt.SetDataSource(dt);
-                            ////dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            //rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            //rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            ////rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 151:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report241.rpt");
-                            rpt.SetDataSource(dt);
-                            ////dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            //rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            //rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            ////rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 152:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report242.rpt");
-                            rpt.SetDataSource(dt);
-                            ////dtMap = DbController.LoadData("Select value FROM param Where name = 'com1'");
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            //rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'" + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy") + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            //rpt.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-                            ////rpt.DataDefinition.FormulaFields["User"].Text = "'" + UserComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 153:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report243.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                            }
-                            rpt.DataDefinition.FormulaFields["Typemem"].Text = "'" + CarTypeComboBox.Text + "'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                        case 154: //Mac 2021/11/23
-                            PrimaryTabControl.SelectTab(1);
-
-                            dst = StartDatePicker.Value;
-                            startDateTime = dst.ToString("d MMMM yyyy") + " " + StartTimePicker.Value.ToLongTimeString();
-                            dfn = EndDatePicker.Value;
-                            endDateTime = dfn.ToString("d MMMM yyyy") + " " + EndTimePicker.Value.ToLongTimeString();
-                            AppGlobalVariables.ConditionText = "'วันที่ :   " + startDateTime + "  ถึง  " + endDateTime + "'";
-
-                            rpt.Load(path + "\\CrystalReports\\Report155.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("d/MM/yyyy HH:mm:ss") + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = AppGlobalVariables.ConditionText;
-                            ReportHeaderLabel.Text = ReportComboBox.Text + " " + AppGlobalVariables.ConditionText;
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                        case 155: //Mac 2021/11/26
-                            PrimaryTabControl.SelectTab(1);
-
-                            rpt.Load(path + "\\CrystalReports\\Report156.rpt");
-                            rpt.SetDataSource(dt);
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + AppGlobalVariables.Printings.Company1.Trim() + "'";
-                            rpt.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("d/MM/yyyy HH:mm:ss") + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-                        case 156:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report131.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["CreatedBy"].Text = "' '";
-                            }
-                            rpt.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 157:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report131.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["CreatedBy"].Text = "' '";
-                            }
-                            rpt.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
-
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 158:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report132.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["CreatedBy"].Text = "''";
-                            }
-                            rpt.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 159:
-                            PrimaryTabControl.SelectTab(1);
-                            rpt.Load(path + "\\CrystalReports\\Report132.rpt");
-                            rpt.SetDataSource(dt);
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.DataDefinition.FormulaFields["Condition"].Text = "'" + AppGlobalVariables.ConditionText + "'";
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Address"].Text = "'" + dtMap.Rows[1][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["Tax"].Text = "'" + dtMap.Rows[3][0].ToString().Trim() + "'";
-                                rpt.DataDefinition.FormulaFields["CreatedBy"].Text = "''";
-                            }
-                            rpt.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 160:
-                            rpt.Load(path + "\\CrystalReports\\Report161.rpt");
-                            rpt.SetDataSource(dt);
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
-                            break;
-
-                        case 161:  // 34.สรุปค่าบริการรายเดือน Member รถยนต์
+                        case 162:  // 34.สรุปค่าบริการรายเดือน Member รถยนต์
                             if (Configs.Reports.UseReportThanapoom)
                             {
                                 DataTable mappedTable = CRUDManager.GetFeeAndVatSummaryFromMemberGroupPriceMonth(sql);
@@ -4811,24 +1726,15 @@ namespace ParkingManagementReport
                                     ResultGridView.Columns[colIndex].DefaultCellStyle = numericStyle;
                                     ResultGridView.Columns[colIndex].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
                                 }
-
-                                Cursor = Cursors.Default;
-                                return;
                             }
                             else
                             {
-                                rpt.Load(path + "\\CrystalReports\\Report162.rpt");
-                                rpt.SetDataSource(dt);
-                                if (dtMap.Rows.Count > 0)
-                                    rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                                PrimaryCrystalReportViewer.ReportSource = rpt;
-                                PrimaryCrystalReportViewer.Refresh();
+                                reportDocument.Load(path + "\\CrystalReports\\Report162.rpt");
+                                TrySetReportData(reportDocument, dataFromQuery);
                             }
                             break;
 
-                        case 162: // 35.สรุปค่าบริการรายวัน
+                        case 163: // 35.สรุปค่าบริการรายวัน (ธนภูมิ)
                             if (Configs.Reports.UseReportThanapoom)
                             {
                                 DataTable itemizedTable = CRUDManager.GetItemizedPromotionUsage(sql, paymentText: Constants.TextBased.PaymentStatusPaid);
@@ -4847,65 +1753,59 @@ namespace ParkingManagementReport
                                     ResultGridView.Columns[colIndex].DefaultCellStyle = numericStyle;
                                     ResultGridView.Columns[colIndex].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight;
                                 }
-
-                                Cursor = Cursors.Default;
-                                return;
                             }
                             break;
 
-                        case 163:
-                            rpt.Load(path + "\\CrystalReports\\Report164.rpt");
-                            rpt.SetDataSource(dt);
-                            if (dtMap.Rows.Count > 0)
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
+                        case 164: // การเข้าออกของรถยนต์แสดงช่องทางการชำระเงิน
+                            if (Configs.Reports.ReportNoRunning)
+                                reportDocument.Load(path + "\\CrystalReports\\Report164_NoRunning.rpt");
+                            else
+                                reportDocument.Load(path + "\\CrystalReports\\Report164.rpt");
 
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
+                            TrySetReportData(reportDocument, dataFromQuery);
                             break;
 
 
-                        case 164: // ธนภูมิ #37.รายงานสรุปจำนวนรถและรายได้
+                        case 165: // ธนภูมิ #37.รายงานสรุปจำนวนรถและรายได้ (ธนภูมิ)
                             if (Configs.Reports.UseReportThanapoom)
                             {
                                 DataTable dataTable = CRUDManager.GetVehicleEarningSummary(sql, StartDatePicker.Value, EndDatePicker.Value);
-                                rpt.Load(path + "\\CrystalReports\\TnptVehicleEarningSummary.rpt");
-                                rpt.SetDataSource(dataTable);
+                                reportDocument.Load(path + "\\CrystalReports\\TnptVehicleEarningSummary.rpt");
+                                reportDocument.SetDataSource(dataTable);
 
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = $"'รายงานสรุปจำนวน{AppGlobalVariables.Database.VehicleTypeTh}และรายได้'";
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
-                                rpt.DataDefinition.FormulaFields["PrintedPersonnel"].Text = $"'Printed By: {AppGlobalVariables.OperatingUser.Name}'";
-                                //rpt.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(EndDatePicker.Value.ToString("yyyy-MM-dd"))} {TextFormatters.ExtractBuddhistEraFromDate(EndDatePicker.Value)}'";
-                                rpt.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(EndDatePicker.Value.ToString("yyyy-MM-dd"))}'";
-                                rpt.DataDefinition.FormulaFields["ReportSearchDate"].Text = $"'{start_date} ถึง {end_date}'";
+                                reportDocument.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
+                                reportDocument.DataDefinition.FormulaFields["PrintedPersonnel"].Text = $"'Printed By: {AppGlobalVariables.OperatingUser.Name}'";
+                                reportDocument.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(EndDatePicker.Value.ToString("yyyy-MM-dd"))}'";
+                                reportDocument.DataDefinition.FormulaFields["ReportSearchDate"].Text = $"'{start_date} ถึง {end_date}'";
                             }
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
-                            PrimaryCrystalReportViewer.Refresh();
                             PrimaryTabControl.SelectTab(1);
                             break;
 
-                        case 165: // ธนภูมิ #38.สรุปจำนวนบัตรทั้งหมดตามบริษัท
+                        case 166: // ธนภูมิ #38.สรุปจำนวนบัตรทั้งหมดตามบริษัท (ธนภูมิ)
                             if (Configs.Reports.UseReportThanapoom)
                             {
                                 ResultGridView.DataSource = null;
 
                                 DataTable dataTable = CRUDManager.GetCardSortByCompanySummary(sql);
-                                rpt.Load(path + "\\CrystalReports\\TnptCardSortedCompanySummary.rpt");
-                                rpt.SetDataSource(dataTable);
+                                reportDocument.Load(path + "\\CrystalReports\\TnptCardSortedCompanySummary.rpt");
+                                reportDocument.SetDataSource(dataTable);
 
-                                rpt.DataDefinition.FormulaFields["ReportName"].Text = $"'สรุปจำนวนบัตรทั้งหมดตามบริษัท'";
-                                rpt.DataDefinition.FormulaFields["ReportType"].Text = $"'ทั้งหมด'";
-                                rpt.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
-                                rpt.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(EndDatePicker.Value.ToString("yyyy-MM-dd"))}'";
-                                rpt.DataDefinition.FormulaFields["PrintedPersonnel"].Text = $"'Printed By: {AppGlobalVariables.OperatingUser.Name}'";
+                                reportDocument.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
+                                reportDocument.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(EndDatePicker.Value.ToString("yyyy-MM-dd"))}'";
+                                reportDocument.DataDefinition.FormulaFields["PrintedPersonnel"].Text = $"'Printed By: {AppGlobalVariables.OperatingUser.Name}'";
                             }
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            PrimaryCrystalReportViewer.ReportSource = reportDocument;
                             PrimaryCrystalReportViewer.Refresh();
 
                             PrimaryTabControl.SelectTab(1);
 
                             break;
                     }
+
+                    ResultGridView.AutoResizeColumns();
+
+                    PrimaryCrystalReportViewer.ReportSource = reportDocument;
+                    PrimaryCrystalReportViewer.Refresh();
 
                     CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
                 }
@@ -4915,6 +1815,221 @@ namespace ParkingManagementReport
                 Console.WriteLine(ex);
                 MessageBox.Show(TextFormatters.ErrorStacktraceFromException(ex));
             }
+        }
+
+        private void Handle131415(ReportDocument reportDocument, DataTable dataTable)
+        {
+            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            path = path.Replace("\\bin\\Debug", "");
+
+            ResultGridView.DataSource = ConvertTableType(dataTable);
+
+            CaseReportPricePromotion();
+
+            string p0, p1, p2, p3, p4;
+            p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[6].Value.ToString();
+            p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
+            p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[12].Value.ToString();
+            p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[13].Value.ToString();
+            p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString();
+
+            if (Configs.Reports.ReportNoRunning) 
+            {
+                if (selectedReportId == 13)
+                    reportDocument.Load(path + "\\CrystalReports\\Report13_NoRunning.rpt");
+                else if (selectedReportId == 14)
+                    reportDocument.Load(path + "\\CrystalReports\\Report14_NoRunning.rpt");
+            }
+            else
+            {
+                if (selectedReportId == 13)
+                {
+                    reportDocument.Load(path + "\\CrystalReports\\Report13.rpt");
+                }
+                else if (selectedReportId == 14)
+                {
+                    reportDocument.Load(path + "\\CrystalReports\\Report14.rpt");
+                }
+            }
+
+            ResultGridView.Columns[5].Visible = false;
+
+            TrySetReportData(reportDocument, dataTable);
+            return;
+        }
+
+        private void TrySetReportData(ReportDocument reportDocument, DataTable dataTable)
+        {
+            try
+            {
+                ResultGridView.DataSource = dataTable;
+            }
+            catch { }
+            try
+            {
+                reportDocument.SetDataSource(dataTable);
+            }
+            catch { }
+
+            TrySetReportHeaders(reportDocument);
+
+            Cursor = Cursors.Default;
+
+            PdfExportButton.Enabled = true;
+            ExcelExportButton.Enabled = true;
+        }
+
+        private void TrySetReportHeaders(ReportDocument reportDocument)
+        {
+            string startDate = StartDatePicker.Value.ToString("yyyy-MM-dd");
+            string endDate = EndDatePicker.Value.ToString("yyyy-MM-dd");
+            string reportName = ReportComboBox.Text;
+            string conditionText = AppGlobalVariables.ConditionText;
+
+            ReportHeaderLabel.Text = $"{reportName} {conditionText}";
+
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["ReportName"].Text = $"'{reportName}'";
+            }
+            catch { }
+            try
+            {
+                var monthText = StartDatePicker.Value.ToString(" MMMM ");
+                var thaiYear = StartDatePicker.Value.Year + 543;
+
+                reportDocument.DataDefinition.FormulaFields["ReportCon"].Text =
+                    $"'เดือนภาษี{monthText}{thaiYear}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["Condition"].Text = $"'{conditionText}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company1}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
+            }
+            catch { }
+            try
+            {
+                if (MemberGroupMonthComboBox.SelectedIndex > 0)
+                    reportDocument.DataDefinition.FormulaFields["Grouppro"].Text = $"'ชื่อลูกค้า : {MemberGroupMonthComboBox.Text}'";
+                else
+                    reportDocument.DataDefinition.FormulaFields["Grouppro"].Text = $"'โปรโมชั่น : {PromotionComboBox.Text}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["LongAddress"].Text = $"'{AppGlobalVariables.Printings.Address1.Trim()} {AppGlobalVariables.Printings.Address2.Trim()}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["Address"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["Address1"].Text = $"'{AppGlobalVariables.Printings.Address1}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["Address2"].Text = $"'{AppGlobalVariables.Printings.Address2}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["TaxID"].Text = $"'{AppGlobalVariables.Printings.Tax1}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["TaxMonth"].Text = $"'{StartDatePicker.Value.ToString("MMMM ปี ")}{StartDatePicker.Value.Year}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["Branch"].Text = $"'{AppGlobalVariables.Printings.Branch}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["Building"].Text = $"'{AppGlobalVariables.Printings.Building}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["Office"].Text = $"'{AppGlobalVariables.Printings.Office}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["Date"].Text = $"'Date: {StartDatePicker.Value.ToString("d MMMM ")} {StartDatePicker.Value.ToString("yyyy")}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["DatePrint"].Text = "'พิมพ์วันที่ " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + "'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["DatetimePrint"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "  " + DateTime.Now.ToString("d/M/") + DateTime.Now.ToString("yyyy HH:mm:ss") + "'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(endDate)}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["Sender"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["PrintedByUser"].Text = $"'{AppGlobalVariables.OperatingUser.Name}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["ReportSearchDate"].Text = $"'{startDate} ถึง {endDate}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["FooterName1"].Text = $"'{AppGlobalVariables.Printings.ReportFooter1}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["FooterName2"].Text = $"'{AppGlobalVariables.Printings.ReportFooter2}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["FooterName3"].Text = $"'{AppGlobalVariables.Printings.ReportFooter3}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["FooterName4"].Text = $"'{AppGlobalVariables.Printings.ReportFooter4}'";
+            }
+            catch { }
+            try
+            {
+                reportDocument.DataDefinition.FormulaFields["FooterName5"].Text = $"'{AppGlobalVariables.Printings.ReportFooter5}'";
+            }
+            catch { }
         }
 
         private void ApplyConditionalUIChanges()
@@ -4950,7 +2065,7 @@ namespace ParkingManagementReport
             PdfExportButton.Enabled = false;
         }
 
-        private void CreateReportLicense(DataTable dt)
+        private DataTable CreateReportLicense(DataTable dt)
         {
             DataTable dtTmp = new DataTable();
             DataColumn dc = new DataColumn("ลำดับ", typeof(string));
@@ -5033,21 +2148,7 @@ namespace ParkingManagementReport
             dtTmp.DefaultView.Sort = dtTmp.Columns[5].ColumnName + " DESC";
             ResultGridView.DataSource = dtTmp;
 
-            ReportDocument rpt = new ReportDocument();
-            DataTable dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
-            PrimaryCrystalReportViewer.ReportSource = null;
-            PrimaryCrystalReportViewer.Refresh();
-            string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            path = path.Replace("\\bin\\Debug", "");
-            rpt.Load(path + "\\CrystalReports\\Report7.rpt");
-            rpt.SetDataSource(dtTmp);
-            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
-            if (dtMap.Rows.Count > 0)
-            {
-                rpt.DataDefinition.FormulaFields["CompanyName"].Text = "'" + dtMap.Rows[0][0].ToString().Trim() + "'";
-            }
-            PrimaryCrystalReportViewer.ReportSource = rpt;
-            PrimaryCrystalReportViewer.Refresh();
+            return dtTmp;
         }
 
         private void CaseReportTax()
@@ -5188,7 +2289,6 @@ namespace ParkingManagementReport
 
             for (int i = 0; i < intNo; i++)
             {
-
                 try
                 {
                     int intGtype = Convert.ToInt32(ResultGridView[11, i].Value);
@@ -5262,9 +2362,7 @@ namespace ParkingManagementReport
                         strProname = AppGlobalVariables.PromotionNamesById[intGtype];
                     ResultGridView[12, i].Value = strProname;
                 }
-                catch (Exception)
-                {
-                }
+                catch (Exception) { }
             }
 
             ResultGridView[3, intNo].Value = "จำนวนรถ";
@@ -5292,13 +2390,7 @@ namespace ParkingManagementReport
             ResultGridView.Columns[9].HeaderText = "ชม.ลด";
             ResultGridView.Columns[10].HeaderText = "ชม.จ่าย";
             ResultGridView.Columns[11].HeaderText = "ค่าปรับบัตรหาย";
-
-            if (selectedReportId == 12 && Configs.Reports.UseReport13_11) //Mac 2017/11/30
-            {
-                ResultGridView.Columns[12].HeaderText = "เหตุผล";
-            }
-            else
-                ResultGridView.Columns[12].HeaderText = "ค่าปรับข้ามวัน";
+            ResultGridView.Columns[12].HeaderText = "ค่าปรับข้ามวัน";
             ResultGridView.Columns[13].HeaderText = "รายได้";
             ResultGridView.Columns[14].HeaderText = "ส่วนลด"; //Mac 2016/03/05
             ResultGridView.Columns[15].HeaderText = "E-Stamp";
@@ -5310,24 +2402,22 @@ namespace ParkingManagementReport
 
             if (Configs.UseMemo)
             {
-                ResultGridView.Columns[16].HeaderText = "บันทึกเพิ่มเติม"; //Mac 2016/03/05
+                ResultGridView.Columns[16].HeaderText = "บันทึกเพิ่มเติม";
                 ResultGridView.Columns[16].Width = 160;
             }
 
-            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/23
+            if (selectedReportId == 14)
             {
                 ResultGridView.Columns[13].HeaderText = "รายได้ก่อนภาษี";
                 ResultGridView.Columns[14].HeaderText = "ภาษี 7%";
                 ResultGridView.Columns[15].HeaderText = "รายได้";
                 ResultGridView.Columns[16].HeaderText = "E-Stamp";
-                if (Configs.Reports.UseReport13_3)
-                    ResultGridView.Columns[17].HeaderText = "เก็บจริง";
             }
 
             int intNo = ResultGridView.Rows.Count - 1;
             ResultGridView.Columns[11].Width = 105;
             ResultGridView.Columns[15].Width = 160;
-            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView.Columns[16].Width = 160;
+            if (selectedReportId == 14) ResultGridView.Columns[16].Width = 160;
             int intSumPrice = 0;
             int intSumPriceLoss = 0;
             int intSumPriceOver = 0;
@@ -5409,11 +2499,10 @@ namespace ParkingManagementReport
                 int intHour = diffTime.Hours;
                 if (diffTime.Days > 0)
                     intHour += diffTime.Days * 24;
-                if (diffTime.Minutes > 0) //Mac 2022/11/03
+                if (diffTime.Minutes > 0)
                     intHour++;
                 ResultGridView[7, i].Value = intHour.ToString();
 
-                //Mac 2017/06/07
                 string totalInOut = "";
                 if (diffTime.Days == 0 && diffTime.Hours == 0 && diffTime.Minutes == 0)
                     totalInOut = "0";
@@ -5422,25 +2511,22 @@ namespace ParkingManagementReport
 
                 ResultGridView[7, i].Value = totalInOut;
 
-                try //Mac 2018/01/16
+                try
                 {
-                    if (Configs.UseProIDAll) //Mac 2015/10/16
+                    if (Configs.UseProIDAll)
                     {
                         string[] ProIDAll;
                         int intHourPro = 0;
 
-                        //if (selectedReportId == 13)
-                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/23
+                        if (selectedReportId == 14)
                         {
                             ProIDAll = ResultGridView[16, i].Value.ToString().Split(',');
                             ResultGridView[16, i].Value = "";
                         }
                         else
                         {
-                            /*ProIDAll = ResultGridView[14, i].Value.ToString().Split(',');
-                            ResultGridView[14, i].Value = "";*/
                             ProIDAll = ResultGridView[15, i].Value.ToString().Split(',');
-                            ResultGridView[15, i].Value = ""; //Mac 2016/03/05
+                            ResultGridView[15, i].Value = "";
                         }
 
                         for (int n = 0; n < ProIDAll.Length; n++)
@@ -5449,15 +2535,14 @@ namespace ParkingManagementReport
                             {
                                 intHourPro += AppGlobalVariables.PromotionNamesMinuteMap[Convert.ToInt16(ProIDAll[n])];
 
-                                //if (selectedReportId == 13)
-                                if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/23
+                                if (selectedReportId == 14)
                                     ResultGridView[16, i].Value += AppGlobalVariables.PromotionNamesById[Convert.ToInt16(ProIDAll[n])];
                                 else
                                     ResultGridView[15, i].Value += AppGlobalVariables.PromotionNamesById[Convert.ToInt16(ProIDAll[n])]; //Mac 2016/03/05
 
                                 if (n < (ProIDAll.Length - 2))
                                 {
-                                    if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/23
+                                    if (selectedReportId == 14)
                                         ResultGridView[16, i].Value += "|"; //Mac 2016/03/05
                                     else
                                         ResultGridView[15, i].Value += "|"; //Mac 2016/03/05
@@ -5482,11 +2567,10 @@ namespace ParkingManagementReport
                     }
                     else
                     {
-                        //if (selectedReportId == 13) intID = Convert.ToInt32(ResultGridView[16, i].Value);
-                        //Mac 2018/02/23
-                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) intID = Convert.ToInt32(ResultGridView[16, i].Value); //Mac 2018/02/23
-                        else intID = Convert.ToInt32(ResultGridView[15, i].Value); //Mac 2016/03/05
-                        //else intID = Convert.ToInt32(ResultGridView[14, i].Value);
+                        if (selectedReportId == 14)
+                            intID = Convert.ToInt32(ResultGridView[16, i].Value);
+                        else
+                            intID = Convert.ToInt32(ResultGridView[15, i].Value);
 
                         int intHourPro = 0;
                         if (intID > 0)
@@ -5505,19 +2589,17 @@ namespace ParkingManagementReport
 
                         if (intID > 0)
                         {
-                            //if (selectedReportId == 13) ResultGridView[16, i].Value = AppGlobalVariables.PromotionNamesById[intID];
-                            //Mac 2018/02/24
-                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView[16, i].Value = AppGlobalVariables.PromotionNamesById[intID];
-                            else ResultGridView[15, i].Value = AppGlobalVariables.PromotionNamesById[intID]; //Mac 2016/03/05
-                            //else ResultGridView[14, i].Value = AppGlobalVariables.PromotionNamesById[intID];
+                            if (selectedReportId == 14)
+                                ResultGridView[16, i].Value = AppGlobalVariables.PromotionNamesById[intID];
+                            else
+                                ResultGridView[15, i].Value = AppGlobalVariables.PromotionNamesById[intID]; //Mac 2016/03/05
                         }
                         else
                         {
-                            //if (selectedReportId == 13) ResultGridView[16, i].Value = "";
-                            //Mac 2018/02/24
-                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView[16, i].Value = "";
-                            else ResultGridView[15, i].Value = ""; //Mac 2016/03/05
-                            //else ResultGridView[14, i].Value = "";
+                            if (selectedReportId == 14)
+                                ResultGridView[16, i].Value = "";
+                            else
+                                ResultGridView[15, i].Value = "";
                         }
                     }
                 }
@@ -5526,16 +2608,14 @@ namespace ParkingManagementReport
                     ResultGridView[8, i].Value = "0";
                     ResultGridView[9, i].Value = "0";
                     ResultGridView[10, i].Value = "0";
-                    //if (selectedReportId == 13)
-                    if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+
+                    if (selectedReportId == 14)
                         ResultGridView[16, i].Value = "";
                     else
                         ResultGridView[15, i].Value = "";
                 }
 
-                //Golf2014/10/08
-                // (selectedReportId == 13)
-                if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                if (selectedReportId == 14)
                 {
                     try
                     {
@@ -5563,8 +2643,6 @@ namespace ParkingManagementReport
                             ResultGridView[14, i].Value = vat.ToString("#,###,##0.00");
                         }
 
-                        /*ResultGridView[13, i].Value = beforeVat.ToString("#0.0000");
-                        ResultGridView[14, i].Value = vat.ToString("#0.0000");*/
                         doubleSumBeforeVat += beforeVat;
                         doubleSumVat += vat;
                     }
@@ -5573,25 +2651,18 @@ namespace ParkingManagementReport
 
 
                 intSumPriceLoss += Convert.ToInt32(ResultGridView[11, i].Value);
-                if (selectedReportId == 12 && Configs.Reports.UseReport13_11) //Mac 2017/11/30
+                if (selectedReportId == 13)
                 {
 
                 }
                 else
                     intSumPriceOver += Convert.ToInt32(ResultGridView[12, i].Value);
-                //if (selectedReportId == 13)
-                if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+                if (selectedReportId == 14)
                 {
                     intSumPrice += Convert.ToInt32(ResultGridView[15, i].Value);
 
                     if (Convert.ToInt32(ResultGridView[15, i].Value) == 0) //Mac 2017/07/12
                         ResultGridView[10, i].Value = "0";
-
-                    if (Configs.Reports.UseReport13_3) //Mac 2018/04/18
-                    {
-                        if (ResultGridView[17, i].Value.ToString().Trim() == "")
-                            ResultGridView[17, i].Value = ResultGridView[15, i].Value;
-                    }
                 }
                 else
                 {
@@ -5604,16 +2675,13 @@ namespace ParkingManagementReport
             }
             ResultGridView[5, intNo].Value = "จำนวนรถ";
             ResultGridView[6, intNo].Value = intNo.ToString("#,###,##0") + " คัน";
-            //ResultGridView[6, intNo].Value = intNo + " คัน";
             ResultGridView[10, intNo].Value = "รายได้รวม";
             ResultGridView[11, intNo].Value = intSumPriceLoss.ToString("#,###,##0");
             ResultGridView[12, intNo].Value = intSumPriceOver.ToString("#,###,##0");
-            /*ResultGridView[11, intNo].Value = intSumPriceLoss;
-            ResultGridView[12, intNo].Value = intSumPriceOver;*/
-            //if (selectedReportId == 13)
-            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) //Mac 2018/02/24
+
+            if (selectedReportId == 14)
             {
-                if (Configs.UseCalVatFromTotal) //Mac 2022/09/30
+                if (Configs.UseCalVatFromTotal)
                 {
                     ResultGridView[13, intNo].Value = (Convert.ToDouble(intSumPrice) - (Convert.ToDouble(intSumPrice) * 7 / 107)).ToString("#,###,##0.00");
                     ResultGridView[14, intNo].Value = (Convert.ToDouble(intSumPrice) * 7 / 107).ToString("#,###,##0.00");
@@ -5621,31 +2689,25 @@ namespace ParkingManagementReport
                 }
                 else
                 {
-                    if (Configs.Reports.Report3Decimal) //Mac 2016/10/06
+                    if (Configs.Reports.Report3Decimal)
                     {
                         ResultGridView[13, intNo].Value = doubleSumBeforeVat.ToString("#,###,##0.000");
                         ResultGridView[14, intNo].Value = doubleSumVat.ToString("#,###,##0.000");
-                        //ResultGridView[15, intNo].Value = intSumPrice.ToString("#,###,##0.000");
                     }
                     else
                     {
                         ResultGridView[13, intNo].Value = doubleSumBeforeVat.ToString("#,###,##0.00");
                         ResultGridView[14, intNo].Value = doubleSumVat.ToString("#,###,##0.00");
-                        //ResultGridView[15, intNo].Value = intSumPrice.ToString("#,###,##0.00");
                     }
                     ResultGridView[15, intNo].Value = intSumPrice.ToString("#,###,##0");
                 }
-                /*ResultGridView[13, intNo].Value = doubleSumBeforeVat.ToString("#0.0000");
-                ResultGridView[14, intNo].Value = doubleSumVat.ToString("#0.0000"); ;
-                ResultGridView[15, intNo].Value = intSumPrice;*/
             }
             else
             {
                 ResultGridView[13, intNo].Value = intSumPrice.ToString("#,###,##0");
                 ResultGridView[14, intNo].Value = intSumDiscount.ToString("#,###,##0"); //Mac 2016/03/05
             }
-            //else ResultGridView[13, intNo].Value = intSumPrice;
-            //      
+
             totalLoss = intSumPriceLoss;
             totalOver = intSumPriceOver;
             totalPrice = intSumPrice;
@@ -5657,359 +2719,7 @@ namespace ParkingManagementReport
                 ResultGridView.Columns[ResultGridView.ColumnCount - 1].Visible = false;
         }
 
-        private void CaseReportPricePromotion13_12()
-        {
-            ResultGridView.Columns[0].HeaderText = "เครื่องรับเงิน online";
-            ResultGridView.Columns[1].HeaderText = "เลขที่ใบเสร็จ/ใบกำกับภาษี";
-            ResultGridView.Columns[2].HeaderText = "ลำดับ";
-            ResultGridView.Columns[3].HeaderText = "ประเภท";
-            ResultGridView.Columns[4].HeaderText = "ทะเบียน";
-            ResultGridView.Columns[5].HeaderText = "เวลาเข้า";
-            ResultGridView.Columns[6].HeaderText = "เจ้าหน้าที่ขาออก";
-            ResultGridView.Columns[7].HeaderText = "เวลาออก";
-            ResultGridView.Columns[8].HeaderText = "ชม.จอด";
-            ResultGridView.Columns[9].HeaderText = "ชม.โปรโมชั่น";
-            ResultGridView.Columns[10].HeaderText = "ชม.ลด";
-            ResultGridView.Columns[11].HeaderText = "ชม.จ่าย";
-            ResultGridView.Columns[12].HeaderText = "ค่าปรับบัตรหาย";
-            if (selectedReportId == 12 && Configs.Reports.UseReport13_11)
-            {
-                ResultGridView.Columns[13].HeaderText = "เหตุผล";
-            }
-            else
-                ResultGridView.Columns[13].HeaderText = "ค่าปรับข้ามวัน";
-            ResultGridView.Columns[14].HeaderText = "รายได้";
-            ResultGridView.Columns[15].HeaderText = "ส่วนลด";
-            ResultGridView.Columns[16].HeaderText = "E-Stamp";
-
-            ResultGridView.Columns[0].Width = 110;
-            ResultGridView.Columns[1].Width = 110;
-            ResultGridView.Columns[2].Width = 50;
-            ResultGridView.Columns[5].Width = 120;
-            ResultGridView.Columns[6].Width = 160;
-            ResultGridView.Columns[7].Width = 120;
-
-            if (Configs.UseMemo)
-            {
-                ResultGridView.Columns[17].HeaderText = "บันทึกเพิ่มเติม";
-                ResultGridView.Columns[17].Width = 160;
-            }
-
-            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13)
-            {
-                ResultGridView.Columns[14].HeaderText = "รายได้ก่อนภาษี";
-                ResultGridView.Columns[15].HeaderText = "ภาษี 7%";
-                ResultGridView.Columns[16].HeaderText = "รายได้";
-                ResultGridView.Columns[17].HeaderText = "E-Stamp";
-                if (Configs.Reports.UseReport13_3)
-                    ResultGridView.Columns[18].HeaderText = "เก็บจริง";
-            }
-
-            int intNo = ResultGridView.Rows.Count - 1;
-            ResultGridView.Columns[12].Width = 105;
-            ResultGridView.Columns[16].Width = 160;
-
-            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView.Columns[17].Width = 160;
-            int intSumPrice = 0;
-            int intSumPriceLoss = 0;
-            int intSumPriceOver = 0;
-            int intSumDiscount = 0;
-            double doubleSumBeforeVat = 0;
-            double doubleSumVat = 0;
-
-            for (int i = 0; i < intNo; i++)
-            {
-                int intID = Convert.ToInt32(ResultGridView[1, i].Value);
-                DateTime dto = DateTime.Parse(ResultGridView[7, i].Value.ToString());
-                if (intID > 0)
-                {
-                    string fontSlip13 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip13 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName)
-                            fontSlip13 = "IV";
-                    }
-
-                    if (Configs.UseReceiptFor1Out)
-                    {
-                        if (Configs.OutReceiptNameMonth)
-                        {
-                            ResultGridView[1, i].Value = ResultGridView[ResultGridView.ColumnCount - 1, i].Value.ToString() + dto.ToString("yyMM") + intID.ToString("00000#"); //Mac 2022/04/26
-                        }
-                        else
-                        {
-                            ResultGridView[1, i].Value = ResultGridView[ResultGridView.ColumnCount - 1, i].Value.ToString() + dto.ToString("yy") + intID.ToString("00000#");
-                        }
-                    }
-                    else
-                    {
-                        if (Configs.OutReceiptNameMonth)
-                        {
-                            ResultGridView[1, i].Value = fontSlip13 + dto.ToString("yyMM") + intID.ToString("00000#");
-                        }
-                        else
-                        {
-                            ResultGridView[1, i].Value = fontSlip13 + dto.ToString("yy") + intID.ToString("00000#");
-                        }
-                    }
-                }
-
-                try
-                {
-                    string x = ResultGridView[3, i].Value.ToString();
-                    int value;
-                    if (int.TryParse(x, out value))
-                    {
-                        intID = value;
-                        ResultGridView[3, i].Value = AppGlobalVariables.CarTypesById[intID];
-                    }
-                    else
-                        ResultGridView[3, i].Value = x;
-                }
-                catch
-                {
-                    ResultGridView[3, i].Value = "";
-                }
-
-
-                try
-                {
-                    intID = Convert.ToInt32(ResultGridView[6, i].Value);
-                    if (intID == 0)
-                        ResultGridView[6, i].Value = "";
-                    else
-                        ResultGridView[6, i].Value = AppGlobalVariables.UsersById[intID];
-                }
-                catch
-                {
-                    ResultGridView[6, i].Value = "";
-                }
-
-                DateTime dti = DateTime.Parse(ResultGridView[5, i].Value.ToString());
-                TimeSpan diffTime = dto - dti;
-                int intHour = diffTime.Hours;
-                if (diffTime.Days > 0)
-                    intHour += diffTime.Days * 24;
-                if (diffTime.Minutes > 0)
-                    intHour++;
-                ResultGridView[8, i].Value = intHour.ToString();
-
-                string totalInOut = "";
-                if (diffTime.Days == 0 && diffTime.Hours == 0 && diffTime.Minutes == 0)
-                    totalInOut = "0";
-                else
-                    totalInOut = (diffTime.Days * 24) + diffTime.Hours + "." + diffTime.Minutes.ToString("00");
-
-                ResultGridView[8, i].Value = totalInOut;
-
-                try
-                {
-                    if (Configs.UseProIDAll)
-                    {
-                        string[] ProIDAll;
-                        int intHourPro = 0;
-
-                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13)
-                        {
-                            ProIDAll = ResultGridView[17, i].Value.ToString().Split(',');
-                            ResultGridView[17, i].Value = "";
-                        }
-                        else
-                        {
-                            ProIDAll = ResultGridView[16, i].Value.ToString().Split(',');
-                            ResultGridView[16, i].Value = "";
-                        }
-
-                        for (int n = 0; n < ProIDAll.Length; n++)
-                        {
-                            if (ProIDAll[n].Length > 0)
-                            {
-                                intHourPro += AppGlobalVariables.PromotionNamesMinuteMap[Convert.ToInt16(ProIDAll[n])];
-
-                                if (selectedReportId == 13 && !Configs.Reports.UseReport14like13)
-                                    ResultGridView[17, i].Value += AppGlobalVariables.PromotionNamesById[Convert.ToInt16(ProIDAll[n])];
-                                else
-                                    ResultGridView[16, i].Value += AppGlobalVariables.PromotionNamesById[Convert.ToInt16(ProIDAll[n])];
-
-                                if (n < (ProIDAll.Length - 2))
-                                {
-                                    if (selectedReportId == 13 && !Configs.Reports.UseReport14like13)
-                                        ResultGridView[17, i].Value += "|";
-                                    else
-                                        ResultGridView[16, i].Value += "|";
-                                }
-
-                            }
-                        }
-
-                        intHourPro = intHourPro / 60;
-
-                        ResultGridView[9, i].Value = intHourPro.ToString();
-                        if (intHourPro < intHour)
-                        {
-                            ResultGridView[10, i].Value = intHourPro.ToString();
-                            ResultGridView[11, i].Value = (intHour - intHourPro).ToString();
-                        }
-                        else
-                        {
-                            ResultGridView[10, i].Value = intHour.ToString();
-                            ResultGridView[11, i].Value = "0";
-                        }
-                    }
-                    else
-                    {
-                        if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) intID = Convert.ToInt32(ResultGridView[17, i].Value);
-                        else intID = Convert.ToInt32(ResultGridView[16, i].Value);
-
-                        int intHourPro = 0;
-                        if (intID > 0)
-                            intHourPro = AppGlobalVariables.PromotionNamesMinuteMap[intID] / 60;
-                        ResultGridView[9, i].Value = intHourPro.ToString();
-                        if (intHourPro < intHour)
-                        {
-                            ResultGridView[10, i].Value = intHourPro.ToString();
-                            ResultGridView[11, i].Value = (intHour - intHourPro).ToString();
-                        }
-                        else
-                        {
-                            ResultGridView[10, i].Value = intHour.ToString();
-                            ResultGridView[11, i].Value = "0";
-                        }
-
-                        if (intID > 0)
-                        {
-
-                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView[17, i].Value = AppGlobalVariables.PromotionNamesById[intID];
-                            else ResultGridView[16, i].Value = AppGlobalVariables.PromotionNamesById[intID];
-                        }
-                        else
-                        {
-                            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13) ResultGridView[17, i].Value = "";
-                            else ResultGridView[16, i].Value = "";
-                        }
-                    }
-                }
-                catch
-                {
-                    ResultGridView[9, i].Value = "0";
-                    ResultGridView[10, i].Value = "0";
-                    ResultGridView[11, i].Value = "0";
-
-                    if (selectedReportId == 13 && !Configs.Reports.UseReport14like13)
-                        ResultGridView[17, i].Value = "";
-                    else
-                        ResultGridView[16, i].Value = "";
-                }
-
-                if (selectedReportId == 13 && !Configs.Reports.UseReport14like13)
-                {
-                    try
-                    {
-                        double vat = (double.Parse(ResultGridView[16, i].Value.ToString()) * 7) / 107;
-
-                        if (Configs.Reports.Report3Decimal)
-                            vat = Math.Round(vat, 3);
-                        else
-                            vat = Math.Round(vat, 2);
-
-                        double beforeVat = double.Parse(ResultGridView[16, i].Value.ToString()) - vat;
-
-                        if (Configs.Reports.Report3Decimal)
-                        {
-                            ResultGridView[14, i].Value = beforeVat.ToString("#,###,##0.000");
-                            ResultGridView[15, i].Value = vat.ToString("#,###,##0.000");
-                        }
-                        else
-                        {
-                            ResultGridView[14, i].Value = beforeVat.ToString("#,###,##0.00");
-                            ResultGridView[15, i].Value = vat.ToString("#,###,##0.00");
-                        }
-
-                        doubleSumBeforeVat += beforeVat;
-                        doubleSumVat += vat;
-                    }
-                    catch (Exception) { }
-                }
-
-
-                intSumPriceLoss += Convert.ToInt32(ResultGridView[12, i].Value);
-                if (selectedReportId == 12 && Configs.Reports.UseReport13_11)
-                {
-
-                }
-                else
-                    intSumPriceOver += Convert.ToInt32(ResultGridView[13, i].Value);
-
-                if (selectedReportId == 13 && !Configs.Reports.UseReport14like13)
-                {
-                    intSumPrice += Convert.ToInt32(ResultGridView[16, i].Value);
-
-                    if (Convert.ToInt32(ResultGridView[16, i].Value) == 0)
-                        ResultGridView[11, i].Value = "0";
-
-                    if (Configs.Reports.UseReport13_3)
-                    {
-                        if (ResultGridView[18, i].Value.ToString().Trim() == "")
-                            ResultGridView[18, i].Value = ResultGridView[16, i].Value;
-                    }
-                }
-                else
-                {
-                    intSumPrice += Convert.ToInt32(ResultGridView[14, i].Value);
-                    intSumDiscount += Convert.ToInt32(ResultGridView[15, i].Value);
-
-                    if (Convert.ToInt32(ResultGridView[14, i].Value) == 0)
-                        ResultGridView[11, i].Value = "0";
-                }
-            }
-            ResultGridView[6, intNo].Value = "จำนวนรถ";
-            ResultGridView[7, intNo].Value = intNo.ToString("#,###,##0") + " คัน";
-            ResultGridView[11, intNo].Value = "รายได้รวม";
-            ResultGridView[12, intNo].Value = intSumPriceLoss.ToString("#,###,##0");
-            ResultGridView[13, intNo].Value = intSumPriceOver.ToString("#,###,##0");
-            if (selectedReportId == 13 && !Configs.Reports.UseReport14like13)
-            {
-                if (Configs.UseCalVatFromTotal)
-                {
-                    ResultGridView[14, intNo].Value = (Convert.ToDouble(intSumPrice) - (Convert.ToDouble(intSumPrice) * 7 / 107)).ToString("#,###,##0.00");
-                    ResultGridView[15, intNo].Value = (Convert.ToDouble(intSumPrice) * 7 / 107).ToString("#,###,##0.00");
-                    ResultGridView[16, intNo].Value = intSumPrice.ToString("#,###,##0");
-                }
-                else
-                {
-                    if (Configs.Reports.Report3Decimal)
-                    {
-                        ResultGridView[14, intNo].Value = doubleSumBeforeVat.ToString("#,###,##0.000");
-                        ResultGridView[15, intNo].Value = doubleSumVat.ToString("#,###,##0.000");
-                    }
-                    else
-                    {
-                        ResultGridView[14, intNo].Value = doubleSumBeforeVat.ToString("#,###,##0.00");
-                        ResultGridView[15, intNo].Value = doubleSumVat.ToString("#,###,##0.00");
-                    }
-                    ResultGridView[16, intNo].Value = intSumPrice.ToString("#,###,##0");
-                }
-            }
-            else
-            {
-                ResultGridView[14, intNo].Value = intSumPrice.ToString("#,###,##0");
-                ResultGridView[15, intNo].Value = intSumDiscount.ToString("#,###,##0");
-            }
-
-            totalLoss = intSumPriceLoss;
-            totalOver = intSumPriceOver;
-            totalPrice = intSumPrice;
-            totalDiscount = intSumDiscount;
-            totalBeforeVat = doubleSumBeforeVat;
-            totalVat = doubleSumVat;
-
-            if (Configs.UseReceiptFor1Out)
-                ResultGridView.Columns[ResultGridView.ColumnCount - 1].Visible = false;
-        }
-
-        private Image GetCopyImage(string path)// Golf 27-8-2557
+        private Image GetCopyImage(string path)
         {
             try
             {
@@ -6022,6 +2732,405 @@ namespace ParkingManagementReport
             catch (Exception) { }
             return null;
         }
+
+        private DataTable การเข้าออกMemberแสดงรูปภาพ(DataTable dt)
+        {
+            DataTable Map = new DataTable();
+
+            Map.Columns.Add(new DataColumn("ลำดับ", typeof(string)));
+            Map.Columns.Add(new DataColumn("ชื่อ", typeof(string)));
+            Map.Columns.Add(new DataColumn("ทะเบียน", typeof(string)));
+            Map.Columns.Add(new DataColumn("วันที่", typeof(string)));
+            Map.Columns.Add(new DataColumn("ประตู", typeof(string)));
+            Map.Columns.Add(new DataColumn("picdiv", typeof(System.Byte[])));
+            Map.Columns.Add(new DataColumn("piclic", typeof(System.Byte[])));
+
+            ///////////////////////////////////////////////////
+            for (int j = 0; j < dt.Rows.Count; j++)
+            {
+                DataRow dr = Map.NewRow();
+                try
+                {
+                    dr["ลำดับ"] = dt.Rows[j]["ลำดับ"];
+                    dr["ชื่อ"] = dt.Rows[j]["ชื่อ"];
+                    dr["ทะเบียน"] = dt.Rows[j]["ทะเบียน"];
+                    dr["วันที่"] = dt.Rows[j]["วันที่"];
+                    dr["ประตู"] = dt.Rows[j]["ประตู"];
+                }
+                catch (Exception) { }
+                FileStream fiStream;
+                BinaryReader binReader;
+                byte[] pic = { };
+
+                try
+                {
+                    fiStream = new FileStream(dt.Rows[j]["picdiv"].ToString(), FileMode.Open);
+                    binReader = new BinaryReader(fiStream);
+                    pic = binReader.ReadBytes((int)fiStream.Length);
+                    dr["picdiv"] = pic;
+                    fiStream.Close();
+                    binReader.Close();
+                }
+                catch (Exception)
+                {
+                    dr["picdiv"] = null;
+                }
+
+
+                try
+                {
+                    fiStream = new FileStream(dt.Rows[j]["piclic"].ToString(), FileMode.Open);
+                    binReader = new BinaryReader(fiStream);
+                    pic = binReader.ReadBytes((int)fiStream.Length);
+                    dr["piclic"] = pic;
+                    fiStream.Close();
+                    binReader.Close();
+                }
+                catch (Exception)
+                {
+                    dr["piclic"] = null;
+                }
+
+                Map.Rows.Add(dr);
+            }
+
+            return Map;
+        }
+
+        private DataTable คงค้างแสดงรูปภาพ(DataTable dt)
+        {
+            /* ResultGridView.Columns[5].Visible = false;
+            try
+            {
+                ResultGridView.Columns[6].Visible = false;
+            }
+            catch (Exception) { }
+            ResultGridView.Location = new Point(ResultGridView.Location.X, ResultGridView.Location.Y + 150);
+            ResultGridView.Height = ResultGridView.Height - 150;
+            groupBox3.Visible = true;
+            pictureBox3.Visible = false;
+            pictureBox4.Visible = false;
+            if (Configs.IsVillage && Configs.Use2Camera)
+            {
+                pictureBox5.Visible = false;
+                lbPic5.Visible = false;
+            }
+            lbPic1.Text = "รูปคนขับ";
+            lbPic2.Text = "รูปทะเบียน";
+            lbPic3.Visible = false;
+            lbPic4.Visible = false; */
+
+            DataTable Map = new DataTable("myMember");  //*** DataTable Map DataSet.xsd ***//
+
+            Map.Columns.Add(new DataColumn("ลำดับ", typeof(string)));
+            Map.Columns.Add(new DataColumn("ประเภท", typeof(string)));
+            Map.Columns.Add(new DataColumn("ทะเบียน", typeof(string)));
+            Map.Columns.Add(new DataColumn("เวลาเข้า", typeof(string)));
+            Map.Columns.Add(new DataColumn("เจ้าหน้าที่ขาเข้า", typeof(string)));
+            Map.Columns.Add(new DataColumn("picdiv", typeof(System.Byte[])));
+            Map.Columns.Add(new DataColumn("piclic", typeof(System.Byte[])));
+
+            if (Configs.UseNameOnCard) //Mac 2018/12/13
+                Map.Columns.Add(new DataColumn("ชื่อบัตร", typeof(string)));
+
+            ///////////////////////////////////////////////////
+            for (int j = 0; j < dt.Rows.Count; j++)
+            {
+                DataRow dr = Map.NewRow();
+                dr["ลำดับ"] = dt.Rows[j]["ลำดับ"];
+                dr["ประเภท"] = dt.Rows[j]["ประเภท"];
+                dr["เวลาเข้า"] = dt.Rows[j]["เวลาเข้า"];
+                dr["เจ้าหน้าที่ขาเข้า"] = dt.Rows[j]["เจ้าหน้าที่ขาเข้า"];
+                try
+                {
+                    dr["ทะเบียน"] = dt.Rows[j]["ทะเบียน"];
+                }
+                catch (Exception) { }
+                FileStream fiStream;
+                BinaryReader binReader;
+                byte[] pic = { };
+
+                try
+                {
+                    fiStream = new FileStream(dt.Rows[j]["picdiv"].ToString(), FileMode.Open);
+                    binReader = new BinaryReader(fiStream);
+                    pic = binReader.ReadBytes((int)fiStream.Length);
+                    dr["picdiv"] = pic;
+                    fiStream.Close();
+                    binReader.Close();
+                }
+                catch (Exception)
+                {
+                    dr["picdiv"] = null;
+                }
+
+
+                try
+                {
+                    fiStream = new FileStream(dt.Rows[j]["piclic"].ToString(), FileMode.Open);
+                    binReader = new BinaryReader(fiStream);
+                    pic = binReader.ReadBytes((int)fiStream.Length);
+                    dr["piclic"] = pic;
+                    fiStream.Close();
+                    binReader.Close();
+                }
+                catch (Exception ex)
+                {
+                    dr["piclic"] = null;
+                }
+
+                if (Configs.UseNameOnCard) //Mac 2018/12/13
+                    dr["ชื่อบัตร"] = dt.Rows[j]["ชื่อบัตร"];
+
+                Map.Rows.Add(dr);
+            }
+
+            return Map;
+        }
+
+        private DataTable การยกไม้แสดงรูปภาพ(DataTable dt)
+        {
+            /* ResultGridView.Columns[4].Visible = false;
+            try
+            {
+                ResultGridView.Columns[5].Visible = false;
+            }
+            catch (Exception) { }
+
+            ResultGridView.Location = new Point(ResultGridView.Location.X, ResultGridView.Location.Y + 150);
+            ResultGridView.Height = ResultGridView.Height - 150;
+            groupBox3.Visible = true;
+            pictureBox3.Visible = false;
+            pictureBox4.Visible = false;
+            if (Configs.IsVillage && Configs.Use2Camera)
+            {
+                pictureBox5.Visible = false;
+                lbPic5.Visible = false;
+            }
+            lbPic1.Text = "รูปคนขับ";
+            lbPic2.Text = "รูปทะเบียน";
+            lbPic3.Visible = false;
+            lbPic4.Visible = false;*/
+
+            DataTable Map = new DataTable("myMember");  //*** DataTable Map DataSet.xsd ***//
+
+            DataRow dr = null;
+            Map.Columns.Add(new DataColumn("เวลายก", typeof(string)));
+            Map.Columns.Add(new DataColumn("พนักงาน", typeof(string)));
+            Map.Columns.Add(new DataColumn("ประตู", typeof(string)));
+            Map.Columns.Add(new DataColumn("บันทึก", typeof(string)));
+            Map.Columns.Add(new DataColumn("picdiv", typeof(System.Byte[])));
+            Map.Columns.Add(new DataColumn("piclic", typeof(System.Byte[])));
+
+            ///////////////////////////////////////////////////
+            for (int j = 0; j < dt.Rows.Count; j++)
+            {
+                dr = Map.NewRow();
+                dr["เวลายก"] = dt.Rows[j]["เวลายก"];
+                dr["พนักงาน"] = dt.Rows[j]["พนักงาน"];
+                dr["ประตู"] = dt.Rows[j]["ประตู"];
+                try
+                {
+                    dr["บันทึก"] = dt.Rows[j]["บันทึก"];
+                }
+                catch (Exception) { }
+                FileStream fiStream;
+                BinaryReader binReader;
+                byte[] pic = { };
+
+                try
+                {
+                    fiStream = new FileStream(dt.Rows[j]["picdiv"].ToString(), FileMode.Open);
+                    binReader = new BinaryReader(fiStream);
+                    pic = binReader.ReadBytes((int)fiStream.Length);
+                    dr["picdiv"] = pic;
+                    fiStream.Close();
+                    binReader.Close();
+                }
+                catch (Exception)
+                {
+                    dr["picdiv"] = null;
+                }
+
+                try
+                {
+                    fiStream = new FileStream(dt.Rows[j]["piclic"].ToString(), FileMode.Open);
+                    binReader = new BinaryReader(fiStream);
+                    pic = binReader.ReadBytes((int)fiStream.Length);
+                    dr["piclic"] = pic;
+                    fiStream.Close();
+                    binReader.Close();
+                }
+                catch (Exception ex)
+                {
+                    dr["piclic"] = null;
+                }
+                Map.Rows.Add(dr);
+            }
+
+            return Map;
+        }
+
+        private DataTable การเข้าออกแสดงรูปภาพ(DataTable dt)
+        {
+            DataTable Map = new DataTable("myMember");  //*** DataTable Map DataSet.xsd ***//
+
+            DataRow dr = null;
+            Map.Columns.Add(new DataColumn("ลำดับ", typeof(string)));
+            Map.Columns.Add(new DataColumn("ประเภท", typeof(string)));
+            Map.Columns.Add(new DataColumn("ทะเบียน", typeof(string)));
+            if (Configs.IsVillage && Configs.Use2Camera)
+            {
+                Map.Columns.Add(new DataColumn("ชื่อผู้มาติดต่อ", typeof(string)));
+                Map.Columns.Add(new DataColumn("ประเภทบัตร", typeof(string)));
+                Map.Columns.Add(new DataColumn("เบอร์โทรศัพท์", typeof(string)));
+                Map.Columns.Add(new DataColumn("ติดต่อ", typeof(string)));
+                Map.Columns.Add(new DataColumn("ที่อยู่", typeof(string)));
+            }
+            Map.Columns.Add(new DataColumn("เวลาเข้า", typeof(string)));
+            Map.Columns.Add(new DataColumn("เจ้าหน้าที่ขาเข้า", typeof(string)));
+            Map.Columns.Add(new DataColumn("เวลาออก", typeof(string)));
+            Map.Columns.Add(new DataColumn("รายได้", typeof(string)));
+            Map.Columns.Add(new DataColumn("ส่วนลด", typeof(string)));
+            Map.Columns.Add(new DataColumn("เจ้าหน้าที่ขาออก", typeof(string)));
+            Map.Columns.Add(new DataColumn("il", typeof(System.Byte[]))); // เข้า-ทะเบียน
+            Map.Columns.Add(new DataColumn("ol", typeof(System.Byte[]))); // ออก-ทะเบียน
+            Map.Columns.Add(new DataColumn("iv", typeof(System.Byte[]))); // เข้า-หน้าคน
+            Map.Columns.Add(new DataColumn("ov", typeof(System.Byte[]))); // ออก-หน้าคน
+
+            if (Configs.IsVillage && Configs.Use2Camera)
+                Map.Columns.Add(new DataColumn("vi", typeof(System.Byte[])));
+            else if (Configs.Use2Camera && Configs.IPIn3.Trim().Length > 0)
+                Map.Columns.Add(new DataColumn("io", typeof(System.Byte[])));
+            int i = 0;
+            ///////////////////////////////////////////////////
+            for (i = 0; i < dt.Rows.Count; i++)
+            {
+                FileStream fiStream;
+                BinaryReader binReader;
+                byte[] pic = { };
+                try
+                {
+                    dr = Map.NewRow();
+                    dr["ลำดับ"] = dt.Rows[i]["ลำดับ"];
+                    dr["ประเภท"] = dt.Rows[i]["ประเภท"];
+                    dr["ทะเบียน"] = dt.Rows[i]["ทะเบียน"];
+                    dr["เวลาเข้า"] = dt.Rows[i]["เวลาเข้า"];
+                    dr["เจ้าหน้าที่ขาเข้า"] = dt.Rows[i]["เจ้าหน้าที่ขาเข้า"];
+                    dr["เวลาออก"] = dt.Rows[i]["เวลาออก"];
+                    dr["รายได้"] = dt.Rows[i]["รายได้"];
+                    dr["ส่วนลด"] = dt.Rows[i]["ส่วนลด"];
+                    dr["เจ้าหน้าที่ขาออก"] = dt.Rows[i]["เจ้าหน้าที่ขาออก"];
+                    if (Configs.IsVillage && Configs.Use2Camera)
+                    {
+                        dr["ชื่อผู้มาติดต่อ"] = dt.Rows[i]["ชื่อผู้มาติดต่อ"];
+                        dr["ประเภทบัตร"] = dt.Rows[i]["ประเภทบัตร"];
+                        dr["เบอร์โทรศัพท์"] = dt.Rows[i]["เบอร์โทรศัพท์"];
+                        dr["ติดต่อ"] = dt.Rows[i]["ติดต่อ"];
+                        dr["ที่อยู่"] = dt.Rows[i]["ที่อยู่"];
+                    }
+
+                    try
+                    {
+                        fiStream = new FileStream(dt.Rows[i]["il"].ToString(), FileMode.Open);
+                        binReader = new BinaryReader(fiStream);
+                        pic = binReader.ReadBytes((int)fiStream.Length);
+                        dr["il"] = pic;
+                        fiStream.Close();
+                        binReader.Close();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        dr["il"] = null;
+                    }
+
+                    try
+                    {
+                        fiStream = new FileStream(dt.Rows[i]["ol"].ToString(), FileMode.Open);
+                        binReader = new BinaryReader(fiStream);
+                        pic = binReader.ReadBytes((int)fiStream.Length);
+                        dr["ol"] = pic;
+                        fiStream.Close();
+                        binReader.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        dr["ol"] = null;
+                    }
+
+                    try
+                    {
+                        fiStream = new FileStream(dt.Rows[i]["iv"].ToString(), FileMode.Open);
+                        binReader = new BinaryReader(fiStream);
+                        pic = binReader.ReadBytes((int)fiStream.Length);
+                        dr["iv"] = pic;
+                        fiStream.Close();
+                        binReader.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        dr["iv"] = null;
+                    }
+
+                    try
+                    {
+                        fiStream = new FileStream(dt.Rows[i]["ov"].ToString(), FileMode.Open);
+                        binReader = new BinaryReader(fiStream);
+                        pic = binReader.ReadBytes((int)fiStream.Length);
+                        dr["ov"] = pic;
+                        fiStream.Close();
+                        binReader.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        dr["ov"] = null;
+                    }
+                    if (Configs.IsVillage && Configs.Use2Camera)
+                    {
+                        try
+                        {
+                            fiStream = new FileStream(dt.Rows[i]["vi"].ToString(), FileMode.Open);
+                            binReader = new BinaryReader(fiStream);
+                            pic = binReader.ReadBytes((int)fiStream.Length);
+                            dr["vi"] = pic;
+                            fiStream.Close();
+                            binReader.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            dr["vi"] = null;
+                        }
+                    }
+
+                    if (Configs.Use2Camera && Configs.IPIn3.Trim().Length > 0)
+                    {
+                        try //Mac 2015/02/04
+                        {
+                            fiStream = new FileStream(dt.Rows[i]["io"].ToString(), FileMode.Open);
+                            binReader = new BinaryReader(fiStream);
+                            pic = binReader.ReadBytes((int)fiStream.Length);
+                            dr["io"] = pic;
+                            fiStream.Close();
+                            binReader.Close();
+                        }
+                        catch (Exception)
+                        {
+                            dr["io"] = null;
+                        }
+                    }
+
+                    Map.Rows.Add(dr);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+
+            return Map;
+        }
+
 
         public void ExportToExcel(DataGridView Tbl, string ExcelFilePath = null)
         {
@@ -6271,7 +3380,7 @@ namespace ParkingManagementReport
 
         private void LoadManageUser()
         {
-            string sql = "select id,cardname as การ์ด,level as เลเวล,username,password,name as ชื่อ_นามสกุล ,address as ที่อยูา,tel as เบอร์โทร,grouprpt as กลุ่มรายงาน from user";
+            string sql = "select id,cardname as การ์ด,level as เลเวล,username,password,name as ชื่อ_นามสกุล ,address as ที่อยูา,tel as เบอร์โทร,groupreportDocument as กลุ่มรายงาน from user";
             DataTable dt = DbController.LoadData(sql);
             PrimaryTabControl.TabPages.Add(tabUser);
             PrimaryTabControl.SelectTab(tabUser);
@@ -6303,8 +3412,8 @@ namespace ParkingManagementReport
                     + " address = '" + UserAddressTextBox.Text + "',"
                     + " tel = '" + UserTelTextBox.Text + "',";
                 if (UserGroupTextBox.Text.Trim() != "")
-                    sql += " grouprpt =" + UserGroupTextBox.Text;
-                else sql += " grouprpt = NULL";
+                    sql += " groupreportDocument =" + UserGroupTextBox.Text;
+                else sql += " groupreportDocument = NULL";
                 sql += "  where id = " + AppGlobalVariables.IdTextUser;
                 Console.WriteLine(sql);
                 if (DbController.SaveData(sql) == "")
@@ -6324,8 +3433,8 @@ namespace ParkingManagementReport
                     + "'" + UserAddressTextBox.Text + "',"
                     + "'" + UserTelTextBox.Text + "',";
                 if (UserGroupTextBox.Text.Trim() != "")
-                    sql += " grouprpt =" + UserGroupTextBox.Text + ")";
-                else sql += " grouprpt = NULL)";
+                    sql += " groupreportDocument =" + UserGroupTextBox.Text + ")";
+                else sql += " groupreportDocument = NULL)";
                 if (DbController.SaveData(sql) == "")
                 {
                     MessageBox.Show("บันทึกการเพิ่มข้อมูลเรียบร้อย");
@@ -6738,6 +3847,7 @@ namespace ParkingManagementReport
         private void ReportComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             selectedReportId = AppGlobalVariables.ReportsById.First(kvp => kvp.Value == ReportComboBox.Text).Key - 1;
+            selectedReportId++;
 
             if (selectedReportId == 16 || selectedReportId == 17 || selectedReportId == 18
                 || selectedReportId == 19 || selectedReportId == 20 || selectedReportId == 21)
@@ -6784,7 +3894,7 @@ namespace ParkingManagementReport
                 ParkingTimeComparisonPanel.Visible = true;
             else
                 ParkingTimeComparisonPanel.Visible = false;
-            
+
             if (selectedReportId == 161)
             {
                 label20.Enabled = false;
@@ -6852,7 +3962,6 @@ namespace ParkingManagementReport
                             sql += " where no = " + ResultGridView.Rows[i].Cells[1].Value;
                             DbController.SaveData(sql);
                         }
-
                     }
                     else
                     {
@@ -7171,8 +4280,8 @@ namespace ParkingManagementReport
                         PrimaryTabControl.SelectTab(1);
                         string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                         path = path.Replace("\\bin\\Debug", "");
-                        ReportDocument rpt = new ReportDocument();
-                        rpt.Load(path + "\\CrystalReports\\Report17.rpt");
+                        ReportDocument reportDocument = new ReportDocument();
+                        reportDocument.Load(path + "\\CrystalReports\\Report17.rpt");
 
                         string nTel = "";
                         string nFax = "";
@@ -7226,13 +4335,13 @@ namespace ParkingManagementReport
                                 }
                             }
                         }
-                        rpt.SetParameterValue("compName", AppGlobalVariables.Printings.Company1.Trim());
-                        rpt.SetParameterValue("ComAddress1", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
-                        rpt.SetParameterValue("ComTel", nTel);
-                        rpt.SetParameterValue("comFax", nFax);
-                        rpt.SetParameterValue("compTax", nTax);
-                        rpt.SetParameterValue("DateSearch", startDateTime);
-                        rpt.SetParameterValue("DateSearch2", endDateTime);
+                        reportDocument.SetParameterValue("compName", AppGlobalVariables.Printings.Company1.Trim());
+                        reportDocument.SetParameterValue("ComAddress1", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
+                        reportDocument.SetParameterValue("ComTel", nTel);
+                        reportDocument.SetParameterValue("comFax", nFax);
+                        reportDocument.SetParameterValue("compTax", nTax);
+                        reportDocument.SetParameterValue("DateSearch", startDateTime);
+                        reportDocument.SetParameterValue("DateSearch2", endDateTime);
 
                         sql = "SELECT COUNT(recordin.no) "
                         + " FROM recordout JOIN recordin ON  recordin.no = recordout.no "
@@ -7240,15 +4349,15 @@ namespace ParkingManagementReport
                         + " AND recordout.dateout BETWEEN '" + startDateTime + "'  AND '" + endDateTime + "'";
                         DataTable dt = DbController.LoadData(sql);
                         if (dt != null && dt.Rows.Count > 0)
-                            rpt.SetParameterValue("01", dt.Rows[0].ItemArray[0].ToString());
-                        else rpt.SetParameterValue("01", "'0'");
+                            reportDocument.SetParameterValue("01", dt.Rows[0].ItemArray[0].ToString());
+                        else reportDocument.SetParameterValue("01", "'0'");
 
                         sql = "SELECT COUNT(recordin.no) "
                         + " FROM recordout JOIN recordin ON  recordin.no = recordout.no "
                         + " WHERE recordout.proid = 0 AND  recordin.cartype != 200 AND  recordout.price > 0 AND recordout.losscard = 0 "
                         + " AND recordout.dateout BETWEEN '" + startDateTime + "'  AND '" + endDateTime + "' ";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("02", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("02", dt.Rows[0].ItemArray[0].ToString());
 
 
                         sql = "SELECT SUM(recordout.price) "
@@ -7256,7 +4365,7 @@ namespace ParkingManagementReport
                         + " WHERE recordout.proid = 0 AND  recordin.cartype != 200 AND  recordout.price > 0 AND recordout.losscard = 0 "
                         + " AND recordout.dateout BETWEEN '" + startDateTime + "'  AND '" + endDateTime + "' ";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("04", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("04", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT COUNT(recordin.no) "
                         + " FROM recordout JOIN recordin  ON  recordin.no = recordout.no  "
@@ -7265,7 +4374,7 @@ namespace ParkingManagementReport
                         + " (SELECT PromotionId FROM prosetprice GROUP BY PromotionId) "
                         + " AND recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("05", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("05", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT COUNT(recordin.no) "
                         + " FROM recordout JOIN recordin  ON  recordin.no = recordout.no  "
@@ -7274,7 +4383,7 @@ namespace ParkingManagementReport
                         + " (SELECT PromotionId FROM prosetprice GROUP BY PromotionId) "
                         + " AND recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("06", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("06", dt.Rows[0].ItemArray[0].ToString());
 
                         ///////////////////////////////////////////////
                         int total = 0;
@@ -7407,7 +4516,7 @@ namespace ParkingManagementReport
                             }
                         }
                         catch (Exception) { }
-                        rpt.SetParameterValue("07", total.ToString());
+                        reportDocument.SetParameterValue("07", total.ToString());
                         ///////////////////////////////////////////////
 
                         ////////////////////////////////////////////////////
@@ -7543,8 +4652,8 @@ namespace ParkingManagementReport
                             }
                         }
                         catch (Exception) { }
-                        rpt.SetParameterValue("13", total.ToString());
-                        rpt.SetParameterValue("14", total2.ToString());
+                        reportDocument.SetParameterValue("13", total.ToString());
+                        reportDocument.SetParameterValue("14", total2.ToString());
                         ////////////////////////////////////////////////////
 
                         sql = "SELECT COUNT(recordin.no) "
@@ -7554,7 +4663,7 @@ namespace ParkingManagementReport
                         + " (SELECT PromotionId FROM prosetprice GROUP BY PromotionId) "
                         + " AND recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("09", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("09", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT SUM(recordout.price) "
                         + " FROM recordout JOIN recordin  ON  recordin.no = recordout.no  "
@@ -7563,7 +4672,7 @@ namespace ParkingManagementReport
                         + " (SELECT PromotionId FROM prosetprice GROUP BY PromotionId) "
                         + " AND recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("11", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("11", dt.Rows[0].ItemArray[0].ToString());
 
 
                         sql = "SELECT COUNT(recordin.no) "
@@ -7573,36 +4682,36 @@ namespace ParkingManagementReport
                         + " (SELECT PromotionId FROM prosetprice GROUP BY PromotionId) "
                         + " AND recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("12", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("12", dt.Rows[0].ItemArray[0].ToString());
                         if (dt.Rows[0].ItemArray[0].ToString().Trim() == "0")
-                            rpt.SetParameterValue("12", "0");
+                            reportDocument.SetParameterValue("12", "0");
 
                         sql = "SELECT COUNT(*) FROM cardmf";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("15", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("15", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT COUNT(*) FROM cardmf WHERE level > 1";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("16", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("16", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT COUNT(*) FROM cardmf WHERE level = 1";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("33", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("33", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT COUNT(*) FROM cardmf WHERE level = 0";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("17", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("17", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT COUNT(*) FROM liftrecord WHERE datelift BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("24", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("24", dt.Rows[0].ItemArray[0].ToString());
 
                         /*sql = "SELECT COUNT(recordin.no) "
                         + " FROM recordout JOIN recordin ON  recordin.no = recordout.no   "
                         + " WHERE  recordout.dateout BETWEEN '" + startDateTime + "'  AND '" + endDateTime + "'  "
                         + " AND timediff(recordout.dateout, recordin.datein) > '12:00:00';";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("20", dt.Rows[0].ItemArray[0].ToString());*/
+                        reportDocument.SetParameterValue("20", dt.Rows[0].ItemArray[0].ToString());*/
 
                         //Mac 2016/01/06
                         sql = "SELECT COUNT(t1.no)"
@@ -7612,7 +4721,7 @@ namespace ParkingManagementReport
                         + " AND t2.no IS null"
                         + " AND timediff(NOW(), t1.datein) > '12:00:00';";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("20", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("20", dt.Rows[0].ItemArray[0].ToString());
 
                         /*sql = "SELECT COUNT(recordin.no) "
                         + " FROM recordout JOIN recordin ON  recordin.no = recordout.no   "
@@ -7620,7 +4729,7 @@ namespace ParkingManagementReport
                         + " AND timediff(recordout.dateout, recordin.datein) > '12:00:00'"
                         + " AND recordin.cartype != 200;";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("23", dt.Rows[0].ItemArray[0].ToString());*/
+                        reportDocument.SetParameterValue("23", dt.Rows[0].ItemArray[0].ToString());*/
 
                         //Mac 2016/01/06
                         sql = "SELECT COUNT(t1.no)"
@@ -7631,7 +4740,7 @@ namespace ParkingManagementReport
                         + " AND timediff(NOW(), t1.datein) > '12:00:00'"
                         + " AND t1.cartype != 200;";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("23", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("23", dt.Rows[0].ItemArray[0].ToString());
 
                         /*sql = "SELECT COUNT(recordin.no) "
                         + " FROM recordout JOIN recordin ON  recordin.no = recordout.no   "
@@ -7639,7 +4748,7 @@ namespace ParkingManagementReport
                         + " AND timediff(recordout.dateout, recordin.datein) > '12:00:00'"
                         + " AND recordin.cartype = 200;";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("34", dt.Rows[0].ItemArray[0].ToString());*/
+                        reportDocument.SetParameterValue("34", dt.Rows[0].ItemArray[0].ToString());*/
 
                         //Mac 2016/01/06
                         sql = "SELECT COUNT(t1.no)"
@@ -7650,7 +4759,7 @@ namespace ParkingManagementReport
                         + " AND timediff(NOW(), t1.datein) > '12:00:00'"
                         + " AND t1.cartype = 200;";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("34", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("34", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT SUM(recordout.price) FROM recordout "
                         + " WHERE losscard > 0 AND recordout.dateout BETWEEN '"
@@ -7658,9 +4767,9 @@ namespace ParkingManagementReport
                         dt = DbController.LoadData(sql);
                         string losscard = dt.Rows[0].ItemArray[0].ToString();
                         Console.WriteLine(losscard);
-                        rpt.SetParameterValue("19", "0");
+                        reportDocument.SetParameterValue("19", "0");
                         if (losscard.Trim() != "")
-                            rpt.SetParameterValue("19", losscard);
+                            reportDocument.SetParameterValue("19", losscard);
 
 
                         //Golf2014/10/09
@@ -7670,39 +4779,39 @@ namespace ParkingManagementReport
                         dt = DbController.LoadData(sql);
                         losscard = dt.Rows[0].ItemArray[0].ToString();
                         Console.WriteLine(losscard);
-                        rpt.SetParameterValue("18", "0");
+                        reportDocument.SetParameterValue("18", "0");
                         if (losscard.Trim() != "")
-                            rpt.SetParameterValue("18", losscard);
+                            reportDocument.SetParameterValue("18", losscard);
 
 
 
                         sql = "SELECT COUNT(printno) FROM recordout WHERE printno > 0 AND recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("25", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("25", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT MIN(printno) FROM recordout WHERE printno > 0 AND recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("26", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("26", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT MAX(printno) FROM recordout WHERE printno > 0 AND recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("27", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("27", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT  COUNT(recordin.id) "
                         + " FROM recordin JOIN recordout ON recordin.no = recordout.no "
                         + " WHERE recordin.cartype != 200 AND recordout.losscard = 0 AND "
                         + " recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("31", dt.Rows[0].ItemArray[0].ToString());
-                        rpt.SetParameterValue("32", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("31", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("32", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT  COUNT(recordin.id)  "
                         + " FROM recordin JOIN recordout ON recordin.no = recordout.no "
                         + " WHERE recordin.cartype = 200 AND "
                         + " recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("28", dt.Rows[0].ItemArray[0].ToString());
-                        rpt.SetParameterValue("29", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("28", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("29", dt.Rows[0].ItemArray[0].ToString());
 
                         //Mac 2016/05/30
                         sql = "SELECT if(SUM(recordout.price) is null,0,SUM(recordout.price)) "
@@ -7710,7 +4819,7 @@ namespace ParkingManagementReport
                         + " WHERE recordin.cartype = 200 AND  recordout.price > 0 AND recordout.losscard = 0 "
                         + " AND recordout.dateout BETWEEN '" + startDateTime + "'  AND '" + endDateTime + "' ";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("35", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("35", dt.Rows[0].ItemArray[0].ToString());
 
                         //Mac 2016/02/01
                         try
@@ -7721,11 +4830,11 @@ namespace ParkingManagementReport
                             + " AND confirm1 IS null;";
                             dt = DbController.LoadData(sql);
                             if (dt.Rows[0].ItemArray[0].ToString() == "0")
-                                rpt.SetParameterValue("Verified1", "Verified 1");
+                                reportDocument.SetParameterValue("Verified1", "Verified 1");
                         }
                         catch
                         {
-                            rpt.SetParameterValue("Verified1", "");
+                            reportDocument.SetParameterValue("Verified1", "");
                         }
 
                         //Mac 2016/02/01
@@ -7737,13 +4846,13 @@ namespace ParkingManagementReport
                             + " AND confirm2 IS null;";
                             dt = DbController.LoadData(sql);
                             if (dt.Rows[0].ItemArray[0].ToString() == "0")
-                                rpt.SetParameterValue("Verified2", "Verified 2");
+                                reportDocument.SetParameterValue("Verified2", "Verified 2");
                         }
                         catch
                         {
-                            rpt.SetParameterValue("Verified2", "");
+                            reportDocument.SetParameterValue("Verified2", "");
                         }
-                        PrimaryCrystalReportViewer.ReportSource = rpt;
+                        PrimaryCrystalReportViewer.ReportSource = reportDocument;
                         PrimaryCrystalReportViewer.Refresh();
                         Cursor = Cursors.Default;
                     }
@@ -7955,9 +5064,9 @@ namespace ParkingManagementReport
                         PrimaryTabControl.SelectTab(1);
                         string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                         path = path.Replace("\\bin\\Debug", "");
-                        ReportDocument rpt = new ReportDocument();
-                        rpt.Load(path + "\\CrystalReports\\Report18.rpt");
-                        rpt.SetDataSource(dtMap);
+                        ReportDocument reportDocument = new ReportDocument();
+                        reportDocument.Load(path + "\\CrystalReports\\Report18.rpt");
+                        reportDocument.SetDataSource(dtMap);
                         string nTel = "";
                         string nFax = "";
                         string nTax = "";
@@ -8011,16 +5120,16 @@ namespace ParkingManagementReport
                             }
                         }
                         /////////////////////////////////////////////////////
-                        rpt.SetParameterValue("compName", AppGlobalVariables.Printings.Company1.Trim());
-                        rpt.SetParameterValue("ComAddress1", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
-                        rpt.SetParameterValue("ComTel", nTel);
-                        rpt.SetParameterValue("comFax", nFax);
-                        rpt.SetParameterValue("compTax", nTax);
-                        rpt.SetParameterValue("compTelext", "");
-                        rpt.SetParameterValue("DateSearch", startDateTime);
-                        rpt.SetParameterValue("DateSearch2", endDateTime);
+                        reportDocument.SetParameterValue("compName", AppGlobalVariables.Printings.Company1.Trim());
+                        reportDocument.SetParameterValue("ComAddress1", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
+                        reportDocument.SetParameterValue("ComTel", nTel);
+                        reportDocument.SetParameterValue("comFax", nFax);
+                        reportDocument.SetParameterValue("compTax", nTax);
+                        reportDocument.SetParameterValue("compTelext", "");
+                        reportDocument.SetParameterValue("DateSearch", startDateTime);
+                        reportDocument.SetParameterValue("DateSearch2", endDateTime);
 
-                        PrimaryCrystalReportViewer.ReportSource = rpt;
+                        PrimaryCrystalReportViewer.ReportSource = reportDocument;
                         PrimaryCrystalReportViewer.Refresh();
 
 
@@ -8036,8 +5145,8 @@ namespace ParkingManagementReport
                         PrimaryTabControl.SelectTab(1);
                         string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                         path = path.Replace("\\bin\\Debug", "");
-                        ReportDocument rpt = new ReportDocument();
-                        rpt.Load(path + "\\CrystalReports\\Report19.rpt");
+                        ReportDocument reportDocument = new ReportDocument();
+                        reportDocument.Load(path + "\\CrystalReports\\Report19.rpt");
                         string nTel = "";
                         string nFax = "";
                         string nTax = "";
@@ -8090,14 +5199,14 @@ namespace ParkingManagementReport
                                 }
                             }
                         }
-                        rpt.SetParameterValue("compName", AppGlobalVariables.Printings.Company1.Trim());
-                        rpt.SetParameterValue("ComAddress1", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
-                        rpt.SetParameterValue("ComTel", nTel);
-                        rpt.SetParameterValue("comFax", nFax);
-                        rpt.SetParameterValue("compTax", nTax);
-                        rpt.SetParameterValue("compTelext", "");
-                        rpt.SetParameterValue("DateSearch", startDateTime);
-                        rpt.SetParameterValue("DateSearch2", endDateTime);
+                        reportDocument.SetParameterValue("compName", AppGlobalVariables.Printings.Company1.Trim());
+                        reportDocument.SetParameterValue("ComAddress1", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
+                        reportDocument.SetParameterValue("ComTel", nTel);
+                        reportDocument.SetParameterValue("comFax", nFax);
+                        reportDocument.SetParameterValue("compTax", nTax);
+                        reportDocument.SetParameterValue("compTelext", "");
+                        reportDocument.SetParameterValue("DateSearch", startDateTime);
+                        reportDocument.SetParameterValue("DateSearch2", endDateTime);
                         /////////////////////////////////////////////////////
 
                         sql = "SELECT  COUNT(recordin.id) "
@@ -8106,27 +5215,27 @@ namespace ParkingManagementReport
                         + " recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "' ";
 
                         DataTable dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("visiterin", dt.Rows[0].ItemArray[0].ToString());
-                        rpt.SetParameterValue("visiterout", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("visiterin", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("visiterout", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT  COUNT(recordin.id)  "
                         + " FROM recordin JOIN recordout ON recordin.no = recordout.no "
                         + " WHERE recordin.cartype = 200 AND  (SELECT level FROM cardmf WHERE name = recordin.id) = 2 AND"
                         + " recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("vipin", dt.Rows[0].ItemArray[0].ToString());
-                        rpt.SetParameterValue("vipout", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("vipin", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("vipout", dt.Rows[0].ItemArray[0].ToString());
 
                         sql = "SELECT  COUNT(recordin.id)  "
                         + " FROM recordin JOIN recordout ON recordin.no = recordout.no "
                         + " WHERE recordin.cartype = 200 AND  (SELECT level FROM cardmf WHERE name = recordin.id) = 3 AND"
                         + " recordout.dateout BETWEEN '" + startDateTime + "' AND '" + endDateTime + "'";
                         dt = DbController.LoadData(sql);
-                        rpt.SetParameterValue("memberin", dt.Rows[0].ItemArray[0].ToString());
-                        rpt.SetParameterValue("memberout", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("memberin", dt.Rows[0].ItemArray[0].ToString());
+                        reportDocument.SetParameterValue("memberout", dt.Rows[0].ItemArray[0].ToString());
 
 
-                        PrimaryCrystalReportViewer.ReportSource = rpt;
+                        PrimaryCrystalReportViewer.ReportSource = reportDocument;
                         PrimaryCrystalReportViewer.Refresh();
 
                     }
@@ -8605,12 +5714,12 @@ namespace ParkingManagementReport
 
                         string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                         path = path.Replace("\\bin\\Debug", "");
-                        ReportDocument rpt = new ReportDocument();
+                        ReportDocument reportDocument = new ReportDocument();
                         if (Configs.UseActivePromotion)
-                            rpt.Load(path + "\\CrystalReports\\Report20_active.rpt");
+                            reportDocument.Load(path + "\\CrystalReports\\Report20_active.rpt");
                         else
-                            rpt.Load(path + "\\CrystalReports\\Report20.rpt");
-                        rpt.SetDataSource(estampSumMap);
+                            reportDocument.Load(path + "\\CrystalReports\\Report20.rpt");
+                        reportDocument.SetDataSource(estampSumMap);
                         string nTel = "";
                         string nFax = "";
                         string nTax = "";
@@ -8666,18 +5775,18 @@ namespace ParkingManagementReport
                         if (MemberGroupMonthComboBox.SelectedIndex > 0) //Mac 2016/04/02
                         {
                             CrystalDecisions.CrystalReports.Engine.TextObject txtReportHeader;
-                            txtReportHeader = rpt.ReportDefinition.ReportObjects["text7"] as TextObject;
+                            txtReportHeader = reportDocument.ReportDefinition.ReportObjects["text7"] as TextObject;
                             txtReportHeader.Text = MemberGroupMonthComboBox.Text;
                         }
-                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'"; //Mac 2020/08/27
-                        rpt.SetParameterValue("compName", AppGlobalVariables.Printings.Company1.Trim());
-                        rpt.SetParameterValue("ComAddress1", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
-                        rpt.SetParameterValue("ComTel", nTel);
-                        rpt.SetParameterValue("compTax", nTax);
-                        rpt.SetParameterValue("DateSearch", startDateTime);
-                        rpt.SetParameterValue("DateSearch2", endDateTime);
+                        reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'"; //Mac 2020/08/27
+                        reportDocument.SetParameterValue("compName", AppGlobalVariables.Printings.Company1.Trim());
+                        reportDocument.SetParameterValue("ComAddress1", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
+                        reportDocument.SetParameterValue("ComTel", nTel);
+                        reportDocument.SetParameterValue("compTax", nTax);
+                        reportDocument.SetParameterValue("DateSearch", startDateTime);
+                        reportDocument.SetParameterValue("DateSearch2", endDateTime);
 
-                        PrimaryCrystalReportViewer.ReportSource = rpt;
+                        PrimaryCrystalReportViewer.ReportSource = reportDocument;
                         PrimaryCrystalReportViewer.Refresh();
                     }
                     catch (Exception) { }
@@ -8694,43 +5803,11 @@ namespace ParkingManagementReport
                         {
                             string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                             path = path.Replace("\\bin\\Debug", "");
-                            ReportDocument rpt = new ReportDocument();
+                            ReportDocument reportDocument = new ReportDocument();
 
-                            if (Configs.Reports.UseReport21_3)
-                            {
-                                rpt.Load(path + "\\CrystalReports\\Report21_3.rpt");
-                            }
-                            else if (Configs.Reports.UseReport21_2)
-                            {
-                                rpt.Load(path + "\\CrystalReports\\Report21_2.rpt");
-                            }
-                            else if (Configs.Reports.UseReportThanapoom)
-                            {
-                                rpt.Load(path + "\\CrystalReports\\Report21_1_tnpt.rpt");
-                            }
-                            else if (Configs.Reports.UseReport21_1)
-                            {
-                                if (Configs.Reports.Report21_1_Switch)
-                                {
-                                    if (Configs.IsSwitch)
-                                    {
-                                        rpt.Load(path + "\\CrystalReports\\Report21_1_sw.rpt");
-                                        Configs.IsSwitch = false;
-                                    }
-                                    else
-                                    {
-                                        rpt.Load(path + "\\CrystalReports\\Report21_1.rpt");
-                                        Configs.IsSwitch = true;
-                                    }
-                                }
-                                else
-                                    rpt.Load(path + "\\CrystalReports\\Report21_1.rpt");
-                            }
+                            reportDocument.Load(path + "\\CrystalReports\\Report21.rpt");
 
-                            else
-                                rpt.Load(path + "\\CrystalReports\\Report21.rpt");
-
-                            rpt.SetDataSource(itemizedMap);
+                            reportDocument.SetDataSource(itemizedMap);
 
                             string nTel = "";
                             string nFax = "";
@@ -8786,15 +5863,15 @@ namespace ParkingManagementReport
                             }
                             if (MemberGroupMonthComboBox.SelectedIndex > 0) //Mac 2016/04/18
                             {
-                                TextObject txtReportHeader = rpt.ReportDefinition.ReportObjects["text7"] as TextObject;
+                                TextObject txtReportHeader = reportDocument.ReportDefinition.ReportObjects["text7"] as TextObject;
                                 txtReportHeader.Text = "บัตรจอดรถ";
                             }
-                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                            rpt.SetParameterValue("DateSearch", StartDatePicker.Text + " " + StartTimePicker.Text);
-                            rpt.SetParameterValue("DateSearch2", EndDatePicker.Text + " " + EndTimePicker.Text);
+                            reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
+                            reportDocument.SetParameterValue("DateSearch", StartDatePicker.Text + " " + StartTimePicker.Text);
+                            reportDocument.SetParameterValue("DateSearch2", EndDatePicker.Text + " " + EndTimePicker.Text);
 
                             PrimaryTabControl.SelectTab(1);
-                            PrimaryCrystalReportViewer.ReportSource = rpt;
+                            PrimaryCrystalReportViewer.ReportSource = reportDocument;
                             PrimaryCrystalReportViewer.Refresh();
                         }
                         catch (Exception) { }
@@ -8817,21 +5894,11 @@ namespace ParkingManagementReport
 
                         string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                         path = path.Replace("\\bin\\Debug", "");
-                        ReportDocument rpt = new ReportDocument();
-                        rpt.Load(path + "\\CrystalReports\\Report22.rpt");
-                        rpt.SetDataSource(mappedTable);
+                        ReportDocument reportDocument = new ReportDocument();
+                        reportDocument.Load(path + "\\CrystalReports\\Report22.rpt");
+                        reportDocument.SetDataSource(mappedTable);
 
-                        string start_date = StartDatePicker.Value.ToString("yyyy-MM-dd");
-                        string end_date = EndDatePicker.Value.ToString("yyyy-MM-dd");
-
-                        rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportComboBox.Text + "'";
-                        rpt.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(end_date)}'";
-                        rpt.DataDefinition.FormulaFields["ReportSearchDate"].Text = $"'{start_date} ถึง {end_date}'";
-                        rpt.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
-                        rpt.DataDefinition.FormulaFields["Address"].Text = "'อาคารธนภูมิ'";
-                        rpt.DataDefinition.FormulaFields["PrintedByUser"].Text = $"'Printed By: {AppGlobalVariables.OperatingUser.Name}'";
-                        //rpt.DataDefinition.FormulaFields["PromotionName"].Text = $"'{PromotionComboBox?.Text}'";
-                        PrimaryCrystalReportViewer.ReportSource = rpt;
+                        PrimaryCrystalReportViewer.ReportSource = reportDocument;
                         PrimaryCrystalReportViewer.Refresh();
                     }
                     catch (Exception) { }

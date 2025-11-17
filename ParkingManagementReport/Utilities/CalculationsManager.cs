@@ -554,13 +554,6 @@ namespace ParkingManagementReport.Utilities
                 }
                 void CalculateStandardReport(int count, int offset)
                 {
-                    if ((selectedReportId == 1 || selectedReportId == 91) && Configs.Reports.UseReport1_6)
-                        offset = 1;
-                    else if (Configs.Reports.UseReport1_4)
-                        offset = 3;
-                    else if (Configs.Reports.UseReport1_6 || Configs.Reports.UseReport1_8)
-                        offset = 1;
-
                     for (int i = 0; i < count; i++)
                     {
                         if (int.TryParse(ResultGridView.Rows[i].Cells[6 + offset].Value?.ToString(), out int price))

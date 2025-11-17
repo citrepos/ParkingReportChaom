@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.Office.Interop.Excel;
 using ParkingManagementReport.Common;
 using ParkingManagementReport.Utilities.Formatters;
 
@@ -85,12 +84,6 @@ namespace ParkingManagementReport.Utilities.Database
                 Map.Columns.Add(new DataColumn("รหัสส่วนลด", typeof(string)));     // Proid
                 Map.Columns.Add(new DataColumn("รหัสใบเสร็จ", typeof(string)));     // printno
                 
-                if(Configs.Reports.UseReportThanapoom) 
-                    Map.Columns.Add(new DataColumn("tnpt_id", typeof(int)));        // tnpt_id
-
-                if (Configs.Reports.UseReport21_2)
-                    Map.Columns.Add(new DataColumn("Proprice", typeof(string)));
-
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     DataTable dt3 = DbController.LoadData("SELECT value FROM param WHERE name = 'not_day'");
@@ -121,194 +114,18 @@ namespace ParkingManagementReport.Utilities.Database
                             ? AppGlobalVariables.PromotionNamesById[currentProId] 
                             : "Unknown";
 
-                        double parkingTime = Convert.ToDouble(
-                                                (Configs.Reports.UseReport21_1 || Configs.Reports.UseReport21_2 || Configs.Reports.UseReport21_3)
-                                                    ? dt.Rows[i]["hm"]
-                                                    : dt.Rows[i]["tdf"]);
+                        double parkingTime = Convert.ToDouble(dt.Rows[i]["tdf"]);
 
                         double parkingTimeRoundedUp = Math.Ceiling(parkingTime);
 
                         #region ReportProsetPriceDayWeek (Currently unused)
-                        if (Configs.Reports.ReportProsetPriceDayWeek) //Mac 2019/05/27
+                        if (Configs.Reports.ReportProsetPriceDayWeek)
                         {
                             MessageBox.Show("UNHANDLED `ReportProsetPriceDayWeek`");
                             return null;
-
-                            /*int SumData0 = 0;
-                            var CalPriceZone = (dynamic)null;
-                            DateTime dti = DateTime.Parse(dt.Rows[i]["datein"].ToString());
-                            DateTime dto = DateTime.Parse(dt.Rows[i]["dateout"].ToString());
-                            DateTime dtInOne;
-                            DateTime dtOutOne;
-                            TimeSpan diffInOut = DateTime.Parse(dto.ToShortDateString()) - DateTime.Parse(dti.ToShortDateString());
-                            dr["PriceList"] = "0";
-                            int intFM = 0;
-                            int intLM = 0;
-
-                            bool boolNoRound = false;
-                            boolNoRound = false;
-                            for (int x = 0; x < diffInOut.Days + 1; x++)
-                            {
-                                int intMin = 0;
-                                int ZoneMin = 0;
-                                int intTotal = 0;
-                                TimeSpan diffIO;
-                                string ZoneStart = "";
-                                string ZoneStop = "";
-
-                                if (diffInOut.Days == 0)
-                                {
-                                    boolNoRound = true;
-                                    dtInOne = dti;
-                                    dtOutOne = dto;
-                                }
-                                else if (x == 0)
-                                {
-                                    dtInOne = dti;
-                                    dtOutOne = DateTime.Parse(dti.ToShortDateString() + " 23:59:59");
-                                }
-                                else if (x == diffInOut.Days)
-                                {
-                                    dtInOne = DateTime.Parse(dto.ToShortDateString() + " 00:00:00");
-                                    dtOutOne = dto;
-                                }
-                                else
-                                {
-                                    dtInOne = DateTime.Parse(dti.ToShortDateString() + " 00:00:00");
-                                    dtOutOne = DateTime.Parse(dti.AddDays(1).ToShortDateString() + " 00:00:00");
-                                }
-
-                                diffIO = dtOutOne - dtInOne;
-                                if (diffIO.Days > 0)
-                                    intMin += diffIO.Days * 24 * 60;
-                                intMin += diffIO.Hours * 60;
-                                intMin += diffIO.Minutes;
-
-                                stringDW = dtInOne.DayOfWeek.ToString().ToLower().Substring(0, 2);
-
-                                if ((diffInOut.Days == 0) || (x == 0))
-                                {
-                                    DataTable dtFM = DbController.LoadData("select freemin, pricelimit from cartype_freemin_prosetprice_dayweek where typeid = " + dt.Rows[i]["cartype"] + " and dayweek like '%" + stringDW + "%'");
-                                    if (dtFM != null && dtFM.Rows.Count > 0)
-                                    {
-                                        intFM = Convert.ToInt32(dtFM.Rows[0][0]);
-                                        intLM = Convert.ToInt32(dtFM.Rows[0][1]);
-                                    }
-                                }
-
-                                AppGlobalVariables.IntTime = new int[0];
-                                AppGlobalVariables.IntPriceMin = new int[0];
-                                AppGlobalVariables.IntPriceHour = new int[0];
-                                AppGlobalVariables.IntHourRound = new int[0];
-                                AppGlobalVariables.IntExpense = new int[0];
-                                AppGlobalVariables.IntOver = new int[0];
-                                sqlQuery = "select * from prosetprice where PromotionId = " + currentProId + " and dayweek like '%" + stringDW + "%' order by no";
-                                DataTable dt2 = DbController.LoadData(sqlQuery);
-                                if (dt2 != null && dt2.Rows.Count > 0)
-                                {
-                                    AppGlobalVariables.IntTime = new int[dt2.Rows.Count];
-                                    AppGlobalVariables.IntPriceMin = new int[dt2.Rows.Count];
-                                    AppGlobalVariables.IntPriceHour = new int[dt2.Rows.Count];
-                                    AppGlobalVariables.IntHourRound = new int[dt2.Rows.Count];
-                                    AppGlobalVariables.IntExpense = new int[dt2.Rows.Count];
-                                    AppGlobalVariables.IntOver = new int[dt2.Rows.Count];
-                                    for (int j = 0; j < dt2.Rows.Count; j++)
-                                    {
-                                        if (j == 0)
-                                        {
-                                            AppGlobalVariables.IntTime[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[3].ToString());
-                                        }
-                                        else
-                                        {
-                                            AppGlobalVariables.IntTime[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[3].ToString()) - Convert.ToInt32(dt2.Rows[j - 1].ItemArray[3].ToString());
-                                        }
-                                        AppGlobalVariables.IntPriceMin[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[4].ToString());
-                                        AppGlobalVariables.IntPriceHour[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[5].ToString());
-                                        AppGlobalVariables.IntHourRound[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[6].ToString());
-                                        AppGlobalVariables.IntExpense[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[7].ToString());
-                                        AppGlobalVariables.IntOver[j] = Convert.ToInt32(dt2.Rows[j].ItemArray[8].ToString());
-                                    }
-                                }
-
-                                AppGlobalVariables.IntTime2 = new int[0];
-                                AppGlobalVariables.IntPriceMin2 = new int[0];
-                                AppGlobalVariables.IntPriceHour2 = new int[0];
-                                AppGlobalVariables.IntHourRound2 = new int[0];
-                                AppGlobalVariables.IntExpense2 = new int[0];
-                                AppGlobalVariables.IntOver2 = new int[0];
-                                DataTable dt4 = DbController.LoadData("select * from prosetprice_zone where PromotionID = " + currentProId + " and dayweek like '%" + stringDW + "%' order by no");
-                                if (dt4 != null && dt4.Rows.Count > 0)
-                                {
-                                    AppGlobalVariables.IntTime2 = new int[dt4.Rows.Count];
-                                    AppGlobalVariables.IntPriceMin2 = new int[dt4.Rows.Count];
-                                    AppGlobalVariables.IntPriceHour2 = new int[dt4.Rows.Count];
-                                    AppGlobalVariables.IntHourRound2 = new int[dt4.Rows.Count];
-                                    AppGlobalVariables.IntExpense2 = new int[dt4.Rows.Count];
-                                    AppGlobalVariables.IntOver2 = new int[dt4.Rows.Count];
-                                    for (int y = 0; y < dt4.Rows.Count; y++)
-                                    {
-                                        if (y == 0)
-                                        {
-                                            AppGlobalVariables.IntTime2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[3].ToString());
-                                        }
-                                        else
-                                        {
-                                            AppGlobalVariables.IntTime2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[3].ToString()) - Convert.ToInt32(dt4.Rows[y - 1].ItemArray[3].ToString());
-                                        }
-                                        AppGlobalVariables.IntPriceMin2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[4].ToString());
-                                        AppGlobalVariables.IntPriceHour2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[5].ToString());
-                                        AppGlobalVariables.IntHourRound2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[6].ToString());
-                                        AppGlobalVariables.IntExpense2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[7].ToString());
-                                        AppGlobalVariables.IntOver2[y] = Convert.ToInt32(dt4.Rows[y].ItemArray[8].ToString());
-                                    }
-
-                                    ZoneStart = dt4.Rows[0]["zone_start"].ToString();
-                                    ZoneStop = dt4.Rows[0]["zone_stop"].ToString();
-                                }
-
-                                CalPriceZone = CalculationsManager.CalPriceZoneOneDay(0, dtInOne.ToString(), dtOutOne.ToString(), ZoneStart, ZoneStop, 0, 0, 0, boolNoRound);
-                                ZoneMin = CalPriceZone.Key;
-
-                                if (ZoneMin > 0)
-                                {
-                                    intMin -= ZoneMin;
-
-                                    ZoneMin -= intFM;
-                                    if (ZoneMin > 0)
-                                    {
-                                        intFM = 0;
-                                    }
-                                    else
-                                    {
-                                        ZoneMin = 0;
-                                        intFM -= CalPriceZone.Key;
-                                    }
-
-                                    SumData0 += CalculationsManager.CalPrice2(0, ZoneMin, notDay);
-                                }
-
-                                int tmpintMin = intMin;
-                                intMin -= intFM;
-                                if (intMin > 0)
-                                {
-                                    intFM = 0;
-                                }
-                                else
-                                {
-                                    intMin = 0;
-                                    intFM -= tmpintMin;
-                                }
-                                SumData0 += CalculationsManager.CalPrice(0, intMin, notDay);
-
-                                if ((SumData0 > intLM) && (intLM > 0))
-                                    SumData0 = intLM;
-                            }
-
-                            dr["PriceList"] = SumData0;*/
                         }
                         else
                         {
-                            //Mac 2022/07/26----------------
                             if (Configs.UseDayWeek == "I")
                             {
                                 stringDW = DateTime.Parse(dt.Rows[i]["datein"].ToString()).DayOfWeek.ToString().ToLower().Substring(0, 2);
@@ -335,31 +152,11 @@ namespace ParkingManagementReport.Utilities.Database
                         double parkingPrice = 0;        // ชำระเงินเอง (ค่าจอดรถ)
                         double applicableChargeFee = 0; // ค่าบริการเรียกเก็บ
 
-                        if (Configs.Reports.UseReportThanapoom)
+                        if (true)
                         {
                             (totalParkingPrice, discount, applicableChargeFee) = GetApplicableChargesThanapoom(stringDW, notDay, i, dt);
-                            if (dt.Rows[i]["proid"].ToString() == "119")
-                            {
-                                parkingPrice = 0;
-                            }
-                            else
-                            {
-                                parkingPrice = totalParkingPrice - discount - applicableChargeFee;
-                            }
 
-                            /*
-                            if (double.TryParse(dt.Rows[i]["price"]?.ToString(), out double parkingPriceValue))
-                                parkingPrice = parkingPriceValue;
-
-                            if (parkingPrice > 0)
-                            {
-                                int lossCardPrice = Convert.ToInt32(dt.Rows[i]?["losscard"] ?? 0);
-                                int overDatePrice = Convert.ToInt32(dt.Rows[i]?["overdate"] ?? 0);
-                                int totalFine = lossCardPrice + overDatePrice;
-
-                                parkingPrice = Math.Max(totalFine - parkingPrice, 0);
-                            }
-                            */
+                            parkingPrice = totalParkingPrice - discount - applicableChargeFee;
                         }
                         else
                         {
@@ -386,8 +183,6 @@ namespace ParkingManagementReport.Utilities.Database
                         dr["ส่วนลด"] = discount.ToString("F2");
                         dr["ชำระเงินเอง"] = parkingPrice.ToString("F2");
                         dr["ค่าบริการเรียกเก็บ"] = applicableChargeFee.ToString("F2");
-                        if (Configs.Reports.UseReportThanapoom)  
-                            dr["tnpt_id"] = dt?.Rows?[i]?["tnpt_id_int"];
                         #endregion
 
                         if (paymentText == Constants.TextBased.PaymentStatusPaid)
@@ -466,7 +261,6 @@ namespace ParkingManagementReport.Utilities.Database
 
             return resultTable;
         }
-
 
         public static DataTable GetSummarizedDailyPromotionUsage(DataTable usageData)
         {

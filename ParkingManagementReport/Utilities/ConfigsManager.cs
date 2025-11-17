@@ -608,6 +608,7 @@ namespace ParkingManagementReport.Utilities
             SetStringConfig(paramsLookup, "add1", value => AppGlobalVariables.Printings.Address1 = value);
             SetStringConfig(paramsLookup, "add2", value => AppGlobalVariables.Printings.Address2 = value);
             SetStringConfig(paramsLookup, "tax", value => AppGlobalVariables.Printings.Tax1 = value);
+            SetStringConfig(paramsLookup, "branch", value => AppGlobalVariables.Printings.Branch = value);
             SetStringConfig(paramsLookup, "tel", value => AppGlobalVariables.Printings.Telephone = value);
             SetStringConfig(paramsLookup, "building", value => AppGlobalVariables.Printings.Building = value);
             SetStringConfig(paramsLookup, "office", value => AppGlobalVariables.Printings.Office = value);
@@ -666,67 +667,16 @@ namespace ParkingManagementReport.Utilities
             {
                 // Report usage flags
                 ["report_search_memgroup"] = v => Configs.Reports.ReportSearchMemberGroup = v,
-                ["use_report5_1"] = v => Configs.Reports.UseReport5_1 = v,
-                ["use_report1_3"] = v => Configs.Reports.UseReport1_3 = v,
-                ["use_report13_3"] = v => Configs.Reports.UseReport13_3 = v,
-                ["use_report13_10"] = v => Configs.Reports.UseReport13_10 = v,
-                ["use_report3_1"] = v => Configs.Reports.UseReport3_1 = v,
-                ["use_report13_11"] = v => Configs.Reports.UseReport13_11 = v,
-                ["use_report1_4"] = v => Configs.Reports.UseReport1_4 = v,
-                ["use_report5_2"] = v => Configs.Reports.UseReport5_2 = v,
-                ["use_report14like13"] = v => Configs.Reports.UseReport14like13 = v,
-                ["use_report1_5"] = v => Configs.Reports.UseReport1_5 = v,
-                ["use_report5_3"] = v => Configs.Reports.UseReport5_3 = v,
-                ["use_report21_1"] = v => Configs.Reports.UseReport21_1 = v,
-                ["use_report72_1"] = v => Configs.Reports.UseReport72_1 = v,
-                ["use_report71_1"] = v => Configs.Reports.UseReport71_1 = v,
-                ["use_report5_4"] = v => Configs.Reports.UseReport5_4 = v,
-                ["use_report1_6"] = v => Configs.Reports.UseReport1_6 = v,
-                ["use_report13_7"] = v => Configs.Reports.UseReport13_7 = v,
-                ["use_report6"] = v => Configs.Reports.UseReport6 = v,
-                ["use_report23_1"] = v => Configs.Reports.UseReport23_1 = v,
-                ["use_report1_7"] = v => Configs.Reports.UseReport1_7 = v,
-                ["use_report24_1"] = v => Configs.Reports.UseReport24_1 = v,
-                ["use_report108_110_1"] = v => Configs.Reports.UseReport108_110_1 = v,
-                ["use_report24_2"] = v => Configs.Reports.UseReport24_2 = v,
-                ["use_report49_1"] = v => Configs.Reports.UseReport49_1 = v,
-                ["use_report35_1"] = v => Configs.Reports.UseReport35_1 = v,
-                ["use_report36_1"] = v => Configs.Reports.UseReport36_1 = v,
-                ["use_report24_3"] = v => Configs.Reports.UseReport24_3 = v,
-                ["use_report1_8"] = v => Configs.Reports.UseReport1_8 = v,
-                ["use_report21_2"] = v => Configs.Reports.UseReport21_2 = v,
-                ["use_report21_3"] = v => Configs.Reports.UseReport21_3 = v,
-                ["use_report13_12"] = v => Configs.Reports.UseReport13_12 = v,
-                ["use_report13_13"] = v => Configs.Reports.UseReport13_13 = v,
-                ["use_report2_4"] = v => Configs.Reports.UseReport2_4 = v,
-
+                
                 // Report behavior flags
                 ["report3decimal"] = v => Configs.Reports.Report3Decimal = v,
                 ["report_norunning"] = v => Configs.Reports.ReportNoRunning = v,
                 ["report_cartypefree15min"] = v => Configs.Reports.ReportCartypeFree15Min = v,
                 ["report_pricesplit_losscard"] = v => Configs.Reports.ReportPriceSplitLosscard = v,
-                ["report21_22_nocreditnoshow"] = v => Configs.Reports.Report21_22_NoCreditNoShow = v,
                 ["report_prosetprice_dayweek"] = v => Configs.Reports.ReportProsetPriceDayWeek = v,
-                ["report21_1_switch"] = v => Configs.Reports.Report21_1_Switch = v,
-                ["report13pro_switchprice_not0"] = v => Configs.Reports.Report13Pro_SwitchPriceNot0 = v,
-                ["report49_losscard_novat"] = v => Configs.Reports.Report49_LossCard_NoVat = v,
                 ["report_pdfonly"] = v => Configs.UsePDFOnly = v,
                 ["report_datestring"] = v => Configs.Reports.UseReportDateString = v,
                 ["use_report_hour_use"] = v => Configs.Reports.UseReportHourUse = v,
-                ["use_report_thanapoom"] = v => Configs.Reports.UseReportThanapoom = v,
-                
-                // Report logo flags
-                ["use_report1logo"] = v => Configs.Reports.UseReport1logo = v,
-                ["use_report2logo"] = v => Configs.Reports.UseReport2logo = v,
-                ["use_report3logo"] = v => Configs.Reports.UseReport3logo = v,
-                ["use_report4logo"] = v => Configs.Reports.UseReport4logo = v,
-                ["use_report5logo"] = v => Configs.Reports.UseReport5logo = v,
-                ["use_report8logo"] = v => Configs.Reports.UseReport8logo = v,
-                ["use_report13logo"] = v => Configs.Reports.UseReport13logo = v,
-                ["use_report13_1logo"] = v => Configs.Reports.UseReport13_1logo = v,
-                ["use_report16logo"] = v => Configs.Reports.UseReport16logo = v,
-                ["use_report32logo"] = v => Configs.Reports.UseReport32logo = v,
-                ["use_report50logo"] = v => Configs.Reports.UseReport50logo = v
             };
 
             // Apply all report settings
@@ -832,17 +782,6 @@ namespace ParkingManagementReport.Utilities
             return txt;
         }
 
-        internal static void UpdateEmptyTnptIdBackToDb()
-        {
-            string query = "UPDATE promotion\r\nSET tnpt_id = LPAD(groupro, 3, '0')\r\nWHERE (tnpt_id IS NULL OR tnpt_id = '')\r\n  AND groupro IS NOT NULL;";
-
-            string result = DbController.SaveData(query);
-
-            if (string.IsNullOrEmpty(result))
-                Console.WriteLine("Update successful");
-            else
-                Console.WriteLine("Error: " + result);
-        }
     }
 }
 
