@@ -33,6 +33,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ReportComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.OvertimePaymentComboBox = new System.Windows.Forms.ComboBox();
             this.PromotionIdRangePanel = new System.Windows.Forms.Panel();
             this.label44 = new System.Windows.Forms.Label();
             this.label43 = new System.Windows.Forms.Label();
@@ -208,6 +210,7 @@
             this.label1.Size = new System.Drawing.Size(67, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "เลือกรายงาน";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // ReportComboBox
             // 
@@ -220,6 +223,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label45);
+            this.groupBox1.Controls.Add(this.OvertimePaymentComboBox);
             this.groupBox1.Controls.Add(this.PromotionIdRangePanel);
             this.groupBox1.Controls.Add(this.PaymentChannelComboBox);
             this.groupBox1.Controls.Add(this.label42);
@@ -270,6 +275,27 @@
             this.groupBox1.Size = new System.Drawing.Size(1220, 186);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(910, 50);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(85, 13);
+            this.label45.TabIndex = 53;
+            this.label45.Text = "การจ่ายเกินเวลา";
+            this.label45.Visible = false;
+            this.label45.Click += new System.EventHandler(this.label45_Click);
+            // 
+            // OvertimePaymentComboBox
+            // 
+            this.OvertimePaymentComboBox.FormattingEnabled = true;
+            this.OvertimePaymentComboBox.Location = new System.Drawing.Point(910, 64);
+            this.OvertimePaymentComboBox.Name = "OvertimePaymentComboBox";
+            this.OvertimePaymentComboBox.Size = new System.Drawing.Size(190, 21);
+            this.OvertimePaymentComboBox.TabIndex = 52;
+            this.OvertimePaymentComboBox.Visible = false;
+            this.OvertimePaymentComboBox.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged_1);
             // 
             // PromotionIdRangePanel
             // 
@@ -339,6 +365,7 @@
             this.PaymentChannelComboBox.Size = new System.Drawing.Size(150, 21);
             this.PaymentChannelComboBox.TabIndex = 50;
             this.PaymentChannelComboBox.Visible = false;
+            this.PaymentChannelComboBox.SelectedIndexChanged += new System.EventHandler(this.PaymentChannelComboBox_SelectedIndexChanged);
             // 
             // label42
             // 
@@ -502,6 +529,7 @@
             this.PaymentChannelPanel.Size = new System.Drawing.Size(166, 43);
             this.PaymentChannelPanel.TabIndex = 47;
             this.PaymentChannelPanel.Visible = false;
+            this.PaymentChannelPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.PaymentChannelPanel_Paint);
             // 
             // ExpirationDateCheckBox
             // 
@@ -638,21 +666,23 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(907, 48);
+            this.label31.Location = new System.Drawing.Point(594, 140);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(27, 13);
             this.label31.TabIndex = 42;
             this.label31.Text = "ป้อม";
             this.label31.Visible = false;
+            this.label31.Click += new System.EventHandler(this.label31_Click);
             // 
             // GuardhouseComboBox
             // 
             this.GuardhouseComboBox.FormattingEnabled = true;
-            this.GuardhouseComboBox.Location = new System.Drawing.Point(909, 64);
+            this.GuardhouseComboBox.Location = new System.Drawing.Point(593, 156);
             this.GuardhouseComboBox.Name = "GuardhouseComboBox";
             this.GuardhouseComboBox.Size = new System.Drawing.Size(107, 21);
             this.GuardhouseComboBox.TabIndex = 41;
             this.GuardhouseComboBox.Visible = false;
+            this.GuardhouseComboBox.SelectedIndexChanged += new System.EventHandler(this.GuardhouseComboBox_SelectedIndexChanged);
             // 
             // label30
             // 
@@ -1839,5 +1869,7 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.ComboBox OvertimePaymentComboBox;
     }
 }

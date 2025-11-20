@@ -14,6 +14,8 @@ namespace ParkingManagementReport.Common
         public static string CurrentUserId { get; set; }
         public static string CurrentPaytype { get; set; }
         public static string CurrentCartype { get; set; }
+
+        public static string CurrentOvertimePayment { get; set; }
         public static string startDateTimeText { get; set; }
         public static string endDateTimeText { get; set; }
 

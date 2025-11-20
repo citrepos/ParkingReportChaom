@@ -35,6 +35,9 @@ namespace ParkingManagementReport.Common
             public static readonly string PaymentChannelTrueMoney = "TrueMoney";
             public static readonly string PaymentChannelCash = "เงินสด";
             public static readonly string PaymentChannelEDC = "EDC";
+
+            public static readonly string OvertimePaymentTrue = "ชำระเงินแต่ไม่ได้ออกจากลานจอด";
+            public static readonly string OvertimePaymentFalse = "ชำระเงินแล้วออกจากลานจอดปกติ";
             #endregion
         }
     }

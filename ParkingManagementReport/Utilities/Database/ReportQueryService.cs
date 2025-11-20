@@ -19,6 +19,7 @@ namespace ParkingManagementReport.Utilities.Database
         private string recordNumber;
         private string user;
         private string carType;
+        private string overTime;
         private string licensePlate;
         private string promotionName;
         private string cardId;
@@ -81,6 +82,7 @@ namespace ParkingManagementReport.Utilities.Database
             string recordNumber,
             string user,
             string carType,
+            string overTime,
             string licensePlate,
             string promotionName,
             string cardId,
@@ -119,6 +121,7 @@ namespace ParkingManagementReport.Utilities.Database
             this.recordNumber = TextFormatters.RemoveSpecialCharacters(recordNumber);
             this.user = TextFormatters.RemoveSpecialCharacters(user);
             this.carType = TextFormatters.RemoveSpecialCharacters(carType);
+            this.overTime = TextFormatters.RemoveSpecialCharacters(overTime);
             this.licensePlate = TextFormatters.RemoveSpecialCharacters(licensePlate);
             this.promotionName = TextFormatters.RemoveSpecialCharacters(promotionName);
             this.cardId = TextFormatters.RemoveSpecialCharacters(cardId);
@@ -172,6 +175,7 @@ namespace ParkingManagementReport.Utilities.Database
             this.memberTypeId = AppGlobalVariables.MemberGroupsToId[memberType];
             AppGlobalVariables.CurrentUserId = TextFormatters.RemoveSpecialCharacters(user);
             AppGlobalVariables.CurrentCartype = TextFormatters.RemoveSpecialCharacters(carType);
+            AppGlobalVariables.CurrentOvertimePayment = TextFormatters.RemoveSpecialCharacters(overTime);
             AppGlobalVariables.CurrentPaytype = TextFormatters.RemoveSpecialCharacters(paymentChannel);
             
             //this.startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
@@ -361,7 +365,7 @@ namespace ParkingManagementReport.Utilities.Database
                             sql += " and member.memgrouppriceid_month = " + memberGroupMonthId;
                     }
 
-                    sql += " GROUP BY ro.no ORDER BY ro.no;";
+                    sql += " GROUP BY ro.no ORDER BY ri.license;";
             }
                     else
                     {

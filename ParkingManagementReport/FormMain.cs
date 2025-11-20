@@ -116,6 +116,12 @@ namespace ParkingManagementReport
             Constants.TextBased.PaymentChannelEDC
             });
 
+            OvertimePaymentComboBox.Items.AddRange(new object[] {
+            Constants.TextBased.All,
+            Constants.TextBased.OvertimePaymentTrue,
+            Constants.TextBased.OvertimePaymentFalse,
+            });
+
             MemberCardTypeComboBox.Items.AddRange(new object[] {
                 Constants.TextBased.All,
                 Constants.TextBased.MemberCardTypeWithPayment,
@@ -7075,6 +7081,9 @@ namespace ParkingManagementReport
                 if (selectedReportId == 0 || selectedReportId == 101 || selectedReportId == 162)
                 {
                     label42.Visible = true;
+                    label45.Visible = true;
+                    OvertimePaymentComboBox.Visible = true;
+                    OvertimePaymentComboBox.Text = Constants.TextBased.All;
                     PaymentChannelComboBox.Visible = true;
                     PaymentChannelComboBox.Text = Constants.TextBased.All;
                 }
@@ -7298,6 +7307,41 @@ namespace ParkingManagementReport
 
         }
 
+        private void label31_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void PaymentChannelComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void GuardhouseComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void PaymentChannelPanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label45_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void SearchButton_Click(object sender, EventArgs e)
         {
             if (ReportComboBox.Items.Count < 1) return;
@@ -7322,6 +7366,7 @@ namespace ParkingManagementReport
                 RecordNumberTextBox.Text,
                 UserComboBox.Text,
                 CarTypeComboBox.Text,
+                OvertimePaymentComboBox.Text,
                 LicensePlateTextBox.Text,
                 PromotionComboBox.Text,
                 CardIdTextBox.Text,
@@ -7460,6 +7505,7 @@ namespace ParkingManagementReport
             string userId = AppGlobalVariables.CurrentUserId;
             string carType = AppGlobalVariables.CurrentCartype;
             string payType = AppGlobalVariables.CurrentPaytype;
+            string overTimePaytype = AppGlobalVariables.CurrentOvertimePayment;
             DataTable dt = DbController.LoadData(sql);
                         groupBox3.Visible = false;
             string path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -7489,6 +7535,7 @@ namespace ParkingManagementReport
                         resultTable.Columns.Add("ช่องทางการชำระเงิน");
                         resultTable.Columns.Add("รายได้", typeof(decimal));
                         resultTable.Columns.Add("ส่วนลด", typeof(decimal));
+                        resultTable.Columns.Add("has_usergateout", typeof(bool));
 
                         // สร้าง Dictionary id -> DataRow
                         Dictionary<string, DataRow> idRowMap = dt.Rows
@@ -7536,12 +7583,47 @@ namespace ParkingManagementReport
                                         ? row["userout"].ToString()
                                         : "";
 
+                            string realUserOut =
+                                !string.IsNullOrWhiteSpace(row["usergateout"]?.ToString())
+                                    ? row["usergateout"].ToString()
+                                    : !string.IsNullOrWhiteSpace(row["userout"]?.ToString())
+                                        ? row["userout"].ToString()
+                                        : "";
+
+
                             string payment = row["ช่องทางการชำระเงิน"]?.ToString() ?? "เงินสด";
+
+                            // ถ้าเป็นเงินสด → ไม่ต้องแก้ไขอะไรทั้งสิ้น
+                            bool isCash = payment.Trim().Equals("เงินสด", StringComparison.OrdinalIgnoreCase);
+
+                            // 🎯 ถ้าไม่ใช่เงินสด ค่อยปรับตามประเภท userout
+                            if (!isCash)
+                            {
+                                if (realUserOut.Trim().Equals("WEBPAYAT", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    payment = $"{payment} (Webpayment)";
+                                }
+
+                                if (realUserOut.Trim().Equals("Webpayment", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    payment = $"{payment} (Webpayment)";
+                                }
+
+                                if (realUserOut.Trim().StartsWith("Kiosk", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    payment = $"{payment} (Kiosk)";
+                                }
+                            }
+
+
                             decimal price = row["price"] != DBNull.Value ? Convert.ToDecimal(row["price"]) : 0;
                             decimal discount = row["discount"] != DBNull.Value ? Convert.ToDecimal(row["discount"]) : 0;
 
                             if (string.IsNullOrWhiteSpace(license) || license == "NO")
                                 license = row["id"]?.ToString() ?? "";
+
+                            bool hasGateOut = !string.IsNullOrWhiteSpace(row["usergateout"]?.ToString());
+
 
                             resultTable.Rows.Add(
                                 no,
@@ -7554,26 +7636,43 @@ namespace ParkingManagementReport
                                 userout,
                                 payment,
                                 price,
-                                discount
+                                discount,
+                                hasGateOut
                             );
                         }
                         DataTable filteredTable = resultTable.Clone(); // โครงสร้างเหมือนกัน
 
-                        if (userId != Constants.TextBased.All || carType != Constants.TextBased.All || payType != Constants.TextBased.All)
+                        if (userId != Constants.TextBased.All || carType != Constants.TextBased.All || payType != Constants.TextBased.All || overTimePaytype != Constants.TextBased.All)
                         {
                             foreach (DataRow row in resultTable.Rows)
                             {
-                                string userout = row["เจ้าหน้าที่ขาออก"]?.ToString() ?? "";
-                                string userin = row["เจ้าหน้าที่ขาเข้า"]?.ToString() ?? "";
+                                string userout = row["เจ้าหน้าที่ขาออก"]?.ToString()?.Trim() ?? "";
+                                string userin = row["เจ้าหน้าที่ขาเข้า"]?.ToString()?.Trim() ?? "";
                                 string cartype = row["ประเภท"]?.ToString()?.Trim() ?? "";
-                                string payment = row["ช่องทางการชำระเงิน"]?.ToString() ?? "";
+                                string payment = row["ช่องทางการชำระเงิน"]?.ToString()?.Trim() ?? "";
+
+                                bool hasUserGateOut = row["has_usergateout"] != DBNull.Value &&
+                                (bool)row["has_usergateout"];
+
+                                // เงื่อนไขโอเวอร์ไทม์
+                                bool matchOvertime = true;
+
+                                if (overTimePaytype == Constants.TextBased.OvertimePaymentTrue)
+                                {
+                                    matchOvertime = !hasUserGateOut; // ยังไม่ออก (ไม่มี usergateout)
+                                }
+                                else if (overTimePaytype == Constants.TextBased.OvertimePaymentFalse)
+                                {
+                                    matchOvertime = hasUserGateOut; // ออกแล้ว (มี usergateout)
+                                }
 
                                 bool matchUser = (userId == Constants.TextBased.All) || (userout == userId || userin == userId);
                                 bool matchCarType = (carType == Constants.TextBased.All) || (cartype == carType);
-                                bool matchPayType = (payType == Constants.TextBased.All) || (payment == payType);
+                                bool matchPayType =
+                                    (payType == Constants.TextBased.All) ||
+                                    payment.StartsWith(payType, StringComparison.OrdinalIgnoreCase);
 
-                                // ✅ ถ้าเข้าทุกเงื่อนไขพร้อมกัน (AND)
-                                if (matchUser && matchCarType && matchPayType)
+                                if (matchUser && matchCarType && matchPayType && matchOvertime)
                                 {
                                     filteredTable.ImportRow(row);
                                 }
@@ -7589,6 +7688,11 @@ namespace ParkingManagementReport
                         ResultGridView.DataSource = filteredTable;
                         ResultGridView.Refresh();
 
+                        if (ResultGridView.Columns.Contains("has_usergateout"))
+                        {
+                            ResultGridView.Columns["has_usergateout"].Visible = false;
+                        }
+
                         ResultGridView.Columns[0].Width = 50;
                         ResultGridView.Columns[1].Width = 70;
                         ResultGridView.Columns[2].Width = 80;
@@ -7597,6 +7701,9 @@ namespace ParkingManagementReport
                         ResultGridView.Columns[5].Width = 105;
                         ResultGridView.Columns[6].Width = 120;
                         ResultGridView.Columns[7].Width = 105;
+
+
+
 
                         // ✅ โหลด Crystal Report
                         rpt.Load(path + "\\CrystalReports\\Report1.rpt");
