@@ -1640,7 +1640,7 @@
             this.ManagePermissionButton.TabIndex = 0;
             this.ManagePermissionButton.Text = "จัดการสิทธิ์";
             this.ManagePermissionButton.UseVisualStyleBackColor = true;
-            this.ManagePermissionButton.Click += new System.EventHandler(this.button1_Click);
+            this.ManagePermissionButton.Click += new System.EventHandler(this.ManagePermissionButton_Click);
             // 
             // MifareCheckTimer
             // 

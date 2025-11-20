@@ -496,15 +496,15 @@ namespace ParkingManagementReport.Utilities
 
                 switch (selectedReportId)
                 {
-                    case 0:
                     case 1:
-                    case 8:
-                    case 90:
+                    case 2:
+                    case 9:
                     case 91:
+                    case 92:
                         CalculateStandardReport(rowCount, villageOffset);
                         break;
 
-                    case 2:
+                    case 3:
                         for (int i = 0; i < rowCount; i++)
                         {
                             totalPrice += int.Parse(ResultGridView.Rows[i].Cells[5].Value.ToString());
@@ -516,7 +516,7 @@ namespace ParkingManagementReport.Utilities
                         ResultGridView.Rows[rowCount].Cells[6].Value = totalDiscount.ToString("#,###,##0");
                         break;
 
-                    case 29:
+                    case 30:
                         int col1 = 0, col2 = 0, col3 = 0;
 
                         for (int i = 0; i < rowCount; i++)
@@ -534,17 +534,17 @@ namespace ParkingManagementReport.Utilities
                         ResultGridView[4, rowCount].Value = totalPrice.ToString("#,###,##0");
                         break;
 
-                    case 3:
-                    case 10:
+                    case 4:
+                    case 11:
                         ResultGridView.Rows[rowCount].Cells[3].Value = "รวม";
                         ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} ครั้ง";
                         break;
 
-                    case 4:
-                    case 30:
+                    case 5:
                     case 31:
-                    case 92:
+                    case 32:
                     case 93:
+                    case 94:
                         ResultGridView.Rows[rowCount].Cells[3].Value = "จำนวนรถ";
                         ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} คัน";
                         break;
