@@ -3233,7 +3233,7 @@ namespace ParkingManagementReport
             SetWidthIfExists("โปรโมชั่น", 160);
             SetWidthIfExists("บันทึก", 260);
             SetWidthIfExists("ชื่อ-นามสกุล", 260);
-            
+
             /* switch (selectedReportId) { case: } */
         }
 
