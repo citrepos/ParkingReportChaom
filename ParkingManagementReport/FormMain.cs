@@ -2471,7 +2471,6 @@ namespace ParkingManagementReport
                                     dr4["picdiv"] = null;
                                 }
 
-
                                 try
                                 {
                                     fiStream = new FileStream(dt.Rows[j]["piclic"].ToString(), FileMode.Open);
