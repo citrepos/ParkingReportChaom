@@ -170,6 +170,68 @@ namespace ParkingManagementReport.Utilities
             return dtTmp;
         }
 
+        public static DataTable สรุปรถยนต์เข้าออกตามชั่วโมง(DataTable dt)
+        {
+            #region safe getters
+            DateTime GetDate(DataRow r, string name)
+            {
+                try { return Convert.ToDateTime(r[name]); }
+                catch { return DateTime.MinValue; }
+            }
+
+            int GetInt(DataRow r, string name)
+            {
+                try { return Convert.ToInt32(r[name]); }
+                catch { return 0; }
+            }
+            #endregion
+
+            // สร้างตารางสำหรับผลลัพธ์
+            DataTable perHour = new DataTable();
+            perHour.Columns.Add(new DataColumn("ชั่วโมง", typeof(string)));            // 00:00 - 00:59
+            perHour.Columns.Add(new DataColumn("ลูกค้าทั่วไปเข้า", typeof(int)));
+            perHour.Columns.Add(new DataColumn("สมาชิกเข้า", typeof(int)));
+            perHour.Columns.Add(new DataColumn("ลูกค้าทั่วไปออก", typeof(int)));
+            perHour.Columns.Add(new DataColumn("สมาชิกออก", typeof(int)));
+
+            // เตรียมข้อมูลเข้า & ออก แยกง่ายๆ
+            var recordIn = dt.AsEnumerable()
+                .Where(r => r.Table.Columns.Contains("datein"));
+
+            var recordOut = dt.AsEnumerable()
+                .Where(r => r.Table.Columns.Contains("dateout"));
+
+            // Loop 0 - 23 ชั่วโมง
+            for (int hour = 0; hour < 24; hour++)
+            {
+                string range = $"{hour:00}:00 - {hour:00}:59";
+
+                // ----------- Count In ----------
+                int inVisitor = recordIn.Count(r =>
+                    GetDate(r, "datein").Hour == hour &&
+                    GetInt(r, "cartype") < 200);
+
+                int inMember = recordIn.Count(r =>
+                    GetDate(r, "datein").Hour == hour &&
+                    GetInt(r, "cartype") == 200);
+
+                // ----------- Count Out ----------
+                int outVisitor = recordOut.Count(r =>
+                    GetDate(r, "dateout").Hour == hour &&
+                    GetInt(r, "cartype") < 200);
+
+                int outMember = recordOut.Count(r =>
+                    GetDate(r, "dateout").Hour == hour &&
+                    GetInt(r, "cartype") == 200);
+
+                // Add row
+                perHour.Rows.Add(range, inVisitor, inMember, outVisitor, outMember);
+            }
+
+            return perHour;
+        }
+
+
         public static DataTable สรุปรถยนต์เข้าออกตามวันที่(DataTable dt)
         {
             #region safe getters
@@ -196,6 +258,7 @@ namespace ParkingManagementReport.Utilities
                 from row in dt.AsEnumerable()
                 let outDate = GetDate(row)
                 group row by outDate.Date into g
+                orderby g.Key
                 select new
                 {
                     DayRange = $"{g.Key:dd-MM-yyyy} ถึง {g.Key.AddDays(1).AddSeconds(-1):dd-MM-yyyy}",

@@ -517,21 +517,23 @@ namespace ParkingManagementReport.Utilities
                         break;
 
                     case 30:
-                        int col1 = 0, col2 = 0, col3 = 0;
+                        int col1 = 0, col2 = 0, col3 = 0, col4 = 0;
 
                         for (int i = 0; i < rowCount; i++)
                         {
                             col1 += int.Parse(ResultGridView.Rows[i].Cells[1].Value.ToString());
                             col2 += int.Parse(ResultGridView.Rows[i].Cells[2].Value.ToString());
                             col3 += int.Parse(ResultGridView.Rows[i].Cells[3].Value.ToString());
-                            totalPrice += int.Parse(ResultGridView.Rows[i].Cells[4].Value.ToString());
-                        }
+                            col4 += int.Parse(ResultGridView.Rows[i].Cells[4].Value.ToString());
+                            totalPrice += int.Parse(ResultGridView.Rows[i].Cells[5].Value.ToString());
+                        } 
 
                         ResultGridView[0, rowCount].Value = "รวม";
                         ResultGridView[1, rowCount].Value = col1.ToString("#,###,##0");
                         ResultGridView[2, rowCount].Value = col2.ToString("#,###,##0");
                         ResultGridView[3, rowCount].Value = col3.ToString("#,###,##0");
-                        ResultGridView[4, rowCount].Value = totalPrice.ToString("#,###,##0");
+                        ResultGridView[4, rowCount].Value = col4.ToString("#,###,##0");
+                        ResultGridView[5, rowCount].Value = totalPrice.ToString("#,###,##0");
                         break;
 
                     case 4:

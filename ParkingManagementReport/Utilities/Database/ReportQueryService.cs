@@ -428,7 +428,7 @@ namespace ParkingManagementReport.Utilities.Database
                     sql = GetPromotionUsage();
                     break;
                 case 23:
-                    sql = "SELECT CAST(member.cardid AS char) AS หมายเลขบัตร, member.name AS 'ชื่อ-นามสกุล', (SELECT groupname FROM membergroup WHERE id = member.memgroupid) AS กลุ่มสมาชิก, ";
+                    sql = "SELECT CAST(member.cardid AS char) AS หมายเลขบัตร, member.name AS 'ชื่อ - นามสกุล', (SELECT groupname FROM membergroup WHERE id = member.memgroupid) AS กลุ่มสมาชิก, ";
                     sql += " member.license AS ทะเบียนรถ, member.tel AS เบอร์โทรศัพท์,";
                     sql += " date_format(member.datestart, '%d/%m/%Y %H:%i:%s') AS วันที่สมัคร, ";
                     sql += " date_format(member.dateexprie, '%d/%m/%Y %H:%i:%s') AS วันหมดอายุ, member.enable FROM member ";
@@ -518,42 +518,60 @@ namespace ParkingManagementReport.Utilities.Database
                         + " DROP TABLE IF EXISTS perHour; ";
                     break;
                 case 26:
-                    sql = "DROP PROCEDURE IF EXISTS dowhile2; "
-                    + " CREATE PROCEDURE dowhile2(IN date_select DATETIME, IN date_finish DATETIME) "
-                    + " BEGIN "
-                    + "   DECLARE num INT DEFAULT 0; "
-                    + "   CREATE TABLE perHour (hours varchar(30),inVisitor INT(1),inMember INT(1), outVisitor INT(1), outMember INT(1)); "
-                    + "   WHILE num < 24 DO "
-                    + "     INSERT INTO perHour VALUES ( CONCAT(DATE_FORMAT(MAKETIME(num,0,0),'%H:%i'),' - ',DATE_FORMAT(MAKETIME(num,59,0),'%H:%i')), ";
-                    if (Configs.UseSettingNewMember && memberGroupMonth != Constants.TextBased.All) 
+                    startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd");
+                    sql =
+                    "SELECT \r\n" +
+                    "    recordin.datein, \r\n" +
+                    "    recordout.dateout, \r\n" +
+                    "    recordin.cartype, \r\n" +
+                    "    recordout.proid, \r\n" +
+                    "    recordout.price, \r\n" +
+                    "    recordout.userout \r\n" +
+                    "FROM recordout \r\n" +
+                    "JOIN recordin ON recordin.no = recordout.no \r\n" +
+                    $"WHERE recordout.dateout BETWEEN '{startDateTimeText}' AND '{endDateTimeText}' \r\n";
+                    if (user != Constants.TextBased.All)
                     {
-                        sql += " (SELECT COUNT(t1.no)FROM recordin t1 left join member t2 on t1.id = t2.cardid WHERE HOUR(t1.datein) = num AND t1.datein BETWEEN date_select AND date_finish AND t1.cartype < 200";
-                        sql += " and t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += "), ";
-                        sql += " (SELECT COUNT(t1.no)FROM recordin t1 left join member t2 on t1.id = t2.cardid WHERE HOUR(t1.datein) = num AND t1.datein BETWEEN date_select AND date_finish AND t1.cartype = 200";
-                        sql += " and t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += "), ";
-                        sql += " (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no left join member t3 on t2.id = t3.cardid WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype < 200";
-                        sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += "), ";
-                        sql += " (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no left join member t3 on t2.id = t3.cardid WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype = 200";
-                        sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-                        sql += ")); ";
+                        sql += $"and recordout.userout = {userId} ";
                     }
-                    else
-                    {
-                        sql += "     (SELECT COUNT(no)FROM recordin WHERE HOUR(datein) = num AND datein BETWEEN date_select AND date_finish AND cartype < 200), "
-                        + "     (SELECT COUNT(no)FROM recordin WHERE HOUR(datein) = num AND datein BETWEEN date_select AND date_finish AND cartype = 200), "
-                        + "     (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype < 200), "
-                        + "     (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype = 200)); ";
-                    }
-                    sql += "     SET num = num + 1; "
-                    + "   END WHILE; "
-                    + "   SELECT hours as ชั่วโมง, inVisitor as ลูกค้าทั่วไปเข้า, inMember as สมาชิกเข้า, outVisitor as ลูกค้าทั่วไปออก, outMember as สมาชิกออก FROM perHour; "
-                    + " END; "
-                    + " DROP TABLE IF EXISTS perHour; "
-                    + " CALL dowhile2('" + startDateTimeText + "','" + endDateTimeText + "');";
                     break;
+                //case 26:
+                //    sql = "DROP PROCEDURE IF EXISTS dowhile2; "
+                //    + " CREATE PROCEDURE dowhile2(IN date_select DATETIME, IN date_finish DATETIME) "
+                //    + " BEGIN "
+                //    + "   DECLARE num INT DEFAULT 0; "
+                //    + "   CREATE TABLE perHour (hours varchar(30),inVisitor INT(1),inMember INT(1), outVisitor INT(1), outMember INT(1)); "
+                //    + "   WHILE num < 24 DO "
+                //    + "     INSERT INTO perHour VALUES ( CONCAT(DATE_FORMAT(MAKETIME(num,0,0),'%H:%i'),' - ',DATE_FORMAT(MAKETIME(num,59,0),'%H:%i')), ";
+                //    if (Configs.UseSettingNewMember && memberGroupMonth != Constants.TextBased.All) 
+                //    {
+                //        sql += " (SELECT COUNT(t1.no)FROM recordin t1 left join member t2 on t1.id = t2.cardid WHERE HOUR(t1.datein) = num AND t1.datein BETWEEN date_select AND date_finish AND t1.cartype < 200";
+                //        sql += " and t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
+                //        sql += "), ";
+                //        sql += " (SELECT COUNT(t1.no)FROM recordin t1 left join member t2 on t1.id = t2.cardid WHERE HOUR(t1.datein) = num AND t1.datein BETWEEN date_select AND date_finish AND t1.cartype = 200";
+                //        sql += " and t2.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
+                //        sql += "), ";
+                //        sql += " (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no left join member t3 on t2.id = t3.cardid WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype < 200";
+                //        sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
+                //        sql += "), ";
+                //        sql += " (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no left join member t3 on t2.id = t3.cardid WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype = 200";
+                //        sql += " and t3.storeid = " + AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
+                //        sql += ")); ";
+                //    }
+                //    else
+                //    {
+                //        sql += "     (SELECT COUNT(no)FROM recordin WHERE HOUR(datein) = num AND datein BETWEEN date_select AND date_finish AND cartype < 200), "
+                //        + "     (SELECT COUNT(no)FROM recordin WHERE HOUR(datein) = num AND datein BETWEEN date_select AND date_finish AND cartype = 200), "
+                //        + "     (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype < 200), "
+                //        + "     (SELECT COUNT(t1.no)FROM recordout t1 LEFT JOIN recordin t2 ON t1.no = t2.no WHERE HOUR(t1.dateout) = num AND t1.dateout BETWEEN date_select AND date_finish AND t2.cartype = 200)); ";
+                //    }
+                //    sql += "     SET num = num + 1; "
+                //    + "   END WHILE; "
+                //    + "   SELECT hours as ชั่วโมง, inVisitor as ลูกค้าทั่วไปเข้า, inMember as สมาชิกเข้า, outVisitor as ลูกค้าทั่วไปออก, outMember as สมาชิกออก FROM perHour; "
+                //    + " END; "
+                //    + " DROP TABLE IF EXISTS perHour; "
+                //    + " CALL dowhile2('" + startDateTimeText + "','" + endDateTimeText + "');";
+                //    break;
 
                 case 27:
                     startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd");
@@ -1594,9 +1612,9 @@ namespace ParkingManagementReport.Utilities.Database
                     }
                     else
                     {
-                        sql += " , CASE WHEN recordout.status = 'V' THEN FORMAT(0,2) ELSE FORMAT(recordout.price - ROUND(recordout.price * 7 / 107, 6), 2) END AS ค่าบริการ";
-                        sql += " , CASE WHEN recordout.status = 'V' THEN FORMAT(0,2) ELSE FORMAT(ROUND(recordout.price * 7 / 107, 6), 2) END AS VAT";
-                        sql += " , CASE WHEN recordout.status = 'V' THEN FORMAT(0,2) ELSE FORMAT(recordout.price, 2) END AS จำนวนเงิน";
+                        sql += " , CASE WHEN recordout.status = 'V' THEN 0 ELSE ROUND(recordout.price - ROUND(recordout.price * 7 / 107, 6), 2) END AS ค่าบริการ";
+                        sql += " , CASE WHEN recordout.status = 'V' THEN 0 ELSE ROUND (recordout.price * 7 / 107, 2) END AS VAT";
+                        sql += " , CASE WHEN recordout.status = 'V' THEN 0 ELSE ROUND(recordout.price, 2)END AS จำนวนเงิน";
                     }
 
                     sql += " FROM recordout";
@@ -1926,9 +1944,9 @@ namespace ParkingManagementReport.Utilities.Database
                     sql = "select id as ลำดับ";
                     sql += " ,dateslip as 'วัน/เดือน/ปี'";
                     sql += " ,slip as เลขที่ใบกำกับภาษี";
-                    sql += " ,format(beforevat, 2) as ค่าบริการ";
-                    sql += " ,format(vat, 2) as VAT";
-                    sql += " ,format(total, 2) as รวมเงิน";
+                    sql += " ,ROUND(beforevat, 2) as ค่าบริการ";
+                    sql += " ,ROUND(vat, 2) as VAT";
+                    sql += " ,ROUND(total, 2) as รวมเงิน";
                     sql += " from vatmonth";
                     break;
                 case 51:
