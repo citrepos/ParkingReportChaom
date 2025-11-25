@@ -473,11 +473,11 @@ namespace ParkingManagementReport.Utilities
         {
             if (ResultGridView.Rows.Count <= 0)
                 return;
-
             try
             {
+                decimal totalSevice = 0, totalVat = 0, totalCash = 0;
                 int rowCount = ResultGridView.Rows.Count - 1;
-                int totalPrice = 0, totalDiscount = 0;
+                int totalPrice = 0, totalDiscount = 0,totalCusIn = 0, totalCusOut = 0, totalMemIn = 0, totalMemOut = 0, companyCount = 0; ;
                 int villageOffset = 0;
                 int colCount = ResultGridView.Rows[0].Cells.Count;
                 int totalExcess = 0;
@@ -497,6 +497,21 @@ namespace ParkingManagementReport.Utilities
                 switch (selectedReportId)
                 {
                     case 1:
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            if (int.TryParse(ResultGridView.Rows[i].Cells[7].Value?.ToString(), out int price))
+                                totalPrice += price;
+
+                            if (int.TryParse(ResultGridView.Rows[i].Cells[8].Value?.ToString(), out int discount))
+                                totalDiscount += discount;
+                        }
+
+                        ResultGridView.Rows[rowCount].Cells[4].Value = "จำนวนรถ";
+                        ResultGridView.Rows[rowCount].Cells[5].Value = $"{rowCount:##,###,##0} คัน";
+                        ResultGridView.Rows[rowCount].Cells[6].Value = "รวม";
+                        ResultGridView.Rows[rowCount].Cells[7].Value = totalPrice.ToString("#,###,##0");
+                        ResultGridView.Rows[rowCount].Cells[8].Value = totalDiscount.ToString("#,###,##0");
+                        break;
                     case 2:
                     case 9:
                     case 91:
@@ -509,11 +524,13 @@ namespace ParkingManagementReport.Utilities
                         {
                             totalPrice += int.Parse(ResultGridView.Rows[i].Cells[5].Value.ToString());
                             totalDiscount += int.Parse(ResultGridView.Rows[i].Cells[6].Value.ToString());
+                            totalCusIn += int.Parse(ResultGridView.Rows[i].Cells[7].Value.ToString());
                         }
 
                         ResultGridView.Rows[rowCount].Cells[4].Value = "รวม";
                         ResultGridView.Rows[rowCount].Cells[5].Value = totalPrice.ToString("#,###,##0");
                         ResultGridView.Rows[rowCount].Cells[6].Value = totalDiscount.ToString("#,###,##0");
+                        ResultGridView.Rows[rowCount].Cells[7].Value = totalCusIn.ToString("#,###,##0");
                         break;
 
                     case 30:
@@ -537,20 +554,109 @@ namespace ParkingManagementReport.Utilities
                         break;
 
                     case 4:
+                    case 5:
+                    case 6:
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            totalPrice += int.Parse(ResultGridView.Rows[i].Cells[7].Value.ToString());
+                            totalDiscount += int.Parse(ResultGridView.Rows[i].Cells[8].Value.ToString());
+                        }
+                        ResultGridView.Rows[rowCount].Cells[5].Value = "รวม";
+                        ResultGridView.Rows[rowCount].Cells[6].Value = $"{rowCount:#,###,##0} คัน";
+                        ResultGridView.Rows[rowCount].Cells[7].Value = totalPrice.ToString("#,###,##0");
+                        ResultGridView.Rows[rowCount].Cells[8].Value = totalDiscount.ToString("#,###,##0");
+                        break;
                     case 11:
                         ResultGridView.Rows[rowCount].Cells[3].Value = "รวม";
                         ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} ครั้ง";
                         break;
-
-                    case 5:
+                    case 24:
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            totalPrice += int.Parse(ResultGridView.Rows[i].Cells[6].Value.ToString());
+                            totalDiscount += int.Parse(ResultGridView.Rows[i].Cells[7].Value.ToString());
+                        }
+                        ResultGridView.Rows[rowCount].Cells[4].Value = "รวม";
+                        ResultGridView.Rows[rowCount].Cells[5].Value = $"{rowCount:#,###,##0} ครั้ง";
+                        ResultGridView.Rows[rowCount].Cells[6].Value = totalPrice.ToString("#,###,##0");
+                        ResultGridView.Rows[rowCount].Cells[7].Value = totalDiscount.ToString("#,###,##0");
+                        break;
+                    case 26:
+                    case 27:
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            totalCusIn += int.Parse(ResultGridView.Rows[i].Cells[1].Value.ToString());
+                            totalCusOut += int.Parse(ResultGridView.Rows[i].Cells[2].Value.ToString());
+                            totalMemIn += int.Parse(ResultGridView.Rows[i].Cells[3].Value.ToString());
+                            totalMemOut += int.Parse(ResultGridView.Rows[i].Cells[4].Value.ToString());
+                        }
+                        ResultGridView.Rows[rowCount].Cells[0].Value = "รวม";
+                        ResultGridView.Rows[rowCount].Cells[1].Value = totalCusIn.ToString("#,###,##0");
+                        ResultGridView.Rows[rowCount].Cells[2].Value = totalCusOut.ToString("#,###,##0");
+                        ResultGridView.Rows[rowCount].Cells[3].Value = totalMemIn.ToString("#,###,##0");
+                        ResultGridView.Rows[rowCount].Cells[4].Value = totalMemOut.ToString("#,###,##0");
+                        break;
+                        
                     case 31:
                     case 32:
+                    case 34:
+
+
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            totalCusIn += int.Parse(ResultGridView.Rows[i].Cells[5].Value.ToString());
+                            totalSevice += decimal.Parse(ResultGridView.Rows[i].Cells[6].Value.ToString());
+                            totalVat += decimal.Parse(ResultGridView.Rows[i].Cells[7].Value.ToString());
+                            totalCash += decimal.Parse(ResultGridView.Rows[i].Cells[8].Value.ToString());
+                        }
+
+                        ResultGridView.Rows[rowCount].Cells[4].Value = "รวม";
+                        ResultGridView.Rows[rowCount].Cells[5].Value = totalCusIn.ToString("#,###,##0");
+                        ResultGridView.Rows[rowCount].Cells[6].Value = totalSevice.ToString("#,###,##0.00");
+                        ResultGridView.Rows[rowCount].Cells[7].Value = totalVat.ToString("#,###,##0.00");
+                        ResultGridView.Rows[rowCount].Cells[8].Value = totalCash.ToString("#,###,##0.00");
+                        break;
+                    case 35:
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            totalCusIn += int.Parse(ResultGridView.Rows[i].Cells[3].Value.ToString());
+                            totalSevice += decimal.Parse(ResultGridView.Rows[i].Cells[4].Value.ToString());
+                            totalVat += decimal.Parse(ResultGridView.Rows[i].Cells[5].Value.ToString());
+                            totalCash += decimal.Parse(ResultGridView.Rows[i].Cells[6].Value.ToString());
+                        }
+
+                        ResultGridView.Rows[rowCount].Cells[2].Value = "รวม";
+                        ResultGridView.Rows[rowCount].Cells[3].Value = totalCusIn.ToString("#,###,##0");
+                        ResultGridView.Rows[rowCount].Cells[4].Value = totalSevice.ToString("#,###,##0.00");
+                        ResultGridView.Rows[rowCount].Cells[5].Value = totalVat.ToString("#,###,##0.00");
+                        ResultGridView.Rows[rowCount].Cells[6].Value = totalCash.ToString("#,###,##0.00");
+                        break;
+                    case 48:
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            totalCusIn += int.Parse(ResultGridView.Rows[i].Cells[1].Value.ToString());
+                            companyCount++; // นับจำนวนแถว
+                        }
+
+                        // แสดงผลรวมพร้อมจำนวนบริษัท
+                        ResultGridView.Rows[rowCount].Cells[0].Value = $"รวม    {companyCount}  บริษัท";
+                        ResultGridView.Rows[rowCount].Cells[1].Value = totalCusIn.ToString("#,###,##0");
+                        break;  
                     case 93:
                     case 94:
                         ResultGridView.Rows[rowCount].Cells[3].Value = "จำนวนรถ";
                         ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} คัน";
                         break;
-
+                    case 164:
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            totalCash += decimal.Parse(ResultGridView.Rows[i].Cells[5].Value.ToString());
+                        }
+                        ResultGridView.Rows[rowCount].Cells[2].Value = "จำนวนรถ";
+                        ResultGridView.Rows[rowCount].Cells[3].Value = $"{rowCount:#,###,##0} คัน";
+                        ResultGridView.Rows[rowCount].Cells[4].Value = "จำนวนเงิน";
+                        ResultGridView.Rows[rowCount].Cells[5].Value = totalCash.ToString("#,###,##0.00");
+                        break;
                     default:
                         break;
                 }

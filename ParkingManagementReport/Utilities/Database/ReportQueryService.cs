@@ -202,40 +202,69 @@ namespace ParkingManagementReport.Utilities.Database
                     sql = GetGenericReport();
                     break;
                 case 3:
-                    sql = "SELECT A.no as ลำดับ,C.name as ชื่อเจ้าหน้าที่,";
-                    sql += "case  when A.gate = 'I' then 'ขาเข้า' when A.gate = 'O' then 'ขาออก' when A.gate = 'B' then 'ขาเข้า/ขาออก' end as ประตู,";
-                    sql += "date_format(A.datein, '%d/%m/%Y %H:%i:%s') as เวลาเข้า,date_format(A.dateout, '%d/%m/%Y %H:%i:%s') as เวลาออก,";
-                    sql += " CASE WHEN B.price > 0 THEN B.price ELSE 0 END as รายได้,";
-                    sql += " CASE WHEN B.discount > 0 THEN B.discount ELSE 0 END as ส่วนลด FROM";
-                    sql += " user C,user_record A";
-                    sql += " LEFT JOIN(";
+                    sql = "SELECT ";
+                    sql += " A.no AS ลำดับ,";
+                    sql += " C.name AS ชื่อเจ้าหน้าที่,";
+                    sql += " CASE ";
+                    sql += "     WHEN A.gate = 'I' THEN 'ขาเข้า' ";
+                    sql += "     WHEN A.gate = 'O' THEN 'ขาออก' ";
+                    sql += "     WHEN A.gate = 'B' THEN 'ขาเข้า/ขาออก' ";
+                    sql += " END AS ประตู,";
+                    sql += " DATE_FORMAT(A.datein, '%d/%m/%Y %H:%i:%s') AS เวลาเข้า,";
+                    sql += " DATE_FORMAT(A.dateout, '%d/%m/%Y %H:%i:%s') AS เวลาออก,";
+
+                    // 🔥 ย้ายมาไว้ตรงนี้ (ต่อจากเวลาออก)
+                    sql += " (SELECT COUNT(*) FROM recordout R WHERE R.datetime BETWEEN A.datein AND A.dateout) AS จำนวน,";
+
+                    // รายได้ / ส่วนลด
+                    sql += " CASE WHEN B.price > 0 THEN B.price ELSE 0 END AS รายได้,";
+                    sql += " CASE WHEN B.discount > 0 THEN B.discount ELSE 0 END AS ส่วนลด";
+
+                    sql += " FROM user C";
+                    sql += " INNER JOIN user_record A ON C.id = A.id";
+
+                    // LEFT JOIN B (แยกตามเงื่อนไข NotShowNoString)
                     if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0)
                     {
-                        sql += " SELECT SUM(recordout.price) AS price";
-                        sql += " ,SUM(recordout.discount) AS discount";
-                        sql += " ,recordout.userno FROM recordout left join recordin on recordout.no = recordin.no";
-                        sql += " where recordin.notshow = 'N'";
-                        sql += " GROUP BY recordout.userno) B";
+                        sql += " LEFT JOIN (";
+                        sql += "     SELECT ";
+                        sql += "         SUM(recordout.price) AS price,";
+                        sql += "         SUM(recordout.discount) AS discount,";
+                        sql += "         recordout.userno";
+                        sql += "     FROM recordout";
+                        sql += "     LEFT JOIN recordin ON recordout.no = recordin.no";
+                        sql += "     WHERE recordin.notshow = 'N'";
+                        sql += "     GROUP BY recordout.userno";
+                        sql += " ) B ON A.no = B.userno";
                     }
                     else
                     {
-                        sql += " SELECT SUM(price) AS price";
-                        sql += " ,SUM(discount) AS discount";
-                        sql += " ,userno FROM recordout";
-                        sql += " GROUP BY userno) B";
+                        sql += " LEFT JOIN (";
+                        sql += "     SELECT ";
+                        sql += "         SUM(price) AS price,";
+                        sql += "         SUM(discount) AS discount,";
+                        sql += "         userno";
+                        sql += "     FROM recordout";
+                        sql += "     GROUP BY userno";
+                        sql += " ) B ON A.no = B.userno";
                     }
-                    sql += " ON A.no = B.userno";
-                    sql += " WHERE C.id=A.id";
-                    sql += " AND A.datein BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+
+                    // WHERE
+                    sql += " WHERE A.datein BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
 
                     if (user != Constants.TextBased.All)
                     {
-                        sql += " AND A.id =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
+                        sql += " AND A.id = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
                     }
-                    if (guardhouse != String.Empty)
-                        sql += " and A.guardhouse = '" + guardhouse + "' ";
+
+                    if (!string.IsNullOrEmpty(guardhouse))
+                    {
+                        sql += " AND A.guardhouse = '" + guardhouse + "' ";
+                    }
+
                     sql += " ORDER BY A.no";
                     break;
+
                 case 4:
                     sql = "SELECT liftrecord.no as ลำดับ, date_format(liftrecord.datelift, '%d/%m/%Y %H:%i:%s') as เวลายก,user.name as เจ้าหน้าที่," //Mac 2018/12/21
                         + "case  when liftrecord.gate LIKE 'I%' then 'ขาเข้า' when liftrecord.gate LIKE 'O%' then 'ขาออก' when liftrecord.gate = 'B' then 'ขาเข้า/ขาออก' end as ประตู ,"

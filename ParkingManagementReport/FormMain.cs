@@ -65,8 +65,8 @@ namespace ParkingManagementReport
             InitializeUIElements();
 
             /*FOR TEST */
-            StartDatePicker.Value = new DateTime(day: 01, month: 10, year: 2025);
-            EndDatePicker.Value = new DateTime(day: 01, month: 10, year: 2025);
+            //StartDatePicker.Value = new DateTime(day: 01, month: 10, year: 2025);
+            //EndDatePicker.Value = new DateTime(day: 01, month: 10, year: 2025);
         }
 
         #region INIT
@@ -972,7 +972,7 @@ namespace ParkingManagementReport
 
                         DateTime dst = StartDatePicker.Value;
                         string startDateTime = dst.ToString("dd MMMM ") + dst.Year.ToString();
-                        reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'ตั้งแต่ " + startDateTime + " 00:00:00 ถึง " + startDateTime + " 23:59:59'";
+                        reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'ตั้งแต่วันที่ " + startDateTime + " 00:00:00 ถึงวันที่ " + startDateTime + " 23:59:59'";
                         break;
 
                     case 26: //รายงานรถยนต์เข้าออก ตามช่วงเวลา
@@ -984,9 +984,9 @@ namespace ParkingManagementReport
 
                         CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
 
-                        //dst = StartDatePicker.Value;
-                        //startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        //reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่ " + startDateTime + " 00:00:00 ถึง " + startDateTime + " 23:59:59'";
+                        dst = StartDatePicker.Value;
+                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่ " + startDateTime + " 00:00:00 ถึงวันที่ " + startDateTime + " 23:59:59'";
                         break;
 
                     case 27: //รายงานรถยนต์เข้าออก ตามวันที่
@@ -1267,48 +1267,22 @@ namespace ParkingManagementReport
 
                     case 47:
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report47.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                        TrySetReportData(reportDocument, dataFromQuery, true);
 
-                        PrimaryTabControl.SelectTab(1);
-                        ResultGridView.Columns[8].Visible = false;
                         break;
 
                     case 48:
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report48.rpt");
                         TrySetReportData(reportDocument, dataFromQuery);
+                        SetWidthIfExists("บริษัท", 450);
+
 
                         PrimaryTabControl.SelectTab(1);
                         break;
 
                     case 49:
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report49.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-
-                        //#region cal sum 49
-                        //double sumVat48 = 0;
-                        //double sumBefore48 = 0;
-                        //double sumTotal48 = 0;
-
-                        //for (int j = 0; j < dataFromQuery.Rows.Count; j++)
-                        //{
-                        //    sumVat48 += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
-                        //    sumBefore48 += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
-                        //    sumTotal48 += Convert.ToDouble(dataFromQuery.Rows[j]["จำนวนเงิน"]);
-                        //}
-
-                        //if (Configs.UseCalVatFromTotal)
-                        //{
-                        //    reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotal48 - (sumTotal48 * 7 / 107)).ToString("#,###,##0.00") + "'";
-                        //    reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotal48 * 7 / 107).ToString("#,###,##0.00") + "'";
-                        //    reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal48.ToString("#,###,##0.00") + "'";
-                        //}
-                        //else
-                        //{
-                        //    reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBefore48.ToString("#,###,##0.00") + "'";
-                        //    reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVat48.ToString("#,###,##0.00") + "'";
-                        //    reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal48.ToString("#,###,##0.00") + "'";
-                        //}
-                        //#endregion
+                        TrySetReportData(reportDocument, dataFromQuery, true);
 
                         PrimaryTabControl.SelectTab(1);
                         break;
@@ -1319,34 +1293,7 @@ namespace ParkingManagementReport
                         else
                             reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report50.rpt");
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-
-                        //#region cal sum 50
-                        //double sumVat49 = 0;
-                        //double sumBefore49 = 0;
-                        //double sumTotal49 = 0;
-
-                        //for (int j = 0; j < dataFromQuery.Rows.Count; j++)
-                        //{
-                        //    sumVat49 += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
-                        //    sumBefore49 += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
-                        //    sumTotal49 += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
-                        //}
-
-                        //if (Configs.UseCalVatFromTotal)
-                        //{
-                        //    reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotal49 - (sumTotal49 * 7 / 107)).ToString("#,###,##0.00") + "'";
-                        //    reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotal49 * 7 / 107).ToString("#,###,##0.00") + "'";
-                        //    reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal49.ToString("#,###,##0.00") + "'";
-                        //}
-                        //else
-                        //{
-                        //    reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBefore49.ToString("#,###,##0.00") + "'";
-                        //    reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVat49.ToString("#,###,##0.00") + "'";
-                        //    reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal49.ToString("#,###,##0.00") + "'";
-                        //}
-                        //#endregion
-
+                        TrySetReportData(reportDocument, dataFromQuery, true);
                         PrimaryTabControl.SelectTab(1);
                         break;
 
@@ -1771,8 +1718,7 @@ namespace ParkingManagementReport
                         DataTable dataTable166 = CRUDManager.GetCardSortByCompanySummary(sql);
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\CardSortedCompanySummary.rpt");
                         reportDocument.SetDataSource(dataTable166);
-
-                        reportDocument.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
+                        TrySetCrystalReportHeaders(reportDocument);
                         PrimaryCrystalReportViewer.ReportSource = reportDocument;
                         PrimaryCrystalReportViewer.Refresh();
 
@@ -2987,7 +2933,6 @@ namespace ParkingManagementReport
 
             if (hideDataGridView)
                 PrimaryTabControl.SelectTab(1);
-
             PdfExportButton.Enabled = true;
             ExcelExportButton.Enabled = true;
         }
@@ -3257,6 +3202,8 @@ namespace ParkingManagementReport
             SetWidthIfExists("ยอดรวม", 100);
             SetWidthIfExists("เวลาเข้า", 120);
             SetWidthIfExists("เวลาออก", 120);
+            SetWidthIfExists("วัน-เวลาเข้า", 120);
+            SetWidthIfExists("วัน-เวลาออก", 120);
             SetWidthIfExists("เวลายก", 120);
             SetWidthIfExists("วันที่สมัคร", 120);
             SetWidthIfExists("วันที่หมดอายุ", 120);
@@ -3269,7 +3216,7 @@ namespace ParkingManagementReport
             SetWidthIfExists("บันทึก", 260);
             SetWidthIfExists("ชื่อ - นามสกุล", 260);
             SetWidthIfExists("เลขที่ใบกำกับภาษี", 150);
-
+            SetWidthIfExists("E-Stamp", 350);
             /* switch (selectedReportId) { case: } */
         }
 
