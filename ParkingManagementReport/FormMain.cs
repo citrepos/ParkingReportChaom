@@ -1299,6 +1299,24 @@ namespace ParkingManagementReport
                     case 51:
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report51.rpt");
                         TrySetReportData(reportDocument, dataFromQuery);
+                        if (selectedReportId == 51) //Mac 2020/10/26
+                        {
+                            if (this.ResultGridView.RowCount > 0)
+                            {
+                                foreach (DataGridViewRow r in this.ResultGridView.Rows)
+                                {
+                                    if (r.Index < ResultGridView.RowCount - 1)
+                                        this.ResultGridView.Rows[r.Index].HeaderCell.Value = (r.Index + 1).ToString();
+                                }
+                                this.ResultGridView.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
+                                this.ResultGridView.TopLeftHeaderCell.Value = "ลำดับ";
+                                this.ResultGridView.Columns[0].Visible = false;
+                            }
+                        }
+                        else
+                        {
+                            this.ResultGridView.TopLeftHeaderCell.Value = "";
+                        }
                         break;
                     case 52:
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report52.rpt");
