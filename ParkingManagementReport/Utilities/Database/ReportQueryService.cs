@@ -1979,13 +1979,19 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " from vatmonth";
                     break;
                 case 51:
-                    sql = "select s as ประเภทรถ, if(LENGTH(ss) > 0,(select t2.typename from cartype t2 where t2.typeid = t1.ss),'') as ประเภทการเก็บเงิน, sss as จำนวนคัน";
-                    sql += " from (";
-                    sql += " select vehicletype as s,'' as ss,count(vehicletype) as sss from recordin where datein BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "' group by vehicletype";
-                    sql += " union";
-                    sql += " select '' as s,cartype as ss,count(cartype) as sss from recordin where datein BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "' group by cartype";
-                    sql += " ) t1;";
-                    sql += "";
+                    sql = "SELECT id as ลำดับ, ";
+                    sql += "u.name AS เจ้าหน้าที่, ";
+                    sql += "u.username AS ชื่อผู้ใช้, ";
+                    sql += "er.promotion_name AS โปรโมชั่น, ";
+                    sql += "COUNT(*) AS จำนวน ";
+                    sql += "FROM estamprecord er ";
+                    sql += "LEFT JOIN user u ON er.user_id = u.id ";
+                    sql += "WHERE er.date_estamp BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "' ";
+
+                    if (user != Constants.TextBased.All)
+                        sql += " AND er.user_id = " + userId;
+
+                    sql += " GROUP BY er.user_id, er.promotion_id;";
                     break;
                 case 52:
                     AppGlobalVariables.ConditionText = "";

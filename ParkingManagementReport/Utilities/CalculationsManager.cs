@@ -643,6 +643,16 @@ namespace ParkingManagementReport.Utilities
                         ResultGridView.Rows[rowCount].Cells[1].Value = totalCusIn.ToString("#,###,##0");
                         break;  
                     case 93:
+                    case 51:
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            totalCusIn += int.Parse(ResultGridView.Rows[i].Cells[4].Value.ToString());
+                        }
+
+                        // แสดงผลรวมพร้อมจำนวนบริษัท
+                        ResultGridView.Rows[rowCount].Cells[3].Value = $"รวม";
+                        ResultGridView.Rows[rowCount].Cells[4].Value = totalCusIn.ToString("#,###,##0");
+                        break;
                     case 94:
                         ResultGridView.Rows[rowCount].Cells[3].Value = "จำนวนรถ";
                         ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} คัน";

@@ -1296,7 +1296,10 @@ namespace ParkingManagementReport
                         TrySetReportData(reportDocument, dataFromQuery, true);
                         PrimaryTabControl.SelectTab(1);
                         break;
-
+                    case 51:
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report51.rpt");
+                        TrySetReportData(reportDocument, dataFromQuery);
+                        break;
                     case 52:
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report52.rpt");
                         TrySetReportData(reportDocument, dataFromQuery);
@@ -2079,7 +2082,7 @@ namespace ParkingManagementReport
 
         private void ResultGridViewAtRunning()
         {
-            if (selectedReportId == 1 || selectedReportId == 2 || selectedReportId == 3 || selectedReportId == 4 || selectedReportId == 5 || selectedReportId == 6 || selectedReportId == 9 || selectedReportId == 11 || selectedReportId == 13 || selectedReportId == 14 || selectedReportId == 31 || selectedReportId == 32 || selectedReportId == 80 || selectedReportId == 91 || selectedReportId == 92 || selectedReportId == 93 || selectedReportId == 94 || selectedReportId == 95) //Mac 2020/10/26
+            if (selectedReportId == 1 || selectedReportId == 2 || selectedReportId == 3 || selectedReportId == 4 || selectedReportId == 5 || selectedReportId == 6 || selectedReportId == 9 || selectedReportId == 11 || selectedReportId == 13 || selectedReportId == 14 || selectedReportId == 31 || selectedReportId == 32 || selectedReportId == 51 || selectedReportId == 80 || selectedReportId == 91 || selectedReportId == 92 || selectedReportId == 93 || selectedReportId == 94 || selectedReportId == 95) //Mac 2020/10/26
             {
                 if (this.ResultGridView.RowCount > 0)
                 {
@@ -3217,6 +3220,7 @@ namespace ParkingManagementReport
             SetWidthIfExists("ชื่อ - นามสกุล", 260);
             SetWidthIfExists("เลขที่ใบกำกับภาษี", 150);
             SetWidthIfExists("E-Stamp", 350);
+            SetWidthIfExists("เจ้าหน้าที่", 250);
             /* switch (selectedReportId) { case: } */
         }
 
