@@ -12,7 +12,7 @@ namespace ParkingManagementReport.Utilities.Database
         #region FIELDS
         private static MySqlConnection remoteConnection;
        
-        private static MySqlConnection localConnection;
+        private static MySqlConnection localConnection;  
 
         //private static readonly string dbPassword = "Psk9Cmt854";
         private static readonly string dbPassword = "db13apr";
