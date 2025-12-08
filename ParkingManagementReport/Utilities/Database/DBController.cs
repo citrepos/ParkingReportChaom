@@ -14,8 +14,8 @@ namespace ParkingManagementReport.Utilities.Database
        
         private static MySqlConnection localConnection;
 
-        private static readonly string dbPassword = "Psk9Cmt854";
-        //private static readonly string dbPassword = "db13apr";
+        //private static readonly string dbPassword = "Psk9Cmt854";
+        private static readonly string dbPassword = "db13apr";
 
         private static readonly string localIp = "127.0.0.1";
         #endregion FIELDS_END
@@ -174,6 +174,7 @@ namespace ParkingManagementReport.Utilities.Database
         #endregion
     }
 }
+
 /* public static class dbLocal
     {
         private static MySqlConnection msConnectionLocal;

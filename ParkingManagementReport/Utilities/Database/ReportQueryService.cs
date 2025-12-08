@@ -113,67 +113,91 @@ namespace ParkingManagementReport.Utilities.Database
             bool isExpirationDateChecked, bool isParkingGreaterChecked, bool isParkingLesserChecked, bool isParkingBetweenChecked,
             DateTime startDate, DateTime endDate, DateTime startTime, DateTime endTime, DateTime memberExpirationStartDate, DateTime memberExpirationEndDate)
         {
-            this.selectedReportId = selectedReportId;
-            this.paymentChannel = TextFormatters.RemoveSpecialCharacters(paymentChannel);
-            this.recordNumber = TextFormatters.RemoveSpecialCharacters(recordNumber);
-            this.user = TextFormatters.RemoveSpecialCharacters(user);
-            this.carType = TextFormatters.RemoveSpecialCharacters(carType);
-            this.licensePlate = TextFormatters.RemoveSpecialCharacters(licensePlate);
-            this.promotionName = TextFormatters.RemoveSpecialCharacters(promotionName);
-            this.cardId = TextFormatters.RemoveSpecialCharacters(cardId);
-            this.nameOnCard = TextFormatters.RemoveSpecialCharacters(nameOnCard);
-            this.memberType = TextFormatters.RemoveSpecialCharacters(memberType);
-            this.memberGroupMonth = TextFormatters.RemoveSpecialCharacters(memberGroupMonth);
-            this.memberName = TextFormatters.RemoveSpecialCharacters(memberName);
-            this.memberRenewalType = TextFormatters.RemoveSpecialCharacters(memberRenewalType);
-            this.memberProcessState = TextFormatters.RemoveSpecialCharacters(memberProcessState);
-            this.memberCardType = TextFormatters.RemoveSpecialCharacters(memberCardType);
-            this.guardhouse = TextFormatters.RemoveSpecialCharacters(guardhouse);
-            this.paymentStatus = TextFormatters.RemoveSpecialCharacters(paymentStatus);
-            this.address = TextFormatters.RemoveSpecialCharacters(address);
-            this.up2UName = TextFormatters.RemoveSpecialCharacters(up2UName);
-            this.up2UStaffId = TextFormatters.RemoveSpecialCharacters(up2UStaffId);
-            this.up2UStickerNumber = TextFormatters.RemoveSpecialCharacters(up2UStickerNumber);
-            this.up2UCarType = TextFormatters.RemoveSpecialCharacters(up2UCarType);
-            this.memberGroup = TextFormatters.RemoveSpecialCharacters(memberGroup);
-            this.memberId = TextFormatters.RemoveSpecialCharacters(memberId);
-            this.memberStatus = TextFormatters.RemoveSpecialCharacters(memberStatus);
-            this.memberBirthMonth = TextFormatters.RemoveSpecialCharacters(memberBirthMonth);
-            this.memberParkingCountStart = TextFormatters.RemoveSpecialCharacters(memberParkingCountStart);
-            this.memberParkingCountEnd = TextFormatters.RemoveSpecialCharacters(memberParkingCountEnd);
-            this.parkingGreater = TextFormatters.RemoveSpecialCharacters(parkingGreater);
-            this.parkingLesser = TextFormatters.RemoveSpecialCharacters(parkingLesser);
-            this.parkingBetweenFrom = TextFormatters.RemoveSpecialCharacters(parkingBetweenFrom);
-            this.parkingBetweenTo = TextFormatters.RemoveSpecialCharacters(parkingBetweenTo);
-            this.isRegistrationDateChecked = isRegistrationDateChecked;
-            this.isExpirationDateChecked = isExpirationDateChecked;
-            this.isParkingGreaterChecked = isParkingGreaterChecked;
-            this.isParkingLesserChecked = isParkingLesserChecked;
-            this.isParkingBetweenChecked = isParkingBetweenChecked;
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.startTime = startTime;
-            this.endTime = endTime;
-            this.memberExpirationStartDate = memberExpirationStartDate;
-            this.memberExpirationEndDate = memberExpirationEndDate;
-            this.memberTypeSelectedIndex = memberTypeSelectedIndex;
+            this.selectedReportId = SafeAssign(nameof(selectedReportId), () => selectedReportId);
+            this.paymentChannel = SafeAssign(nameof(paymentChannel), () => TextFormatters.RemoveSpecialCharacters(paymentChannel));
+            this.recordNumber = SafeAssign(nameof(recordNumber), () => TextFormatters.RemoveSpecialCharacters(recordNumber));
+            this.user = SafeAssign(nameof(user), () => TextFormatters.RemoveSpecialCharacters(user));
+            this.carType = SafeAssign(nameof(carType), () => TextFormatters.RemoveSpecialCharacters(carType));
+            this.promotionName = SafeAssign(nameof(promotionName), () => TextFormatters.RemoveSpecialCharacters(promotionName));
+            this.cardId = SafeAssign(nameof(cardId), () => TextFormatters.RemoveSpecialCharacters(cardId));
+            this.nameOnCard = SafeAssign(nameof(nameOnCard), () => TextFormatters.RemoveSpecialCharacters(nameOnCard));
+            this.memberType = SafeAssign(nameof(memberType), () => TextFormatters.RemoveSpecialCharacters(memberType));
+            this.memberGroupMonth = SafeAssign(nameof(memberGroupMonth), () => TextFormatters.RemoveSpecialCharacters(memberGroupMonth));
+            this.memberName = SafeAssign(nameof(memberName), () => TextFormatters.RemoveSpecialCharacters(memberName));
+            this.memberRenewalType = SafeAssign(nameof(memberRenewalType), () => TextFormatters.RemoveSpecialCharacters(memberRenewalType));
+            this.memberProcessState = SafeAssign(nameof(memberProcessState), () => TextFormatters.RemoveSpecialCharacters(memberProcessState));
+            this.memberCardType = SafeAssign(nameof(memberCardType), () => TextFormatters.RemoveSpecialCharacters(memberCardType));
+            this.guardhouse = SafeAssign(nameof(guardhouse), () => TextFormatters.RemoveSpecialCharacters(guardhouse));
+            this.paymentStatus = SafeAssign(nameof(paymentStatus), () => TextFormatters.RemoveSpecialCharacters(paymentStatus));
+            this.address = SafeAssign(nameof(address), () => TextFormatters.RemoveSpecialCharacters(address));
+            this.up2UName = SafeAssign(nameof(up2UName), () => TextFormatters.RemoveSpecialCharacters(up2UName));
+            this.up2UStaffId = SafeAssign(nameof(up2UStaffId), () => TextFormatters.RemoveSpecialCharacters(up2UStaffId));
+            this.up2UStickerNumber = SafeAssign(nameof(up2UStickerNumber), () => TextFormatters.RemoveSpecialCharacters(up2UStickerNumber));
+            this.up2UCarType = SafeAssign(nameof(up2UCarType), () => TextFormatters.RemoveSpecialCharacters(up2UCarType));
+            this.memberGroup = SafeAssign(nameof(memberGroup), () => TextFormatters.RemoveSpecialCharacters(memberGroup));
+            this.memberId = SafeAssign(nameof(memberId), () => TextFormatters.RemoveSpecialCharacters(memberId));
+            this.memberStatus = SafeAssign(nameof(memberStatus), () => TextFormatters.RemoveSpecialCharacters(memberStatus));
+            // this.memberBirthMonth = SafeAssign(nameof(memberBirthMonth), () => TextFormatters.RemoveSpecialCharacters(memberBirthMonth));
 
-            firstDayOfMonth = new DateTime(startDate.Year, startDate.Month, 1);
-            lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-            firstDayOfMonthEnd = new DateTime(endDate.Year, endDate.Month, 1);
-            lastDayOfMonthEnd = firstDayOfMonthEnd.AddMonths(1).AddDays(-1);
+            this.memberParkingCountStart = SafeAssign(nameof(memberParkingCountStart), () => TextFormatters.RemoveSpecialCharacters(memberParkingCountStart));
+            this.memberParkingCountEnd = SafeAssign(nameof(memberParkingCountEnd), () => TextFormatters.RemoveSpecialCharacters(memberParkingCountEnd));
+            this.parkingGreater = SafeAssign(nameof(parkingGreater), () => TextFormatters.RemoveSpecialCharacters(parkingGreater));
+            this.parkingLesser = SafeAssign(nameof(parkingLesser), () => TextFormatters.RemoveSpecialCharacters(parkingLesser));
+            this.parkingBetweenFrom = SafeAssign(nameof(parkingBetweenFrom), () => TextFormatters.RemoveSpecialCharacters(parkingBetweenFrom));
+            this.parkingBetweenTo = SafeAssign(nameof(parkingBetweenTo), () => TextFormatters.RemoveSpecialCharacters(parkingBetweenTo));
 
-            iteration = 0;
+            this.isRegistrationDateChecked = SafeAssign(nameof(isRegistrationDateChecked), () => isRegistrationDateChecked);
+            this.isExpirationDateChecked = SafeAssign(nameof(isExpirationDateChecked), () => isExpirationDateChecked);
+            this.isParkingGreaterChecked = SafeAssign(nameof(isParkingGreaterChecked), () => isParkingGreaterChecked);
+            this.isParkingLesserChecked = SafeAssign(nameof(isParkingLesserChecked), () => isParkingLesserChecked);
+            this.isParkingBetweenChecked = SafeAssign(nameof(isParkingBetweenChecked), () => isParkingBetweenChecked);
 
-            this.carTypeId = AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == carType).Key;
-            this.promotionId = AppGlobalVariables.PromotionNamesById.First(kvp => kvp.Value == promotionName).Key;
-            this.userId = AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
-            this.memberTypeId = AppGlobalVariables.MemberGroupsToId[memberType];
-            this.memberGroupMonthId = AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth];
-            this.startDateTimeText = startDate.Year.ToString() + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString();
-            this.endDateTimeText = endDate.Year.ToString() + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString();
+            this.startDate = SafeAssign(nameof(startDate), () => startDate);
+            this.endDate = SafeAssign(nameof(endDate), () => endDate);
+            this.startTime = SafeAssign(nameof(startTime), () => startTime);
+            this.endTime = SafeAssign(nameof(endTime), () => endTime);
 
-            this.isLegitPromotionRange = CheckAndUpdatePromotionRange(promotionRangeFrom, promotionRangeTo);
+            this.memberExpirationStartDate = SafeAssign(nameof(memberExpirationStartDate), () => memberExpirationStartDate);
+            this.memberExpirationEndDate = SafeAssign(nameof(memberExpirationEndDate), () => memberExpirationEndDate);
+            this.memberTypeSelectedIndex = SafeAssign(nameof(memberTypeSelectedIndex), () => memberTypeSelectedIndex);
+
+            firstDayOfMonth = SafeAssign(nameof(firstDayOfMonth),
+                () => new DateTime(startDate.Year, startDate.Month, 1));
+
+            lastDayOfMonth = SafeAssign(nameof(lastDayOfMonth),
+                () => firstDayOfMonth.AddMonths(1).AddDays(-1));
+
+            firstDayOfMonthEnd = SafeAssign(nameof(firstDayOfMonthEnd),
+                () => new DateTime(endDate.Year, endDate.Month, 1));
+
+            lastDayOfMonthEnd = SafeAssign(nameof(lastDayOfMonthEnd),
+                () => firstDayOfMonthEnd.AddMonths(1).AddDays(-1));
+
+            iteration = SafeAssign(nameof(iteration), () => 0);
+
+            this.carTypeId = SafeAssign(nameof(carTypeId),
+                () => AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == carType).Key);
+
+            this.promotionId = SafeAssign(nameof(promotionId),
+                () => AppGlobalVariables.PromotionNamesById.First(kvp => kvp.Value == promotionName).Key);
+
+            this.userId = SafeAssign(nameof(userId),
+                () => AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key);
+
+            this.memberTypeId = SafeAssign(nameof(memberTypeId),
+                () => AppGlobalVariables.MemberGroupsToId[memberType]);
+
+            this.memberGroupMonthId = SafeAssign(nameof(memberGroupMonthId),
+                () => AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth]);
+
+            this.startDateTimeText = SafeAssign(nameof(startDateTimeText),
+                () => startDate.Year + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString());
+
+            this.endDateTimeText = SafeAssign(nameof(endDateTimeText),
+                () => endDate.Year + "-" + endDate.ToString("MM'-'dd") + " " + endTime.ToLongTimeString());
+
+            this.isLegitPromotionRange = SafeAssign(nameof(isLegitPromotionRange),
+                () => CheckAndUpdatePromotionRange(promotionRangeFrom, promotionRangeTo));
 
             string reportQuery = GenerateReportQuery();
 
@@ -465,12 +489,12 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " left join cardmf t1 on member.cardid = t1.name";
                     sql += " left join cardpx t2 on member.cardid = t2.name";
 
-                    sql += " WHERE member.license LIKE '%" + licensePlate + "%' "; 
+                    sql += " WHERE member.license LIKE '%" + licensePlate + "%' ";
 
                     if (nameOnCard.Length > 0)
                         sql += " and (t1.name_on_card like '%" + nameOnCard + "%' or t2.name_on_card like '%" + nameOnCard + "%')";
 
-                    if (Configs.Reports.ReportSearchMemberGroup) 
+                    if (Configs.Reports.ReportSearchMemberGroup)
                     {
                         if (memberType != Constants.TextBased.All)
                             sql += " and member.memgroupid = " + AppGlobalVariables.MemberGroupsToId[memberType];
@@ -689,7 +713,7 @@ namespace ParkingManagementReport.Utilities.Database
                     "FROM recordout \r\n" +
                     "JOIN recordin ON recordin.no = recordout.no \r\n" +
                     $"WHERE recordout.dateout BETWEEN '{startDateTimeText}' AND '{endDateTimeText}' \r\n";
-                    if(user != Constants.TextBased.All)
+                    if (user != Constants.TextBased.All)
                     {
                         sql += $"and recordout.userout = {userId} ";
                     }
@@ -698,7 +722,7 @@ namespace ParkingManagementReport.Utilities.Database
                     if (Configs.UseMemberType)
                     {
                         sql = "SELECT t1.no AS ลำดับ, case when t1.cartype = 200 then ifnull((SELECT typename FROM cartype WHERE typeid = t3.typeid), 'Member') else "; //mac 2022/03/02
-                        if (Configs.Reports.ReportCartypeFree15Min) 
+                        if (Configs.Reports.ReportCartypeFree15Min)
                         {
                             sql += " case when TIMESTAMPDIFF(second,t1.datein,t2.dateout) <= 959 then 'ฟรี 15 นาที' else ";
                             sql += " (SELECT typename FROM cartype WHERE typeid = t1.cartype) end end AS ประเภท ";
@@ -1808,12 +1832,12 @@ namespace ParkingManagementReport.Utilities.Database
                             sql += " , cast((t2.price) as DECIMAL(10,2)) ";
                         }
                         sql += " , t2.printno ";
-                        if (Configs.UseReceiptFor1Out) 
+                        if (Configs.UseReceiptFor1Out)
                         {
                             sql += ", t2.receipt ";
                         }
                         sql += " from recordin t1 left join recordout t2 on t1.no = t2.no";
-                        if (Configs.UsePrintQRCode) 
+                        if (Configs.UsePrintQRCode)
                             sql += " left join (select max(t1.no), t1.no_recordin, t1.mch_order_no, t1.channel, t1.status, t2.ksher_order_no from ksherpay_post t1 left join ksherpay_get t2 on t1.mch_order_no = t2.mch_order_no where t1.status = 'Y' group by t1.no_recordin) t3 on t2.no = t3.no_recordin";
                         sql += " where date(t2.dateout) = '" + day.Year.ToString() + "-" + day.ToString("MM'-'dd") + "'";
                         sql += " and t2.no is not null";
@@ -1831,7 +1855,7 @@ namespace ParkingManagementReport.Utilities.Database
                         }
                         sql += " and t2.printno > 0";
                         sql += " and t2.status = 'N'";
-                        if (Configs.UseReceiptFor1Out) 
+                        if (Configs.UseReceiptFor1Out)
                             sql += " order by t2.receipt, t2.printno";
                         else
                             sql += " order by t2.printno";
@@ -1840,11 +1864,11 @@ namespace ParkingManagementReport.Utilities.Database
                         if (dTable != null && dTable.Rows.Count > 0)
                         {
                             dateSlip49 = dTable.Rows[0].ItemArray[0].ToString();
-                            if (Configs.UseReceiptFor1Out) 
+                            if (Configs.UseReceiptFor1Out)
                             {
                                 if (Configs.OutReceiptNameMonth)
                                 {
-                                    slip49 = dTable.Rows[0]["receipt"].ToString() + startDate.ToString("yyMM") + Convert.ToInt32(dTable.Rows[0].ItemArray[4]).ToString("00000#"); 
+                                    slip49 = dTable.Rows[0]["receipt"].ToString() + startDate.ToString("yyMM") + Convert.ToInt32(dTable.Rows[0].ItemArray[4]).ToString("00000#");
                                 }
                                 else
                                     slip49 = dTable.Rows[0]["receipt"].ToString() + startDate.ToString("yy") + Convert.ToInt32(dTable.Rows[0].ItemArray[4]).ToString("00000#");
@@ -1853,7 +1877,7 @@ namespace ParkingManagementReport.Utilities.Database
                             {
                                 if (Configs.OutReceiptNameMonth)
                                 {
-                                    slip49 = fontSlip49 + Convert.ToInt32(dTable.Rows[0].ItemArray[4]).ToString("00000#"); 
+                                    slip49 = fontSlip49 + Convert.ToInt32(dTable.Rows[0].ItemArray[4]).ToString("00000#");
                                 }
                                 else
                                     slip49 = fontSlip49 + Convert.ToInt32(dTable.Rows[0].ItemArray[4]).ToString("00000#");
@@ -1887,7 +1911,7 @@ namespace ParkingManagementReport.Utilities.Database
                                         {
                                             if (Configs.OutReceiptNameMonth) //Mac 2016/04/27
                                             {
-                                                slip49 += "-" + fontSlip49 + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("00000#"); 
+                                                slip49 += "-" + fontSlip49 + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("00000#");
                                             }
                                             else
                                                 slip49 += "-" + fontSlip49 + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("00000#");
@@ -1898,7 +1922,7 @@ namespace ParkingManagementReport.Utilities.Database
                                 {
                                     if (tmpSlip > 0)
                                     {
-                                        if (Configs.UseReceiptFor1Out) 
+                                        if (Configs.UseReceiptFor1Out)
                                         {
                                             if (Configs.OutReceiptNameMonth)
                                             {
@@ -8410,8 +8434,8 @@ namespace ParkingManagementReport.Utilities.Database
 
             if (Configs.IsVillage)
                 sql += "recordin.address as 'ที่อยู่',";
-            
-            if (Configs.UseNameOnCard) 
+
+            if (Configs.UseNameOnCard)
                 sql += "recordin.license as ทะเบียน, IFNULL(t1.name_on_card,t2.name_on_card) as 'ชื่อบัตร',";
             else
                 sql += "case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end as ทะเบียน,";
@@ -8423,11 +8447,11 @@ namespace ParkingManagementReport.Utilities.Database
                 sql += ",(select name from member_up2u where cardid = recordin.id) as ชื่อสมาชิก,(select date_format(dateexpire, '%d/%m/%Y %H:%i:%s') from member_up2u where cardid = recordin.id) as วันหมดอายุ,"; //Mac 2018/12/21
             }
             sql += "date_format(recordin.datein, '%d/%m/%Y %H:%i:%s') as เวลาเข้า"; //Mac 2018/12/21
-           
+
             sql += ",(select name from user where id = recordin.userin) as เจ้าหน้าที่ขาเข้า";
             if (Configs.UseAsciiMember) //Mac 2016/07/11
                 sql += ",cast(CONCAT(CHAR(left(recordin.id,2)),mid(recordin.id,3)) as char) as รหัสบัตร";
-           
+
             sql += " FROM recordin recordin left join recordout ON recordin.no = recordout.no";
 
             if (Configs.UseMemberLicensePlate) //Mac 2018/09/03
@@ -8560,10 +8584,10 @@ namespace ParkingManagementReport.Utilities.Database
                 sql += " recordout.printno";
 
             sql += " ,recordout.no, ";
-            if (Configs.UseMemberType) 
+            if (Configs.UseMemberType)
             {
                 sql += " case when recordin.cartype = 200 then ifnull(member.typeid, '200') else ";
-                if (Configs.Reports.ReportCartypeFree15Min) 
+                if (Configs.Reports.ReportCartypeFree15Min)
                 {
                     sql += " case when TIMESTAMPDIFF(second,recordin.datein,recordout.dateout) <= 959 then 'ฟรี 15 นาที' else ";
                     sql += " recordin.cartype end end as cartype";
@@ -8609,7 +8633,7 @@ namespace ParkingManagementReport.Utilities.Database
                 sql += " ,recordin.memo";
             }
 
-            if (Configs.UseReceiptFor1Out) 
+            if (Configs.UseReceiptFor1Out)
                 sql += ", recordout.receipt";
 
             if (Configs.UseMemberLicensePlate)
@@ -8621,7 +8645,7 @@ namespace ParkingManagementReport.Utilities.Database
             {
                 sql = "SELECT DISTINCT ";
 
-                if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) 
+                if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0)
                     sql += " recordout.printno_second";
                 else
                     sql += " recordout.printno";
@@ -8629,8 +8653,8 @@ namespace ParkingManagementReport.Utilities.Database
                 sql += " ,recordout.no,";
                 if (Configs.UseMemberType)
                 {
-                    sql += " case when recordin.cartype = 200 then ifnull(member.typeid, '200') else "; 
-                    if (Configs.Reports.ReportCartypeFree15Min) 
+                    sql += " case when recordin.cartype = 200 then ifnull(member.typeid, '200') else ";
+                    if (Configs.Reports.ReportCartypeFree15Min)
                     {
                         sql += " case when TIMESTAMPDIFF(second,recordin.datein,recordout.dateout) <= 959 then 'ฟรี 15 นาที' else ";
                         sql += " recordin.cartype end end";
@@ -8664,7 +8688,7 @@ namespace ParkingManagementReport.Utilities.Database
                 }
                 else
                     sql += " ,recordout.proid";
-               
+
                 if (Configs.UseReceiptFor1Out)
                     sql += ", recordout.receipt";
 
@@ -8682,7 +8706,7 @@ namespace ParkingManagementReport.Utilities.Database
 
             sql += " WHERE recordout.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
 
-            if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) 
+            if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0)
                 sql += " and recordin.notshow = 'N'";
 
             if (nameOnCard.Trim().Length > 0)
@@ -8693,7 +8717,7 @@ namespace ParkingManagementReport.Utilities.Database
                 sql += " AND recordout.userout =" + userId;
             }
 
-            if (Configs.Reports.ReportSearchMemGroup) 
+            if (Configs.Reports.ReportSearchMemGroup)
             {
                 if (memberType != Constants.TextBased.All)
                     sql += " and member.memgroupid = " + AppGlobalVariables.MemberGroupsToId[memberType];
@@ -8702,7 +8726,7 @@ namespace ParkingManagementReport.Utilities.Database
                 if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
                     sql += " AND recordin.cartype =" + carTypeId;
             }
-            else if (Configs.Member2Cartype) 
+            else if (Configs.Member2Cartype)
             {
                 if (memberType == Constants.TextBased.All)
                 {
@@ -8742,7 +8766,7 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " AND recordin.cartype != 200";
                 if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
                     sql += " AND recordin.cartype =" + carTypeId;
-                if (carType == Constants.TextBased.All) 
+                if (carType == Constants.TextBased.All)
                 {
                     if (memberType != Constants.TextBased.All)
                         sql += " AND member.typeid =" + memberTypeId;
@@ -8760,9 +8784,9 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " AND recordout.proid =" + promotionId;
                 }
             }
-            if (Configs.UseTax && (!Configs.UseAsiaTriqPrice)) 
+            if (Configs.UseTax && (!Configs.UseAsiaTriqPrice))
             {
-                if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) 
+                if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0)
                     sql += " AND recordout.printno_second > 0";
                 else
                     sql += " AND recordout.printno > 0";
@@ -8771,7 +8795,7 @@ namespace ParkingManagementReport.Utilities.Database
                 sql += " AND recordin.license LIKE '%" + licensePlate + "%'";
             if (cardId != "")
                 sql += " AND recordin.id = " + cardId;
-            if (guardhouse != String.Empty) 
+            if (guardhouse != String.Empty)
                 sql += " and recordout.guardhouse = '" + guardhouse + "' ";
 
             if (Configs.UseSettingNewMember && memberGroupMonth != Constants.TextBased.All)
@@ -8878,6 +8902,37 @@ namespace ParkingManagementReport.Utilities.Database
             bw.Close();
             fs.Close();
             MessageBox.Show("Text file Save Complete!");
+        }
+
+        private T SafeAssign<T>(string fieldName, Func<T> action)
+        {
+            try
+            {
+                return action();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"❌ Error at: {fieldName}\n\n{ex.Message}",
+                    "Assignment Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+
+                if (typeof(T) == typeof(string))
+                    return (T)(object)string.Empty;
+
+                if (typeof(T) == typeof(int))
+                    return (T)(object)1;
+
+                if (typeof(T) == typeof(bool))
+                    return (T)(object)false;
+
+                if (typeof(T) == typeof(DateTime))
+                    return (T)(object)default(DateTime);
+
+                return default;
+            }
         }
         #endregion
     }

@@ -426,7 +426,6 @@ namespace ParkingManagementReport
             AddToDictionaryIfNotExists(AppGlobalVariables.MemberGroupsToId, Constants.TextBased.All, 0);
             AddToComboBoxIfNotExists(MemberTypeComboBox, Constants.TextBased.All);
 
-
             if (Configs.Reports.ReportSearchMemberGroup)
             {
                 label17.Text = "กลุ่มสมาชิก";
@@ -2805,7 +2804,6 @@ namespace ParkingManagementReport
                 EndDatePicker.Value,
                 StartTimePicker.Value,
                 EndTimePicker.Value,
-
                 MemberExpirationStartDatePicker.Value,
                 MemberExpirationEndDatePicker.Value
             );
