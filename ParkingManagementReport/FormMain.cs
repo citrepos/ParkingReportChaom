@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using CrystalDecisions.CrystalReports.Engine;
@@ -630,7 +631,7 @@ namespace ParkingManagementReport
             }
         }
         #endregion
-
+            
 
         #region HARDWARES
         private void InitializeHardwares()
@@ -657,6 +658,11 @@ namespace ParkingManagementReport
 
             ResultGridView.Location = new Point(dgvX, dgvY);
             ResultGridView.Height = dgvH;
+            pictureBox1.Image = null;
+            pictureBox2.Image = null;
+            pictureBox3.Image = null;
+            pictureBox4.Image = null;
+            pictureBox5.Image = null;
             groupBox3.Visible = false;
             string reportName = ReportComboBox.Text;
             string startTime = StartTimePicker.Value.ToLongTimeString();
@@ -2194,6 +2200,37 @@ namespace ParkingManagementReport
             CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
         }
 
+        private void LoadImageToPictureBox(
+            DataGridView grid,
+            int rowIndex,
+            string columnName,
+            PictureBox targetPictureBox)
+                {
+                    try
+                    {
+                            targetPictureBox.Image?.Dispose();
+                            targetPictureBox.Image = null;
+
+                        var cellValue = grid.Rows[rowIndex].Cells[columnName].Value;
+
+                        if (cellValue != null && cellValue is byte[] bytes && bytes.Length > 0)
+                        {
+                            using (var ms = new MemoryStream(bytes))
+                            {
+                                targetPictureBox.Image = Image.FromStream(ms);
+                            }
+                        }
+                        else
+                        {
+                            targetPictureBox.Image = null;
+                        }
+                    }
+                    catch
+                    {
+                        targetPictureBox.Image = null;
+                    }
+                }
+
         private void ResultGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             pictureBox1.Image = null;
@@ -2204,7 +2241,8 @@ namespace ParkingManagementReport
 
             if (e.RowIndex < ResultGridView.Rows.Count && e.RowIndex > -1)
             {
-                if (selectedReportId == 2 || selectedReportId == 92) //Mac 2020/10/26
+
+                if (selectedReportId == 2 || selectedReportId == 92 ) //Mac 2020/10/26
                 {
                     int iVil = 0;
                     if (Configs.IsVillage && Configs.Use2Camera) iVil = 5;
@@ -2214,9 +2252,15 @@ namespace ParkingManagementReport
                     string pic1, pic2, pic3, pic4, pic5;
                     if (Configs.Use2Camera)
                     {
+                        // รูปคนขับเข้า
+                        LoadImageToPictureBox(ResultGridView, e.RowIndex, "iv", pictureBox1);
 
-                        pic1 = ResultGridView.Rows[e.RowIndex].Cells["iv"].Value.ToString();
-                        pic2 = ResultGridView.Rows[e.RowIndex].Cells["il"].Value.ToString();
+                        // รูปทะเบียนเข้า
+                        LoadImageToPictureBox(ResultGridView, e.RowIndex, "il", pictureBox2);
+
+
+                        //pic1 = ResultGridView.Rows[e.RowIndex].Cells["iv"].Value.ToString();
+                        //pic2 = ResultGridView.Rows[e.RowIndex].Cells["il"].Value.ToString();
 
                         /* Old
                         pic1 = ResultGridView.Rows[e.RowIndex].Cells[11 + iVil].Value.ToString();
@@ -2247,88 +2291,54 @@ namespace ParkingManagementReport
                             pictureBox5.Image = im;
                         }
                     }
-                    if (pic1.Trim() != "" || pic1 != null)
-                    {
-                        Image im = GetCopyImage(pic1);
-                        pictureBox1.Image = im;
-                    }
 
-                    if (pic2.Trim() != "" || pic2 != null)
-                    {
-                        Image im = GetCopyImage(pic2);
-                        pictureBox2.Image = im;
-                    }
+                    //if (pic1.Trim() != "" || pic1 != null)
+                    //{
+                    //    Image im = GetCopyImage(pic1);
+                    //    pictureBox1.Image = im;
+                    //}
+
+                    //if (pic2.Trim() != "" || pic2 != null)
+                    //{
+                    //    Image im = GetCopyImage(pic2);
+                    //    pictureBox2.Image = im;
+                    //}
                     if (Configs.Use2Camera)
                     {
                         /* Old
                         pic3 = ResultGridView.Rows[e.RowIndex].Cells[12 + iVil].Value.ToString();
                         pic4 = ResultGridView.Rows[e.RowIndex].Cells[10 + iVil].Value.ToString();
                         */
+                        // รูปคนขับออก
+                        LoadImageToPictureBox(ResultGridView, e.RowIndex, "ov", pictureBox3);
 
-                        pic3 = ResultGridView.Rows[e.RowIndex].Cells["ov"].Value.ToString();
-                        pic4 = ResultGridView.Rows[e.RowIndex].Cells["ol"].Value.ToString();
+                        // รูปทะเบียนออก
+                        LoadImageToPictureBox(ResultGridView, e.RowIndex, "ol", pictureBox4);
 
-                        if (pic3.Trim() != "" || pic3 != null)
-                        {
-                            Image im = GetCopyImage(pic3);
-                            pictureBox3.Image = im;
-                        }
+                        //pic3 = ResultGridView.Rows[e.RowIndex].Cells["ov"].Value.ToString();
+                        //pic4 = ResultGridView.Rows[e.RowIndex].Cells["ol"].Value.ToString();
 
-                        if (pic4.Trim() != "" || pic4 != null)
-                        {
-                            Image im = GetCopyImage(pic4);
-                            pictureBox4.Image = im;
-                        }
+                        //if (pic3.Trim() != "" || pic3 != null)
+                        //{
+                        //    Image im = GetCopyImage(pic3);
+                        //    pictureBox3.Image = im;
+                        //}
+
+                        //if (pic4.Trim() != "" || pic4 != null)
+                        //{
+                        //    Image im = GetCopyImage(pic4);
+                        //    pictureBox4.Image = im;
+                        //}
                     }
 
                 }
-                if (selectedReportId == 8)
+                if (selectedReportId == 8 || selectedReportId == 32 || selectedReportId == 94) //Mac 2020/10/26
                 {
-                    string pic1, pic2;
-                    pic1 = ResultGridView.Rows[e.RowIndex].Cells[4].Value.ToString();
-                    if (pic1.Trim() != "" || pic1 != null)
-                    {
-                        Image im = GetCopyImage(pic1);
-                        pictureBox1.Image = im;
-                    }
-                    try
-                    {
-                        pic2 = ResultGridView.Rows[e.RowIndex].Cells[5].Value.ToString();
-                        if (pic2.Trim() != "" || pic2 != null)
-                        {
-                            Image im = GetCopyImage(pic2);
-                            pictureBox2.Image = im;
-                        }
-                    }
-                    catch (Exception) { }
+                    // รูปคนขับเข้า
+                    LoadImageToPictureBox(ResultGridView, e.RowIndex, "picdiv", pictureBox1);
 
-                }
-                if (selectedReportId == 32 || selectedReportId == 94) //Mac 2020/10/26
-                {
-                    string pic1, pic2;
-                    if (Configs.NoPanelUp2U == "2") //Mac 2017/03/13
-                        pic1 = ResultGridView.Rows[e.RowIndex].Cells[9].Value.ToString();
-                    else
-                        pic1 = ResultGridView.Rows[e.RowIndex].Cells[5].Value.ToString();
-                    if (pic1.Trim() != "" || pic1 != null)
-                    {
-                        Image im = GetCopyImage(pic1);
-                        pictureBox1.Image = im;
-                    }
-                    try
-                    {
-                        if (Configs.NoPanelUp2U == "2") //Mac 2017/03/13
-                            pic2 = ResultGridView.Rows[e.RowIndex].Cells[10].Value.ToString();
-                        else
-                            pic2 = ResultGridView.Rows[e.RowIndex].Cells[6].Value.ToString();
-                        if (pic2.Trim() != "" || pic2 != null)
-                        {
-                            Image im = GetCopyImage(pic2);
-                            pictureBox2.Image = im;
-                        }
-                    }
-                    catch (Exception) { }
-
+                    // รูปทะเบียนเข้า
+                    LoadImageToPictureBox(ResultGridView, e.RowIndex, "piclic", pictureBox2);
                 }
             }
         }
@@ -3281,6 +3291,10 @@ namespace ParkingManagementReport
             }
             else
             {
+                pictureBox3.Visible = true;
+                pictureBox4.Visible = true;
+                lbPic3.Visible = true;
+                lbPic4.Visible = true;
                 lbPic1.Text = "รูปคนขับขาเข้า";
                 lbPic2.Text = "รูปทะเบียนขาเข้า";
                 lbPic3.Text = "รูปคนขับขาออก";

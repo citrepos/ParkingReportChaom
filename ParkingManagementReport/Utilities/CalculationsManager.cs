@@ -552,9 +552,12 @@ namespace ParkingManagementReport.Utilities
                         ResultGridView[4, rowCount].Value = col4.ToString("#,###,##0");
                         ResultGridView[5, rowCount].Value = totalPrice.ToString("#,###,##0");
                         break;
-
-                    case 4:
                     case 5:
+                    case 32:
+                        ResultGridView.Rows[rowCount].Cells[3].Value = "รวม";
+                        ResultGridView.Rows[rowCount].Cells[4].Value = $"{rowCount:#,###,##0} คัน";
+                        break;
+                    case 4:
                     case 6:
                         for (int i = 0; i < rowCount; i++)
                         {
@@ -598,7 +601,6 @@ namespace ParkingManagementReport.Utilities
                         break;
                         
                     case 31:
-                    case 32:
                     case 34:
 
 
