@@ -7413,7 +7413,7 @@ namespace ParkingManagementReport
             if (selectedReportId == 16 || selectedReportId == 17 || selectedReportId == 18 || selectedReportId == 19 || selectedReportId == 20 || selectedReportId == 21)
                 FunckingShit(selectedReportId, sql);
 
-            else if (selectedReportId == 29 || selectedReportId == 102)
+            else if (selectedReportId == 29 || selectedReportId == 102 || selectedReportId == 1 || selectedReportId == 165)
             {
                 ReportHeaderLabel.Text = AppGlobalVariables.Printings.Header = SetReportHeader().Replace("รายงานรายงาน", "รายงาน");
                 FucntionImpact(selectedReportId, sql);
@@ -9126,6 +9126,7 @@ namespace ParkingManagementReport
             switch (selectedReportId)
             {
                 case 29:
+                    { 
                     DataTable dtSource = DbController.LoadData(sql);
 
                     DataTable result = new DataTable();
@@ -9176,9 +9177,10 @@ namespace ParkingManagementReport
                     PrimaryCrystalReportViewer.ReportSource = rpt;
                     PrimaryCrystalReportViewer.Refresh();
 
-                    return;
-
+                    break;
+                    }
                 case 102:
+                    { 
                     DataTable dt = DbController.LoadData(sql); // column "estamp_data"
 
                     // สร้าง list สำหรับเก็บข้อมูล
@@ -9278,11 +9280,90 @@ namespace ParkingManagementReport
 
                     PdfExportButton.Enabled = true;
                     ExcelExportButton.Enabled = true;
-                    return;
+                    break;
+                    }
+                case 165:
+                    { 
+                    DataTable dtSource = DbController.LoadData(sql);
+                    DataTable result = new DataTable();
+                    result.Columns.Add("no", typeof(string));
+                    result.Columns.Add("ประเภท", typeof(string));
+                    result.Columns.Add("name", typeof(string));
+                    result.Columns.Add("license", typeof(string));
+                    result.Columns.Add("datein", typeof(DateTime));
+                    result.Columns.Add("dateout", typeof(DateTime));
+                    result.Columns.Add("ค่าบริการ", typeof(decimal));   // ✅ เพิ่มคอลัมน์ใหม่
+
+                    foreach (DataRow row in dtSource.Rows)
+                    {
+                        if (row["datein"] == DBNull.Value || row["dateout"] == DBNull.Value)
+                            continue;
+
+                        DateTime dateIn = Convert.ToDateTime(row["datein"]);
+                        DateTime dateOut = Convert.ToDateTime(row["dateout"]);
+
+                        decimal fee = CalculateParkingFee(dateIn, dateOut);
+
+                        result.Rows.Add(
+                            row["no"].ToString(),
+                            row["ประเภท"].ToString(),
+                            row["name"].ToString(),
+                            row["license"].ToString(),
+                            dateIn,
+                            dateOut,
+                            fee
+                        );
+                    }
+
+                    ResultGridView.DataSource = result;
+                    ResultGridView.Refresh();
+
+                    //rpt.Load(path + "\\CrystalReports\\Report165_Impact.rpt");
+                    //rpt.SetDataSource(result);
+                    //rpt.DataDefinition.FormulaFields["ReportName"].Text = "'" + ReportHeaderLabel.Text + "'";
+
+                    //PrimaryCrystalReportViewer.ReportSource = rpt;
+                    //PrimaryCrystalReportViewer.Refresh();
+
+                    break;
+                    }
+            }
+        }
+        private decimal CalculateParkingFee(DateTime dateIn, DateTime dateOut)
+        {
+            decimal totalFee = 0;
+
+            TimeSpan chargeStart = new TimeSpan(8, 30, 0);  // 08:30
+            TimeSpan chargeEnd = new TimeSpan(16, 30, 0); // 16:30
+            decimal ratePerHour = 10;
+            decimal maxPerDay = 80;
+            DateTime currentDate = dateIn.Date;
+
+            while (currentDate <= dateOut.Date)
+            {
+                DateTime periodStart = currentDate + chargeStart;
+                DateTime periodEnd = currentDate + chargeEnd;
+
+                DateTime actualStart = (dateIn > periodStart) ? dateIn : periodStart;
+                DateTime actualEnd = (dateOut < periodEnd) ? dateOut : periodEnd;
+
+                if (actualEnd > actualStart)
+                {
+                    double hours = (actualEnd - actualStart).TotalHours;
+                    decimal dayFee = (decimal)Math.Ceiling(hours) * ratePerHour;
+
+                    if (dayFee > maxPerDay)
+                        dayFee = maxPerDay;
+
+                    totalFee += dayFee;
+                }
+
+                currentDate = currentDate.AddDays(1);
             }
 
-
+            return totalFee;
         }
+
 
         private void FunckingShit(int selectedReportId, string sql)
         {

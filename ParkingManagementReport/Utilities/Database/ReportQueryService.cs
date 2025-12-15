@@ -9531,6 +9531,20 @@ WHERE 1 = 1 ";
                         sql += $"WHERE dateout BETWEEN '{startDate.ToString("yyyy-MM-dd")}' AND '{endDate.AddDays(1).ToString("yyyy-MM-dd")}'";
                     }    
                     break;
+                case 165:
+                    sql = "";
+                    sql += "SELECT recordin.no, ";
+                    sql += "CASE WHEN recordin.cartype=200 ";
+                    sql += "THEN IFNULL((SELECT typename FROM cartype WHERE typeid=member.typeid),'Member') ";
+                    sql += "ELSE (SELECT typename FROM cartype WHERE typeid=recordin.cartype) END AS 'ประเภท', ";
+                    sql += "member.name, recordin.license, recordin.datein, recordout.dateout ";
+                    sql += "FROM recordin ";
+                    sql += "LEFT JOIN recordout ON recordin.no = recordout.no ";
+                    sql += "LEFT JOIN member ON member.license LIKE CONCAT('%',recordin.license,'%') ";
+                    sql += $"WHERE recordin.cartype = 200 ";
+                    sql += $"AND recordin.datein BETWEEN '{startDate:yyyy-MM-dd} 0:00:00' AND '{endDate:yyyy-MM-dd} 23:59:59' ";
+                    sql += "ORDER BY recordin.no";
+                    break;
             }
 
             return sql;
