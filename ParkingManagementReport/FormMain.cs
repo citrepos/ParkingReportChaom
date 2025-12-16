@@ -631,7 +631,7 @@ namespace ParkingManagementReport
             }
         }
         #endregion
-            
+
 
         #region HARDWARES
         private void InitializeHardwares()
@@ -761,10 +761,7 @@ namespace ParkingManagementReport
                     case 8:
                         DataTable dataTable8 = DataTableManager.การยกไม้แสดงรูปภาพ(dataFromQuery);
 
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report8_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report8.rpt");
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report8.rpt");
 
                         TrySetReportData(reportDocument, dataTable8);
 
@@ -785,7 +782,7 @@ namespace ParkingManagementReport
                     case 10:
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report10.rpt");
 
-                        DataTable dataTable10 = ConvertTableType(dataFromQuery);
+                        DataTable dataTable10 = DataTableManager.ConvertedTableType(dataFromQuery);
                         DataTableManager.CaseReportTax(ResultGridView);
 
                         #region cal sum 10
@@ -828,7 +825,7 @@ namespace ParkingManagementReport
                     //รายได้แบบแยกกลุ่ม
                     case 12:
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report12.rpt");
-                        ResultGridView.DataSource = ConvertTableType(dataFromQuery);
+                        ResultGridView.DataSource = DataTableManager.ConvertedTableType(dataFromQuery);
                         CaseReportGroupPrice();
 
                         #region cal sum 12
@@ -873,7 +870,7 @@ namespace ParkingManagementReport
                     case 16:
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report16.rpt");
 
-                        ResultGridView.DataSource = ConvertTableType(dataFromQuery);
+                        ResultGridView.DataSource = DataTableManager.ConvertedTableType(dataFromQuery);
 
                         ResultGridView.Columns[0].HeaderText = ResultGridView.Columns[0].Name = "E-Stamp";
                         ResultGridView.Columns[1].HeaderText = ResultGridView.Columns[1].Name = "ยอดรวม";
@@ -912,7 +909,7 @@ namespace ParkingManagementReport
 
                         TrySetReportData(reportDocument, dataFromQuery);
 
-                        ResultGridView[0, intNo].Value = "E-Stamp ทั้งหมด";
+                        ResultGridView[0, intNo].Value = "รวม E-Stamp ทั้งหมด";
                         ResultGridView[1, intNo].Value = sumPromotion.ToString();
                         break;
 
@@ -1035,8 +1032,8 @@ namespace ParkingManagementReport
 
                         ResultGridView.DataSource = dataTable30;
 
-                        SetWidthIfExists("วันที่", 180);
-                        SetWidthIfExists("ไม่ได้ประทับตรา", 120);
+                        SetColumnWidthIfExists("วันที่", 180);
+                        SetColumnWidthIfExists("ไม่ได้ประทับตรา", 120);
 
                         CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
                         return;
@@ -1053,8 +1050,13 @@ namespace ParkingManagementReport
                         startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
                         dfn = EndDatePicker.Value;
                         endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-                        reportDocument.DataDefinition.FormulaFields["head"].Text =
+
+                        try
+                        {
+                            reportDocument.DataDefinition.FormulaFields["Header"].Text =
                             $"'รายงาน{reportName} จากวันที่ {startDateTime} เวลา {startTime} ถึงวันที่ {endDateTime} เวลา {endTime}'";
+                        } catch { } 
+                        
                         break;
 
                     case 32:
@@ -1279,7 +1281,7 @@ namespace ParkingManagementReport
                     case 48:
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report48.rpt");
                         TrySetReportData(reportDocument, dataFromQuery);
-                        SetWidthIfExists("บริษัท", 450);
+                        SetColumnWidthIfExists("บริษัท", 450);
 
 
                         PrimaryTabControl.SelectTab(1);
@@ -2205,31 +2207,31 @@ namespace ParkingManagementReport
             int rowIndex,
             string columnName,
             PictureBox targetPictureBox)
+        {
+            try
+            {
+                targetPictureBox.Image?.Dispose();
+                targetPictureBox.Image = null;
+
+                var cellValue = grid.Rows[rowIndex].Cells[columnName].Value;
+
+                if (cellValue != null && cellValue is byte[] bytes && bytes.Length > 0)
                 {
-                    try
+                    using (var ms = new MemoryStream(bytes))
                     {
-                            targetPictureBox.Image?.Dispose();
-                            targetPictureBox.Image = null;
-
-                        var cellValue = grid.Rows[rowIndex].Cells[columnName].Value;
-
-                        if (cellValue != null && cellValue is byte[] bytes && bytes.Length > 0)
-                        {
-                            using (var ms = new MemoryStream(bytes))
-                            {
-                                targetPictureBox.Image = Image.FromStream(ms);
-                            }
-                        }
-                        else
-                        {
-                            targetPictureBox.Image = null;
-                        }
-                    }
-                    catch
-                    {
-                        targetPictureBox.Image = null;
+                        targetPictureBox.Image = Image.FromStream(ms);
                     }
                 }
+                else
+                {
+                    targetPictureBox.Image = null;
+                }
+            }
+            catch
+            {
+                targetPictureBox.Image = null;
+            }
+        }
 
         private void ResultGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -2242,7 +2244,7 @@ namespace ParkingManagementReport
             if (e.RowIndex < ResultGridView.Rows.Count && e.RowIndex > -1)
             {
 
-                if (selectedReportId == 2 || selectedReportId == 92 ) //Mac 2020/10/26
+                if (selectedReportId == 2 || selectedReportId == 92) //Mac 2020/10/26
                 {
                     int iVil = 0;
                     if (Configs.IsVillage && Configs.Use2Camera) iVil = 5;
@@ -2278,7 +2280,7 @@ namespace ParkingManagementReport
                         pic5 = ResultGridView.Rows[e.RowIndex].Cells[13 + iVil].Value.ToString();
                         if (pic5.Trim() != "" || pic5 != null)
                         {
-                            Image im = GetCopyImage(pic5);
+                            Image im = ImagesManager.GetCopyImage(pic5);
                             pictureBox5.Image = im;
                         }
                     }
@@ -2287,22 +2289,11 @@ namespace ParkingManagementReport
                         pic5 = ResultGridView.Rows[e.RowIndex].Cells[13 + iVil].Value.ToString();
                         if (pic5.Trim() != "" || pic5 != null)
                         {
-                            Image im = GetCopyImage(pic5);
+                            Image im = ImagesManager.GetCopyImage(pic5);
                             pictureBox5.Image = im;
                         }
                     }
 
-                    //if (pic1.Trim() != "" || pic1 != null)
-                    //{
-                    //    Image im = GetCopyImage(pic1);
-                    //    pictureBox1.Image = im;
-                    //}
-
-                    //if (pic2.Trim() != "" || pic2 != null)
-                    //{
-                    //    Image im = GetCopyImage(pic2);
-                    //    pictureBox2.Image = im;
-                    //}
                     if (Configs.Use2Camera)
                     {
                         /* Old
@@ -2852,11 +2843,6 @@ namespace ParkingManagementReport
             }
         }
 
-        private static DataTable GetReport19()
-        {
-            throw new NotImplementedException();
-        }
-
         private void AddCarTypes(DataTable dt)
         {
             foreach (DataRow row in dt.Rows)
@@ -2906,7 +2892,7 @@ namespace ParkingManagementReport
             }
 
             #region Set data to ResultGridView and PrimaryCrystalReportViewer
-            ResultGridView.DataSource = ConvertTableType(dataTable);
+            ResultGridView.DataSource = DataTableManager.ConvertedTableType(dataTable);
 
             DataTableManager.CaseReportPricePromotion(selectedReportId, ResultGridView);
 
@@ -3228,29 +3214,31 @@ namespace ParkingManagementReport
 
         private void SetReportColumnsWidth()
         {
-            SetWidthIfExists("ยอดรวม", 100);
-            SetWidthIfExists("เวลาเข้า", 120);
-            SetWidthIfExists("เวลาออก", 120);
-            SetWidthIfExists("วัน-เวลาเข้า", 120);
-            SetWidthIfExists("วัน-เวลาออก", 120);
-            SetWidthIfExists("เวลายก", 120);
-            SetWidthIfExists("วันที่สมัคร", 120);
-            SetWidthIfExists("วันที่หมดอายุ", 120);
-            SetWidthIfExists("วันหมดอายุ", 120);
-            SetWidthIfExists("วันที่ชำระ", 120);
-            SetWidthIfExists("เจ้าหน้าที่ขาออก", 140);
-            SetWidthIfExists("E-Stamp", 160);
-            SetWidthIfExists("โปรโมชัน", 160);
-            SetWidthIfExists("โปรโมชั่น", 160);
-            SetWidthIfExists("บันทึก", 260);
-            SetWidthIfExists("ชื่อ - นามสกุล", 260);
-            SetWidthIfExists("เลขที่ใบกำกับภาษี", 150);
-            SetWidthIfExists("E-Stamp", 350);
-            SetWidthIfExists("เจ้าหน้าที่", 250);
+            SetColumnWidthIfExists("ยอดรวม", 100);
+            SetColumnWidthIfExists("เวลาเข้า", 120);
+            SetColumnWidthIfExists("เวลาออก", 120);
+            SetColumnWidthIfExists("เวลาเคลียร์บัตร", 120);
+            SetColumnWidthIfExists("วัน-เวลาเข้า", 120);
+            SetColumnWidthIfExists("วัน-เวลาออก", 120);
+            SetColumnWidthIfExists("เวลายก", 120);
+            SetColumnWidthIfExists("วันที่สมัคร", 120);
+            SetColumnWidthIfExists("วันที่หมดอายุ", 120);
+            SetColumnWidthIfExists("วันหมดอายุ", 120);
+            SetColumnWidthIfExists("วันที่ชำระ", 120);
+            SetColumnWidthIfExists("เจ้าหน้าที่ขาออก", 140);
+            SetColumnWidthIfExists("E-Stamp", 160);
+            SetColumnWidthIfExists("โปรโมชัน", 160);
+            SetColumnWidthIfExists("โปรโมชั่น", 160);
+            SetColumnWidthIfExists("บันทึก", 260);
+            SetColumnWidthIfExists("เหตุผล", 260);
+            SetColumnWidthIfExists("ชื่อ - นามสกุล", 260);
+            SetColumnWidthIfExists("เลขที่ใบกำกับภาษี", 150);
+            SetColumnWidthIfExists("E-Stamp", 350);
+            SetColumnWidthIfExists("เจ้าหน้าที่", 250);
             /* switch (selectedReportId) { case: } */
         }
 
-        private void SetWidthIfExists(string columnName, int width)
+        private void SetColumnWidthIfExists(string columnName, int width)
         {
             if (ResultGridView.Columns.Contains(columnName))
             {
@@ -3329,22 +3317,6 @@ namespace ParkingManagementReport
                 ResultGridView.Rows.Clear();
                 ResultGridView.Columns.Clear();
             }
-        }
-
-        private static DataTable ConvertTableType(DataTable dt)
-        {
-            DataTable newDt = dt.Clone();
-            foreach (DataColumn dc in newDt.Columns)
-            {
-                dc.DataType = Type.GetType("System.String");
-            }
-            foreach (DataRow dr in dt.Rows)
-            {
-                newDt.ImportRow(dr);
-            }
-            dt.Dispose();
-
-            return newDt;
         }
 
         private void CaseReportGroupPrice()
@@ -3467,20 +3439,6 @@ namespace ParkingManagementReport
             ResultGridView[9, intNo].Value = intSumBV.ToString("#0.00");
             ResultGridView[10, intNo].Value = intSumV.ToString("#0.00");
             ResultGridView[11, intNo].Value = intSumR.ToString("#0.00");
-        }
-
-        private Image GetCopyImage(string path)
-        {
-            try
-            {
-                using (Image im = Image.FromFile(path))
-                {
-                    Bitmap bm = new Bitmap(im);
-                    return bm;
-                }
-            }
-            catch (Exception) { }
-            return null;
         }
 
         private void รายงานรายวันจำนวนตราประทับรถยนต์แบบแจกแจง(ReportDocument reportDocument, string sql)

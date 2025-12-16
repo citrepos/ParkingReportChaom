@@ -13,6 +13,7 @@ namespace ParkingManagementReport.Utilities
     {
         private static string strFileL;
         private static string strFileD;
+
         public static void SaveImage(Bitmap bmpPD, Bitmap bmpPL, string strDir, string strMode)
         {
             DateTime now = DateTime.Now;
@@ -39,6 +40,20 @@ namespace ParkingManagementReport.Utilities
             strFileL += "\\" + strMode + "L" + strFile;
 
             bmpPL.Save(strFileL);
+        }
+
+        public static Image GetCopyImage(string path)
+        {
+            try
+            {
+                using (Image im = Image.FromFile(path))
+                {
+                    Bitmap bm = new Bitmap(im);
+                    return bm;
+                }
+            }
+            catch (Exception) { }
+            return null;
         }
     }
 }

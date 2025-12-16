@@ -118,6 +118,7 @@ namespace ParkingManagementReport.Utilities.Database
             this.recordNumber = SafeAssign(nameof(recordNumber), () => TextFormatters.RemoveSpecialCharacters(recordNumber));
             this.user = SafeAssign(nameof(user), () => TextFormatters.RemoveSpecialCharacters(user));
             this.carType = SafeAssign(nameof(carType), () => TextFormatters.RemoveSpecialCharacters(carType));
+            this.licensePlate = SafeAssign(nameof(licensePlate), () => TextFormatters.RemoveSpecialCharacters(licensePlate));
             this.promotionName = SafeAssign(nameof(promotionName), () => TextFormatters.RemoveSpecialCharacters(promotionName));
             this.cardId = SafeAssign(nameof(cardId), () => TextFormatters.RemoveSpecialCharacters(cardId));
             this.nameOnCard = SafeAssign(nameof(nameOnCard), () => TextFormatters.RemoveSpecialCharacters(nameOnCard));
@@ -2002,6 +2003,7 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " ,ROUND(total, 2) as รวมเงิน";
                     sql += " from vatmonth";
                     break;
+                
                 case 51:
                     sql = "SELECT id as ลำดับ, ";
                     sql += "u.name AS เจ้าหน้าที่, ";

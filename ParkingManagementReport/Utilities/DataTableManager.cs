@@ -83,6 +83,22 @@ namespace ParkingManagementReport.Utilities
             }
         }
 
+        public static DataTable ConvertedTableType(DataTable dt)
+        {
+            DataTable newDt = dt.Clone();
+            foreach (DataColumn dc in newDt.Columns)
+            {
+                dc.DataType = Type.GetType("System.String");
+            }
+            foreach (DataRow dr in dt.Rows)
+            {
+                newDt.ImportRow(dr);
+            }
+            dt.Dispose();
+
+            return newDt;
+        }
+
         #region Reports
         public static DataTable สถิติการเข้าออก(DataTable dt, DataGridView dataGridView)
         {
