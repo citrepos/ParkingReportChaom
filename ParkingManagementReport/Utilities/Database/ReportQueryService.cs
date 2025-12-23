@@ -188,9 +188,11 @@ namespace ParkingManagementReport.Utilities.Database
             this.memberTypeId = SafeAssign(nameof(memberTypeId),
                 () => AppGlobalVariables.MemberGroupsToId[memberType]);
 
-            this.memberGroupMonthId = SafeAssign(nameof(memberGroupMonthId),
-                () => AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth]);
 
+            this.memberGroupMonthId = Configs.UseMemberGroupPriceMonth
+                ? SafeAssign(nameof(memberGroupMonthId), () => AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth])
+                : 0;
+            
             this.startDateTimeText = SafeAssign(nameof(startDateTimeText),
                 () => startDate.Year + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString());
 
@@ -301,7 +303,6 @@ namespace ParkingManagementReport.Utilities.Database
                     {
                         sql += " AND liftrecord.userid =" + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
                     }
-                    //if (licensePlate != "")
                     if (!String.IsNullOrEmpty(licensePlate))
                         sql += " AND liftrecord.license LIKE '%" + licensePlate + "%'";
 
@@ -8223,6 +8224,7 @@ namespace ParkingManagementReport.Utilities.Database
             }
 
             sqlBuilder.AppendLine("    recordout.price,");
+            sqlBuilder.AppendLine("    recordout.discount,");
 
             sqlBuilder.AppendLine("recordin.cartype");
             sqlBuilder.AppendLine("FROM recordin");
@@ -8272,14 +8274,14 @@ namespace ParkingManagementReport.Utilities.Database
             }
             else
             {
-                sqlBuilder.AppendLine("recordout.proid > 0 AND recordout.proid < 9999");
+                sqlBuilder.AppendLine("recordout.proid > 0 AND recordout.proid < 99999");
             }
 
             sqlBuilder.AppendLine("ORDER BY recordout.proid, recordout.dateout");
 
             return sqlBuilder.ToString();
         }
-
+        
         private string AllCarIn()
         {
             var sql = new StringBuilder();
@@ -8915,17 +8917,17 @@ namespace ParkingManagementReport.Utilities.Database
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"❌ Error at: {fieldName}\n\n{ex.Message}",
-                    "Assignment Error",
+                    $"! Failed to assign value: {fieldName}\n\n{ex.Message}",
+                    "Assignment Failed",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
+                    MessageBoxIcon.Warning
                 );
 
                 if (typeof(T) == typeof(string))
                     return (T)(object)string.Empty;
 
                 if (typeof(T) == typeof(int))
-                    return (T)(object)1;
+                    return (T)(object)0;
 
                 if (typeof(T) == typeof(bool))
                     return (T)(object)false;

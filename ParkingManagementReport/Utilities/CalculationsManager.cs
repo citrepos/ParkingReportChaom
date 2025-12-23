@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Web.Services.Description;
 using System.Windows.Forms;
 using ParkingManagementReport.Common;
 using ParkingManagementReport.Utilities.Database;
@@ -124,8 +125,10 @@ namespace ParkingManagementReport.Utilities
                         break;
                 }
             }
+
             if (intPrice < 0)
                 intPrice = 0;
+
             return intPrice;
         }
 
@@ -782,5 +785,76 @@ namespace ParkingManagementReport.Utilities
 
             return hourlyRate;
         }
+
+        internal static int CalculateRealParkingPrice(int parkingTimeMinute, long promotionId = 0)
+        {
+            long carTypeFromPromotion = GetCarTypeFromPromotionId(promotionId);
+
+            string sqlQuery = $"select * from pricerate{carTypeFromPromotion} order by no";
+
+            DataTable priceRateTable = DbController.LoadData(sqlQuery);
+            if (priceRateTable == null || priceRateTable.Rows.Count <= 0) return 0;
+
+            AppGlobalVariables.IntTime2 = new int[priceRateTable.Rows.Count];
+            AppGlobalVariables.IntPriceMin2 = new int[priceRateTable.Rows.Count];
+            AppGlobalVariables.IntPriceHour2 = new int[priceRateTable.Rows.Count];
+            AppGlobalVariables.IntHourRound2 = new int[priceRateTable.Rows.Count];
+            AppGlobalVariables.IntExpense2 = new int[priceRateTable.Rows.Count];
+            AppGlobalVariables.IntOver2 = new int[priceRateTable.Rows.Count];
+
+            for (int y = 0; y < priceRateTable.Rows.Count; y++)
+            {
+                if (y == 0)
+                {
+                    AppGlobalVariables.IntTime2[y] = Convert.ToInt32(priceRateTable.Rows[y]["time"].ToString());
+                }
+                else
+                {
+                    AppGlobalVariables.IntTime2[y] = Convert.ToInt32(priceRateTable.Rows[y]["time"].ToString()) - Convert.ToInt32(priceRateTable.Rows[y - 1]["time"].ToString());
+                }
+                AppGlobalVariables.IntPriceMin2[y] = Convert.ToInt32(priceRateTable.Rows[y]["minute"].ToString()); // นาทีละ(บาท)
+                AppGlobalVariables.IntPriceHour2[y] = Convert.ToInt32(priceRateTable.Rows[y]["hour"].ToString());  // ชั่วโมงละ(บาท)
+                AppGlobalVariables.IntHourRound2[y] = Convert.ToInt32(priceRateTable.Rows[y]["round"].ToString()); // ปัดเศษ(นาที)
+                AppGlobalVariables.IntExpense2[y] = Convert.ToInt32(priceRateTable.Rows[y]["expense"].ToString()); // เหมาจ่าย(บาท)
+                AppGlobalVariables.IntOver2[y] = Convert.ToInt32(priceRateTable.Rows[y]["timeover"].ToString());   // จอดเกินกำหนด(บาท)
+            }
+
+            bool notDay = Convert.ToBoolean(DbController.LoadData("SELECT value FROM param WHERE name = 'not_day'").Rows[0]?.ItemArray[0]?.ToString());
+            int parkingPrice = CalPrice2(0, parkingTimeMinute, notDay);
+
+            return parkingPrice;
+        }
+
+       private static int GetCarTypeFromPromotionId(long promotionId)
+        {
+            if (promotionId <= 0)
+                return 0;
+
+            try
+            {
+                string sqlQuery = $"SELECT groupprice FROM promotion WHERE id = {promotionId}";
+
+                DataTable dt = DbController.LoadData(sqlQuery);
+
+                if (dt == null || dt.Rows.Count == 0)
+                    return 0;
+
+                object value = dt.Rows[0]["groupprice"];
+
+                return value != null && int.TryParse(value.ToString(), out int carType)
+                    ? carType
+                    : 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"[GetCarTypeFromPromotionId] => Unable to get groupprice from proid {promotionId}\r\n" +
+                                    $"{ex.GetType()}: {ex.Message}\r\n" +
+                                    $"StackTrace:{ex.StackTrace}");
+
+                return 0;
+            }
+        }
+
+
     }
 }
