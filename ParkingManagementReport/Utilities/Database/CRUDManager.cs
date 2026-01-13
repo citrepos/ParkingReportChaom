@@ -479,9 +479,9 @@ namespace ParkingManagementReport.Utilities.Database
             summarizedDataTable.Columns.Add("ค่าบริการทั้งหมด", typeof(double));
 
             int iter = 1;
-            double sumBeforeVat = 0;
-            double sumVat = 0;
-            double sumTotalCharge = 0;
+            decimal sumBeforeVat = 0;
+            decimal sumVat = 0;
+            decimal sumTotalCharge = 0;
 
             
             Dictionary<int, double> sums = new Dictionary<int, double>();
@@ -500,7 +500,7 @@ namespace ParkingManagementReport.Utilities.Database
             {
                 Console.WriteLine($"tnpt_id: {kvp.Key}, Sum ค่าบริการเรียกเก็บ: {kvp.Value}");
 
-                double currentPrice = kvp.Value;
+                double currentPrice =  kvp.Value;
                 var (beforeVatCharge, vatCharge, totalCharge) = CalculationsManager.CalculateVatFromFullPrice(currentPrice);
                 string wptCode = kvp.Key.ToString();
                 if (!AppGlobalVariables.VendorGroupMonthsById.TryGetValue(kvp.Key, out string companyName))

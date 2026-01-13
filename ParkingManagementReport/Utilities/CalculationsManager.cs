@@ -597,18 +597,22 @@ namespace ParkingManagementReport.Utilities
             return (beforeVatCharge, vatCharge, totalCharge);
         }
 
-        internal static (double beforeVatCharge, double vatCharge, double totalCharge) CalculateVatFromFullPrice(double totalPrice)
+        internal static (decimal beforeVatCharge, decimal vatCharge, decimal totalCharge) CalculateVatFromFullPrice(double totalPrice)
         {
-            double currentTotal = totalPrice;
-            double currentVat = 0.07 * totalPrice;
-            double currentBeforeVat = totalPrice - currentVat;
+            const decimal VatMultiplier = 107m; // 100% + 7% VAT
 
-            double beforeVatCharge = Math.Round(currentBeforeVat, 2);
-            double vatCharge = Math.Round(currentVat, 2);
-            double totalCharge = Math.Round(currentTotal, 2);
+            decimal total = Convert.ToDecimal(totalPrice);
+
+            decimal beforeVat = total * (100m / VatMultiplier);
+            decimal vat = total - beforeVat;
+
+            decimal beforeVatCharge = Math.Round(beforeVat, 2, MidpointRounding.AwayFromZero);
+            decimal vatCharge = Math.Round(vat, 2, MidpointRounding.AwayFromZero);
+            decimal totalCharge = Math.Round(total, 2, MidpointRounding.AwayFromZero);
 
             return (beforeVatCharge, vatCharge, totalCharge);
         }
+
 
         internal static int GetPriceThanapoom(int totalMinute)
         {
