@@ -1658,7 +1658,7 @@ namespace ParkingManagementReport.Utilities.Database
                     else
                     {
                         sql += " , CASE WHEN recordout.status = 'V' THEN 0 ELSE ROUND(recordout.price - ROUND(recordout.price * 7 / 107, 6), 2) END AS ค่าบริการ";
-                        sql += " , CASE WHEN recordout.status = 'V' THEN 0 ELSE ROUND (recordout.price * 7 / 107, 2) END AS VAT";
+                        sql += " , CASE WHEN recordout.status = 'V' THEN 0 ELSE ROUND(recordout.price * 7 / 107, 2) END AS VAT";
                         sql += " , CASE WHEN recordout.status = 'V' THEN 0 ELSE ROUND(recordout.price, 2)END AS จำนวนเงิน";
                     }
 
@@ -1805,7 +1805,7 @@ namespace ParkingManagementReport.Utilities.Database
                     {
                         id49++;
                         sql = "select concat(date_format(t2.dateout,'%d/%m/'), date_format(t2.dateout,'%Y'))";
-                        if (Configs.Reports.ReportPriceSplitLosscard) //Mac 2018/07/05
+                        if (Configs.Reports.ReportPriceSplitLosscard)
                         {
                             sql += " , cast(((t2.price-t2.losscard) - ROUND((t2.price-t2.losscard)*7/107, 6)) as DECIMAL(10,2)) ";
                             sql += " , cast((ROUND((t2.price-t2.losscard)*7/107, 6)) as DECIMAL(10,2)) ";

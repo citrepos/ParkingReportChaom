@@ -1283,7 +1283,6 @@ namespace ParkingManagementReport
                         TrySetReportData(reportDocument, dataFromQuery);
                         SetColumnWidthIfExists("บริษัท", 450);
 
-
                         PrimaryTabControl.SelectTab(1);
                         break;
 
