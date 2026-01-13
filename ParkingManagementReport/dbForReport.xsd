@@ -68,7 +68,7 @@
               <xs:element name="เวลาออก" msprop:Generator_ColumnPropNameInTable="เวลาออกColumn" msprop:Generator_ColumnPropNameInRow="เวลาออก" msprop:Generator_UserColumnName="เวลาออก" msprop:Generator_ColumnVarNameInTable="columnเวลาออก" type="xs:string" minOccurs="0" />
               <xs:element name="รายได้" msprop:Generator_ColumnPropNameInTable="รายได้Column" msprop:Generator_ColumnPropNameInRow="รายได้" msprop:Generator_UserColumnName="รายได้" msprop:Generator_ColumnVarNameInTable="columnรายได้" type="xs:string" minOccurs="0" />
               <xs:element name="ส่วนลด" msprop:Generator_ColumnPropNameInTable="ส่วนลดColumn" msprop:Generator_ColumnPropNameInRow="ส่วนลด" msprop:Generator_UserColumnName="ส่วนลด" msprop:Generator_ColumnVarNameInTable="columnส่วนลด" type="xs:string" minOccurs="0" />
-              <xs:element name="จำนวน" msprop:Generator_UserColumnName="จำนวน" msprop:Generator_ColumnPropNameInTable="จำนวนColumn" msprop:Generator_ColumnPropNameInRow="จำนวน" msprop:Generator_ColumnVarNameInTable="columnจำนวน" type="xs:string" minOccurs="0" />
+              <xs:element name="จำนวน" msprop:Generator_ColumnPropNameInTable="จำนวนColumn" msprop:Generator_ColumnPropNameInRow="จำนวน" msprop:Generator_UserColumnName="จำนวน" msprop:Generator_ColumnVarNameInTable="columnจำนวน" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -1102,7 +1102,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="report163" msprop:Generator_RowEvHandlerName="report163RowChangeEventHandler" msprop:Generator_RowDeletedName="report163RowDeleted" msprop:Generator_RowDeletingName="report163RowDeleting" msprop:Generator_RowEvArgName="report163RowChangeEvent" msprop:Generator_TablePropName="report163" msprop:Generator_RowChangedName="report163RowChanged" msprop:Generator_UserTableName="report163" msprop:Generator_RowChangingName="report163RowChanging" msprop:Generator_RowClassName="report163Row" msprop:Generator_TableClassName="report163DataTable" msprop:Generator_TableVarName="tablereport163">
+        <xs:element name="report164" msprop:Generator_RowEvHandlerName="report164RowChangeEventHandler" msprop:Generator_RowDeletedName="report164RowDeleted" msprop:Generator_RowDeletingName="report164RowDeleting" msprop:Generator_RowEvArgName="report164RowChangeEvent" msprop:Generator_TablePropName="report164" msprop:Generator_RowChangedName="report164RowChanged" msprop:Generator_UserTableName="report164" msprop:Generator_RowChangingName="report164RowChanging" msprop:Generator_RowClassName="report164Row" msprop:Generator_TableClassName="report164DataTable" msprop:Generator_TableVarName="tablereport164">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="ลำดับ" msprop:Generator_ColumnPropNameInTable="ลำดับColumn" msprop:Generator_ColumnPropNameInRow="ลำดับ" msprop:Generator_UserColumnName="ลำดับ" msprop:Generator_ColumnVarNameInTable="columnลำดับ" type="xs:string" minOccurs="0" />
@@ -1116,6 +1116,10 @@
               <xs:element name="ช่องทางการชำระเงิน" msprop:Generator_ColumnPropNameInTable="ช่องทางการชำระเงินColumn" msprop:Generator_ColumnPropNameInRow="ช่องทางการชำระเงิน" msprop:Generator_UserColumnName="ช่องทางการชำระเงิน" msprop:Generator_ColumnVarNameInTable="columnช่องทางการชำระเงิน" type="xs:string" minOccurs="0" />
               <xs:element name="ksher_x0020_order_x0020_no" msprop:Generator_ColumnPropNameInTable="ksher_order_noColumn" msprop:Generator_ColumnPropNameInRow="ksher_order_no" msprop:Generator_UserColumnName="ksher order no" msprop:Generator_ColumnVarNameInTable="columnksher_order_no" type="xs:string" minOccurs="0" />
               <xs:element name="mch_x0020_order_x0020_no" msprop:Generator_ColumnPropNameInTable="mch_order_noColumn" msprop:Generator_ColumnPropNameInRow="mch_order_no" msprop:Generator_UserColumnName="mch order no" msprop:Generator_ColumnVarNameInTable="columnmch_order_no" type="xs:string" minOccurs="0" />
+              <xs:element name="rabbit_x0020_ID" msprop:Generator_ColumnPropNameInRow="rabbit_ID" msprop:Generator_ColumnPropNameInTable="rabbit_IDColumn" msprop:Generator_ColumnVarNameInTable="columnrabbit_ID" msprop:Generator_UserColumnName="rabbit ID" type="xs:string" minOccurs="0" />
+              <xs:element name="Beam_x0020_ID" msprop:Generator_ColumnPropNameInRow="Beam_ID" msprop:Generator_ColumnPropNameInTable="Beam_IDColumn" msprop:Generator_ColumnVarNameInTable="columnBeam_ID" msprop:Generator_UserColumnName="Beam ID" type="xs:string" minOccurs="0" />
+              <xs:element name="QR_x0020_Code" msprop:Generator_ColumnPropNameInRow="QR_Code" msprop:Generator_ColumnPropNameInTable="QR_CodeColumn" msprop:Generator_ColumnVarNameInTable="columnQR_Code" msprop:Generator_UserColumnName="QR Code" type="xs:string" minOccurs="0" />
+              <xs:element name="SCB_x0020_ID" msprop:Generator_ColumnPropNameInRow="SCB_ID" msprop:Generator_ColumnPropNameInTable="SCB_IDColumn" msprop:Generator_ColumnVarNameInTable="columnSCB_ID" msprop:Generator_UserColumnName="SCB ID" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -1240,14 +1244,14 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="report51" msprop:Generator_RowEvHandlerName="report51RowChangeEventHandler" msprop:Generator_RowDeletedName="report51RowDeleted" msprop:Generator_RowDeletingName="report51RowDeleting" msprop:Generator_RowEvArgName="report51RowChangeEvent" msprop:Generator_TablePropName="report51" msprop:Generator_RowChangedName="report51RowChanged" msprop:Generator_RowChangingName="report51RowChanging" msprop:Generator_TableClassName="report51DataTable" msprop:Generator_RowClassName="report51Row" msprop:Generator_TableVarName="tablereport51" msprop:Generator_UserTableName="report51">
+        <xs:element name="report51" msprop:Generator_RowClassName="report51Row" msprop:Generator_RowEvHandlerName="report51RowChangeEventHandler" msprop:Generator_RowDeletedName="report51RowDeleted" msprop:Generator_RowDeletingName="report51RowDeleting" msprop:Generator_RowEvArgName="report51RowChangeEvent" msprop:Generator_TablePropName="report51" msprop:Generator_RowChangedName="report51RowChanged" msprop:Generator_UserTableName="report51" msprop:Generator_RowChangingName="report51RowChanging" msprop:Generator_TableClassName="report51DataTable" msprop:Generator_TableVarName="tablereport51">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="เจ้าหน้าที่" msprop:Generator_ColumnPropNameInRow="เจ้าหน้าที่" msprop:Generator_ColumnPropNameInTable="เจ้าหน้าที่Column" msprop:Generator_ColumnVarNameInTable="columnเจ้าหน้าที่" msprop:Generator_UserColumnName="เจ้าหน้าที่" type="xs:string" minOccurs="0" />
-              <xs:element name="ชื่อผู้ใช้" msprop:Generator_ColumnPropNameInRow="ชื่อผู้ใช้" msprop:Generator_ColumnPropNameInTable="ชื่อผู้ใช้Column" msprop:Generator_ColumnVarNameInTable="columnชื่อผู้ใช้" msprop:Generator_UserColumnName="ชื่อผู้ใช้" type="xs:string" minOccurs="0" />
-              <xs:element name="โปรโมชั่น" msprop:Generator_ColumnPropNameInRow="โปรโมชั่น" msprop:Generator_ColumnPropNameInTable="โปรโมชั่นColumn" msprop:Generator_ColumnVarNameInTable="columnโปรโมชั่น" msprop:Generator_UserColumnName="โปรโมชั่น" type="xs:string" minOccurs="0" />
-              <xs:element name="จำนวน" msprop:Generator_ColumnPropNameInRow="จำนวน" msprop:Generator_ColumnPropNameInTable="จำนวนColumn" msprop:Generator_ColumnVarNameInTable="columnจำนวน" msprop:Generator_UserColumnName="จำนวน" type="xs:string" minOccurs="0" />
-              <xs:element name="ลำดับ" msprop:Generator_ColumnPropNameInRow="ลำดับ" msprop:Generator_ColumnPropNameInTable="ลำดับColumn" msprop:Generator_ColumnVarNameInTable="columnลำดับ" msprop:Generator_UserColumnName="ลำดับ" type="xs:string" minOccurs="0" />
+              <xs:element name="เจ้าหน้าที่" msprop:Generator_UserColumnName="เจ้าหน้าที่" msprop:Generator_ColumnPropNameInTable="เจ้าหน้าที่Column" msprop:Generator_ColumnPropNameInRow="เจ้าหน้าที่" msprop:Generator_ColumnVarNameInTable="columnเจ้าหน้าที่" type="xs:string" minOccurs="0" />
+              <xs:element name="ชื่อผู้ใช้" msprop:Generator_UserColumnName="ชื่อผู้ใช้" msprop:Generator_ColumnPropNameInTable="ชื่อผู้ใช้Column" msprop:Generator_ColumnPropNameInRow="ชื่อผู้ใช้" msprop:Generator_ColumnVarNameInTable="columnชื่อผู้ใช้" type="xs:string" minOccurs="0" />
+              <xs:element name="โปรโมชั่น" msprop:Generator_UserColumnName="โปรโมชั่น" msprop:Generator_ColumnPropNameInTable="โปรโมชั่นColumn" msprop:Generator_ColumnPropNameInRow="โปรโมชั่น" msprop:Generator_ColumnVarNameInTable="columnโปรโมชั่น" type="xs:string" minOccurs="0" />
+              <xs:element name="จำนวน" msprop:Generator_UserColumnName="จำนวน" msprop:Generator_ColumnPropNameInTable="จำนวนColumn" msprop:Generator_ColumnPropNameInRow="จำนวน" msprop:Generator_ColumnVarNameInTable="columnจำนวน" type="xs:string" minOccurs="0" />
+              <xs:element name="ลำดับ" msprop:Generator_UserColumnName="ลำดับ" msprop:Generator_ColumnPropNameInTable="ลำดับColumn" msprop:Generator_ColumnPropNameInRow="ลำดับ" msprop:Generator_ColumnVarNameInTable="columnลำดับ" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

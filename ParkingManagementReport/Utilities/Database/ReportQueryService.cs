@@ -192,7 +192,7 @@ namespace ParkingManagementReport.Utilities.Database
             this.memberGroupMonthId = Configs.UseMemberGroupPriceMonth
                 ? SafeAssign(nameof(memberGroupMonthId), () => AppGlobalVariables.MemberGroupMonthsToId[memberGroupMonth])
                 : 0;
-            
+
             this.startDateTimeText = SafeAssign(nameof(startDateTimeText),
                 () => startDate.Year + "-" + startDate.ToString("MM'-'dd") + " " + startTime.ToLongTimeString());
 
@@ -969,14 +969,9 @@ namespace ParkingManagementReport.Utilities.Database
                     break;
 
                 case 33:
-                    string fontSlip32 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip32 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName)
-                            fontSlip32 = "IV";
-                    }
+                    string fontSlip32 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
 
                     if (Configs.UseReceiptFor1Out)
                     {
@@ -1621,14 +1616,9 @@ namespace ParkingManagementReport.Utilities.Database
                     break;
 
                 case 49:
-                    string fontSlip48 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip48 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName) //Mac 2017/09/11
-                            fontSlip48 = "IV";
-                    }
+                    string fontSlip48 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
 
                     sql = "SELECT DATE_FORMAT(recordout.dateout,'%d/%m/%Y') AS วันที่";
 
@@ -1692,7 +1682,7 @@ namespace ParkingManagementReport.Utilities.Database
                             if (Configs.UsePaymentKsher)
                                 sql += " AND t3.channel = 'promptpay'";
                             else if (Configs.UsePaymentBeam)
-                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                                sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
                             else if (Configs.UsePaymentRabbit)
                                 sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
                         }
@@ -1705,7 +1695,7 @@ namespace ParkingManagementReport.Utilities.Database
                             if (Configs.UsePaymentKsher)
                                 sql += " AND t3.channel is null AND recordout.pay_type = 'C'";
                             else if (Configs.UsePaymentBeam)
-                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                                sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                             else if (Configs.UsePaymentRabbit)
                                 sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                         }
@@ -1714,7 +1704,7 @@ namespace ParkingManagementReport.Utilities.Database
                             if (Configs.UsePaymentKsher)
                                 sql += " AND t3.channel is null AND recordout.pay_type = 'EDC'";
                             else if (Configs.UsePaymentBeam)
-                                sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                                sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
                             else if (Configs.UsePaymentRabbit)
                                 sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
                         }
@@ -1726,7 +1716,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel = 'promptpay'";
                         else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                            sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
                         else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
                     }
@@ -1739,7 +1729,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel is null AND recordout.pay_type = 'C'";
                         else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                            sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                         else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                     }
@@ -1748,7 +1738,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel is null AND recordout.pay_type = 'EDC'";
                         else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                            sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
                         else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
 
@@ -1795,24 +1785,18 @@ namespace ParkingManagementReport.Utilities.Database
                     DbController.LoadData(sql);
 
                     DataTable dTable;
-                    string dateSlip49 = "";
-                    string slip49 = "";
-                    string fontSlip49 = "";
                     double beforeVat49 = 0;
                     double vat49 = 0;
                     double total49 = 0;
                     int tmpSlip = 0;
                     int id49 = 0;
+                    string dateSlip49 = "";
+                    string slip49 = "";
+                    string fontSlip49 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
 
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip49 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName) //Mac 2017/09/11
-                            fontSlip49 = "IV";
-                    }
-
-                    if (Configs.OutReceiptNameMonth) //Mac 2016/04/27
+                    if (Configs.OutReceiptNameMonth)
                         fontSlip49 += startDate.ToString("yyMM");
                     else
                         fontSlip49 += startDate.ToString("yy");
@@ -2004,7 +1988,7 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " ,ROUND(total, 2) as รวมเงิน";
                     sql += " from vatmonth";
                     break;
-                
+
                 case 51:
                     sql = "SELECT id as ลำดับ, ";
                     sql += "u.name AS เจ้าหน้าที่, ";
@@ -2022,14 +2006,9 @@ namespace ParkingManagementReport.Utilities.Database
                     break;
                 case 52:
                     AppGlobalVariables.ConditionText = "";
-                    string fontSlip51 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip51 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName) //Mac 2017/09/11
-                            fontSlip51 = "IV";
-                    }
+                    string fontSlip51 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
 
                     sql = "select (select name from user where id = t1.userout) as 'เจ้าหน้าที่ขาออก'";
                     if (Configs.UseReceiptFor1Out) //Mac 2018/11/14
@@ -2219,14 +2198,9 @@ namespace ParkingManagementReport.Utilities.Database
                     break;
                 case 56:
                     AppGlobalVariables.ConditionText = "";
-                    string fontSlip55 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip55 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName) //Mac 2017/09/11
-                            fontSlip55 = "IV";
-                    }
+                    string fontSlip55 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
 
                     sql = "select t2.license as 'ทะเบียน', cast(t2.id as char) as 'หมายเลขบัตร'";
                     sql += ", date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วันเวลาเข้า', t2.guardhouse as 'ประตู'";
@@ -2742,14 +2716,9 @@ namespace ParkingManagementReport.Utilities.Database
                 case 67:
                     AppGlobalVariables.ConditionText = "";
                     AppGlobalVariables.ConditionText = "ตั้งแต่วันที่ " + startDate.ToString("d MMMM ") + (startDate.Year + 543) + " เวลา  " + startTime.ToLongTimeString() + " น. ถึง วันที่ " + endDate.ToString("d MMMM ") + (endDate.Year + 543) + " เวลา  " + endTime.ToLongTimeString() + " น.";
-                    string fontSlip66 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip66 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName) //Mac 2017/09/11
-                            fontSlip66 = "IV";
-                    }
+                    string fontSlip66 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
 
                     sql = "select CAST(t1.no AS char) as 'Time Slip No.', t2.posid as 'รหัสเครื่อง', date_format(t1.datein,'%d/%m/%Y') as 'วันที่'";
                     if (Configs.UseReceiptFor1Out) //Mac 2018/11/14
@@ -3065,14 +3034,10 @@ namespace ParkingManagementReport.Utilities.Database
                 case 69:
                     AppGlobalVariables.ConditionText = "";
                     AppGlobalVariables.ConditionText = "ตั้งแต่วันที่ " + startDate.ToString("d MMMM yyyy") + " เวลา  " + startTime.ToLongTimeString() + " น. ถึง วันที่ " + endDate.ToString("d MMMM yyyy") + " เวลา  " + endTime.ToLongTimeString() + " น.";
-                    string fontSlip68 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip68 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName) //Mac 2017/09/11
-                            fontSlip68 = "IV";
-                    }
+                    
+                    string fontSlip68 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
 
                     sql = "select CAST(t1.no AS char) as 'Time Slip No.', date_format(t1.datein,'%d/%m/%Y') as 'วันที่'";
                     sql += ", t1.license as 'ทะเบียนรถ', date_format(t1.datein,'%d/%m/%Y %H:%i:%s') as 'เวลาเข้า'";
@@ -3173,15 +3138,10 @@ namespace ParkingManagementReport.Utilities.Database
                 case 71:
                     AppGlobalVariables.ConditionText = "";
                     AppGlobalVariables.ConditionText = "ตั้งแต่วันที่ : " + startDate.ToString("d MMMM ") + (startDate.Year + 543) + " เวลา  " + startTime.ToLongTimeString() + " น. ถึง " + endDate.ToString("d MMMM ") + (endDate.Year + 543) + " เวลา  " + endTime.ToLongTimeString() + " น.";
-                    //strCondition = "ตั้งแต่วันที่ : ";
-                    string fontSlip70 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip70 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName) //Mac 2017/09/11
-                            fontSlip70 = "IV";
-                    }
+
+                    string fontSlip70 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
 
                     if (Configs.UseReceiptFor1Out) //Mac 2018/11/19
                     {
@@ -3303,14 +3263,10 @@ namespace ParkingManagementReport.Utilities.Database
                     AppGlobalVariables.ConditionText = "ตั้งแต่วันที่ : 1 " + startDate.ToString("MMMM ") + (startDate.Year + 543) + " ถึง " + lastDayOfMonth.ToString("dd") + startDate.ToString(" MMMM ") + (endDate.Year + 543);
 
                     AppGlobalVariables.ConditionText = "ตั้งแต่วันที่ : " + startDate.ToString("d MMMM ") + (startDate.Year + 543) + " เวลา  " + startTime.ToLongTimeString() + " น. ถึง " + endDate.ToString("d MMMM ") + (endDate.Year + 543) + " เวลา  " + endTime.ToLongTimeString() + " น.";
-                    string fontSlip72 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip72 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName) //Mac 2017/09/11
-                            fontSlip72 = "IV";
-                    }
+                    
+                    string fontSlip72 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
 
                     if (Configs.UseReceiptFor1Out)
                     {
@@ -3557,20 +3513,16 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += " order by aa";
                     break;
                 case 76:
-                    string voidSlip76 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        voidSlip76 = AppGlobalVariables.Printings.ReceiptNameVoidPay;
+                    string voidSlip76 = (!string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName))
+                        ? AppGlobalVariables.Printings.ReceiptNameVoidPay
+                        : "";
 
                     sql = "select concat('" + voidSlip76 + "', concat(date_format(t1.dateout,'%y') ,lpad(t1.printno,6,'0'))) as 'เลขที่ใบเสร็จ/ใบกำกับภาษี'";
 
-                    string fontSlip75 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip75 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName) //Mac 2017/09/11
-                            fontSlip75 = "IV";
-                    }
+                    string fontSlip75 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
+
                     sql += " , case when t2.cartype = 200 then t3.typeid ";
                     sql += " else case when TIMESTAMPDIFF(second,t2.datein,t1.dateout) <= 959 then 'ฟรี 15 นาที' else (select typename from cartype where typeid = t2.cartype) end end as 'ประเภท'";
                     sql += " , t2.license as ทะเบียน, concat(date_format(t2.datein,'%d/%m/'), date_format(t2.datein,'%Y') + 543,date_format(t2.datein,' %H:%i:%s')) as เวลาเข้า";
@@ -7765,14 +7717,14 @@ namespace ParkingManagementReport.Utilities.Database
                     break;
 
                 case 164: // การเข้าออกของรถยนต์แสดงช่องทางการชำระเงิน
-                    string fontSlip163 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip163 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName)
-                            fontSlip163 = "IV";
-                    }
+                    string fontSlip163 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
+
+                    /* FOR TEST
+                     Configs.UsePaymentBeam = true;
+                     Configs.UsePaymentKsher = false;
+                     Configs.UsePaymentRabbit = false; */
 
                     sql = "select cast(t2.no as char) as 'หมายเลขบัตร', t2.license as 'ทะเบียนรถ', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(t1.dateout, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก',\n";
                     if (Configs.UseReceiptFor1Out)
@@ -7801,8 +7753,8 @@ namespace ParkingManagementReport.Utilities.Database
                     }
                     else if (Configs.UsePaymentBeam)
                     {
-                        sql += "CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END AS 'ช่องทางการชำระเงิน',\n";
-                        sql += "t3.qr as 'QR', t3.beam_id as 'Beam ID'\n";
+                        sql += "CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END AS 'ช่องทางการชำระเงิน',\n";
+                        sql += "t3.qr as 'QR Code', t3.beam_id as 'Beam ID'\n";
                         sql += "from recordout t1 left join recordin t2 on t1.no = t2.no ";
                         sql += "left join (select max(t1.no), t1.no_recordin, t1.beam_id, t1.status, t2.qr\n";
                         sql += "from beam_post t1 left join beam_get t2 on t1.beam_id = t2.beam_id where t1.status = 'Y' group by t1.no_recordin) t3 on t1.no = t3.no_recordin\n";
@@ -7810,7 +7762,7 @@ namespace ParkingManagementReport.Utilities.Database
                     else if (Configs.UsePaymentRabbit)
                     {
                         sql += "CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END AS 'ช่องทางการชำระเงิน',\n";
-                        sql += "t3.qr as 'QR', t3.rabbit_id as 'rabbit ID'\n";
+                        sql += "t3.qr as 'QR Code', t3.rabbit_id as 'rabbit ID'\n";
                         sql += "from recordout t1 left join recordin t2 on t1.no = t2.no ";
                         sql += "left join (select max(t1.no), t1.no_recordin, t1.rabbit_id, t1.status, t2.qr\n";
                         sql += "from rabbit_post t1 left join rabbit_get t2 on t1.rabbit_id = t2.rabbit_id where t1.status = 'Y' group by t1.no_recordin) t3 on t1.no = t3.no_recordin\n";
@@ -7833,27 +7785,27 @@ namespace ParkingManagementReport.Utilities.Database
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel = 'PromptPay'";
                         else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
-                        else if (Configs.UsePaymentBeam)
+                            sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                        else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
                     }
                     else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
                     {
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel is null AND t1.pay_type = 'C'";
+                        else if (Configs.UsePaymentBeam)
+                            sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                         else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
-                        else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                     }
                     else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                     {
                         if (Configs.UsePaymentKsher)
                             sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
+                        else if (Configs.UsePaymentBeam)
+                            sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
                         else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
-                        else if (Configs.UsePaymentBeam)
-                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
                     }
                     else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
                         sql += " AND t3.channel = 'TrueMoney'";
@@ -8281,7 +8233,7 @@ namespace ParkingManagementReport.Utilities.Database
 
             return sqlBuilder.ToString();
         }
-        
+
         private string AllCarIn()
         {
             var sql = new StringBuilder();

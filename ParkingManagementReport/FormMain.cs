@@ -42,13 +42,13 @@ namespace ParkingManagementReport
         private void FormMain_Load(object sender, EventArgs e)
         {
             ConfigsManager.LoadConfigsFromXml();
-            //LoadParametersFromXmlConfigFile();
+            // LoadParametersFromXmlConfigFile();
 
-            if (!DbController.Connect(Configs.ServerIP, AppGlobalVariables.Database.Name))
+            /* if (!DbController.Connect(Configs.ServerIP, AppGlobalVariables.Database.Name))
             {
                 MessageBox.Show("Can not connect database", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-            }
+            } */
 
             FormLogin frmLogin = new FormLogin();
             frmLogin.ShowDialog();
@@ -1724,9 +1724,23 @@ namespace ParkingManagementReport
 
                     case 164: // การเข้าออกของรถยนต์แสดงช่องทางการชำระเงิน
                         if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_NoRunning.rpt");
+                        { 
+                            if(Configs.UsePaymentBeam)
+                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Beam_NoRunning.rpt");
+                            else if(Configs.UsePaymentKsher)
+                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Ksher_NoRunning.rpt");
+                            else if(Configs.UsePaymentRabbit)
+                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Rabbit_NoRunning.rpt");
+                        }
                         else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164.rpt");
+                        {
+                            if (Configs.UsePaymentBeam)
+                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Beam.rpt");
+                            else if (Configs.UsePaymentKsher)
+                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Ksher.rpt");
+                            else if (Configs.UsePaymentRabbit)
+                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Rabbit.rpt");
+                        }
 
                         TrySetReportData(reportDocument, dataFromQuery);
                         break;

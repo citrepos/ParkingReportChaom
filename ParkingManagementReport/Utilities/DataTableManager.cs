@@ -710,14 +710,9 @@ namespace ParkingManagementReport.Utilities
                 DateTime dto = DateTime.Parse(dataGridView[6, i].Value.ToString());
                 if (intID > 0)
                 {
-                    string fontSlip13 = "";
-                    if (AppGlobalVariables.Printings.ReceiptName.Length > 0)
-                        fontSlip13 = AppGlobalVariables.Printings.ReceiptName;
-                    else
-                    {
-                        if (!Configs.UseReceiptName)
-                            fontSlip13 = "IV";
-                    }
+                    string fontSlip13 = !string.IsNullOrEmpty(AppGlobalVariables.Printings.ReceiptName)
+                        ? AppGlobalVariables.Printings.ReceiptName
+                        : (!Configs.UseReceiptName) ? "IV" : String.Empty;
 
                     if (Configs.UseReceiptFor1Out)
                     {
