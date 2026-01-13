@@ -693,6 +693,8 @@ namespace ParkingManagementReport.Utilities
             }
 
             int intNo = dataGridView.Rows.Count - 1;
+
+            dataGridView.Columns[8].Visible = false; //ซ่อน ชม.ส่วนลดผู้มาติดต่อ Voco
             dataGridView.Columns[11].Width = 105;
             dataGridView.Columns[15].Width = 160;
             if (selectedReportId == 14) dataGridView.Columns[16].Width = 160;
