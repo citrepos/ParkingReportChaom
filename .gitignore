@@ -13,7 +13,6 @@
 mono_crash.*
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -417,9 +416,10 @@ FodyWeavers.xsd
 
 # Windows Installer files from build outputs
 *.cab
-*.msi
 *.msix
 *.msm
 *.msp
 
 .vs
+*.zip
+/SetupReportThanapoom

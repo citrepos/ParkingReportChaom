@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,8 +36,14 @@ namespace ParkingManagementReport.Common
             public static readonly string PaymentChannelPromptPay = "PromptPay";
             public static readonly string PaymentChannelTrueMoney = "TrueMoney";
             public static readonly string PaymentChannelCash = "เงินสด";
-            public static readonly string PaymentChannelEdc = "EDC";
+            public static readonly string PaymentChannelEDC = "EDC";
             #endregion
+        }
+
+        public static class FolderDirectories
+        {
+            public static readonly string BaseDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location).Replace("\\bin\\Debug", "");
+            public static readonly string CrystalReport = $"{BaseDirectory}\\CrystalReports";
         }
     }
 }

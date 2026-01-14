@@ -11,7 +11,7 @@ namespace ParkingManagementReport.Utilities.Database
     {
         #region FIELDS
         private static MySqlConnection remoteConnection;
-       
+
         private static MySqlConnection localConnection;
 
         private static readonly string dbPassword = "Psk9Cmt854";
@@ -41,7 +41,7 @@ namespace ParkingManagementReport.Utilities.Database
 
             return dt;
         }
-       
+
         public static string SaveData(string sql, bool isLocal = false)
         {
             string result = "";
@@ -66,18 +66,18 @@ namespace ParkingManagementReport.Utilities.Database
         public static void SaveOfflineRecord(string sql, string driverImage, string licenseImage, string mode)
         {
             sql = sql.Replace("\'", "\\\'");
-            
+
             try
             {
                 string query = $"INSERT INTO recordoffline (strsql,picdiv,piclic,date_time,strmode) VALUES ('{sql}','{driverImage}','{licenseImage}',NOW(),'{mode}')";
-                                               
+
                 SaveData(query, true);
             }
             catch
             {
                 MessageBox.Show("[SaveOfflineRecordSuccess] failed, sql : " + sql);
             }
-            
+
         }
 
         public static int LoadNO()
@@ -174,6 +174,7 @@ namespace ParkingManagementReport.Utilities.Database
         #endregion
     }
 }
+
 /* public static class dbLocal
     {
         private static MySqlConnection msConnectionLocal;

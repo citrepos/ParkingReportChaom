@@ -8,7 +8,6 @@ namespace ParkingManagementReport.Common
 {
     internal class Configs
     {
-        internal static bool UseSumPrice;
         #region GENERIC
         public static int PriceCardLoss { get; internal set; }
         public static int NoCar { get; internal set; }
@@ -129,59 +128,12 @@ namespace ParkingManagementReport.Common
 
         public class Reports
         {
-            public static bool UseReport21_1 { get; internal set; }
-            public static bool UseReport21_2 { get; internal set; }
-            public static bool UseReport21_3 { get; internal set; }
-            public static bool UseReport24_2 { get; internal set; }
-            public static bool UseReport5_1 { get; internal set; }
-            public static bool UseReport5_2 { get; internal set; }
-            public static bool UseReport5_3 { get; internal set; }
-            public static bool UseReport5_4 { get; internal set; }
-            public static bool UseReport2_4 { get; internal set; }
-            public static bool UseReport13_13 { get; internal set; }
-            public static bool UseReport13_12 { get; internal set; }
-            public static bool UseReport1_8 { get; internal set; }
-            public static bool UseReport24_3 { get; internal set; }
-            public static bool UseReport36_1 { get; internal set; }
-            public static bool UseReport35_1 { get; internal set; }
-            public static bool UseReport49_1 { get; internal set; }
-            public static bool UseReport108_110_1 { get; internal set; }
-            public static bool UseReport24_1 { get; internal set; }
-            public static bool UseReport4logo { get; internal set; }
-            public static bool UseReport1_7 { get; internal set; }
-            public static bool UseReport23_1 { get; internal set; }
-            public static bool UseReport6 { get; internal set; }
-            public static bool UseReport13_7 { get; internal set; }
-            public static bool UseReport1_6 { get; internal set; }
-            public static bool UseReport71_1 { get; internal set; }
-            public static bool UseReport72_1 { get; internal set; }
-            public static bool UseReport50logo { get; internal set; }
-            public static bool UseReport32logo { get; internal set; }
-            public static bool UseReport16logo { get; internal set; }
-            public static bool UseReport13_1logo { get; internal set; }
-            public static bool UseReport13logo { get; internal set; }
-            public static bool UseReport8logo { get; internal set; }
-            public static bool UseReport5logo { get; internal set; }
-            public static bool UseReport14like13 { get; internal set; }
-            public static bool UseReport13_3 { get; internal set; }
-            public static bool UseReport1_3 { get; internal set; }
-            public static bool UseReport1_4 { get; internal set; }
-            public static bool UseReport1_5 { get; internal set; }
-            public static bool UseReport1logo { get; internal set; }
-            public static bool UseReport2logo { get; internal set; }
-            public static bool UseReport13_11 { get; internal set; }
-            public static bool UseReport13_10 { get; internal set; }
-            public static bool UseReport3_1 { get; internal set; }
-            public static bool UseReport3logo { get; internal set; }
             public static bool UseReportDateString { get; internal set; }
             public static bool UseReportHourUse { get; internal set; }
+            //public static bool UseReportThanapoom { get; internal set; }
 
             public static bool Report3Decimal { get; internal set; }
             public static bool ReportPriceSplitLosscard { get; internal set; }
-            public static bool Report49_LossCard_NoVat { get; internal set; }
-            public static bool Report13Pro_SwitchPriceNot0 { get; internal set; }
-            public static bool Report21_1_Switch { get; internal set; }
-            public static bool Report21_22_NoCreditNoShow { get; internal set; }
             public static bool ReportProsetPriceDayWeek { get; internal set; }
             public static bool ReportSearchMemberGroup { get; internal set; }
             public static bool ReportSearchMemGroup { get; internal set; }

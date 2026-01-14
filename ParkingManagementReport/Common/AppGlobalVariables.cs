@@ -80,6 +80,7 @@ namespace ParkingManagementReport.Common
             public static string Company2 { get; internal set; }
             public static string Address1 { get; internal set; }
             public static string Address2 { get; internal set; }
+            public static string Branch { get; internal set; }
             public static string Tax1 { get; internal set; }
             public static string Tax2 { get; internal set; }
             public static string Office { get; internal set; }
