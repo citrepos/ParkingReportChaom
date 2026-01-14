@@ -8546,7 +8546,7 @@ namespace ParkingManagementReport.Utilities.Database
                 if (Configs.Reports.ReportCartypeFree15Min)
                 {
                     sql += " case when TIMESTAMPDIFF(second,recordin.datein,recordout.dateout) <= 959 then 'ฟรี 15 นาที' else ";
-                    sql += " recordin.cartype end end as cartype";
+                    sql += " recordin.cartype end as cartype";
                 }
                 else
                 {
@@ -8558,13 +8558,14 @@ namespace ParkingManagementReport.Utilities.Database
                 if (Configs.Reports.ReportCartypeFree15Min)
                 {
                     sql += " case when (recordin.cartype != 200) and TIMESTAMPDIFF(second,recordin.datein,recordout.dateout) <= 959 then 'ฟรี 15 นาที' else ";
-                    sql += "  recordin.cartype end";
+                    sql += "  recordin.cartype end as cartype";
                 }
                 else
                 {
-                    sql += " recordin.cartype ";
+                    sql += " recordin.cartype end as cartype";
                 }
             }
+
             sql += " ,case when recordin.license = 'NO' then recordin.id when recordin.license = '' then recordin.id else recordin.license end as license, recordin.datein, recordout.userout, recordout.dateout, recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard,recordout.overdate";
 
             if (Configs.UseProIDAll)
@@ -8613,11 +8614,11 @@ namespace ParkingManagementReport.Utilities.Database
                     if (Configs.Reports.ReportCartypeFree15Min)
                     {
                         sql += " case when TIMESTAMPDIFF(second,recordin.datein,recordout.dateout) <= 959 then 'ฟรี 15 นาที' else ";
-                        sql += " recordin.cartype end end";
+                        sql += " recordin.cartype end as cartype";
                     }
                     else
                     {
-                        sql += " recordin.cartype end";
+                        sql += " recordin.cartype end as cartype";
                     }
                 }
                 else
@@ -8625,11 +8626,11 @@ namespace ParkingManagementReport.Utilities.Database
                     if (Configs.Reports.ReportCartypeFree15Min)
                     {
                         sql += " case when (recordin.cartype != 200) and TIMESTAMPDIFF(second,recordin.datein,recordout.dateout) <= 959 then 'ฟรี 15 นาที' else ";
-                        sql += "  recordin.cartype end";
+                        sql += "  recordin.cartype end as cartype";
                     }
                     else
                     {
-                        sql += " recordin.cartype ";
+                        sql += " recordin.cartype end as cartype";
                     }
                 }
                 sql += " ,recordin.license,recordin.datein,recordout.userout,recordout.dateout,recordout.proid,recordout.discount,recordout.userout,recordout.userout,recordout.losscard,recordout.overdate,recordout.price,recordout.price"; //Mac 2018/05/13
@@ -8793,16 +8794,16 @@ namespace ParkingManagementReport.Utilities.Database
                 }
                 else
                 {
-                    if (Configs.OutReceiptNameMonth) //Mac 2016/04/27
+                    if (Configs.OutReceiptNameMonth) 
                     {
-                        if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) //Mac 2022/04/22
+                        if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) 
                             sql += " order by concat(concat(date_format(dateout,'%y%m') ,lpad(printno_second,6,'0')))";
                         else
-                            sql += " order by concat(concat(date_format(dateout,'%y%m') ,lpad(printno,6,'0')))"; //Mac 2022/04/26
+                            sql += " order by concat(concat(date_format(dateout,'%y%m') ,lpad(printno,6,'0')))"; 
                     }
                     else
                     {
-                        if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) //Mac 2022/04/22
+                        if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) 
                             sql += " ORDER BY recordout.printno_second";
                         else
                             sql += " ORDER BY recordout.printno";

@@ -415,14 +415,6 @@ namespace ParkingManagementReport
         private void LoadMemberGroupReport()
         {
             MemberTypeComboBox.Items.Clear();
-            CarTypeComboBox.Items.Clear();
-
-            AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 0, Constants.TextBased.All);
-            AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 199, Constants.TextBased.Visitor);
-            AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 200, Constants.TextBased.Member);
-            AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.All);
-            AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.Visitor);
-            AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.Member);
 
             AddToDictionaryIfNotExists(AppGlobalVariables.MemberGroupsToId, Constants.TextBased.All, 0);
             AddToComboBoxIfNotExists(MemberTypeComboBox, Constants.TextBased.All);
@@ -488,13 +480,16 @@ namespace ParkingManagementReport
         {
             try
             {
-                AppGlobalVariables.CarTypesById.Add(0, Constants.TextBased.All);
-                AppGlobalVariables.CarTypesById.Add(199, Constants.TextBased.Visitor);
-                AppGlobalVariables.CarTypesById.Add(200, Constants.TextBased.Member);
+                AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, -1, Constants.TextBased.All);
+                AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.All);
 
-                CarTypeComboBox.Items.Add(Constants.TextBased.All);
-                CarTypeComboBox.Items.Add(Constants.TextBased.Visitor);
-                CarTypeComboBox.Items.Add(Constants.TextBased.Member);
+                //AppGlobalVariables.CarTypesById.Add(0, Constants.TextBased.All);
+                //AppGlobalVariables.CarTypesById.Add(199, Constants.TextBased.Visitor);
+                //AppGlobalVariables.CarTypesById.Add(200, Constants.TextBased.Member);
+
+                //CarTypeComboBox.Items.Add(Constants.TextBased.All);
+                //CarTypeComboBox.Items.Add(Constants.TextBased.Visitor);
+                //CarTypeComboBox.Items.Add(Constants.TextBased.Member);
 
                 DataTable carTypes = DbController.LoadData("SELECT typeid, typename FROM cartype ORDER BY typeid");
                 if (carTypes?.Rows.Count > 0)
@@ -504,15 +499,22 @@ namespace ParkingManagementReport
                         int carTypeId = Convert.ToInt16(carTypes.Rows[i].ItemArray[0]);
                         string carTypeName = carTypes.Rows[i].ItemArray[1].ToString();
 
-                        if (!AppGlobalVariables.CarTypesById.ContainsValue(carTypeName))
-                            if (carTypeName != Constants.TextBased.Member)
-                                AppGlobalVariables.CarTypesById.Add(carTypeId, carTypeName);
-
-                        if (!CarTypeComboBox.Items.Contains(carTypeName))
-                            if (carTypeName != Constants.TextBased.Member)
-                                CarTypeComboBox.Items.Add(carTypeName);
+                        AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, carTypeId, carTypeName);
+                        AddToComboBoxIfNotExists(CarTypeComboBox, carTypeName);
                     }
                 }
+
+                if (!AppGlobalVariables.CarTypesById.ContainsKey(199))
+                {
+                    AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 199, Constants.TextBased.Visitor);
+                    AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.Visitor);
+                }
+                if (!AppGlobalVariables.CarTypesById.ContainsKey(200))
+                {
+                    AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 200, Constants.TextBased.Member);
+                    AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.Member);
+                }
+
             }
             catch (Exception ex)
             {
@@ -541,11 +543,8 @@ namespace ParkingManagementReport
                         int userId = Convert.ToInt32(row["id"]);
                         string userName = row["name"].ToString();
 
-                        if (!AppGlobalVariables.UsersById.ContainsKey(userId))
-                            AppGlobalVariables.UsersById.Add(userId, userName);
-
-                        if (!UserComboBox.Items.Contains(userName))
-                            UserComboBox.Items.Add(userName);
+                        AddToDictionaryIfNotExists(AppGlobalVariables.UsersById, userId, userName);
+                        AddToComboBoxIfNotExists(UserComboBox, userName);
                     }
                 }
             }
@@ -1055,8 +1054,9 @@ namespace ParkingManagementReport
                         {
                             reportDocument.DataDefinition.FormulaFields["Header"].Text =
                             $"'รายงาน{reportName} จากวันที่ {startDateTime} เวลา {startTime} ถึงวันที่ {endDateTime} เวลา {endTime}'";
-                        } catch { } 
-                        
+                        }
+                        catch { }
+
                         break;
 
                     case 32:
@@ -1723,12 +1723,12 @@ namespace ParkingManagementReport
 
                     case 164: // การเข้าออกของรถยนต์แสดงช่องทางการชำระเงิน
                         if (Configs.Reports.ReportNoRunning)
-                        { 
-                            if(Configs.UsePaymentBeam)
+                        {
+                            if (Configs.UsePaymentBeam)
                                 reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Beam_NoRunning.rpt");
-                            else if(Configs.UsePaymentKsher)
+                            else if (Configs.UsePaymentKsher)
                                 reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Ksher_NoRunning.rpt");
-                            else if(Configs.UsePaymentRabbit)
+                            else if (Configs.UsePaymentRabbit)
                                 reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Rabbit_NoRunning.rpt");
                         }
                         else
@@ -2925,7 +2925,8 @@ namespace ParkingManagementReport
             TrySetCrystalReportHeaders(reportDocument);
             #endregion
 
-            ResultGridView.Columns[5].Visible = false;
+            ResultGridView.Columns["เจ้าหน้าที่ขาออก"].Visible = false;
+            ResultGridView.Columns["ชม.ส่วนลดผู้มาติดต่อ"].Visible = false;
 
             PdfExportButton.Enabled = true;
             ExcelExportButton.Enabled = true;
