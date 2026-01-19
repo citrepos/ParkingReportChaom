@@ -425,16 +425,8 @@ namespace ParkingManagementReport
             MemberTypeComboBox.Items.Clear();
             CarTypeComboBox.Items.Clear();
 
-            AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 399, Constants.TextBased.All);
-            AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 199, Constants.TextBased.Visitor);
-            AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 200, Constants.TextBased.Member);
-            AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.All);
-            AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.Visitor);
-            AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.Member);
-
             AddToDictionaryIfNotExists(AppGlobalVariables.MemberGroupsToId, Constants.TextBased.All, 0);
             AddToComboBoxIfNotExists(MemberTypeComboBox, Constants.TextBased.All);
-
 
             if (Configs.Reports.ReportSearchMemberGroup || Configs.Reports.UseReport24_2)
             {
@@ -497,14 +489,6 @@ namespace ParkingManagementReport
         {
             try
             {
-                AppGlobalVariables.CarTypesById.Add(399, Constants.TextBased.All);
-                AppGlobalVariables.CarTypesById.Add(199, Constants.TextBased.Visitor);
-                AppGlobalVariables.CarTypesById.Add(200, Constants.TextBased.Member);
-
-                CarTypeComboBox.Items.Add(Constants.TextBased.All);
-                CarTypeComboBox.Items.Add(Constants.TextBased.Visitor);
-                CarTypeComboBox.Items.Add(Constants.TextBased.Member);
-
                 DataTable carTypes = DbController.LoadData("SELECT typeid, typename FROM cartype ORDER BY typeid");
                 if (carTypes?.Rows.Count > 0)
                 {
@@ -522,12 +506,18 @@ namespace ParkingManagementReport
                     }
                 }
             }
-
-
             catch (Exception ex)
             {
                 Logger.Error(TextFormatters.ErrorStacktraceFromException(ex), "LoadCarTypes");
             }
+
+            AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 399, Constants.TextBased.All);
+            AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 199, Constants.TextBased.Visitor);
+            AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 200, Constants.TextBased.Member);
+
+            AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.All);
+            AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.Visitor);
+            AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.Member);
 
             foreach (var item in CarTypeComboBox.Items)
             {
