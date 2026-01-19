@@ -3536,6 +3536,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -3560,6 +3568,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -15220,15 +15236,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Report Thanapoom"
-        "ProductCode" = "8:{202B1E98-31B1-4C0C-87F0-45F87DDA3248}"
-        "PackageCode" = "8:{97C5C129-AD64-4AE8-BE0A-457894FA291D}"
+        "ProductCode" = "8:{B94475BA-E0D5-4808-820F-E04D5F040812}"
+        "PackageCode" = "8:{69F9579F-0E9D-4D02-8EAC-0C6ABD980B63}"
         "UpgradeCode" = "8:{1CCE8F60-8B71-41F9-A44C-4BF11FF0B403}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:26.01.13"
+        "ProductVersion" = "8:26.01.19"
         "Manufacturer" = "8:CIT"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
