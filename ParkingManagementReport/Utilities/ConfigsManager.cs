@@ -25,6 +25,7 @@ namespace ParkingManagementReport.Utilities
         #region Database
         public static void LoadConfigsFromDb()
         {
+
             dt = new DataTable();
             AppGlobalVariables.PromotionNamesMinuteMap = new Dictionary<int, int>();
             AppGlobalVariables.CarTypesById = new Dictionary<int, string>();
@@ -73,6 +74,9 @@ namespace ParkingManagementReport.Utilities
             dt = DbController.LoadData(sql);
             if (dt.Rows.Count > 0)
                 Configs.UseFlatRateProSetPrice = true;
+
+            AppGlobalVariables.ParamsLookup = LoadParametersFromDatabase();
+            SetConfigsParamsFromLookupData(AppGlobalVariables.ParamsLookup);
 
             UpdateVendorGroup();
 
@@ -583,10 +587,11 @@ namespace ParkingManagementReport.Utilities
             SetBoolConfig(paramsLookup, "printin", value => Configs.IsPrintCarIn = value);
             SetBoolConfig(paramsLookup, "cardloss_price", value => Configs.UseCardLossPrice = value);
             SetBoolConfig(paramsLookup, "use_calvat_from_total", value => Configs.UseCalVatFromTotal = value);
-            SetBoolConfig(paramsLookup, "use_memlicenseplate", value => Configs.UseMemberLicensePlate = value);
             SetBoolConfig(paramsLookup, "use_receiptfor1out", value => Configs.UseReceiptFor1Out = value); 
             SetBoolConfig(paramsLookup, "use_receiptfor1mem", value => Configs.UseReceiptFor1Mem = value); 
             SetBoolConfig(paramsLookup, "use_setting_newmem", value => Configs.UseSettingNewMember = value);
+            SetBoolConfig(paramsLookup, "use_memlicenseplate", value => Configs.UseMemberLicensePlate = value);
+            SetBoolConfig(paramsLookup, "use_memo", value => Configs.UseMemo = value);
             SetBoolConfig(paramsLookup, "use_qrcodenew", value => Configs.UseQRCodeNew = value);
             if (Configs.UseQRCodeNew)
                 Configs.UseSettingNewMember = true;

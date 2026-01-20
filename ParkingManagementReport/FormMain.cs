@@ -42,22 +42,12 @@ namespace ParkingManagementReport
         private void FormMain_Load(object sender, EventArgs e)
         {
             ConfigsManager.LoadConfigsFromXml();
-            // LoadParametersFromXmlConfigFile();
-
-            /* if (!DbController.Connect(Configs.ServerIP, AppGlobalVariables.Database.Name))
-            {
-                MessageBox.Show("Can not connect database", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            } */
 
             FormLogin frmLogin = new FormLogin();
             frmLogin.ShowDialog();
 
             if (AppGlobalVariables.OperatingUser.Level > 2)
                 optionBox.Visible = true;
-
-            AppGlobalVariables.ParamsLookup = ConfigsManager.LoadParametersFromDatabase();
-            ConfigsManager.SetConfigsParamsFromLookupData(AppGlobalVariables.ParamsLookup);
 
             ConfigsManager.LoadConfigsFromDb();
 
@@ -482,14 +472,6 @@ namespace ParkingManagementReport
             {
                 AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, -1, Constants.TextBased.All);
                 AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.All);
-
-                //AppGlobalVariables.CarTypesById.Add(0, Constants.TextBased.All);
-                //AppGlobalVariables.CarTypesById.Add(199, Constants.TextBased.Visitor);
-                //AppGlobalVariables.CarTypesById.Add(200, Constants.TextBased.Member);
-
-                //CarTypeComboBox.Items.Add(Constants.TextBased.All);
-                //CarTypeComboBox.Items.Add(Constants.TextBased.Visitor);
-                //CarTypeComboBox.Items.Add(Constants.TextBased.Member);
 
                 DataTable carTypes = DbController.LoadData("SELECT typeid, typename FROM cartype ORDER BY typeid");
                 if (carTypes?.Rows.Count > 0)
@@ -2900,6 +2882,7 @@ namespace ParkingManagementReport
                 }
                 else if (selectedReportId == 14)
                 {
+                    dataTable = DataTableManager.NormalizeToVisitorAndMember(dataTable);
                     reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report14.rpt");
                 }
             }

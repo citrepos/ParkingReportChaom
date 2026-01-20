@@ -1073,6 +1073,23 @@ namespace ParkingManagementReport.Utilities
             double totalBeforeVat = intSumBV;
             double totalVat = intSumV;
         }
+
+        internal static DataTable NormalizeToVisitorAndMember(DataTable dataTable)
+        {
+            DataTable resultTable = dataTable;
+            if (resultTable == null || !resultTable.Columns.Contains("cartype"))
+                return resultTable;
+
+            foreach (DataRow row in resultTable.Rows)
+            {
+                if (!string.Equals(row["cartype"]?.ToString(), "Member", StringComparison.OrdinalIgnoreCase))
+                {
+                    row["cartype"] = "Visitor";
+                }
+            }
+
+            return resultTable;
+        }
         #endregion
     }
 }

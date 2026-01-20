@@ -8525,14 +8525,6 @@ namespace ParkingManagementReport.Utilities.Database
 
         private string PricePromotion()
         {
-            try
-            {
-                Configs.UseMemo = Convert.ToBoolean(AppGlobalVariables.ParamsLookup["use_memo"]);
-            }
-            catch
-            {
-                Configs.UseMemo = false;
-            }
             string sql = "SELECT DISTINCT ";
             if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0)
                 sql += " recordout.printno_second";
@@ -8775,21 +8767,21 @@ namespace ParkingManagementReport.Utilities.Database
                 if (Configs.UseVoidSlip)
                     sql += " AND recordout.status = 'N'";
 
-                if (Configs.UseReceiptFor1Out) //Mac 2018/11/14
+                if (Configs.UseReceiptFor1Out) 
                 {
                     if (Configs.OutReceiptNameMonth)
                     {
                         if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) //Mac 2022/04/22
-                            sql += " order by recordout.receipt, concat(concat(date_format(dateout,'%y%m') ,lpad(printno_second,6,'0')))";
+                            sql += " order by recordout.no, recordout.receipt, concat(concat(date_format(dateout,'%y%m') ,lpad(printno_second,6,'0')))";
                         else
-                            sql += " order by recordout.receipt, concat(concat(date_format(dateout,'%y%m') ,lpad(printno,6,'0')))"; //Mac 2022/04/26
+                            sql += " order by recordout.no, recordout.receipt, concat(concat(date_format(dateout,'%y%m') ,lpad(printno,6,'0')))"; //Mac 2022/04/26
                     }
                     else
                     {
                         if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) //Mac 2022/04/22
-                            sql += " ORDER BY recordout.receipt, recordout.printno_second";
+                            sql += " ORDER BY recordout.no, recordout.receipt, recordout.printno_second";
                         else
-                            sql += " ORDER BY recordout.receipt, recordout.printno";
+                            sql += " ORDER BY recordout.no, recordout.receipt, recordout.printno";
                     }
                 }
                 else
@@ -8804,14 +8796,14 @@ namespace ParkingManagementReport.Utilities.Database
                     else
                     {
                         if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0) 
-                            sql += " ORDER BY recordout.printno_second";
+                            sql += " ORDER BY recordout.no, recordout.printno_second";
                         else
-                            sql += " ORDER BY recordout.printno";
+                            sql += " ORDER BY recordout.no, recordout.printno";
                     }
                 }
             }
             else
-                sql += " GROUP BY recordout.no ORDER BY recordout.dateout";
+                sql += " GROUP BY recordout.no ORDER BY recordout.no, recordout.dateout";
 
             return sql;
         }
