@@ -8525,14 +8525,6 @@ namespace ParkingManagementReport.Utilities.Database
 
         private string PricePromotion()
         {
-            try
-            {
-                Configs.UseMemo = Convert.ToBoolean(AppGlobalVariables.ParamsLookup["use_memo"]);
-            }
-            catch
-            {
-                Configs.UseMemo = false;
-            }
             string sql = "SELECT DISTINCT ";
             if (Configs.NotShowNoString.Trim().Length > 0 && AppGlobalVariables.OperatingUser.Level == 0)
                 sql += " recordout.printno_second";

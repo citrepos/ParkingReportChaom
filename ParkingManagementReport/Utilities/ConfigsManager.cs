@@ -584,6 +584,7 @@ namespace ParkingManagementReport.Utilities
             SetBoolConfig(paramsLookup, "cardloss_price", value => Configs.UseCardLossPrice = value);
             SetBoolConfig(paramsLookup, "use_calvat_from_total", value => Configs.UseCalVatFromTotal = value);
             SetBoolConfig(paramsLookup, "use_memlicenseplate", value => Configs.UseMemberLicensePlate = value);
+            SetBoolConfig(paramsLookup, "use_memo", value => Configs.UseMemo = value);
             SetBoolConfig(paramsLookup, "use_receiptfor1out", value => Configs.UseReceiptFor1Out = value); 
             SetBoolConfig(paramsLookup, "use_receiptfor1mem", value => Configs.UseReceiptFor1Mem = value); 
             SetBoolConfig(paramsLookup, "use_setting_newmem", value => Configs.UseSettingNewMember = value);

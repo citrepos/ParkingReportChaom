@@ -680,7 +680,7 @@ namespace ParkingManagementReport.Utilities
 
             if (Configs.UseMemo)
             {
-                dataGridView.Columns[16].HeaderText = "บันทึกเพิ่มเติม";
+                dataGridView.Columns[16].HeaderText = dataGridView.Columns[16].Name = "หมายเหตุ";
                 dataGridView.Columns[16].Width = 160;
             }
 
@@ -873,6 +873,11 @@ namespace ParkingManagementReport.Utilities
                                 dataGridView[15, i].Value = "";
                         }
                     }
+                    if (selectedReportId == 13)
+                    {
+                        //dataGridView["หมายเหตุ", i].Value = dataGridView["หมายเหตุ", i].Value
+                    }
+
                 }
                 catch
                 {
