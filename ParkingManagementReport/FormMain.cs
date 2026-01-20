@@ -42,22 +42,12 @@ namespace ParkingManagementReport
         private void FormMain_Load(object sender, EventArgs e)
         {
             ConfigsManager.LoadConfigsFromXml();
-            // LoadParametersFromXmlConfigFile();
-
-            /* if (!DbController.Connect(Configs.ServerIP, AppGlobalVariables.Database.Name))
-            {
-                MessageBox.Show("Can not connect database", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            } */
 
             FormLogin frmLogin = new FormLogin();
             frmLogin.ShowDialog();
 
             if (AppGlobalVariables.OperatingUser.Level > 2)
                 optionBox.Visible = true;
-
-            AppGlobalVariables.ParamsLookup = ConfigsManager.LoadParametersFromDatabase();
-            ConfigsManager.SetConfigsParamsFromLookupData(AppGlobalVariables.ParamsLookup);
 
             ConfigsManager.LoadConfigsFromDb();
 

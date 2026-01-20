@@ -74,6 +74,9 @@ namespace ParkingManagementReport.Utilities
             if (dt.Rows.Count > 0)
                 Configs.UseFlatRateProSetPrice = true;
 
+            AppGlobalVariables.ParamsLookup = LoadParametersFromDatabase();
+            SetConfigsParamsFromLookupData(AppGlobalVariables.ParamsLookup);
+
             UpdateVendorGroup();
 
             LoadDispensers();
