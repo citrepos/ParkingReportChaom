@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using ParkingManagementReport.Common;
 using ParkingManagementReport.Utilities.Database;
@@ -29,7 +25,7 @@ namespace ParkingManagementReport
             txtPayMinute.Enabled = false;
             txtStartTime.Enabled = false;
             txtDayWeek.Enabled = false; //Mac 2019/05/27
-            
+
             string sql = "SELECT id as ลำดับที่, name as ชื่อโปรโมชั่น,"
                 + " minute as นาทีส่วนลด, price as 'ราคาส่วนเกินต่อ 1 ชั่วโมง(บาท)'"
                 + " FROM promotion";
@@ -41,7 +37,8 @@ namespace ParkingManagementReport
                 dataGridView2.Columns[i].Width = widthColumn - 15;
             }
         }
-        string reportId  = "";
+        string reportId = "";
+
         private void dataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             label1.Text = "";
@@ -68,23 +65,34 @@ namespace ParkingManagementReport
                         + " MoreOne as 'จอดเกินกำหนด(บาท)', "
                         + " LoseCard as 'บัตรหาย(บาท)' ";
 
-                        if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
-                            sql += ", DayWeek as 'วันในสัปดาห์' ";
+                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+                    sql += ", DayWeek as 'วันในสัปดาห์' ";
 
-                        sql += " from prosetprice ";
-                        sql += " WHERE PromotionID = " + reportId;
+                sql += " from prosetprice ";
+                sql += " WHERE PromotionID = " + reportId;
 
                 DataTable dt = DbController.LoadData(sql);
 
-                dataGridView1.DataSource = dt;
-                int widthColumn = dataGridView1.Width / dataGridView1.Columns.Count;
-                for (int i = 0; i < dataGridView1.Columns.Count; i++)
+                if (dt == null || dt.Columns.Count == 0)
                 {
-                    dataGridView1.Columns[i].Width = widthColumn - 3;
+                    dataGridView1.DataSource = null;
+                    return;
                 }
 
+                dataGridView1.DataSource = dt;
+
+                if (dataGridView1.Columns.Count > 0)
+                {
+                    int widthColumn = dataGridView1.Width / dataGridView1.Columns.Count;
+
+                    foreach (DataGridViewColumn col in dataGridView1.Columns)
+                    {
+                        col.Width = widthColumn - 3;
+                    }
+                }
             }
         }
+
         bool edit = false;
         string no = "";
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -133,7 +141,8 @@ namespace ParkingManagementReport
             int n1, n2;
             n1 = Int32.Parse(txtStartTime.Text);
             n2 = Int32.Parse(txtFinishTime.Text);
-            if (n2 <= n1) {
+            if (n2 <= n1)
+            {
                 MessageBox.Show("เวลาสิ้นสุดต้องมากกว่าเวลาเริ่มต้น!");
                 return;
             }
@@ -173,7 +182,7 @@ namespace ParkingManagementReport
                             = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = txtDayWeek.Text = ""; //Mac 2019/05/27
                         no = "";
                         //////////////////////////////
-                    
+
                         MessageBox.Show("บันทึกสำเร็จ");
                     }
                     else
@@ -182,7 +191,8 @@ namespace ParkingManagementReport
                     }
                 }
             }//End if Edit
-            if (add) {
+            if (add)
+            {
                 /*string sql = "INSERT INTO prosetprice (PromotionID,no,StartTime,FinishTime,PayMinute,PayHour,MinuteToHour,FlatPay,MoreOne,LoseCard)VALUES ";
                 sql += "(";*/
                 //Mac 2019/05/27
@@ -224,8 +234,8 @@ namespace ParkingManagementReport
                    + " FlatPay as 'เหมาจ่าย(บาท)', "
                    + " MoreOne as 'จอดเกินกำหนด(บาท)', "
                    + " LoseCard as 'บัตรหาย(บาท)' ";
-                   /*+ " from prosetprice "
-                   + " WHERE PromotionID = " + reportId;*/
+            /*+ " from prosetprice "
+            + " WHERE PromotionID = " + reportId;*/
             //if (Configs.Reports.ReportProsetPriceDayWeek) //Mac 2019/05/27
             if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
                 sqld += ", DayWeek as 'วันในสัปดาห์' ";
@@ -268,7 +278,7 @@ namespace ParkingManagementReport
                 string noAdd = "";
                 label1.Text = "เพิ่มข้อมูล";
                 label1.ForeColor = Color.Green;
-                string sql = "SELECT MAX(no) FROM prosetprice where promotionId = "+reportId;
+                string sql = "SELECT MAX(no) FROM prosetprice where promotionId = " + reportId;
                 DataTable dt = DbController.LoadData(sql);
                 noAdd = dt.Rows[0].ItemArray[0].ToString();
                 txtFatPay.Enabled = true;
@@ -285,16 +295,17 @@ namespace ParkingManagementReport
                     no = "1";
                     txtFinishTime.Text = "2";
                 }
-                else 
+                else
                 {
-                    sql = "SELECT FinishTime FROM prosetprice WHERE promotionId = "+reportId +" AND no = "+noAdd;
+                    sql = "SELECT FinishTime FROM prosetprice WHERE promotionId = " + reportId + " AND no = " + noAdd;
                     dt = DbController.LoadData(sql);
-                    txtStartTime.Text = (Int32.Parse(dt.Rows[0].ItemArray[0].ToString()) + 1).ToString() ;
+                    txtStartTime.Text = (Int32.Parse(dt.Rows[0].ItemArray[0].ToString()) + 1).ToString();
                     txtFinishTime.Text = (Int32.Parse(dt.Rows[0].ItemArray[0].ToString()) + 2).ToString();
                     no = (Int32.Parse(noAdd) + 1).ToString();
                 }
             }
-            else {
+            else
+            {
                 MessageBox.Show("กรุณาคลิกเลือกร้าน/บริษัท ด้านล่างก่อน");
             }
         }
