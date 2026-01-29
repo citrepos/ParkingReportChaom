@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.Office.Interop.Excel;
 using ParkingManagementReport.Common;
 using ParkingManagementReport.Utilities.Formatters;
 
@@ -49,6 +48,7 @@ namespace ParkingManagementReport.Utilities.Database
             DbController.SaveData(sqlB, true);
         }
         #endregion
+
 
         #region READ (get)
         public string GetTimeFromDatabase()

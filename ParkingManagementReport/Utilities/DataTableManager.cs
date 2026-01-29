@@ -33,6 +33,7 @@ namespace ParkingManagementReport.Utilities
                     break;
 
                 case 46:
+                case 168:
                     newDt = CRUDManager.GetMemberMonthSummary(newDt);
                     break;
 
