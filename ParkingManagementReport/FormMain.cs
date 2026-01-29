@@ -12,7 +12,6 @@ using ParkingManagementReport.Utilities;
 using ParkingManagementReport.Utilities.Database;
 using ParkingManagementReport.Utilities.Formatters;
 using ParkingManagementReport.Utilities.Hardwares;
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ParkingManagementReport
 {
@@ -1054,7 +1053,7 @@ namespace ParkingManagementReport
                         }
                         ResultGridView[0, intNo].Value = "E-Stamp ทั้งหมด";
                         ResultGridView[1, intNo].Value = intSumEStamp.ToString();
-                        
+
                         dtMap = DbController.LoadData("Select value FROM param Where name = 'com1' or name = 'add1' or name = 'add2' or name = 'tax'");
                         PrimaryCrystalReportViewer.ReportSource = null;
                         PrimaryCrystalReportViewer.Refresh();
@@ -4958,6 +4957,21 @@ namespace ParkingManagementReport
                             PrimaryTabControl.SelectTab(1);
 
                             break;
+
+                        case 168:
+                            PrimaryTabControl.SelectTab(1);
+
+                            rpt.Load(path + "\\CrystalReports\\Report47_separate_page.rpt");
+                            rpt.SetDataSource(dt);
+                            rpt.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสมาชิก'";
+                            rpt.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
+                            rpt.DataDefinition.FormulaFields["Address"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
+                            rpt.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(end_date)}'";
+                            rpt.DataDefinition.FormulaFields["PrintedByUser"].Text = $"'{AppGlobalVariables.OperatingUser.Name}'";
+                            PrimaryCrystalReportViewer.ReportSource = rpt;
+
+                            PrimaryCrystalReportViewer.Refresh();
+                            break;
                     }
 
                     CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
@@ -6085,11 +6099,11 @@ namespace ParkingManagementReport
                     throw new Exception("ExportToExcel: Null or empty input table!\n");
 
                 // load excel, and create a new workbook
-                Excel.Application excelApp = new Excel.Application();
+                Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
                 excelApp.Workbooks.Add();
 
                 // single worksheet
-                Excel._Worksheet workSheet = excelApp.ActiveSheet;
+                Microsoft.Office.Interop.Excel._Worksheet workSheet = excelApp.ActiveSheet;
 
                 // heading report
                 workSheet.Cells[1, 1] = AppGlobalVariables.Printings.Header;
@@ -6457,6 +6471,7 @@ namespace ParkingManagementReport
                 case 42:
                 case 46:
                 case 47:
+                case 168:
                     return $"รายงาน{reportName}";
 
                 case 48 when !Configs.IsSwitch:  // Note: 'when' clause is available in C# 7.0+
@@ -6838,7 +6853,7 @@ namespace ParkingManagementReport
                 ParkingTimeComparisonPanel.Visible = true;
             else
                 ParkingTimeComparisonPanel.Visible = false;
-            
+
             if (selectedReportId == 161)
             {
                 label20.Enabled = false;

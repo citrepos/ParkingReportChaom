@@ -16,14 +16,14 @@ namespace ParkingManagementReport.CrystalReports {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class Report47___Copy : ReportClass {
+    public class Report47_separate_page : ReportClass {
         
-        public Report47___Copy() {
+        public Report47_separate_page() {
         }
         
         public override string ResourceName {
             get {
-                return "Report47 - Copy.rpt";
+                return "Report47_separate_page.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace ParkingManagementReport.CrystalReports {
         
         public override string FullResourceName {
             get {
-                return "ParkingManagementReport.CrystalReports.Report47 - Copy.rpt";
+                return "ParkingManagementReport.CrystalReports.Report47_separate_page.rpt";
             }
             set {
                 // Do nothing
@@ -106,9 +106,9 @@ namespace ParkingManagementReport.CrystalReports {
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedReport47___Copy : Component, ICachedReport {
+    public class CachedReport47_separate_page : Component, ICachedReport {
         
-        public CachedReport47___Copy() {
+        public CachedReport47_separate_page() {
         }
         
         [Browsable(false)]
@@ -145,7 +145,7 @@ namespace ParkingManagementReport.CrystalReports {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            Report47___Copy rpt = new Report47___Copy();
+            Report47_separate_page rpt = new Report47_separate_page();
             rpt.Site = this.Site;
             return rpt;
         }

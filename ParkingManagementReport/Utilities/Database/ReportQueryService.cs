@@ -1532,6 +1532,7 @@ namespace ParkingManagementReport.Utilities.Database
                     break;
 
                 case 46:
+                case 168:
                     StringBuilder strBuilder = new StringBuilder();
 
                     strBuilder.AppendLine("SELECT DISTINCT");
