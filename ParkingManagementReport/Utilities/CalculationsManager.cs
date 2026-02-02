@@ -810,7 +810,7 @@ namespace ParkingManagementReport.Utilities
                 }
                 else
                 {
-                    AppGlobalVariables.IntTime2[y] = Convert.ToInt32(priceRateTable.Rows[y]["time"].ToString()) - Convert.ToInt32(priceRateTable.Rows[y - 1]["time"].ToString());
+                    AppGlobalVariables.IntTime2[y] = Convert.ToInt32(priceRateTable.Rows[y]["time"].ToString())
                 }
                 AppGlobalVariables.IntPriceMin2[y] = Convert.ToInt32(priceRateTable.Rows[y]["minute"].ToString()); // นาทีละ(บาท)
                 AppGlobalVariables.IntPriceHour2[y] = Convert.ToInt32(priceRateTable.Rows[y]["hour"].ToString());  // ชั่วโมงละ(บาท)
