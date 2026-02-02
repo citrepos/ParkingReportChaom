@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_00290BFB5A646E9E0014527918567459"
+        "OwnerKey" = "8:_AFF0EFE80430435E9C64C8871AC19ACB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_00D7709CB0BB4F8C8CDF35AC6ECCFFAB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -69,12 +75,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_0C6B0535DCEB47F9B8D08BD04DF708BF"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_0D4959055F8944AF8D13F6F5942D90E6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -94,12 +94,6 @@
         "Entry"
         {
         "MsmKey" = "8:_127F8F8631C84C83B8D9082D96EBB979"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_12ACE020F4064E46BFA09378F2B6FD3B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -136,12 +130,6 @@
         "Entry"
         {
         "MsmKey" = "8:_168D66BE83F94043852BC253956A2A36"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_186CBE1B85DB42EA82A454FFA2867D95"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -311,6 +299,18 @@
         {
         "MsmKey" = "8:_34CA04332CF84F2E9B14ECFA95788CDA"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_35FE5FB513524A1276335E267ADF3D4F"
+        "OwnerKey" = "8:_0B332D383700442DA4424CC2CD30A7F4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_35FE5FB513524A1276335E267ADF3D4F"
+        "OwnerKey" = "8:_AFF0EFE80430435E9C64C8871AC19ACB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -777,12 +777,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9F11EA0211D1470F96888BD9C0A59D2B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9F35123ECAA64E16BAD29E44919B3537"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -808,12 +802,6 @@
         "Entry"
         {
         "MsmKey" = "8:_A6E731536EEC491F9A813CADAA0A97E7"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A71C9DDA800C4959B91EA3BA89341B0F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -935,6 +923,12 @@
         {
         "MsmKey" = "8:_B988FF8070EB41468086F63A6211ACA8"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B9D8C23DCACF55789F4BBA3559539998"
+        "OwnerKey" = "8:_52F54CDE174F4F8A9DBBE358592500BE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1113,6 +1107,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_DECB4932DEA3772B9472C554661DB25F"
+        "OwnerKey" = "8:_B024597268844AD7A26077F26CDF5AFA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DFB1383F27214425A776A346E6B32A5A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1276,7 +1276,73 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_12ACE020F4064E46BFA09378F2B6FD3B"
+        "OwnerKey" = "8:_35FE5FB513524A1276335E267ADF3D4F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_B024597268844AD7A26077F26CDF5AFA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_DECB4932DEA3772B9472C554661DB25F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_AFF0EFE80430435E9C64C8871AC19ACB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_00290BFB5A646E9E0014527918567459"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A146286547734C4F9B0C14755C5C990F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_9B3A86CFC73A4B02AFD0E326C4891768"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_70641B386A604504841067E9FF1B70C0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_52F54CDE174F4F8A9DBBE358592500BE"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_B9D8C23DCACF55789F4BBA3559539998"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_421052F572E244D1991BB39C00FC12DF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_0B332D383700442DA4424CC2CD30A7F4"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -1374,6 +1440,37 @@
         }
         "File"
         {
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_00290BFB5A646E9E0014527918567459"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:BarcodeLib, Version=1.0.0.15, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_00290BFB5A646E9E0014527918567459"
+                    {
+                    "Name" = "8:BarcodeLib.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:BarcodeLib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_F518B6C782E345ACB8AA8124333C5D5B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_00D7709CB0BB4F8C8CDF35AC6ECCFFAB"
             {
             "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\CrystalReports\\Report164_Ksher.cs"
@@ -1565,26 +1662,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0C6B0535DCEB47F9B8D08BD04DF708BF"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\MySql.Data.zip"
-            "TargetName" = "8:MySql.Data.zip"
-            "Tag" = "8:"
-            "Folder" = "8:_F518B6C782E345ACB8AA8124333C5D5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0D4959055F8944AF8D13F6F5942D90E6"
             {
             "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\CrystalReports\\Report19.rpt"
@@ -1651,37 +1728,6 @@
             "TargetName" = "8:Report11.cs"
             "Tag" = "8:"
             "Folder" = "8:_36D2D80070EC451AA97BFC1EA0FF62B6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_12ACE020F4064E46BFA09378F2B6FD3B"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:vshost32, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_12ACE020F4064E46BFA09378F2B6FD3B"
-                    {
-                    "Name" = "8:ParkingManagementReport.vshost.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\ParkingManagementReport.vshost.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_F518B6C782E345ACB8AA8124333C5D5B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1802,26 +1848,6 @@
             "TargetName" = "8:Report164_Rabbit.cs"
             "Tag" = "8:"
             "Folder" = "8:_36D2D80070EC451AA97BFC1EA0FF62B6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_186CBE1B85DB42EA82A454FFA2867D95"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\ParkingManagementReport.vshost.application"
-            "TargetName" = "8:ParkingManagementReport.vshost.application"
-            "Tag" = "8:"
-            "Folder" = "8:_F518B6C782E345ACB8AA8124333C5D5B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2394,6 +2420,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_35FE5FB513524A1276335E267ADF3D4F"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:MySql.Data, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_35FE5FB513524A1276335E267ADF3D4F"
+                    {
+                    "Name" = "8:MySql.Data.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:MySql.Data.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_F518B6C782E345ACB8AA8124333C5D5B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_37BE5B55990F435FB02375479CB7D78E"
@@ -3980,26 +4037,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9F11EA0211D1470F96888BD9C0A59D2B"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\ParkingManagementReport.vshost.exe.config"
-            "TargetName" = "8:ParkingManagementReport.vshost.exe.config"
-            "Tag" = "8:"
-            "Folder" = "8:_F518B6C782E345ACB8AA8124333C5D5B"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9F35123ECAA64E16BAD29E44919B3537"
             {
             "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\CrystalReports\\Report164_SCB.rpt"
@@ -4097,26 +4134,6 @@
             "TargetName" = "8:Report41_NoRunning.cs"
             "Tag" = "8:"
             "Folder" = "8:_36D2D80070EC451AA97BFC1EA0FF62B6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A71C9DDA800C4959B91EA3BA89341B0F"
-            {
-            "SourcePath" = "8:..\\ParkingManagementReport\\bin\\Debug\\ParkingManagementReport.vshost.exe.manifest"
-            "TargetName" = "8:ParkingManagementReport.vshost.exe.manifest"
-            "Tag" = "8:"
-            "Folder" = "8:_F518B6C782E345ACB8AA8124333C5D5B"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -4551,6 +4568,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B9D8C23DCACF55789F4BBA3559539998"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_B9D8C23DCACF55789F4BBA3559539998"
+                    {
+                    "Name" = "8:log4net.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:log4net.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_F518B6C782E345ACB8AA8124333C5D5B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B9F9057DA8D4420ABB4DFC3DDAD91F91"
@@ -5131,6 +5179,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DECB4932DEA3772B9472C554661DB25F"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:CrystalDecisions.ReportAppServer.Prompting, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_DECB4932DEA3772B9472C554661DB25F"
+                    {
+                    "Name" = "8:CrystalDecisions.ReportAppServer.Prompting.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:CrystalDecisions.ReportAppServer.Prompting.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_F518B6C782E345ACB8AA8124333C5D5B"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DFB1383F27214425A776A346E6B32A5A"
@@ -5763,7 +5842,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Report Parking"
         "ProductCode" = "8:{AB9504B5-A2CC-46DE-BDB6-088A85C4171E}"
-        "PackageCode" = "8:{8E069633-2EA1-4C92-8DE9-5C64B6782683}"
+        "PackageCode" = "8:{B4C62D22-1B53-446C-802F-E3596C8A6DA3}"
         "UpgradeCode" = "8:{AA0E047A-5108-4969-9CE8-6ACAADA300FB}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"

@@ -921,7 +921,7 @@ namespace ParkingManagementReport.Utilities.Database
             #endregion
 
             double parkingPrice = Convert.ToDouble(intParkingPrice); // dr["ค่าจอดทั้งหมด"]
-            double feeCharge = Convert.ToDouble(intFee);             // dr["ค่าบริการเรียกเก็บ"]
+            double feeCharge = Convert.ToDouble(intFee);            // dr["ค่าบริการเรียกเก็บ"]
 
             return (parkingPrice, feeCharge);
         }
