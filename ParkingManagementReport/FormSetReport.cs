@@ -9,6 +9,11 @@ namespace ParkingManagementReport
 {
     public partial class FormSetReport : Form
     {
+        string no = "";
+        string reportId = "";
+        bool edit = false;
+        bool add = false;
+
         public FormSetReport()
         {
             InitializeComponent();
@@ -24,20 +29,67 @@ namespace ParkingManagementReport
             txtPayHour.Enabled = false;
             txtPayMinute.Enabled = false;
             txtStartTime.Enabled = false;
-            txtDayWeek.Enabled = false; //Mac 2019/05/27
+            txtDayWeek.Enabled = false;
 
             string sql = "SELECT id as ลำดับที่, name as ชื่อโปรโมชั่น,"
                 + " minute as นาทีส่วนลด, price as 'ราคาส่วนเกินต่อ 1 ชั่วโมง(บาท)'"
                 + " FROM promotion";
+
             DataTable dt = DbController.LoadData(sql);
             dataGridView2.DataSource = dt;
-            int widthColumn = dataGridView2.Width / dataGridView2.Columns.Count;
-            for (int i = 0; i < dataGridView2.Columns.Count; i++)
+
+            if (dt == null || dataGridView2.Columns.Count == 0 || dataGridView2.Width <= 0)
+                return;
+
+            int columnCount = dataGridView2.Columns.Count;
+            int widthColumn = dataGridView2.Width / columnCount;
+
+            for (int i = 0; i < columnCount; i++)
             {
-                dataGridView2.Columns[i].Width = widthColumn - 15;
+                dataGridView2.Columns[i].Width = Math.Max(50, widthColumn - 15);
             }
         }
-        string reportId = "";
+
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            add = false;
+            txtFatPay.Enabled = false;
+            txtFinishTime.Enabled = false;
+            txtLossCard.Enabled = false;
+            txtMinuteToHour.Enabled = false;
+            txtMoreOne.Enabled = false;
+            txtPayHour.Enabled = false;
+            txtPayMinute.Enabled = false;
+            txtDayWeek.Enabled = false;
+            txtStartTime.Text = txtFinishTime.Text = txtPayHour.Text = txtPayMinute.Text = txtLossCard.Text = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = txtDayWeek.Text = ""; //Mac 2019/05/27
+
+            if (e.RowIndex > -1 && dataGridView1.Rows.Count > 0)
+            {
+                edit = true;
+                txtFatPay.Enabled = true;
+                txtFinishTime.Enabled = true;
+                txtLossCard.Enabled = true;
+                txtMinuteToHour.Enabled = true;
+                txtMoreOne.Enabled = true;
+                txtPayHour.Enabled = true;
+                txtPayMinute.Enabled = true;
+                txtDayWeek.Enabled = true;
+                no = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+                txtStartTime.Text = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
+                txtFinishTime.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
+                txtPayMinute.Text = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
+                txtPayHour.Text = dataGridView1.Rows[e.RowIndex].Cells[4].Value.ToString();
+                txtMinuteToHour.Text = dataGridView1.Rows[e.RowIndex].Cells[5].Value.ToString();
+                txtFatPay.Text = dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString();
+                txtMoreOne.Text = dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString();
+                txtLossCard.Text = dataGridView1.Rows[e.RowIndex].Cells[8].Value.ToString();
+                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0)
+                    txtDayWeek.Text = dataGridView1.Rows[e.RowIndex].Cells[9].Value.ToString();
+            }
+            label1.Text = "แก้ไขข้อมูล";
+            label1.ForeColor = Color.Red;
+        }
 
         private void dataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -50,9 +102,9 @@ namespace ParkingManagementReport
             txtMoreOne.Enabled = false;
             txtPayHour.Enabled = false;
             txtPayMinute.Enabled = false;
-            txtDayWeek.Enabled = false; //Mac 2019/05/27
-            //txtStartTime.Text = txtFinishTime.Text = txtPayHour.Text = txtPayMinute.Text = txtLossCard.Text = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = "";
-            txtStartTime.Text = txtFinishTime.Text = txtPayHour.Text = txtPayMinute.Text = txtLossCard.Text = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = txtDayWeek.Text = ""; //Mac 2019/05/27
+            txtDayWeek.Enabled = false;
+            txtStartTime.Text = txtFinishTime.Text = txtPayHour.Text = txtPayMinute.Text = txtLossCard.Text = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = txtDayWeek.Text = "";
+
             if (e.RowIndex > -1)
             {
                 reportId = dataGridView2.Rows[e.RowIndex].Cells[0].Value.ToString();
@@ -65,7 +117,7 @@ namespace ParkingManagementReport
                         + " MoreOne as 'จอดเกินกำหนด(บาท)', "
                         + " LoseCard as 'บัตรหาย(บาท)' ";
 
-                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0)
                     sql += ", DayWeek as 'วันในสัปดาห์' ";
 
                 sql += " from prosetprice ";
@@ -93,49 +145,6 @@ namespace ParkingManagementReport
             }
         }
 
-        bool edit = false;
-        string no = "";
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            add = false;
-            txtFatPay.Enabled = false;
-            txtFinishTime.Enabled = false;
-            txtLossCard.Enabled = false;
-            txtMinuteToHour.Enabled = false;
-            txtMoreOne.Enabled = false;
-            txtPayHour.Enabled = false;
-            txtPayMinute.Enabled = false;
-            txtDayWeek.Enabled = false; //Mac 2019/05/27
-            //txtStartTime.Text = txtFinishTime.Text = txtPayHour.Text = txtPayMinute.Text = txtLossCard.Text = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = "";
-            txtStartTime.Text = txtFinishTime.Text = txtPayHour.Text = txtPayMinute.Text = txtLossCard.Text = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = txtDayWeek.Text = ""; //Mac 2019/05/27
-            if (e.RowIndex > -1 && dataGridView1.Rows.Count > 0)
-            {
-                edit = true;
-                txtFatPay.Enabled = true;
-                txtFinishTime.Enabled = true;
-                txtLossCard.Enabled = true;
-                txtMinuteToHour.Enabled = true;
-                txtMoreOne.Enabled = true;
-                txtPayHour.Enabled = true;
-                txtPayMinute.Enabled = true;
-                txtDayWeek.Enabled = true; //Mac 2019/05/27
-                no = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
-                txtStartTime.Text = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
-                txtFinishTime.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
-                txtPayMinute.Text = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
-                txtPayHour.Text = dataGridView1.Rows[e.RowIndex].Cells[4].Value.ToString();
-                txtMinuteToHour.Text = dataGridView1.Rows[e.RowIndex].Cells[5].Value.ToString();
-                txtFatPay.Text = dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString();
-                txtMoreOne.Text = dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString();
-                txtLossCard.Text = dataGridView1.Rows[e.RowIndex].Cells[8].Value.ToString();
-                //if (Configs.Reports.ReportProsetPriceDayWeek) //Mac 2019/05/27
-                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
-                    txtDayWeek.Text = dataGridView1.Rows[e.RowIndex].Cells[9].Value.ToString();
-            }
-            label1.Text = "แก้ไขข้อมูล";
-            label1.ForeColor = Color.Red;
-        }
-
         private void btnSave_Click(object sender, EventArgs e)
         {
             int n1, n2;
@@ -158,8 +167,8 @@ namespace ParkingManagementReport
                 sql += "MoreOne = '" + txtMoreOne.Text + "',";
                 sql += "FlatPay = '" + txtFatPay.Text + "',";
                 sql += "MinuteToHour = '" + txtMinuteToHour.Text + "' ";
-                //if (Configs.Reports.ReportProsetPriceDayWeek) //Mac 2019/05/27
-                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+
+                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0)
                     sql += ", DayWeek = '" + txtDayWeek.Text + "' ";
                 sql += " WHERE PromotionID = " + reportId;
                 sql += " AND no = " + no;
@@ -167,7 +176,7 @@ namespace ParkingManagementReport
                 {
                     if (DbController.SaveData(sql) == "")
                     {
-                        if (txtFinishTime.Text != "1440") //Mac 2019/05/27
+                        if (txtFinishTime.Text != "1440")
                         {
                             sql = "update prosetprice SET ";
                             sql += "StartTime = '" + (Int32.Parse(txtFinishTime.Text) + 1) + "'";
@@ -176,10 +185,8 @@ namespace ParkingManagementReport
                             DbController.SaveData(sql);
                         }
 
-                        /*txtStartTime.Text = txtFinishTime.Text = txtPayHour.Text = txtPayMinute.Text = txtLossCard.Text
-                            = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = "";*/
                         txtStartTime.Text = txtFinishTime.Text = txtPayHour.Text = txtPayMinute.Text = txtLossCard.Text
-                            = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = txtDayWeek.Text = ""; //Mac 2019/05/27
+                            = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = txtDayWeek.Text = "";
                         no = "";
                         //////////////////////////////
 
@@ -187,18 +194,15 @@ namespace ParkingManagementReport
                     }
                     else
                     {
-                        MessageBox.Show("บันทึกไม่สำเร็จ");
+                        MessageBox.Show("บันทึกไม่สำเร็จ: \n\rsql= " + sql);
                     }
                 }
             }//End if Edit
             if (add)
             {
-                /*string sql = "INSERT INTO prosetprice (PromotionID,no,StartTime,FinishTime,PayMinute,PayHour,MinuteToHour,FlatPay,MoreOne,LoseCard)VALUES ";
-                sql += "(";*/
-                //Mac 2019/05/27
                 string sql = "INSERT INTO prosetprice (PromotionID,no,StartTime,FinishTime,PayMinute,PayHour,MinuteToHour,FlatPay,MoreOne,LoseCard";
-                //if (Configs.Reports.ReportProsetPriceDayWeek)
-                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+
+                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0)
                     sql += ", DayWeek";
                 sql += ")VALUES (";
                 sql += "'" + reportId + "',";
@@ -211,8 +215,8 @@ namespace ParkingManagementReport
                 sql += "'" + txtFatPay.Text + "',";
                 sql += "'" + txtMoreOne.Text + "',";
                 sql += "'" + txtLossCard.Text + "'";
-                //if (Configs.Reports.ReportProsetPriceDayWeek) //Mac 2019/05/27
-                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+
+                if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0)
                     sql += ", '" + txtDayWeek.Text + "'";
                 sql += ")";
 
@@ -221,8 +225,7 @@ namespace ParkingManagementReport
                 {
                     MessageBox.Show("บันทึกสำเร็จ");
                 }
-                else MessageBox.Show("บันทึกไม่สำเร็จ");
-
+                else MessageBox.Show("บันทึกไม่สำเร็จ: \n\rsql= " + sql);
             }//Endif Add
 
 
@@ -234,10 +237,8 @@ namespace ParkingManagementReport
                    + " FlatPay as 'เหมาจ่าย(บาท)', "
                    + " MoreOne as 'จอดเกินกำหนด(บาท)', "
                    + " LoseCard as 'บัตรหาย(บาท)' ";
-            /*+ " from prosetprice "
-            + " WHERE PromotionID = " + reportId;*/
-            //if (Configs.Reports.ReportProsetPriceDayWeek) //Mac 2019/05/27
-            if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0) //Mac 2022/07/26
+
+            if (Configs.Reports.ReportProsetPriceDayWeek || Configs.UseDayWeek.Trim().Length > 0)
                 sqld += ", DayWeek as 'วันในสัปดาห์' ";
 
             sqld += " from prosetprice ";
@@ -245,12 +246,24 @@ namespace ParkingManagementReport
 
             DataTable dt = DbController.LoadData(sqld);
 
-            dataGridView1.DataSource = dt;
-            int widthColumn = dataGridView1.Width / dataGridView1.Columns.Count;
-            for (int i = 0; i < dataGridView1.Columns.Count; i++)
+            if (dt == null || dt.Columns.Count == 0)
             {
-                dataGridView1.Columns[i].Width = widthColumn - 3;
+                dataGridView1.DataSource = null;
+                return;
             }
+
+            dataGridView1.DataSource = dt;
+
+            if (dataGridView1.Columns.Count > 0)
+            {
+                int widthColumn = dataGridView1.Width / dataGridView1.Columns.Count;
+
+                foreach (DataGridViewColumn col in dataGridView1.Columns)
+                {
+                    col.Width = widthColumn - 3;
+                }
+            }
+
             //////////////////////////////
             txtFatPay.Enabled = false;
             txtFinishTime.Enabled = false;
@@ -259,21 +272,20 @@ namespace ParkingManagementReport
             txtMoreOne.Enabled = false;
             txtPayHour.Enabled = false;
             txtPayMinute.Enabled = false;
-            txtDayWeek.Enabled = false; //Mac 2019/05/27
+            txtDayWeek.Enabled = false;
 
             edit = false;
             add = false;
         }
-        bool add = false;
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
             if (reportId.Trim() != "")
             {
                 add = true;
-                /*txtStartTime.Text = txtFinishTime.Text = txtPayHour.Text = txtPayMinute.Text = txtLossCard.Text
-                                = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = "";*/
+
                 txtStartTime.Text = txtFinishTime.Text = txtPayHour.Text = txtPayMinute.Text = txtLossCard.Text
-                                = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = txtDayWeek.Text = ""; //Mac 2019/05/27
+                                = txtMoreOne.Text = txtFatPay.Text = txtMinuteToHour.Text = txtDayWeek.Text = "";
                 no = "";
                 string noAdd = "";
                 label1.Text = "เพิ่มข้อมูล";
