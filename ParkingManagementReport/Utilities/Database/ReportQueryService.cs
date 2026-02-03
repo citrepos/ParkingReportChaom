@@ -2168,10 +2168,10 @@ namespace ParkingManagementReport.Utilities.Database
                                 if (Configs.OutReceiptNameMonth)
                                 {
                                     //slip49 = dTable.Rows[0]["receipt"].ToString() + startDate.ToString("yyMM") + Convert.ToInt32(dTable.Rows[0].ItemArray[4]).ToString("000#");
-                                    slip49 = dTable.Rows[0]["receipt"].ToString() + startDate.ToString("yyMM") + Convert.ToInt32(dTable.Rows[0].ItemArray[4]).ToString("00000#"); //Mac 2022/04/26
+                                    slip49 = startDate.ToString("yyMM") + Convert.ToInt32(dTable.Rows[0].ItemArray[4]).ToString("00000#"); //Mac 2022/04/26
                                 }
                                 else
-                                    slip49 = dTable.Rows[0]["receipt"].ToString() + startDate.ToString("yy") + Convert.ToInt32(dTable.Rows[0].ItemArray[4]).ToString("00000#");
+                                    slip49 = startDate.ToString("yy") + Convert.ToInt32(dTable.Rows[0].ItemArray[4]).ToString("00000#");
                             }
                             else
                             {
@@ -2204,10 +2204,10 @@ namespace ParkingManagementReport.Utilities.Database
                                             if (Configs.OutReceiptNameMonth)
                                             {
                                                 //slip49 += "-" + dTable.Rows[i49]["receipt"].ToString() + startDate.ToString("yyMM") + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("000#");
-                                                slip49 += "-" + dTable.Rows[i49]["receipt"].ToString() + startDate.ToString("yyMM") + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("00000#"); //Mac 2022/04/26
+                                                slip49 += "-" + startDate.ToString("yyMM") + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("00000#"); //Mac 2022/04/26
                                             }
                                             else
-                                                slip49 += "-" + dTable.Rows[i49]["receipt"].ToString() + startDate.ToString("yy") + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("00000#");
+                                                slip49 += "-" + startDate.ToString("yy") + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("00000#");
                                         }
                                         else
                                         {
@@ -2253,10 +2253,10 @@ namespace ParkingManagementReport.Utilities.Database
                                             if (Configs.OutReceiptNameMonth)
                                             {
                                                 //slip49 += "," + dTable.Rows[i49]["receipt"].ToString() + startDate.ToString("yyMM") + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("000#");
-                                                slip49 += "," + dTable.Rows[i49]["receipt"].ToString() + startDate.ToString("yyMM") + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("00000#"); //Mac 2022/04/26
+                                                slip49 += "," + startDate.ToString("yyMM") + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("00000#"); //Mac 2022/04/26
                                             }
                                             else
-                                                slip49 += "," + dTable.Rows[i49]["receipt"].ToString() + startDate.ToString("yy") + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("00000#");
+                                                slip49 += "," + startDate.ToString("yy") + Convert.ToInt32(dTable.Rows[i49].ItemArray[4]).ToString("00000#");
                                         }
                                         else
                                         {

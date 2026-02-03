@@ -75,6 +75,11 @@ namespace ParkingManagementReport
             /*FOR TEST
             StartDatePicker.Value = new DateTime(day: 01, month: 4, year: 2025);
             EndDatePicker.Value = new DateTime(day: 15, month: 4, year: 2025);*/
+            StartDatePicker.Format = DateTimePickerFormat.Custom;
+            StartDatePicker.CustomFormat = "dd/MM/yyyy";
+
+            EndDatePicker.Format = DateTimePickerFormat.Custom;
+            EndDatePicker.CustomFormat = "dd/MM/yyyy";
         }
 
         #region INIT
@@ -6646,9 +6651,9 @@ namespace ParkingManagementReport
         }
         private string SetReportHeader()
         {
-            string startDateLong = StartDatePicker.Value.ToLongDateString();
+            string startDateLong = StartDatePicker.Value.ToShortDateString();
             string startTimeLong = StartTimePicker.Value.ToLongTimeString();
-            string endDateLong = EndDatePicker.Value.ToLongDateString();
+            string endDateLong = EndDatePicker.Value.ToShortDateString();
             string endTimeLong = EndTimePicker.Value.ToLongTimeString();
             string reportName = ReportComboBox.Text;
 
@@ -6658,7 +6663,7 @@ namespace ParkingManagementReport
                     return $"รายงาน{reportName} จากวันที่ {startDateLong} เวลา {startTimeLong} ถึงวันที่ {endDateLong} เวลา {endTimeLong}";
 
                 case 24:
-                    return $"รายงาน{reportName} จากวันที่ {startDateLong} เวลา 0:00:00 ถึงวันที่ {startDateLong} เวลา 23:59:59";
+                    return $"รายงาน{reportName} จากวันที่ {startDateLong} เวลา 00:00:00 ถึงวันที่ {startDateLong} เวลา 23:59:59";
 
                 case 33:
                 case 38:
@@ -7434,8 +7439,12 @@ namespace ParkingManagementReport
 
             Cursor = Cursors.Default;
         }
-        #endregion UI_EVENT_HANDLER_END
 
+        private void StartDatePicker_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+        #endregion UI_EVENT_HANDLER_END
 
         #region HELPERS
         private void AddMemberGroups(DataTable dt)
@@ -7732,7 +7741,7 @@ namespace ParkingManagementReport
                         resultTable.Columns.Add("ค่าปรับข้ามวัน");
                         resultTable.Columns.Add("รายได้");
                         resultTable.Columns.Add("ส่วนลด");
-                        resultTable.Columns.Add("E-Stamp");
+                        resultTable.Columns.Add("รหัสส่วนลด");
                         resultTable.Columns.Add("receipt");
 
 

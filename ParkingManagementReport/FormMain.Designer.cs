@@ -1171,6 +1171,7 @@
             this.StartDatePicker.Name = "StartDatePicker";
             this.StartDatePicker.Size = new System.Drawing.Size(159, 20);
             this.StartDatePicker.TabIndex = 4;
+            this.StartDatePicker.ValueChanged += new System.EventHandler(this.StartDatePicker_ValueChanged);
             // 
             // label2
             // 
