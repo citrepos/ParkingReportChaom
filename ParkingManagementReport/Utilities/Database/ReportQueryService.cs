@@ -464,7 +464,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (carType == Constants.TextBased.All)
                         {
                             if (memberType != Constants.TextBased.All)
-                                sql += " AND member.typeid =" + AppGlobalVariables.CarTypesById[memberTypeId];
+                                sql += " AND recordin.cartype = 200 AND member.typeid =" + AppGlobalVariables.CarTypesById[memberTypeId];
                         }
                     }
                     if (promotionName != Constants.TextBased.All)
@@ -833,7 +833,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (carType == Constants.TextBased.All) //Mac 2015/02/10
                         {
                             if (memberType != Constants.TextBased.All)
-                                sql += " AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
+                                sql += " AND t1.cartype = 200 AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
                         }
                     }
 
@@ -950,7 +950,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (carType == Constants.TextBased.All) //Mac 2015/02/10
                         {
                             if (memberType != Constants.TextBased.All)
-                                sql += " AND member.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
+                                sql += "AND recordin.cartype = 200 AND member.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
                         }
                     }
 
@@ -1320,7 +1320,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (carType == Constants.TextBased.All) //Mac 2015/02/10
                         {
                             if (memberType != Constants.TextBased.All)
-                                sql += " AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
+                                sql += "AND t2.cartype = 200 AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
                         }
                     }
                     if (!String.IsNullOrEmpty(licensePlate))
@@ -1523,7 +1523,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (carType == Constants.TextBased.All) //Mac 2015/02/10
                         {
                             if (memberType != Constants.TextBased.All)
-                                sql += " AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
+                                sql += "AND t1.cartype = 200 AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
                         }
                     }
                     if (!String.IsNullOrEmpty(licensePlate))
@@ -8031,7 +8031,7 @@ namespace ParkingManagementReport.Utilities.Database
                 if (carType == Constants.TextBased.All) //Mac 2015/02/10
                 {
                     if (memberType != Constants.TextBased.All)
-                        sql += " AND member.typeid =" + memberTypeId;
+                        sql += " AND recordin.cartype = 200 AND member.typeid =" + memberTypeId;
                 }
             }
             if (licensePlate != "")
@@ -8131,7 +8131,7 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += $" AND recordin.cartype = {carType}";
 
                 if (carType == Constants.TextBased.All && memberType != Constants.TextBased.All)
-                    sql += $" AND member.typeid = {carTypeId}";
+                    sql += $"AND recordin.cartype = 200 AND member.typeid = {carTypeId}";
             }
 
             // License filter
@@ -8358,7 +8358,7 @@ namespace ParkingManagementReport.Utilities.Database
                     sql.AppendLine($"AND recordin.cartype = {carTypeId}");
 
                 if (carType == Constants.TextBased.All && memberType != Constants.TextBased.All)
-                    sql.AppendLine($"AND member.typeid = {memberTypeId}");
+                    sql.AppendLine($"AND recordin.cartype = 200 AND member.typeid = {memberTypeId}");
             }
 
             if (!string.IsNullOrWhiteSpace(licensePlate))
@@ -8482,7 +8482,7 @@ namespace ParkingManagementReport.Utilities.Database
                 if (carType == Constants.TextBased.All) //Mac 2015/02/10
                 {
                     if (memberType != Constants.TextBased.All)
-                        sql += " AND member.typeid =" + memberTypeId;
+                        sql += "AND recordin.cartype = 200 AND member.typeid =" + memberTypeId;
                 }
             }
 
@@ -8718,7 +8718,7 @@ namespace ParkingManagementReport.Utilities.Database
                 if (carType == Constants.TextBased.All)
                 {
                     if (memberType != Constants.TextBased.All)
-                        sql += " AND member.typeid =" + memberTypeId;
+                        sql += "AND recordin.cartype = 200 AND member.typeid =" + memberTypeId;
                 }
             }
 

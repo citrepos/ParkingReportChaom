@@ -452,15 +452,17 @@ namespace ParkingManagementReport
                 else
                 {
                     MemberTypeComboBox.Text = Constants.TextBased.All;
-                    dt = DbController.LoadData("SELECT DISTINCT typeid FROM member WHERE typeid != 200 ORDER BY typeid");
+                    dt = DbController.LoadData("SELECT DISTINCT member.typeid, cartype.typename FROM member JOIN cartype ON member.typeid = cartype.typeid WHERE member.typeid != 200 ORDER BY member.typeid");
+                    //dt = DbController.LoadData("SELECT DISTINCT typeid FROM member WHERE typeid != 200 ORDER BY typeid");
+
 
                     foreach (DataRow row in dt.Rows)
                     {
-                        string key = row["typeid"].ToString();
-                        int value = Convert.ToInt32(row["typeid"]);
+                        string name = row["typename"].ToString();
+                        int id = Convert.ToInt32(row["typeid"]);
 
-                        AddToDictionaryIfNotExists(AppGlobalVariables.MemberGroupsToId, key, value);
-                        AddToComboBoxIfNotExists(MemberTypeComboBox, key);
+                        AddToDictionaryIfNotExists(AppGlobalVariables.MemberGroupsToId, name, id);
+                        AddToComboBoxIfNotExists(MemberTypeComboBox, name);
                     }
                 }
             }
