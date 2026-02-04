@@ -6686,7 +6686,7 @@ namespace ParkingManagementReport
                     return $"รายงาน{reportName}";
 
                 case 48 when !Configs.IsSwitch:  // Note: 'when' clause is available in C# 7.0+
-                    return $"รายงานภาษีขายค่าปรับประจำวัน จากวันที่ {startDateLong} เวลา {startTimeLong} ถึงวันที่ {endDateLong} เวลา {endTimeLong}";
+                    return $"รายงาน{reportName} จากวันที่ {startDateLong} เวลา {startTimeLong} ถึงวันที่ {endDateLong} เวลา {endTimeLong}";
 
                 case 162:
                     string paymentChannelText = PaymentChannelComboBox.Text == Constants.TextBased.All ? "ทั้งหมด" : PaymentChannelComboBox.Text;
@@ -7413,7 +7413,7 @@ namespace ParkingManagementReport
             if (selectedReportId == 16 || selectedReportId == 17 || selectedReportId == 18 || selectedReportId == 19 || selectedReportId == 20 || selectedReportId == 21)
                 FunckingShit(selectedReportId, sql);
 
-            else if (selectedReportId == 29 || selectedReportId == 102 || selectedReportId == 1 || selectedReportId == 165)
+            else if (selectedReportId == 29 || selectedReportId == 102 || selectedReportId == 165)
             {
                 ReportHeaderLabel.Text = AppGlobalVariables.Printings.Header = SetReportHeader().Replace("รายงานรายงาน", "รายงาน");
                 FucntionImpact(selectedReportId, sql);
