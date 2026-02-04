@@ -8330,7 +8330,7 @@ namespace ParkingManagementReport
                         resultTable.Columns.Add("ภาษี 7%");
                         resultTable.Columns.Add("รายได้");
 
-                        resultTable.Columns.Add("E-Stamp");
+                        resultTable.Columns.Add("รหัสส่วนลด");
                         resultTable.Columns.Add("receipt");
 
 
@@ -8851,17 +8851,11 @@ namespace ParkingManagementReport
                         else p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[13].Value.ToString();
                         p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[14].Value.ToString(); //Mac 2017/06/12
                     }
-                    /////////////////////////////
-                    ////
+
                     if (selectedReportId == 13)
                     {
                         rpt.Load(path + "\\CrystalReports\\Report13_1.rpt");
                     }
-                    else
-                    {
-
-                    }
-
 
                     rpt.SetDataSource(dt);
 

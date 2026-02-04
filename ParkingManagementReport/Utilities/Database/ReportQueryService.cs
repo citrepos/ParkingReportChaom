@@ -4671,15 +4671,25 @@ namespace ParkingManagementReport.Utilities.Database
                 case 100:
                     if (Configs.Reports.UseReportImpact)
                     {
-                        sql = "SELECT recordout.no AS 'ลำดับ', ";
+                        sql = "SELECT recordin.no AS 'ลำดับ', ";
                         sql += "CASE WHEN recordin.cartype=200 THEN IFNULL((SELECT typename FROM cartype WHERE typeid=member.typeid),'Member') ";
                         sql += "ELSE (SELECT typename FROM cartype WHERE typeid=recordin.cartype) END AS 'ประเภท', ";
-                        sql += "CASE WHEN recordin.license='NO' THEN recordin.id WHEN recordin.license='' THEN recordin.id ELSE recordin.license END AS 'ทะเบียน', ";
-                        sql += "recordin.qrcode_park AS 'หมายเลขบัตร', DATE_FORMAT(recordin.datein,'%d/%m/%Y %H:%i:%s') AS 'เวลาเข้า', ";
+                        sql += "CASE WHEN recordin.license='NO' THEN recordin.id ";
+                        sql += "WHEN recordin.license='' THEN recordin.id ";
+                        sql += "ELSE recordin.license END AS 'ทะเบียน', ";
+                        sql += "recordin.qrcode_park AS 'หมายเลขบัตร', ";
+                        sql += "DATE_FORMAT(recordin.datein,'%d/%m/%Y %H:%i:%s') AS 'เวลาเข้า', ";
                         sql += "(SELECT name FROM user WHERE id=recordin.userin) AS 'เจ้าหน้าที่ขาเข้า' ";
-                        sql += "FROM recordin LEFT JOIN recordout ON recordin.no=recordout.no LEFT JOIN member ON member.license LIKE CONCAT('%',recordin.license,'%') ";
 
-                        sql += " WHERE dategateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'";
+                        sql += "FROM recordin ";
+                        sql += "LEFT JOIN member ON member.license LIKE CONCAT('%',recordin.license,'%') ";
+
+                        sql += "WHERE recordin.datein >= '" + startDateTimeText + "' ";
+                        sql += "AND recordin.datein < '" + endDateTimeText + "' ";
+
+                        sql += "AND recordin.license IS NOT NULL ";
+                        sql += "AND TRIM(recordin.license) <> '' ";
+                        sql += "AND TRIM(recordin.license) <> '0' ";
 
                         if (user != Constants.TextBased.All)
                             sql += " AND recordin.userin = " + AppGlobalVariables.UsersById.First(kvp => kvp.Value == user).Key;
@@ -4763,7 +4773,7 @@ namespace ParkingManagementReport.Utilities.Database
                                     sql += " AND member.memgroupid =" + AppGlobalVariables.MemberGroupsToId[memberType];
                                     if (carType != Constants.TextBased.All)
                                     {
-                                        sql += " AND member.typeid =" + carTypeId;
+                                        sql += " AND recordin.cartype = 200 AND member.typeid =" + carTypeId;
                                     }
                                 }
                         }
@@ -4796,8 +4806,7 @@ namespace ParkingManagementReport.Utilities.Database
                                 sql += " and member.memgrouppriceid_month = " + memberGroupMonthId;
                         }
 
-
-                        sql += " GROUP BY recordout.no ORDER BY recordout.no;";
+                        sql += " ORDER BY recordin.datein DESC;";
 
                     }
                     else
