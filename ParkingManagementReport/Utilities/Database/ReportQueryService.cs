@@ -259,96 +259,96 @@ namespace ParkingManagementReport.Utilities.Database
                             }
                         }
 
-                    //    if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
-                    //{
-                    //    if (Configs.UsePaymentKsher)
-                    //        sql += " AND t3.channel = 'PromptPay'";
-                    //    else if (Configs.UsePaymentBeam)
-                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
-                    //    else if (Configs.UsePaymentRabbit)
-                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
-                    //}
-                    //else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
-                    //{
-                    //    if (Configs.UsePaymentKsher)
-                    //        sql += " AND t3.channel is null AND t1.pay_type = 'C'";
-                    //    else if (Configs.UsePaymentRabbit)
-                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
-                    //    else if (Configs.UsePaymentBeam)
-                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
-                    //}
-                    //else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
-                    //{
-                    //    if (Configs.UsePaymentKsher)
-                    //        sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
-                    //    else if (Configs.UsePaymentRabbit)
-                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
-                    //    else if (Configs.UsePaymentBeam)
-                    //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
-                    //}
-                    //else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
-                    //{
-                    //    sql += " AND t3.channel = 'TrueMoney'";
-                    //}
-                    //if (Configs.Reports.ReportSearchMemGroup) //Mac 2021/03/11
-                    //{
-                    //    if (memberType != Constants.TextBased.All)
-                    //        sql += " and member.memgroupid = " + AppGlobalVariables.MemberGroupsToId[memberType];
+                        //    if (paymentChannel == Constants.TextBased.PaymentChannelPromptPay)
+                        //{
+                        //    if (Configs.UsePaymentKsher)
+                        //        sql += " AND t3.channel = 'PromptPay'";
+                        //    else if (Configs.UsePaymentBeam)
+                        //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                        //    else if (Configs.UsePaymentRabbit)
+                        //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                        //}
+                        //else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
+                        //{
+                        //    if (Configs.UsePaymentKsher)
+                        //        sql += " AND t3.channel is null AND t1.pay_type = 'C'";
+                        //    else if (Configs.UsePaymentRabbit)
+                        //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                        //    else if (Configs.UsePaymentBeam)
+                        //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                        //}
+                        //else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
+                        //{
+                        //    if (Configs.UsePaymentKsher)
+                        //        sql += " AND t3.channel is null AND t1.pay_type = 'EDC'";
+                        //    else if (Configs.UsePaymentRabbit)
+                        //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                        //    else if (Configs.UsePaymentBeam)
+                        //        sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN ro.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                        //}
+                        //else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
+                        //{
+                        //    sql += " AND t3.channel = 'TrueMoney'";
+                        //}
+                        if (Configs.Reports.ReportSearchMemGroup) //Mac 2021/03/11
+                        {
+                            if (memberType != Constants.TextBased.All)
+                                sql += " and member.memgroupid = " + AppGlobalVariables.MemberGroupsToId[memberType];
 
-                    //    if (carType == Constants.TextBased.Visitor)
-                    //        sql += " AND ri.cartype != 200";
-                    //    if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                    //        sql += " AND ri.cartype =" + carTypeId;
-                    //}
-                    //else if (Configs.Member2Cartype) //Mac 2016/05/03
-                    //{
-                    //    if (memberType == Constants.TextBased.All)
-                    //        if (memberType == Constants.TextBased.All)
-                    //        {
-                    //            if (carType != Constants.TextBased.All)
-                    //            {
-                    //                sql += " AND (ri.cartype =" + carTypeId + " or member.typeid =" + carTypeId + ")";
-                    //            }
-                    //        }
-                    //        else if (memberTypeSelectedIndex == 1)
-                    //        {
-                    //            sql += " AND ri.cartype != 200";
-                    //            if (carType != Constants.TextBased.All)
-                    //            {
-                    //                sql += " AND ri.cartype =" + carTypeId;
-                    //            }
-                    //        }
-                    //        else if (memberTypeSelectedIndex == 2)
-                    //        {
-                    //            sql += " AND ri.cartype = 200";
-                    //            if (carType != Constants.TextBased.All)
-                    //            {
-                    //                sql += " AND member.typeid =" + carTypeId;
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-                    //            //sql += " AND recordin.cartype = 200";
-                    //            sql += " AND member.memgroupid =" + AppGlobalVariables.MemberGroupsToId[memberType];
-                    //            if (carType != Constants.TextBased.All)
-                    //            {
-                    //                sql += " AND member.typeid =" + carTypeId;
-                    //            }
-                    //        }
-                    //}
-                    //else
-                    //{
-                    //    if (carType == Constants.TextBased.Visitor)
-                    //        sql += " AND ri.cartype != 200";
-                    //    if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
-                    //        sql += " AND ri.cartype =" + carTypeId;
-                    //    if (carType == Constants.TextBased.All) //Mac 2015/02/10
-                    //    {
-                    //        if (memberType != Constants.TextBased.All)
-                    //            sql += " AND member.typeid =" + memberTypeId;
-                    //    }
-                    //}
-                    if (licensePlate != "")
+                            if (carType == Constants.TextBased.Visitor)
+                                sql += " AND ri.cartype != 200";
+                            if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                                sql += " AND ri.cartype =" + carTypeId;
+                        }
+                        else if (Configs.Member2Cartype) //Mac 2016/05/03
+                        {
+                            if (memberType == Constants.TextBased.All)
+                                if (memberType == Constants.TextBased.All)
+                                {
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND (ri.cartype =" + carTypeId + " or member.typeid =" + carTypeId + ")";
+                                    }
+                                }
+                                else if (memberTypeSelectedIndex == 1)
+                                {
+                                    sql += " AND ri.cartype != 200";
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND ri.cartype =" + carTypeId;
+                                    }
+                                }
+                                else if (memberTypeSelectedIndex == 2)
+                                {
+                                    sql += " AND ri.cartype = 200";
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND member.typeid =" + carTypeId;
+                                    }
+                                }
+                                else
+                                {
+                                    //sql += " AND recordin.cartype = 200";
+                                    sql += " AND member.memgroupid =" + AppGlobalVariables.MemberGroupsToId[memberType];
+                                    if (carType != Constants.TextBased.All)
+                                    {
+                                        sql += " AND member.typeid =" + carTypeId;
+                                    }
+                                }
+                        }
+                        else
+                        {
+                            if (carType == Constants.TextBased.Visitor)
+                                sql += " AND ri.cartype != 200";
+                            if (carType != Constants.TextBased.All && carType != Constants.TextBased.Visitor)
+                                sql += " AND ri.cartype =" + carTypeId;
+                            if (carType == Constants.TextBased.All) //Mac 2015/02/10
+                            {
+                                if (memberType != Constants.TextBased.All)
+                                    sql += " AND ri.cartype = 200 AND member.typeid = " + memberTypeId;
+                            }
+                        }
+                        if (licensePlate != "")
                         sql += " AND ri.license LIKE '%" + licensePlate + "%'";
                     if (cardId != "")
                         sql += " AND ri.id = " + cardId;
@@ -593,7 +593,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (carType == Constants.TextBased.All)
                         {
                             if (memberType != Constants.TextBased.All)
-                                sql += " AND member.typeid =" + AppGlobalVariables.CarTypesById[memberTypeId];
+                                sql += "AND recordin.cartype = 200 AND member.typeid =" + AppGlobalVariables.CarTypesById[memberTypeId];
                         }
                     }
                     if (promotionName != Constants.TextBased.All)
@@ -1113,7 +1113,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (carType == Constants.TextBased.All) //Mac 2015/02/10
                         {
                             if (memberType != Constants.TextBased.All)
-                                sql += " AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
+                                sql += "AND t1.cartype = 200 AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
                         }
                     }
 
@@ -1233,7 +1233,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (carType == Constants.TextBased.All) //Mac 2015/02/10
                         {
                             if (memberType != Constants.TextBased.All)
-                                sql += " AND member.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
+                                sql += "AND recordin.cartype = 200 AND member.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
                         }
                     }
 
@@ -1608,7 +1608,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (carType == Constants.TextBased.All) //Mac 2015/02/10
                         {
                             if (memberType != Constants.TextBased.All)
-                                sql += " AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
+                                sql += "AND t2.cartype = 200 AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
                         }
                     }
                     if (!String.IsNullOrEmpty(licensePlate))
@@ -1777,7 +1777,7 @@ namespace ParkingManagementReport.Utilities.Database
                         if (carType == Constants.TextBased.All) //Mac 2015/02/10
                         {
                             if (memberType != Constants.TextBased.All)
-                                sql += " AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
+                                sql += "AND t1.cartype = 200 AND t3.typeid =" + AppGlobalVariables.CarTypesById.First(kvp => kvp.Value == memberType).Key;
                         }
                     }
                     if (!String.IsNullOrEmpty(licensePlate))
@@ -4776,7 +4776,7 @@ namespace ParkingManagementReport.Utilities.Database
                             if (carType == Constants.TextBased.All) //Mac 2015/02/10
                             {
                                 if (memberType != Constants.TextBased.All)
-                                    sql += " AND member.typeid =" + memberTypeId;
+                                    sql += "AND recordin.cartype = 200 AND member.typeid = " + memberTypeId;
                             }
                         }
                         if (licensePlate != "")
@@ -5031,7 +5031,7 @@ namespace ParkingManagementReport.Utilities.Database
                             if (carType == Constants.TextBased.All) //Mac 2015/02/10
                             {
                                 if (memberType != Constants.TextBased.All)
-                                    sql += " AND member.typeid =" + memberTypeId;
+                                    sql += "AND recordin.cartype = 200 AND member.typeid =" + memberTypeId;
                             }
                         }
                         if (licensePlate != "")
@@ -9881,7 +9881,7 @@ WHERE 1 = 1 ";
                 if (carType == Constants.TextBased.All) //Mac 2015/02/10
                 {
                     if (memberType != Constants.TextBased.All)
-                        sql += " AND member.typeid =" + memberTypeId;
+                        sql += "AND recordin.cartype = 200 AND member.typeid = " + memberTypeId;
                 }
             }
             if (licensePlate != "")
@@ -9986,7 +9986,7 @@ WHERE 1 = 1 ";
                     sql += $" AND recordin.cartype = {carType}";
 
                 if (carType == Constants.TextBased.All && memberType != Constants.TextBased.All)
-                    sql += $" AND member.typeid = {carTypeId}";
+                    sql += $"AND recordin.cartype = 200 AND member.typeid = {carTypeId}";
             }
 
             // License filter
@@ -10261,7 +10261,7 @@ WHERE 1 = 1 ";
                     sql.AppendLine($"AND recordin.cartype = {carTypeId}");
 
                 if (carType == Constants.TextBased.All && memberType != Constants.TextBased.All)
-                    sql.AppendLine($"AND member.typeid = {memberTypeId}");
+                    sql.AppendLine($" AND recordin.cartype = 200 AND member.typeid = {memberTypeId}");
             }
 
             if (!string.IsNullOrWhiteSpace(licensePlate))
@@ -10394,7 +10394,7 @@ WHERE 1 = 1 ";
                 if (carType == Constants.TextBased.All) //Mac 2015/02/10
                 {
                     if (memberType != Constants.TextBased.All)
-                        sql += " AND member.typeid =" + memberTypeId;
+                        sql += " AND recordin.cartype = 200 AND member.typeid =" + memberTypeId;
                 }
             }
 
@@ -10660,7 +10660,7 @@ WHERE 1 = 1 ";
                 if (carType == Constants.TextBased.All) //Mac 2015/02/10
                 {
                     if (memberType != Constants.TextBased.All)
-                        sql += " AND member.typeid =" + memberTypeId;
+                        sql += " AND recordin.cartype = 200 AND member.typeid =" + memberTypeId;
                 }
             }
 

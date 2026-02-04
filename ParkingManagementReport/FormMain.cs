@@ -428,12 +428,11 @@ namespace ParkingManagementReport
         private void LoadMemberGroupReport()
         {
             MemberTypeComboBox.Items.Clear();
-            CarTypeComboBox.Items.Clear();
 
             AddToDictionaryIfNotExists(AppGlobalVariables.MemberGroupsToId, Constants.TextBased.All, 0);
             AddToComboBoxIfNotExists(MemberTypeComboBox, Constants.TextBased.All);
 
-            if (Configs.Reports.ReportSearchMemberGroup || Configs.Reports.UseReport24_2)
+            if (Configs.Reports.ReportSearchMemberGroup)
             {
                 label17.Text = "กลุ่มสมาชิก";
                 MemberTypeComboBox.Visible = label17.Visible = true;
@@ -476,15 +475,15 @@ namespace ParkingManagementReport
                 else
                 {
                     MemberTypeComboBox.Text = Constants.TextBased.All;
-                    dt = DbController.LoadData("SELECT DISTINCT typeid FROM member WHERE typeid != 200 ORDER BY typeid");
+                    dt = DbController.LoadData("SELECT DISTINCT member.typeid, cartype.typename FROM member JOIN cartype ON member.typeid = cartype.typeid WHERE member.typeid != 200 ORDER BY member.typeid");
 
                     foreach (DataRow row in dt.Rows)
                     {
-                        string key = row["typeid"].ToString();
-                        int value = Convert.ToInt32(row["typeid"]);
+                        string name = row["typename"].ToString();
+                        int id = Convert.ToInt32(row["typeid"]);
 
-                        AddToDictionaryIfNotExists(AppGlobalVariables.MemberGroupsToId, key, value);
-                        AddToComboBoxIfNotExists(MemberTypeComboBox, key);
+                        AddToDictionaryIfNotExists(AppGlobalVariables.MemberGroupsToId, name, id);
+                        AddToComboBoxIfNotExists(MemberTypeComboBox, name);
                     }
                 }
             }
@@ -496,6 +495,14 @@ namespace ParkingManagementReport
             {
                 AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, -1, Constants.TextBased.All);
                 AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.All);
+
+                //AppGlobalVariables.CarTypesById.Add(0, Constants.TextBased.All);
+                //AppGlobalVariables.CarTypesById.Add(199, Constants.TextBased.Visitor);
+                //AppGlobalVariables.CarTypesById.Add(200, Constants.TextBased.Member);
+
+                //CarTypeComboBox.Items.Add(Constants.TextBased.All);
+                //CarTypeComboBox.Items.Add(Constants.TextBased.Visitor);
+                //CarTypeComboBox.Items.Add(Constants.TextBased.Member);
 
                 DataTable carTypes = DbController.LoadData("SELECT typeid, typename FROM cartype ORDER BY typeid");
                 if (carTypes?.Rows.Count > 0)
@@ -520,6 +527,7 @@ namespace ParkingManagementReport
                     AddToDictionaryIfNotExists(AppGlobalVariables.CarTypesById, 200, Constants.TextBased.Member);
                     AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.Member);
                 }
+
             }
             catch (Exception ex)
             {
@@ -7663,12 +7671,11 @@ namespace ParkingManagementReport
                                 }
 
                                 bool matchUser = (userId == Constants.TextBased.All) || (userout == userId || userin == userId);
-                                bool matchCarType = (carType == Constants.TextBased.All) || (cartype == carType);
                                 bool matchPayType =
                                     (payType == Constants.TextBased.All) ||
                                     payment.StartsWith(payType, StringComparison.OrdinalIgnoreCase);
 
-                                if (matchUser && matchCarType && matchPayType && matchOvertime)
+                                if (matchUser && matchPayType && matchOvertime)
                                 {
                                     filteredTable.ImportRow(row);
                                 }
