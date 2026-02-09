@@ -452,7 +452,7 @@ namespace ParkingManagementReport
                 else
                 {
                     MemberTypeComboBox.Text = Constants.TextBased.All;
-                    dt = DbController.LoadData("SELECT DISTINCT member.typeid, cartype.typename FROM member JOIN cartype ON member.typeid = cartype.typeid WHERE member.typeid != 200 ORDER BY member.typeid");
+                    dt = DbController.LoadData("SELECT DISTINCT member.typeid, cartype.typename FROM member JOIN cartype ON member.typeid = cartype.typeid ORDER BY member.typeid");
                     //dt = DbController.LoadData("SELECT DISTINCT typeid FROM member WHERE typeid != 200 ORDER BY typeid");
 
 
