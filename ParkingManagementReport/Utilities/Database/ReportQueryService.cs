@@ -9530,15 +9530,21 @@ WHERE 1 = 1 ";
                 case 163:
                     if (Configs.Reports.UseReportImpact)
                     {
-                        sql = "SELECT * FROM member";
+                        sql = "SELECT \r\n member.id AS ลำดับ,\r\n member.cardid AS หมายเลขบัตร,\r\n  member.name AS ชื่อสมาชิก,\r\n member.license AS ทะเบียน, member.address AS ที่อยู่, ";
+                        sql += "date_format(member.datestart, '%d/%m/%Y %H:%i:%s') AS วันที่เริ่ม,\r\n  date_format(member.dateexprie, '%d/%m/%Y %H:%i:%s') AS วันหมดอายุ, ";
+                        sql += "cartype.typename AS ประเภทสมาชิก FROM member\r\n LEFT JOIN cartype ON member.typeid = cartype.typeid ";
                     }
-                    else
-                    {
-                        sql = "SELECT recordin.no, recordin.cartype,recordout.price,recordout.discount, recordin.datein, recordout.dateout\n";
-                        sql += "FROM recordin\n";
-                        sql += "JOIN recordout ON recordin.no = recordout.no\n";
-                        sql += $"WHERE dateout BETWEEN '{startDate.ToString("yyyy-MM-dd")}' AND '{endDate.AddDays(1).ToString("yyyy-MM-dd")}'";
-                    }    
+                    if (memberType != Constants.TextBased.All)
+                    { 
+                        sql += " WHERE member.typeid = " + memberTypeId;  
+                    }
+                    if (licensePlate != "")
+                        sql += " WHERE member.license LIKE '%" + licensePlate + "%'";
+                    if (cardId != "")
+                        sql += " WHERE member.cardid = " + cardId;
+
+                    sql += " ORDER BY member.id DESC;";
+
                     break;
                 case 165:
                     sql = "";
