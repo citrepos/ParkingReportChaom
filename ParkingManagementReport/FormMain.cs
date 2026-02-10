@@ -9039,8 +9039,9 @@ namespace ParkingManagementReport
                                     ? Convert.ToDateTime(row["dateout"]).ToString("dd/MM/yyyy HH:mm:ss")
                                     : "");
                             string paytype = row["ช่องทางการชำระเงิน"]?.ToString() ?? "";
+
                             string userout = "";
-                             if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
+                            if (row["usergateout"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["usergateout"].ToString()))
                             {
                                 // 🔹 ถ้าไม่มี userpays แต่มี usergateout
                                 userout = row["usergateout"].ToString();
@@ -9076,8 +9077,30 @@ namespace ParkingManagementReport
                             newRow[9] = rabbitId;
                             resultTable.Rows.Add(newRow);
                         }
+                        DataTable filteredTable = resultTable.Clone(); // โครงสร้างเหมือนกัน
 
-                        ResultGridView.DataSource = resultTable;
+                        if (payType != Constants.TextBased.All)
+                        {
+                            foreach (DataRow row in resultTable.Rows)
+                            {
+                                string payment = row["ช่องทางการชำระเงิน"]?.ToString()?.Trim() ?? "";
+ 
+                                bool matchPayType =
+                                    (payType == Constants.TextBased.All) ||
+                                    payment.StartsWith(payType, StringComparison.OrdinalIgnoreCase);
+
+                                if (matchPayType)
+                                {
+                                    filteredTable.ImportRow(row);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // แสดงทุกแถว
+                            filteredTable = resultTable.Copy();
+                        }
+                        ResultGridView.DataSource = filteredTable;
                         ResultGridView.Refresh();
 
                         //ResultGridView.Columns[0].Width = 50;
