@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using ParkingManagementReport.Common;
@@ -430,46 +429,29 @@ namespace ParkingManagementReport.Utilities
 
         private static void SetOnlinePaymentType()
         {
-            int paymentMethodCount = 0;
+            string dbName = AppGlobalVariables.Database.Name;
 
-            sql = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" + AppGlobalVariables.Database.Name + "' AND TABLE_NAME = 'rabbit_post'";
-            dt = DbController.LoadData(sql);
-            if (dt.Rows.Count > 0)
+            var paymentTables = new (string TableName, Action EnableConfig)[]
             {
-                Configs.UsePaymentRabbit = true;
-                paymentMethodCount++;
+                ("rabbit_post", () => Configs.UsePaymentRabbit = true),
+                ("ksherpay_post", () => Configs.UsePaymentKsher = true),
+                ("beam_post", () => Configs.UsePaymentBeam = true),
+                ("scb_post", () => Configs.UsePaymentScb = true)
+            };
+
+            int enabledCount = 0;
+
+            foreach (var (tableName, enableConfig) in paymentTables)
+            {
+                if (DoesTableExist(dbName, tableName))
+                {
+                    enableConfig();
+                    enabledCount++;
+                }
             }
 
-            sql = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" + AppGlobalVariables.Database.Name + "' AND TABLE_NAME = 'ksherpay_post'";
-            dt = DbController.LoadData(sql);
-            if (dt.Rows.Count > 0)
-            {
-                Configs.UsePaymentKsher = true;
-                paymentMethodCount++;
-            }
-
-            sql = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" + AppGlobalVariables.Database.Name + "' AND TABLE_NAME = 'beam_post'";
-            dt = DbController.LoadData(sql);
-            if (dt.Rows.Count > 0)
-            {
-                Configs.UsePaymentBeam = true;
-                paymentMethodCount++;
-            }
-
-            if (paymentMethodCount > 1)
-            {
-                string caption = "Online Payment Conflict";
-
-                MessageBox.Show(
-                    "มีการเปิดใช้งานวิธีชำระเงินมากกว่า 1 รายการ กรุณาตรวจสอบ table:\r\n" +
-                    "-beam_post\r\n" +
-                    "-ksherpay_post\r\n" +
-                    "-rabbit_post",
-                    caption,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
-            }
+            if (enabledCount > 1)
+                ShowOnlinePaymentConflictWarning();
         }
 
         public static void SetUseMemberType()
@@ -752,7 +734,42 @@ namespace ParkingManagementReport.Utilities
                       TextCenter("               ใบเสร็จรับเงิน / ใบกำกับภาษีอย่างย่อ")
             );
         }
+
         #region Helpers
+        private static string TextCenter(String s)
+        {
+            string txt = s + "\r\n";
+
+            return txt;
+        }
+
+        private static bool DoesTableExist(string dbName, string tableName)
+        {
+            string sql = $@"
+            SELECT 1
+                FROM INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_SCHEMA = '{dbName}'
+            AND TABLE_NAME = '{tableName}'";
+
+            DataTable dt = DbController.LoadData(sql);
+            return dt.Rows.Count > 0;
+        }
+
+        private static void ShowOnlinePaymentConflictWarning()
+        {
+            const string caption = "Online Payment Conflict";
+
+            MessageBox.Show(
+                "มีการเปิดใช้งานวิธีชำระเงินมากกว่า 1 รายการ กรุณาตรวจสอบ table:\r\n" +
+                "- beam_post\r\n" +
+                "- ksherpay_post\r\n" +
+                "- rabbit_post\r\n" +
+                "- scb_post",
+                caption,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            );
+        }
 
         private static void LoadParam(bool Offline)
         {
@@ -778,14 +795,6 @@ namespace ParkingManagementReport.Utilities
             DbController.SaveData(sql);
         }
         #endregion
-
-        private static string TextCenter(String s)
-        {
-            string txt = s + "\r\n";
-
-            return txt;
-        }
-
     }
 }
 

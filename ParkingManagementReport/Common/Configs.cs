@@ -34,6 +34,7 @@ namespace ParkingManagementReport.Common
         public static bool UsePaymentBeam { get; internal set; }
         public static bool UsePaymentKsher { get; internal set; }
         public static bool UsePaymentRabbit { get; internal set; }
+        public static bool UsePaymentScb { get; internal set; }
 
         public static bool UseMemberGroupPriceMonth { get; internal set; }
         public static bool UseActivePromotion { get; internal set; }

@@ -11,8 +11,8 @@ using ParkingManagementReport.Utilities;
 using ParkingManagementReport.Utilities.Database;
 using ParkingManagementReport.Utilities.Formatters;
 using ParkingManagementReport.Utilities.Hardwares;
-using static ParkingManagementReport.Common.Constants;
 using Excel = Microsoft.Office.Interop.Excel;
+using static ParkingManagementReport.Common.Constants;
 
 namespace ParkingManagementReport
 {
@@ -57,7 +57,7 @@ namespace ParkingManagementReport
 
             /*FOR TEST */
             //StartDatePicker.Value = new DateTime(day: 01, month: 10, year: 2025);
-            //EndDatePicker.Value = new DateTime(day: 01, month: 10, year: 2025);
+            //EndDatePicker.Value = new DateTime(day: 10, month: 10, year: 2025);
         }
 
         #region INIT
@@ -1714,24 +1714,14 @@ namespace ParkingManagementReport
                         break;
 
                     case 164: // การเข้าออกของรถยนต์แสดงช่องทางการชำระเงิน
-                        if (Configs.Reports.ReportNoRunning)
-                        {
-                            if (Configs.UsePaymentBeam)
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Beam_NoRunning.rpt");
-                            else if (Configs.UsePaymentKsher)
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Ksher_NoRunning.rpt");
-                            else if (Configs.UsePaymentRabbit)
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Rabbit_NoRunning.rpt");
-                        }
-                        else
-                        {
-                            if (Configs.UsePaymentBeam)
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Beam.rpt");
-                            else if (Configs.UsePaymentKsher)
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Ksher.rpt");
-                            else if (Configs.UsePaymentRabbit)
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Rabbit.rpt");
-                        }
+                        if (Configs.UsePaymentBeam)
+                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Beam.rpt");
+                        else if (Configs.UsePaymentKsher)
+                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Ksher.rpt");
+                        else if (Configs.UsePaymentRabbit)
+                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Rabbit.rpt");
+                        else if (Configs.UsePaymentScb)
+                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_SCB.rpt");
 
                         TrySetReportData(reportDocument, dataFromQuery);
                         break;

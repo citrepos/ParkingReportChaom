@@ -1670,6 +1670,8 @@ namespace ParkingManagementReport.Utilities.Database
                         sql += " LEFT JOIN (SELECT MAX(t1.no) AS max_no, t1.no_recordin, t1.beam_id, t1.status, t2.qr FROM beam_post t1 LEFT JOIN beam_get t2 ON t1.beam_id = t2.beam_id WHERE status = 'Y' GROUP BY no_recordin) t3 ON recordout.no = t3.no_recordin";
                     else if (Configs.UsePaymentRabbit)
                         sql += " LEFT JOIN (SELECT MAX(t1.no) AS max_no, t1.no_recordin, t1.rabbit_id, t1.status, t2.qr FROM rabbit_post t1 LEFT JOIN rabbit_get t2 ON t1.rabbit_id = t2.rabbit_id WHERE status = 'Y' GROUP BY no_recordin) t3 ON recordout.no = t3.no_recordin";
+                    else if (Configs.UsePaymentScb)
+                        sql += " LEFT JOIN (SELECT MAX(t1.no) AS max_no, t1.no_recordin, t1.scb_id, t1.status, t2.qr FROM scb_post t1 LEFT JOIN scb_get t2 ON t1.scb_id = t2.scb_id WHERE status = 'Y' GROUP BY no_recordin) t3 ON recordout.no = t3.no_recordin";
 
                     sql += " where recordout.dateout between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
 
@@ -1719,6 +1721,8 @@ namespace ParkingManagementReport.Utilities.Database
                             sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
                         else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                        else if (Configs.UsePaymentScb)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.scb_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
                     }
                     else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
                     {
@@ -1732,6 +1736,8 @@ namespace ParkingManagementReport.Utilities.Database
                             sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                         else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                        else if (Configs.UsePaymentScb)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.scb_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                     }
                     else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                     {
@@ -1741,7 +1747,8 @@ namespace ParkingManagementReport.Utilities.Database
                             sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
                         else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
-
+                        else if (Configs.UsePaymentScb)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.scb_id IS NOT NULL THEN 'PromptPay' WHEN recordout.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
                     }
                     sql += " and recordout.printno > 0";
 
@@ -7724,7 +7731,8 @@ namespace ParkingManagementReport.Utilities.Database
                     /* FOR TEST
                      Configs.UsePaymentBeam = true;
                      Configs.UsePaymentKsher = false;
-                     Configs.UsePaymentRabbit = false; */
+                     Configs.UsePaymentRabbit = false;
+                     Configs.UsePaymentScb = false; */
 
                     sql = "select cast(t2.no as char) as 'หมายเลขบัตร', t2.license as 'ทะเบียนรถ', date_format(t2.datein, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาเข้า', date_format(t1.dateout, '%d/%m/%Y %H:%i:%s') as 'วัน-เวลาออก',\n";
                     if (Configs.UseReceiptFor1Out)
@@ -7745,7 +7753,7 @@ namespace ParkingManagementReport.Utilities.Database
                     sql += "format(t1.price, 2) as 'รายได้',\n";
                     if (Configs.UsePaymentKsher)
                     {
-                        sql += "case when t3.channel = 'TrueMoney' then 'TrueMoney' when t3.channel = 'promptpay' then 'PromptPay' when t1.pay_type = 'EDC' then 'EDC' else 'เงินสด' end as 'ช่องทางการชำระเงิน',\n";
+                        sql += "case when t3.channel = 'TrueMoney' then 'TrueMoney' when t3.channel = 'promptpay' then 'PromptPay' when t1.pay_type = 'EDC' then 'EDC' else 'เงินสด' end as 'ช่องทางการชำระเงิน', (select name from user where id = t1.userout) as เจ้าหน้าที่ขาออก,\n";
                         sql += "t3.ksher_order_no as 'ksher order no', t3.mch_order_no as 'mch order no' ";
                         sql += "from recordout t1 left join recordin t2 on t1.no = t2.no ";
                         sql += "left join (select max(t1.no), t1.no_recordin, t1.mch_order_no, t1.channel, t1.status, t2.ksher_order_no\n";
@@ -7753,7 +7761,7 @@ namespace ParkingManagementReport.Utilities.Database
                     }
                     else if (Configs.UsePaymentBeam)
                     {
-                        sql += "CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END AS 'ช่องทางการชำระเงิน',\n";
+                        sql += "CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END AS 'ช่องทางการชำระเงิน', (select name from user where id = t1.userout) as เจ้าหน้าที่ขาออก,\n";
                         sql += "t3.qr as 'QR Code', t3.beam_id as 'Beam ID'\n";
                         sql += "from recordout t1 left join recordin t2 on t1.no = t2.no ";
                         sql += "left join (select max(t1.no), t1.no_recordin, t1.beam_id, t1.status, t2.qr\n";
@@ -7761,11 +7769,19 @@ namespace ParkingManagementReport.Utilities.Database
                     }
                     else if (Configs.UsePaymentRabbit)
                     {
-                        sql += "CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END AS 'ช่องทางการชำระเงิน',\n";
-                        sql += "t3.qr as 'QR Code', t3.rabbit_id as 'rabbit ID'\n";
+                        sql += "CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END AS 'ช่องทางการชำระเงิน', (select name from user where id = t1.userout) as เจ้าหน้าที่ขาออก,\n";
+                        sql += "t3.qr as 'QR Code', t3.rabbit_id as 'Rabbit ID'\n";
                         sql += "from recordout t1 left join recordin t2 on t1.no = t2.no ";
                         sql += "left join (select max(t1.no), t1.no_recordin, t1.rabbit_id, t1.status, t2.qr\n";
                         sql += "from rabbit_post t1 left join rabbit_get t2 on t1.rabbit_id = t2.rabbit_id where t1.status = 'Y' group by t1.no_recordin) t3 on t1.no = t3.no_recordin\n";
+                    }
+                    else if (Configs.UsePaymentScb)
+                    {
+                        sql += "CASE WHEN t3.qr IS NOT NULL AND t3.scb_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END AS 'ช่องทางการชำระเงิน', (select name from user where id = t1.userout) as เจ้าหน้าที่ขาออก,\n";
+                        sql += "t3.qr as 'QR Code', t3.scb_id as 'SCB ID'\n";
+                        sql += "from recordout t1 left join recordin t2 on t1.no = t2.no ";
+                        sql += "left join (select max(t1.no), t1.no_recordin, t1.scb_id, t1.status, t2.qr\n";
+                        sql += "from scb_post t1 left join scb_get t2 on t1.scb_id = t2.scb_id where t1.status = 'Y' group by t1.no_recordin) t3 on t1.no = t3.no_recordin\n";
                     }
 
                     sql += "WHERE t1.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "'\n";
@@ -7788,6 +7804,8 @@ namespace ParkingManagementReport.Utilities.Database
                             sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
                         else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
+                        else if (Configs.UsePaymentScb)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.scb_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'PromptPay'";
                     }
                     else if (paymentChannel == Constants.TextBased.PaymentChannelCash)
                     {
@@ -7797,6 +7815,8 @@ namespace ParkingManagementReport.Utilities.Database
                             sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                         else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
+                        else if (Configs.UsePaymentScb)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.scb_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'เงินสด'";
                     }
                     else if (paymentChannel == Constants.TextBased.PaymentChannelEDC)
                     {
@@ -7806,6 +7826,8 @@ namespace ParkingManagementReport.Utilities.Database
                             sql += " AND (CASE WHEN t3.beam_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
                         else if (Configs.UsePaymentRabbit)
                             sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.rabbit_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
+                        else if (Configs.UsePaymentScb)
+                            sql += " AND (CASE WHEN t3.qr IS NOT NULL AND t3.scb_id IS NOT NULL THEN 'PromptPay' WHEN t1.pay_type = 'EDC' THEN 'EDC' ELSE 'เงินสด' END) = 'EDC'";
                     }
                     else if (paymentChannel == Constants.TextBased.PaymentChannelTrueMoney)
                         sql += " AND t3.channel = 'TrueMoney'";

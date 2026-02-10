@@ -677,8 +677,9 @@ namespace ParkingManagementReport.Utilities
                         }
                         ResultGridView.Rows[rowCount].Cells[2].Value = "จำนวนรถ";
                         ResultGridView.Rows[rowCount].Cells[3].Value = $"{rowCount:#,###,##0} คัน";
-                        ResultGridView.Rows[rowCount].Cells[4].Value = "จำนวนเงิน";
+                        ResultGridView.Rows[rowCount].Cells[4].Value = "รวมเงิน";
                         ResultGridView.Rows[rowCount].Cells[5].Value = totalCash.ToString("#,###,##0.00");
+                        ResultGridView.Rows[rowCount].Cells[6].Value = "บาท";
                         break;
                     default:
                         break;
