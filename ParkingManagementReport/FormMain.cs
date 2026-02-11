@@ -55,9 +55,10 @@ namespace ParkingManagementReport
 
             InitializeUIElements();
 
-            /*FOR TEST */
-            //StartDatePicker.Value = new DateTime(day: 01, month: 10, year: 2025);
-            //EndDatePicker.Value = new DateTime(day: 10, month: 10, year: 2025);
+            /*FOR TEST 
+            StartDatePicker.Value = new DateTime(day: 01, month: 10, year: 2025);
+            EndDatePicker.Value = new DateTime(day: 10, month: 10, year: 2025);
+            */
         }
 
         #region INIT
@@ -1070,13 +1071,13 @@ namespace ParkingManagementReport
                         $"'รายงาน{reportName} จากวันที่ {startDateTime} เวลา {startTime} ถึงวันที่ {endDateTime} เวลา {endTime}'";
                         break;
 
-                    case 33:
+                    case 33: //รายงานยกเลิกใบกำกับภาษีอย่างย่อ
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report33.rpt");
                         TrySetReportData(reportDocument, dataFromQuery);
                         reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานยกเลิกใบกำกับภาษีอย่างย่อประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.ToString("yyyy") + " ถึงวันที่ " + EndDatePicker.Value.ToString("d MMMM ") + EndDatePicker.Value.ToString("yyyy") + "'";
                         break;
 
-                    case 34:
+                    case 34: //รายงานภาษีขายค่าบริการที่จอดรถประจำวัน
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report34.rpt");
                         TrySetReportData(reportDocument, dataFromQuery);
                         reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
@@ -1112,12 +1113,12 @@ namespace ParkingManagementReport
 
                         break;
 
-                    case 35:
+                    case 35: //รายงานภาษีขายค่าบริการที่จอดรถประจำเดือน
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report35.rpt");
                         TrySetReportData(reportDocument, dataFromQuery);
                         reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถประจำเดือน " + StartDatePicker.Value.ToString("MMMM") + " " + StartDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
 
-                        #region cal sum
+                        #region cal sum 35
                         double sumVatM = 0;
                         double sumBeforeM = 0;
                         double sumTotalM = 0;
@@ -1148,48 +1149,45 @@ namespace ParkingManagementReport
 
                         break;
 
-                    case 36:
+                    case 36: //รายงานสรุปรายได้
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report36.rpt");
                         TrySetReportData(reportDocument, dataFromQuery);
                         reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปรายได้ประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.AddYears(543).ToString("yyyy") + " ถึงวันที่ " + EndDatePicker.Value.ToString("d MMMM ") + EndDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
 
                         #region cal sum 36
-                        double sumVatT = 0;
-                        double sumBeforeT = 0;
-                        double sumTotalT = 0;
-                        double sumPriceT = 0;
-                        double sumLossCardT = 0;
-                        double sumOverdateT = 0;
-
-                        for (int j = 0; j < dataFromQuery.Rows.Count; j++)
+                        var columnToFormulaMap = new (string Column, string Formula)[]
                         {
-                            sumVatT += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
-                            sumBeforeT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
-                            sumTotalT += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
-                            sumPriceT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าจอดรถ"]);
-                            sumLossCardT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าปรับบัตรหาย"]);
-                            sumOverdateT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าปรับค้างคืน"]);
+                           ("ค่าจอดรถ", "Pa0"),
+                           ("ค่าปรับบัตรหาย", "Pa1"),
+                           ("ค่าปรับค้างคืน", "Pa2"),
+                           ("ค่าบริการ PromptPay", "Pa3"),
+                           ("ค่าบริการเงินสด", "Pa4"),
+                           ("รวมค่าบริการ", "Pa5"),
+                           ("รวม VAT", "Pa6"),
+                           ("รวมสุทธิ", "Pa7")
+                        };
+                        int rowCount = ResultGridView.Rows.Count - 1;
+
+                        var sums = columnToFormulaMap.ToDictionary(x => x.Column, x => 0.0);
+
+                        foreach (DataRow row in dataFromQuery.Rows)
+                        {
+                            foreach (var col in columnToFormulaMap)
+                            {
+                                if (row[col.Column] != DBNull.Value)
+                                    sums[col.Column] += Convert.ToDouble(row[col.Column]);
+                            }
                         }
 
-                        if (Configs.UseCalVatFromTotal)
+                        foreach (var map in columnToFormulaMap)
                         {
-                            reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotalT - (sumTotalT * 7 / 107)).ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotalT * 7 / 107).ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalT.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + (sumTotalT - (sumTotalT * 7 / 107)).ToString("#,###,##0.00") + "'";
-                        }
-                        else
-                        {
-                            reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBeforeT.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVatT.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalT.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumPriceT.ToString("#,###,##0.00") + "'";
-                        }
+                            string formatted = sums[map.Column].ToString("#,###,##0.00");
 
-                        reportDocument.DataDefinition.FormulaFields["Pa4"].Text = "'" + sumLossCardT.ToString("#,###,##0.00") + "'";
-                        reportDocument.DataDefinition.FormulaFields["Pa5"].Text = "'" + sumOverdateT.ToString("#,###,##0.00") + "'";
+                            ResultGridView.Rows[rowCount].Cells[map.Column].Value = formatted;
+
+                            reportDocument.DataDefinition.FormulaFields[map.Formula].Text = $"'{formatted}'";
+                        }
                         #endregion
-
                         break;
 
                     case 37:
@@ -1244,8 +1242,7 @@ namespace ParkingManagementReport
                         $"'รายงาน{reportName} จากวันที่ {startDateTime} เวลา {startTime} ถึงวันที่ {endDateTime} เวลา {endTime}'";
                         break;
 
-                    //การเข้าออกMember แสดงรูปภาพ
-                    case 42:
+                    case 42: //การเข้าออกMember แสดงรูปภาพ
                         DataTable dataTable42 = DataTableManager.การเข้าออกMemberแสดงรูปภาพ(dataFromQuery);
 
                         if (Configs.Reports.ReportNoRunning)
@@ -1294,6 +1291,7 @@ namespace ParkingManagementReport
                         TrySetReportData(reportDocument, dataFromQuery, true);
                         PrimaryTabControl.SelectTab(1);
                         break;
+
                     case 51:
                         reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report51.rpt");
                         TrySetReportData(reportDocument, dataFromQuery);
@@ -2488,76 +2486,102 @@ namespace ParkingManagementReport
 
             PromotionComboBox.SelectedIndex = 0;
 
-            if (selectedReportId == 13 || selectedReportId == 14 || selectedReportId == 15 || selectedReportId == 16
-                || selectedReportId == 20 || selectedReportId == 21 || selectedReportId == 12)
-                SetReportConditionButton.Visible = true;
-            else SetReportConditionButton.Visible = false;
-
-            if (selectedReportId == 41 || selectedReportId == 42 || selectedReportId == 77 || selectedReportId == 78)
-            {
-                RecordNumberTextBox.Text = "";
-                label30.Visible = true;
-                RecordNumberTextBox.Visible = true;
-            }
-            else
-            {
-                RecordNumberTextBox.Text = "";
-                label30.Visible = false;
-                RecordNumberTextBox.Visible = false;
-            }
-
-            if (selectedReportId == 90)
-                AddressPanel.Visible = true;
-            else
-                AddressPanel.Visible = false;
-
-            if (selectedReportId == 23)
-                PaymentChannelPanel.Visible = true;
-            else
-                PaymentChannelPanel.Visible = false;
-
-
-            if (selectedReportId == 96)
-                ParkingTimeComparisonPanel.Visible = true;
-            else
-                ParkingTimeComparisonPanel.Visible = false;
-
-            if (selectedReportId == 162)
-            {
-                label20.Enabled = false;
-                PaymentStatusComboBox.Enabled = false;
-            }
-            else
-            {
-                label20.Enabled = true;
-                PaymentStatusComboBox.Enabled = true;
-            }
-
-            if (selectedReportId == 164 || selectedReportId == 49 || selectedReportId == 50)
-            {
-                label42.Visible = true;
-                PaymentChannelComboBox.Visible = true;
-                PaymentChannelComboBox.Text = Constants.TextBased.All;
-            }
-            else
-            {
-                label42.Visible = false;
-                PaymentChannelComboBox.Visible = false;
-            }
-
-            if (selectedReportId == 21 || selectedReportId == 22 || selectedReportId == 47 || selectedReportId == 162 || selectedReportId == 166)
-            {
-                PromotionIdFrom.Clear();
-                PromotionIdTo.Clear();
-                PromotionComboBox.SelectedIndex = 0;
-
-                PromotionIdRangePanel.Visible = true;
-                PromotionIdRangePanel.Location = new Point(347, 85);
-            }
-            else
-                PromotionIdRangePanel.Visible = false;
-
+            // Reset common UI
+            RecordNumberTextBox.Text = "";
             ViewBlockerPanel.Visible = false;
+
+            // ---------- SetReportConditionButton ----------
+            switch (selectedReportId)
+            {
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 20:
+                case 21:
+                case 12:
+                    SetReportConditionButton.Visible = true;
+                    break;
+                default:
+                    SetReportConditionButton.Visible = false;
+                    break;
+            }
+
+            // ---------- Record number ----------
+            switch (selectedReportId)
+            {
+                case 41:
+                case 42:
+                case 77:
+                case 78:
+                    label30.Visible = true;
+                    RecordNumberTextBox.Visible = true;
+                    break;
+                default:
+                    label30.Visible = false;
+                    RecordNumberTextBox.Visible = false;
+                    break;
+            }
+
+            // ---------- Address panel ----------
+            AddressPanel.Visible = selectedReportId == 90;
+
+            // ---------- Payment channel panel ----------
+            PaymentChannelPanel.Visible = selectedReportId == 23;
+
+            // ---------- Parking time comparison ----------
+            ParkingTimeComparisonPanel.Visible = selectedReportId == 96;
+
+            // ---------- Payment status enable ----------
+            bool disablePaymentStatus = selectedReportId == 162;
+            label20.Enabled = !disablePaymentStatus;
+            PaymentStatusComboBox.Enabled = !disablePaymentStatus;
+
+            // ---------- Payment channel combo ----------
+            switch (selectedReportId)
+            {
+                case 164:
+                case 49:
+                case 50:
+                    label42.Visible = true;
+                    PaymentChannelComboBox.Visible = true;
+                    PaymentChannelComboBox.Text = Constants.TextBased.All;
+                    break;
+                default:
+                    label42.Visible = false;
+                    PaymentChannelComboBox.Visible = false;
+                    break;
+            }
+
+            // ---------- Promotion ID range ----------
+            switch (selectedReportId)
+            {
+                case 21:
+                case 22:
+                case 47:
+                case 162:
+                case 166:
+                    PromotionIdFrom.Clear();
+                    PromotionIdTo.Clear();
+                    PromotionComboBox.SelectedIndex = 0;
+
+                    PromotionIdRangePanel.Visible = true;
+                    PromotionIdRangePanel.Location = new Point(347, 85);
+                    break;
+                default:
+                    PromotionIdRangePanel.Visible = false;
+                    break;
+            }
+
+            switch (selectedReportId)
+            {
+                case 36:
+                    ViewBlockerPanel.Bounds = new Rectangle(9, 48, 1095, 135);
+                    ViewBlockerPanel.Visible = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void UpdateReportButton_Click(object sender, EventArgs e)

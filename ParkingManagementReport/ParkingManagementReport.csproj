@@ -808,8 +808,8 @@
     </Content>
     <Content Include="CrystalReports\Report36.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Report36.cs</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>Report361.cs</LastGenOutput>
     </Content>
     <Content Include="CrystalReports\Report53.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

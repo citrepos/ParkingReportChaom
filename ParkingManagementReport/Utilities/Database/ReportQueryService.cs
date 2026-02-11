@@ -1161,36 +1161,74 @@ namespace ParkingManagementReport.Utilities.Database
                     break;
 
                 case 36:
-                    sql = "select concat(date_format(t2.dateout,'%d/%m/'), date_format(t2.dateout,'%Y') + 543) as วันที่";
+                    string paymentGatewayTable = "";
+                    string promptPayCondition = "";
+                    string cashCondition = "";
 
-                    if (Configs.Reports.ReportPriceSplitLosscard) //Mac 2019/08/27
+                    if (Configs.UsePaymentKsher)
                     {
-                        sql += " , format((sum(t2.price-t2.losscard) - ROUND(sum(t2.price-t2.losscard)*7/107, 2)) - (sum(t2.overdate) - ROUND(sum(t2.overdate)*7/107, 2)), 2) as ค่าจอดรถ";
-                        sql += " , format(sum(t2.losscard), 2) as ค่าปรับบัตรหาย";
-                        sql += " , format(sum(t2.overdate) - ROUND(sum(t2.overdate)*7/107, 6), 2) as ค่าปรับค้างคืน";
-                        sql += " , format(sum((t2.price-t2.losscard)) - ROUND(sum((t2.price-t2.losscard))*7/107, 6), 2) as ค่าบริการ";
-                        sql += " , format(ROUND(sum((t2.price-t2.losscard))*7/107, 6), 2) as VAT";
-                        sql += " , format(sum((t2.price-t2.losscard)), 2) as รวมเงิน";
+                        paymentGatewayTable = "ksherpay_post";
+                        promptPayCondition = "t3.channel = 'PromptPay'";
+                        cashCondition = "(t3.channel IS NULL AND t2.pay_type <> 'EDC')";
+                    }
+                    else if (Configs.UsePaymentBeam)
+                    {
+                        paymentGatewayTable = "beam_post";
+                        promptPayCondition = "t3.beam_id IS NOT NULL";
+                        cashCondition = "(t3.beam_id IS NULL AND t2.pay_type <> 'EDC')";
+                    }
+                    else if (Configs.UsePaymentRabbit)
+                    {
+                        paymentGatewayTable = "rabbit_post";
+                        promptPayCondition = "t3.rabbit_id IS NOT NULL";
+                        cashCondition = "(t3.rabbit_id IS NULL AND t2.pay_type <> 'EDC')";
+                    }
+                    else if (Configs.UsePaymentScb)
+                    {
+                        paymentGatewayTable = "scb_post";
+                        promptPayCondition = "t3.scb_id IS NOT NULL";
+                        cashCondition = "(t3.scb_id IS NULL AND t2.pay_type <> 'EDC')";
+                    }
+
+                    sql = "SELECT ";
+                    sql += "concat(date_format(t2.dateout,'%d/%m/'), date_format(t2.dateout,'%Y') + 543) AS วันที่, ";
+                    if (Configs.Reports.ReportPriceSplitLosscard)
+                    {
+                        MessageBox.Show("Unhandled 'ReportPriceSplitLosscard' case");
+                        return string.Empty;
                     }
                     else
                     {
-                        sql += " , format((sum(t2.price) - ROUND(sum(t2.price)*7/107, 2)) - ((sum(t2.losscard) - ROUND(sum(t2.losscard)*7/107, 2)) + (sum(t2.overdate) - ROUND(sum(t2.overdate)*7/107, 2))), 2) as ค่าจอดรถ";
-                        sql += " , format(sum(t2.losscard) - ROUND(sum(t2.losscard)*7/107, 6), 2) as ค่าปรับบัตรหาย";
-                        sql += " , format(sum(t2.overdate) - ROUND(sum(t2.overdate)*7/107, 6), 2) as ค่าปรับค้างคืน";
-                        sql += " , format(sum(t2.price) - ROUND(sum(t2.price)*7/107, 6), 2) as ค่าบริการ";
-                        sql += " , format(ROUND(sum(t2.price)*7/107, 6), 2) as VAT";
-                        sql += " , format(sum(t2.price), 2) as รวมเงิน";
+                        sql += "format((sum(t2.price) - ROUND(sum(t2.price)*7/107, 2)) - ((sum(t2.losscard) - ROUND(sum(t2.losscard)*7/107, 2)) + (sum(t2.overdate) - ROUND(sum(t2.overdate)*7/107, 2))), 2) AS ค่าจอดรถ, ";
+                        sql += "format(sum(t2.losscard) - ROUND(sum(t2.losscard)*7/107, 6), 2) AS ค่าปรับบัตรหาย, ";
+                        sql += "format(sum(t2.overdate) - ROUND(sum(t2.overdate)*7/107, 6), 2) AS ค่าปรับค้างคืน, ";
+                        sql += $@"
+                                format(
+                                    SUM(CASE WHEN {promptPayCondition} THEN t2.price ELSE 0 END)
+                                    - ROUND(SUM(CASE WHEN {promptPayCondition} THEN t2.price ELSE 0 END) * 7 / 107, 6)
+                                , 2) AS 'ค่าบริการ PromptPay',
+                                
+                                format(
+                                    SUM(CASE WHEN {cashCondition} THEN t2.price ELSE 0 END)
+                                    - ROUND(SUM(CASE WHEN {cashCondition} THEN t2.price ELSE 0 END) * 7 / 107, 6)
+                                , 2) AS ค่าบริการเงินสด,
+                                ";
+                        sql += "format(sum(t2.price) - ROUND(sum(t2.price)*7/107, 6), 2) AS 'รวมค่าบริการ', ";
+                        sql += "format(ROUND(sum(t2.price)*7/107, 6), 2) AS 'รวม VAT', ";
+                        sql += "format(sum(t2.price), 2) AS 'รวมสุทธิ' ";
                     }
-                    sql += " from recordin t1 left join recordout t2 on t1.no = t2.no";
-                    sql += " where t2.dateout between '" + startDateTimeText + "' and '" + endDateTimeText + "'";
-                    sql += " and t2.no is not null";
-                    sql += " and t2.printno > 0";
 
-                    if (Configs.UseVoidSlip)
-                        sql += " and t2.status = 'N'";
+                    sql += "FROM recordin t1 ";
+                    sql += "LEFT JOIN recordout t2 ON t1.no = t2.no ";
+                    sql += "LEFT JOIN " + paymentGatewayTable + " t3 ON t1.no = t3.no_recordin ";
 
-                    sql += " group by date_format(t2.dateout,'%Y-%m-%d')";
-                    sql += " order by date_format(t2.dateout,'%Y-%m-%d')";
+                    sql += "WHERE t2.dateout BETWEEN '" + startDateTimeText + "' AND '" + endDateTimeText + "' ";
+                    sql += "AND t2.no IS NOT NULL ";
+                    sql += "AND t2.printno > 0 ";
+                    sql += "AND t2.status = 'N' ";
+
+                    sql += "GROUP BY date_format(t2.dateout,'%Y-%m-%d') ";
+                    sql += "ORDER BY date_format(t2.dateout,'%Y-%m-%d')";
                     break;
 
                 case 37:

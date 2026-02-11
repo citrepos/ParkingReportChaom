@@ -192,7 +192,7 @@
               <xs:element name="อ้างถึงเลขใบเสร็จ" msprop:Generator_ColumnPropNameInTable="อ้างถึงเลขใบเสร็จColumn" msprop:Generator_ColumnPropNameInRow="อ้างถึงเลขใบเสร็จ" msprop:Generator_UserColumnName="อ้างถึงเลขใบเสร็จ" msprop:Generator_ColumnVarNameInTable="columnอ้างถึงเลขใบเสร็จ" type="xs:string" minOccurs="0" />
               <xs:element name="ภาษี_x0020_7_x0025_" msprop:Generator_ColumnPropNameInTable="_ภาษี_7_Column" msprop:Generator_ColumnPropNameInRow="_ภาษี_7_" msprop:Generator_UserColumnName="ภาษี 7%" msprop:Generator_ColumnVarNameInTable="_columnภาษี_7_" type="xs:string" minOccurs="0" />
               <xs:element name="เครื่องรับเงิน_x0020_online" msprop:Generator_ColumnPropNameInTable="เครื่องรับเงิน_onlineColumn" msprop:Generator_ColumnPropNameInRow="เครื่องรับเงิน_online" msprop:Generator_UserColumnName="เครื่องรับเงิน online" msprop:Generator_ColumnVarNameInTable="columnเครื่องรับเงิน_online" type="xs:string" minOccurs="0" />
-              <xs:element name="หมายเหตุ" msprop:Generator_UserColumnName="หมายเหตุ" msprop:Generator_ColumnPropNameInTable="หมายเหตุColumn" msprop:Generator_ColumnPropNameInRow="หมายเหตุ" msprop:Generator_ColumnVarNameInTable="columnหมายเหตุ" type="xs:string" minOccurs="0" />
+              <xs:element name="หมายเหตุ" msprop:Generator_ColumnPropNameInTable="หมายเหตุColumn" msprop:Generator_ColumnPropNameInRow="หมายเหตุ" msprop:Generator_UserColumnName="หมายเหตุ" msprop:Generator_ColumnVarNameInTable="columnหมายเหตุ" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -1253,6 +1253,21 @@
               <xs:element name="โปรโมชั่น" msprop:Generator_ColumnPropNameInTable="โปรโมชั่นColumn" msprop:Generator_ColumnPropNameInRow="โปรโมชั่น" msprop:Generator_UserColumnName="โปรโมชั่น" msprop:Generator_ColumnVarNameInTable="columnโปรโมชั่น" type="xs:string" minOccurs="0" />
               <xs:element name="จำนวน" msprop:Generator_ColumnPropNameInTable="จำนวนColumn" msprop:Generator_ColumnPropNameInRow="จำนวน" msprop:Generator_UserColumnName="จำนวน" msprop:Generator_ColumnVarNameInTable="columnจำนวน" type="xs:string" minOccurs="0" />
               <xs:element name="ลำดับ" msprop:Generator_ColumnPropNameInTable="ลำดับColumn" msprop:Generator_ColumnPropNameInRow="ลำดับ" msprop:Generator_UserColumnName="ลำดับ" msprop:Generator_ColumnVarNameInTable="columnลำดับ" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="report36" msprop:Generator_RowEvHandlerName="report36RowChangeEventHandler" msprop:Generator_RowDeletedName="report36RowDeleted" msprop:Generator_RowDeletingName="report36RowDeleting" msprop:Generator_RowEvArgName="report36RowChangeEvent" msprop:Generator_TablePropName="report36" msprop:Generator_RowChangedName="report36RowChanged" msprop:Generator_RowChangingName="report36RowChanging" msprop:Generator_TableClassName="report36DataTable" msprop:Generator_RowClassName="report36Row" msprop:Generator_TableVarName="tablereport36" msprop:Generator_UserTableName="report36">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="วันที่" msdata:Caption="ประเภท" msprop:Generator_ColumnPropNameInRow="วันที่" msprop:Generator_ColumnPropNameInTable="วันที่Column" msprop:Generator_ColumnVarNameInTable="columnวันที่" msprop:Generator_UserColumnName="วันที่" type="xs:string" minOccurs="0" />
+              <xs:element name="ค่าจอดรถ" msdata:Caption="ทะเบียน" msprop:Generator_ColumnPropNameInRow="ค่าจอดรถ" msprop:Generator_ColumnPropNameInTable="ค่าจอดรถColumn" msprop:Generator_ColumnVarNameInTable="columnค่าจอดรถ" msprop:Generator_UserColumnName="ค่าจอดรถ" type="xs:string" minOccurs="0" />
+              <xs:element name="ค่าปรับบัตรหาย" msdata:Caption="เวลาเข้า" msprop:Generator_ColumnPropNameInRow="ค่าปรับบัตรหาย" msprop:Generator_ColumnPropNameInTable="ค่าปรับบัตรหายColumn" msprop:Generator_ColumnVarNameInTable="columnค่าปรับบัตรหาย" msprop:Generator_UserColumnName="ค่าปรับบัตรหาย" type="xs:string" minOccurs="0" />
+              <xs:element name="ค่าปรับค้างคืน" msdata:Caption="เจ้าหน้าที่ขาเข้า" msprop:Generator_ColumnPropNameInRow="ค่าปรับค้างคืน" msprop:Generator_ColumnPropNameInTable="ค่าปรับค้างคืนColumn" msprop:Generator_ColumnVarNameInTable="columnค่าปรับค้างคืน" msprop:Generator_UserColumnName="ค่าปรับค้างคืน" type="xs:string" minOccurs="0" />
+              <xs:element name="ค่าบริการ_x0020_PromptPay" msdata:Caption="เวลาออก" msprop:Generator_ColumnPropNameInRow="ค่าบริการ_PromptPay" msprop:Generator_ColumnPropNameInTable="ค่าบริการ_PromptPayColumn" msprop:Generator_ColumnVarNameInTable="columnค่าบริการ_PromptPay" msprop:Generator_UserColumnName="ค่าบริการ PromptPay" type="xs:string" minOccurs="0" />
+              <xs:element name="ค่าบริการเงินสด" msdata:Caption="รายได้" msprop:Generator_ColumnPropNameInRow="ค่าบริการเงินสด" msprop:Generator_ColumnPropNameInTable="ค่าบริการเงินสดColumn" msprop:Generator_ColumnVarNameInTable="columnค่าบริการเงินสด" msprop:Generator_UserColumnName="ค่าบริการเงินสด" type="xs:string" minOccurs="0" />
+              <xs:element name="รวมค่าบริการ" msprop:Generator_ColumnPropNameInRow="รวมค่าบริการ" msprop:Generator_ColumnPropNameInTable="รวมค่าบริการColumn" msprop:Generator_ColumnVarNameInTable="columnรวมค่าบริการ" msprop:Generator_UserColumnName="รวมค่าบริการ" type="xs:string" minOccurs="0" />
+              <xs:element name="รวม_x0020_VAT" msprop:Generator_ColumnPropNameInRow="รวม_VAT" msprop:Generator_ColumnPropNameInTable="รวม_VATColumn" msprop:Generator_ColumnVarNameInTable="columnรวม_VAT" msprop:Generator_UserColumnName="รวม VAT" type="xs:string" minOccurs="0" />
+              <xs:element name="รวมสุทธิ" msprop:Generator_ColumnPropNameInRow="รวมสุทธิ" msprop:Generator_ColumnPropNameInTable="รวมสุทธิColumn" msprop:Generator_ColumnVarNameInTable="columnรวมสุทธิ" msprop:Generator_UserColumnName="รวมสุทธิ" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
