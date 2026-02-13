@@ -428,13 +428,11 @@ namespace ParkingManagementReport
 
                 if (Configs.Member2Cartype)
                 {
-                    CarTypeComboBox.Text = Constants.TextBased.All;
                     dt = DbController.LoadData("SELECT typename, typeid FROM cartype ORDER BY typeid");
                     AddCarTypes(dt);
                 }
                 else
                 {
-                    CarTypeComboBox.Text = Constants.TextBased.All;
                     dt = DbController.LoadData("SELECT t1.typename, t1.typeid FROM cartype t1 LEFT JOIN member t2 ON t1.typeid = t2.typeid WHERE t2.typeid IS NULL AND t1.typeid != 200 ORDER BY t1.typeid");
                     AddCarTypes(dt);
                 }
@@ -507,6 +505,7 @@ namespace ParkingManagementReport
                     AddToComboBoxIfNotExists(CarTypeComboBox, Constants.TextBased.Member);
                 }
 
+                CarTypeComboBox.Text = Constants.TextBased.All;
             }
             catch (Exception ex)
             {
@@ -712,9 +711,19 @@ namespace ParkingManagementReport
                     //รถคงค้าง
                     case 5:
                         if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5_NoRunning.rpt");
+                        {
+                            if (Configs.UseNameOnCard)
+                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5_NameOnCard_NoRunning.rpt");
+                            else
+                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5_NoRunning.rpt");
+                        }
                         else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5.rpt");
+                        {
+                            if (Configs.UseNameOnCard)
+                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5_NameOnCard.rpt");
+                            else
+                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5.rpt");
+                        }
 
                         TrySetReportData(reportDocument, dataFromQuery);
                         break;
@@ -932,7 +941,8 @@ namespace ParkingManagementReport
                         return;
 
                     case 21: //รายงานจำนวนตราประทับรถยนต์แบบแจกแจง
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report21.rpt");
+                        if (Configs.Reports.ReportMinimal)
+                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report21_Minimal.rpt");
 
                         รายงานจำนวนตราประทับรถยนต์แบบแจกแจง(reportDocument, sql);
                         return;
@@ -3189,6 +3199,11 @@ namespace ParkingManagementReport
             try
             {
                 reportDocument.SetParameterValue("ComTel", nTel);
+            }
+            catch { }
+            try
+            {
+                reportDocument.SetParameterValue("compTax", nTax);
             }
             catch { }
             try

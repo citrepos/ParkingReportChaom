@@ -134,13 +134,13 @@ namespace ParkingManagementReport.Common
             //public static bool UseReportThanapoom { get; internal set; }
 
             public static bool Report3Decimal { get; internal set; }
+            public static bool ReportCartypeFree15Min { get; internal set; }
+            public static bool ReportNoRunning { get; internal set; }
+            public static bool ReportMinimal { get; internal set; }
             public static bool ReportPriceSplitLosscard { get; internal set; }
             public static bool ReportProsetPriceDayWeek { get; internal set; }
             public static bool ReportSearchMemberGroup { get; internal set; }
             public static bool ReportSearchMemGroup { get; internal set; }
-            public static bool ReportNoRunning { get; internal set; }
-            public static bool ReportCartypeFree15Min { get; internal set; }
         }
-
     }
 }

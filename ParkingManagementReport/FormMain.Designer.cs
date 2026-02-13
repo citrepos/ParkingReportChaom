@@ -1383,6 +1383,7 @@
             this.PrimaryCrystalReportViewer.Name = "PrimaryCrystalReportViewer";
             this.PrimaryCrystalReportViewer.Size = new System.Drawing.Size(1311, 473);
             this.PrimaryCrystalReportViewer.TabIndex = 0;
+            this.PrimaryCrystalReportViewer.ToolPanelView = CrystalDecisions.Windows.Forms.ToolPanelViewType.None;
             // 
             // tabPage3
             // 

@@ -375,10 +375,10 @@ namespace ParkingManagementReport.Utilities
             Map.Columns.Add(new DataColumn("ทะเบียน", typeof(string)));
             Map.Columns.Add(new DataColumn("เวลาเข้า", typeof(string)));
             Map.Columns.Add(new DataColumn("เจ้าหน้าที่ขาเข้า", typeof(string)));
-            Map.Columns.Add(new DataColumn("picdiv", typeof(System.Byte[])));
-            Map.Columns.Add(new DataColumn("piclic", typeof(System.Byte[])));
+            Map.Columns.Add(new DataColumn("picdiv", typeof(Byte[])));
+            Map.Columns.Add(new DataColumn("piclic", typeof(Byte[])));
 
-            if (Configs.UseNameOnCard) //Mac 2018/12/13
+            if (Configs.UseNameOnCard)
                 Map.Columns.Add(new DataColumn("ชื่อบัตร", typeof(string)));
 
             ///////////////////////////////////////////////////
@@ -426,7 +426,7 @@ namespace ParkingManagementReport.Utilities
                     dr["piclic"] = null;
                 }
 
-                if (Configs.UseNameOnCard) //Mac 2018/12/13
+                if (Configs.UseNameOnCard)
                     dr["ชื่อบัตร"] = dt.Rows[j]["ชื่อบัตร"];
 
                 Map.Rows.Add(dr);

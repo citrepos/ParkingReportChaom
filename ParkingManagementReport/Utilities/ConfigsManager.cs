@@ -657,6 +657,7 @@ namespace ParkingManagementReport.Utilities
                 // Report behavior flags
                 ["report3decimal"] = v => Configs.Reports.Report3Decimal = v,
                 ["report_norunning"] = v => Configs.Reports.ReportNoRunning = v,
+                ["report_minimal"] = v => Configs.Reports.ReportMinimal = v,
                 ["report_cartypefree15min"] = v => Configs.Reports.ReportCartypeFree15Min = v,
                 ["report_pricesplit_losscard"] = v => Configs.Reports.ReportPriceSplitLosscard = v,
                 ["report_prosetprice_dayweek"] = v => Configs.Reports.ReportProsetPriceDayWeek = v,
