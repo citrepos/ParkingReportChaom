@@ -114,7 +114,8 @@ namespace ParkingManagementReport.Utilities.Database
                             ? AppGlobalVariables.PromotionNamesById[currentProId]
                             : "Unknown";
 
-                        int parkingTimeMinute = Convert.ToInt16(dt.Rows[i]["tdf"]);
+                        int parkingTimeMinute = int.TryParse(dt.Rows[i]["tdf"]?.ToString(), out int m) ? m : 0;
+
                         double parkingTimeHour = Math.Round(parkingTimeMinute / 60.0, 2);
 
                         double parkingTimeHourRoundedUp = Math.Ceiling(parkingTimeHour);
@@ -185,6 +186,13 @@ namespace ParkingManagementReport.Utilities.Database
                         dr["ชำระเงินเอง"] = parkingPrice.ToString("F2");
                         dr["ค่าบริการเรียกเก็บ"] = applicableChargeFee.ToString("F2");
                         #endregion
+
+                        if (Configs.Reports.ReportMinimal)
+                        {
+                            if (applicableChargeFee > 0)
+                                Map.Rows.Add(dr);
+                            continue;
+                        }
 
                         if (paymentText == Constants.TextBased.PaymentStatusPaid)
                         {
