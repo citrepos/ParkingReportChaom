@@ -11,8 +11,8 @@ using ParkingManagementReport.Utilities;
 using ParkingManagementReport.Utilities.Database;
 using ParkingManagementReport.Utilities.Formatters;
 using ParkingManagementReport.Utilities.Hardwares;
-using Excel = Microsoft.Office.Interop.Excel;
 using static ParkingManagementReport.Common.Constants;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ParkingManagementReport
 {
@@ -29,8 +29,6 @@ namespace ParkingManagementReport
         int FlatRateM = 0;
         int FlatRateP = 0;
         int FlatRateX = 0;
-        //int totalReceived, totalDiscount, totalAmount, totalLoss, totalOver, totalPrice;
-        //double totalBeforeVat, totalVat;
         int dgvX, dgvY, dgvH;
         #endregion
 
@@ -157,14 +155,12 @@ namespace ParkingManagementReport
             if (Configs.UseSettingNewMember)
             {
                 MemberGroupMonthComboBox.Visible = true;
-                PaymentStatusComboBox.Visible = true;
                 AdditionalMemberInfoPanel.Visible = true;
             }
             else if ((Configs.UseMemberGroupPriceMonth || Configs.UseGroupPromotion) &&
                      Configs.ShowConditionMemberGroupPriceMonth)
             {
                 MemberGroupMonthComboBox.Visible = true;
-                PaymentStatusComboBox.Visible = true;
                 MemberNameComboBox.Visible = true;
             }
 
@@ -178,13 +174,13 @@ namespace ParkingManagementReport
             }
 
             // Configure label visibility
-            label19.Visible = Configs.UseSettingNewMember ||
-                             (Configs.UseMemberGroupPriceMonth || Configs.UseGroupPromotion);
-            label20.Visible = label19.Visible;
+            label19.Visible = Configs.UseSettingNewMember || Configs.UseMemberGroupPriceMonth || Configs.UseGroupPromotion;
+            label20.Visible = true;
             label21.Visible = (Configs.UseMemberGroupPriceMonth || Configs.UseGroupPromotion) &&
                               Configs.ShowConditionMemberGroupPriceMonth;
 
             PromotionIdRangePanel.Visible = false;
+            PaymentStatusComboBox.Visible = true;
         }
 
         private void SetDefaultComboBoxValues(params ComboBox[] comboBoxes)
@@ -639,8 +635,7 @@ namespace ParkingManagementReport
         #region PROCESS
         private void Display(string sql)
         {
-            if (String.IsNullOrEmpty(sql))
-                return;
+            //if (String.IsNullOrEmpty(sql)) return;
 
             DataTable dataFromQuery = DbController.LoadData(sql);
             DataTable dtMap = new DataTable();
@@ -657,1111 +652,1126 @@ namespace ParkingManagementReport
             string reportName = ReportComboBox.Text;
             string startTime = StartTimePicker.Value.ToLongTimeString();
             string endTime = EndTimePicker.Value.ToLongTimeString();
-            if (dataFromQuery.Rows.Count > 0)
-            {
-                PrimaryCrystalReportViewer.ReportSource = null;
-                PrimaryCrystalReportViewer.Refresh();
 
-                switch (selectedReportId)
-                {
-                    //การเข้าออก
-                    case 1:
+            PrimaryCrystalReportViewer.ReportSource = null;
+            PrimaryCrystalReportViewer.Refresh();
+
+            switch (selectedReportId)
+            {
+                //การเข้าออก
+                case 1:
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report1_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report1.rpt");
+
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
+
+                //การเข้าออก แสดงรูปภาพ
+                case 2:
+                    DataTable dataTable2 = DataTableManager.การเข้าออกแสดงรูปภาพ(dataFromQuery);
+
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report2_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report2.rpt");
+
+                    TrySetReportData(reportDocument, dataTable2);
+
+                    SetDisplayImageUI();
+                    break;
+
+                //การทำงานของเจ้าหน้าที่
+                case 3:
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report3_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report3.rpt");
+
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
+
+                //การยกไม้
+                case 4:
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report4_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report4.rpt");
+
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
+
+                //รถคงค้าง
+                case 5:
+                    if (Configs.Reports.ReportNoRunning)
+                    {
+                        if (Configs.UseNameOnCard)
+                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5_NameOnCard_NoRunning.rpt");
+                        else
+                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5_NoRunning.rpt");
+                    }
+                    else
+                    {
+                        if (Configs.UseNameOnCard)
+                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5_NameOnCard.rpt");
+                        else
+                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5.rpt");
+                    }
+
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
+
+                //บัตรหาย
+                case 6:
+                    if (Configs.Reports.ReportPriceSplitLosscard)
+                    {
+                        if (Configs.Reports.ReportNoRunning)
+                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report6_NoRunning.rpt");
+                        else
+                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report6.rpt");
+                    }
+                    else //ถ้าไม่แยกเงินค่าปรับ กับค่าบริการจอดรถ → ไปใช้ Report1
+                    {
                         if (Configs.Reports.ReportNoRunning)
                             reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report1_NoRunning.rpt");
                         else
                             reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report1.rpt");
+                    }
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    //การเข้าออก แสดงรูปภาพ
-                    case 2:
-                        DataTable dataTable2 = DataTableManager.การเข้าออกแสดงรูปภาพ(dataFromQuery);
+                //สถิติการเข้าออก
+                case 7:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report7.rpt");
 
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report2_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report2.rpt");
+                    DataTable dataTable7 = DataTableManager.สถิติการเข้าออก(dataFromQuery, ResultGridView);
 
-                        TrySetReportData(reportDocument, dataTable2);
+                    TrySetReportData(reportDocument, dataTable7);
+                    break;
 
-                        SetDisplayImageUI();
-                        break;
+                //การยกไม้ แสดงรูปภาพ
+                case 8:
+                    DataTable dataTable8 = DataTableManager.การยกไม้แสดงรูปภาพ(dataFromQuery);
 
-                    //การทำงานของเจ้าหน้าที่
-                    case 3:
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report3_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report3.rpt");
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report8.rpt");
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    TrySetReportData(reportDocument, dataTable8);
 
-                    //การยกไม้
-                    case 4:
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report4_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report4.rpt");
+                    SetDisplayImageUI();
+                    break;
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                //โปรโมชั่น
+                case 9:
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report9_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report9.rpt");
 
-                    //รถคงค้าง
-                    case 5:
-                        if (Configs.Reports.ReportNoRunning)
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
+
+                //รายได้แยกภาษี
+                case 10:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report10.rpt");
+
+                    DataTable dataTable10 = DataTableManager.ConvertedTableType(dataFromQuery);
+                    DataTableManager.CaseReportTax(ResultGridView);
+
+                    #region cal sum 10
+                    try
+                    {
+                        string p0, p1, p2, p3, p4, p5;
+                        p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[4].Value.ToString();
+                        p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[7].Value.ToString();
+                        p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[8].Value.ToString();
+                        p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[9].Value.ToString();
+                        p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[10].Value.ToString();
+                        p5 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
+
+                        if (dtMap.Rows.Count > 0)
                         {
-                            if (Configs.UseNameOnCard)
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5_NameOnCard_NoRunning.rpt");
-                            else
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5_NoRunning.rpt");
+                            reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + p0 + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + p1 + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + p2 + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + p3 + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa4"].Text = "'" + p4 + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa5"].Text = "'" + p5 + "'";
                         }
-                        else
+                    }
+                    catch { }
+                    #endregion
+
+                    TrySetReportData(reportDocument, dataTable10);
+                    break;
+
+                //รายได้ของ Member
+                case 11:
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report11_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report11.rpt");
+
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
+
+                //รายได้แบบแยกกลุ่ม
+                case 12:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report12.rpt");
+                    ResultGridView.DataSource = DataTableManager.ConvertedTableType(dataFromQuery);
+                    CaseReportGroupPrice();
+
+                    #region cal sum 12
+                    try
+                    {
+                        string p0, p1, p2, p3, p4, p5, p6;
+                        p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[4].Value.ToString();
+                        p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[6].Value.ToString();
+                        p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[7].Value.ToString();
+                        p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[8].Value.ToString();
+                        p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[9].Value.ToString();
+                        p5 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[10].Value.ToString();
+                        p6 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
+
+                        if (dtMap.Rows.Count > 0)
                         {
-                            if (Configs.UseNameOnCard)
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5_NameOnCard.rpt");
-                            else
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report5.rpt");
+                            reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + p0 + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + p1 + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + p2 + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + p3 + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa4"].Text = "'" + p4 + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa5"].Text = "'" + p5 + "'";
+                            reportDocument.DataDefinition.FormulaFields["Pa6"].Text = "'" + p6 + "'";
                         }
+                    }
+                    catch { }
+                    #endregion
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    //บัตรหาย
-                    case 6:
-                        if (Configs.Reports.ReportPriceSplitLosscard)
-                        {
-                            if (Configs.Reports.ReportNoRunning)
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report6_NoRunning.rpt");
-                            else
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report6.rpt");
-                        }
-                        else //ถ้าไม่แยกเงินค่าปรับ กับค่าบริการจอดรถ → ไปใช้ Report1
-                        {
-                            if (Configs.Reports.ReportNoRunning)
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report1_NoRunning.rpt");
-                            else
-                                reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report1.rpt");
-                        }
+                //การเข้าออกแสดงโปรโมชั่น
+                case 13:
+                //รายได้ค่าจอดตามเลขที่ใบเสร็จ/ใบกำกับภาษี
+                case 14:
+                //การเข้าออกของรถแสดงโปรโมชั่นตามการทำงานของเจ้าหน้าที่
+                case 15:
+                    Handle131415(reportDocument, dataFromQuery);
+                    break;
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                //ยอดรวม E-Stamp
+                case 16:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report16.rpt");
 
-                    //สถิติการเข้าออก
-                    case 7:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report7.rpt");
+                    ResultGridView.DataSource = DataTableManager.ConvertedTableType(dataFromQuery);
 
-                        DataTable dataTable7 = DataTableManager.สถิติการเข้าออก(dataFromQuery, ResultGridView);
+                    ResultGridView.Columns[0].HeaderText = ResultGridView.Columns[0].Name = "E-Stamp";
+                    ResultGridView.Columns[1].HeaderText = ResultGridView.Columns[1].Name = "ยอดรวม";
 
-                        TrySetReportData(reportDocument, dataTable7);
-                        break;
+                    int intNo = ResultGridView.Rows.Count - 1;
+                    int sumPromotion = 0;
+                    int sumNonPromotion = 0;
 
-                    //การยกไม้ แสดงรูปภาพ
-                    case 8:
-                        DataTable dataTable8 = DataTableManager.การยกไม้แสดงรูปภาพ(dataFromQuery);
-
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report8.rpt");
-
-                        TrySetReportData(reportDocument, dataTable8);
-
-                        SetDisplayImageUI();
-                        break;
-
-                    //โปรโมชั่น
-                    case 9:
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report9_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report9.rpt");
-
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
-
-                    //รายได้แยกภาษี
-                    case 10:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report10.rpt");
-
-                        DataTable dataTable10 = DataTableManager.ConvertedTableType(dataFromQuery);
-                        DataTableManager.CaseReportTax(ResultGridView);
-
-                        #region cal sum 10
+                    for (int i = 0; i < intNo; i++)
+                    {
+                        int intID = Convert.ToInt32(ResultGridView[0, i].Value);
                         try
                         {
-                            string p0, p1, p2, p3, p4, p5;
-                            p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[4].Value.ToString();
-                            p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[7].Value.ToString();
-                            p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[8].Value.ToString();
-                            p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[9].Value.ToString();
-                            p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[10].Value.ToString();
-                            p5 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
-
-                            if (dtMap.Rows.Count > 0)
+                            if (intID > 0)
                             {
-                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + p0 + "'";
-                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + p1 + "'";
-                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + p2 + "'";
-                                reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + p3 + "'";
-                                reportDocument.DataDefinition.FormulaFields["Pa4"].Text = "'" + p4 + "'";
-                                reportDocument.DataDefinition.FormulaFields["Pa5"].Text = "'" + p5 + "'";
+                                ResultGridView[0, i].Value = AppGlobalVariables.PromotionNamesById[intID];
+                                sumPromotion += Convert.ToInt32(ResultGridView[1, i].Value);
+                            }
+                            else
+                            {
+                                ResultGridView[0, i].Value = "(ไม่มีโปรโมชั่น-ส่วนลด)";
+                                sumNonPromotion = Convert.ToInt32(ResultGridView[1, i].Value);
                             }
                         }
-                        catch { }
-                        #endregion
-
-                        TrySetReportData(reportDocument, dataTable10);
-                        break;
-
-                    //รายได้ของ Member
-                    case 11:
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report11_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report11.rpt");
-
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
-
-                    //รายได้แบบแยกกลุ่ม
-                    case 12:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report12.rpt");
-                        ResultGridView.DataSource = DataTableManager.ConvertedTableType(dataFromQuery);
-                        CaseReportGroupPrice();
-
-                        #region cal sum 12
-                        try
+                        catch (Exception)
                         {
-                            string p0, p1, p2, p3, p4, p5, p6;
-                            p0 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[4].Value.ToString();
-                            p1 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[6].Value.ToString();
-                            p2 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[7].Value.ToString();
-                            p3 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[8].Value.ToString();
-                            p4 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[9].Value.ToString();
-                            p5 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[10].Value.ToString();
-                            p6 = ResultGridView.Rows[ResultGridView.Rows.Count - 1].Cells[11].Value.ToString();
-
-                            if (dtMap.Rows.Count > 0)
-                            {
-                                reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + p0 + "'";
-                                reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + p1 + "'";
-                                reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + p2 + "'";
-                                reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + p3 + "'";
-                                reportDocument.DataDefinition.FormulaFields["Pa4"].Text = "'" + p4 + "'";
-                                reportDocument.DataDefinition.FormulaFields["Pa5"].Text = "'" + p5 + "'";
-                                reportDocument.DataDefinition.FormulaFields["Pa6"].Text = "'" + p6 + "'";
-                            }
+                            ResultGridView[0, i].Value = "E-Stamp เลิกใช้";
                         }
-                        catch { }
-                        #endregion
+                    }
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    dataFromQuery = DataTableManager.ConvertedDataGridView(ResultGridView);
 
-                    //การเข้าออกแสดงโปรโมชั่น
-                    case 13:
-                    //รายได้ค่าจอดตามเลขที่ใบเสร็จ/ใบกำกับภาษี
-                    case 14:
-                    //การเข้าออกของรถแสดงโปรโมชั่นตามการทำงานของเจ้าหน้าที่
-                    case 15:
-                        Handle131415(reportDocument, dataFromQuery);
-                        break;
+                    reportDocument.DataDefinition.FormulaFields["SumPromotion"].Text = $"'{sumPromotion}'";
+                    reportDocument.DataDefinition.FormulaFields["SumNonPromotion"].Text = $"'{sumNonPromotion}'";
+                    reportDocument.DataDefinition.FormulaFields["SumAll"].Text = $"'{sumPromotion + sumNonPromotion}'";
 
-                    //ยอดรวม E-Stamp
-                    case 16:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report16.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        ResultGridView.DataSource = DataTableManager.ConvertedTableType(dataFromQuery);
+                    ResultGridView[0, intNo].Value = "รวม E-Stamp ทั้งหมด";
+                    ResultGridView[1, intNo].Value = sumPromotion.ToString();
+                    break;
 
-                        ResultGridView.Columns[0].HeaderText = ResultGridView.Columns[0].Name = "E-Stamp";
-                        ResultGridView.Columns[1].HeaderText = ResultGridView.Columns[1].Name = "ยอดรวม";
+                case 17: //รายงานสรุปการเข้า-ออก
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report17.rpt");
 
-                        int intNo = ResultGridView.Rows.Count - 1;
-                        int sumPromotion = 0;
-                        int sumNonPromotion = 0;
+                    รายงานสรุปการเข้าออก(reportDocument);
+                    return;
 
-                        for (int i = 0; i < intNo; i++)
-                        {
-                            int intID = Convert.ToInt32(ResultGridView[0, i].Value);
-                            try
-                            {
-                                if (intID > 0)
-                                {
-                                    ResultGridView[0, i].Value = AppGlobalVariables.PromotionNamesById[intID];
-                                    sumPromotion += Convert.ToInt32(ResultGridView[1, i].Value);
-                                }
-                                else
-                                {
-                                    ResultGridView[0, i].Value = "(ไม่มีโปรโมชั่น-ส่วนลด)";
-                                    sumNonPromotion = Convert.ToInt32(ResultGridView[1, i].Value);
-                                }
-                            }
-                            catch (Exception)
-                            {
-                                ResultGridView[0, i].Value = "E-Stamp เลิกใช้";
-                            }
-                        }
+                case 18: //รายงานการเข้า-ออกประจำวัน
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report18.rpt");
 
-                        dataFromQuery = DataTableManager.ConvertedDataGridView(ResultGridView);
+                    รายงานการเข้าออกประจำวัน(reportDocument);
+                    return;
 
-                        reportDocument.DataDefinition.FormulaFields["SumPromotion"].Text = $"'{sumPromotion}'";
-                        reportDocument.DataDefinition.FormulaFields["SumNonPromotion"].Text = $"'{sumNonPromotion}'";
-                        reportDocument.DataDefinition.FormulaFields["SumAll"].Text = $"'{sumPromotion + sumNonPromotion}'";
+                case 19: //รายงานสถิติการเข้าออกที่จอดรถ
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report19.rpt");
 
-                        TrySetReportData(reportDocument, dataFromQuery);
+                    รายงานสถิติการเข้าออกที่จอดรถ(reportDocument);
+                    return;
 
-                        ResultGridView[0, intNo].Value = "รวม E-Stamp ทั้งหมด";
-                        ResultGridView[1, intNo].Value = sumPromotion.ToString();
-                        break;
+                case 20: //รายงานสรุปจำนวนตราประทับ
+                    if (Configs.UseActivePromotion)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report20_Active.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report20.rpt");
 
-                    case 17: //รายงานสรุปการเข้า-ออก
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report17.rpt");
+                    รายงานสรุปจำนวนตราประทับ(reportDocument);
 
-                        รายงานสรุปการเข้าออก(reportDocument);
-                        return;
+                    return;
 
-                    case 18: //รายงานการเข้า-ออกประจำวัน
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report18.rpt");
+                case 21: //รายงานจำนวนตราประทับรถยนต์แบบแจกแจง
+                    if (Configs.Reports.ReportMinimal)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report21_Minimal.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report21.rpt");
 
-                        รายงานการเข้าออกประจำวัน(reportDocument);
-                        return;
+                    รายงานจำนวนตราประทับรถยนต์แบบแจกแจง(reportDocument, sql);
+                    return;
 
-                    case 19: //รายงานสถิติการเข้าออกที่จอดรถ
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report19.rpt");
+                case 22: //รายงานรายวันจำนวนตราประทับรถยนต์แบบแจกแจง
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report22.rpt");
 
-                        รายงานสถิติการเข้าออกที่จอดรถ(reportDocument);
-                        return;
+                    รายงานรายวันจำนวนตราประทับรถยนต์แบบแจกแจง(reportDocument, sql);
+                    return;
 
-                    case 20: //รายงานสรุปจำนวนตราประทับ
-                        if (Configs.UseActivePromotion)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report20_Active.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report20.rpt");
+                case 23: //รายชื่อสมาชิก
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report23.rpt");
 
-                        รายงานสรุปจำนวนตราประทับ(reportDocument);
-                        return;
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 21: //รายงานจำนวนตราประทับรถยนต์แบบแจกแจง
-                        if (Configs.Reports.ReportMinimal)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report21_Minimal.rpt");
+                case 24: //รายได้จากสมาชิก
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report24_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report24.rpt");
 
-                        รายงานจำนวนตราประทับรถยนต์แบบแจกแจง(reportDocument, sql);
-                        return;
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 22: //รายงานรายวันจำนวนตราประทับรถยนต์แบบแจกแจง
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report22.rpt");
+                case 25: //สรุปรถเข้า-ออกตามช่วงเวลา เฉพาะวัน
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report25.rpt");
 
-                        รายงานรายวันจำนวนตราประทับรถยนต์แบบแจกแจง(reportDocument, sql);
-                        return;
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                    case 23: //รายชื่อสมาชิก
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report23.rpt");
+                    DateTime dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM ") + dst.Year.ToString();
+                    reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'ตั้งแต่วันที่ " + startDateTime + " 00:00:00 ถึงวันที่ " + startDateTime + " 23:59:59'";
+                    break;
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                case 26: //รายงานรถยนต์เข้าออก ตามช่วงเวลา
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report26.rpt");
 
-                    case 24: //รายได้จากสมาชิก
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report24_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report24.rpt");
+                    DataTable dataTable26 = DataTableManager.สรุปรถยนต์เข้าออกตามชั่วโมง(dataFromQuery);
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    TrySetReportData(reportDocument, dataTable26);
 
-                    case 25: //สรุปรถเข้า-ออกตามช่วงเวลา เฉพาะวัน
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report25.rpt");
+                    CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
 
-                        TrySetReportData(reportDocument, dataFromQuery);
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่ " + startDateTime + " 00:00:00 ถึงวันที่ " + startDateTime + " 23:59:59'";
+                    break;
 
-                        DateTime dst = StartDatePicker.Value;
-                        string startDateTime = dst.ToString("dd MMMM ") + dst.Year.ToString();
-                        reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'ตั้งแต่วันที่ " + startDateTime + " 00:00:00 ถึงวันที่ " + startDateTime + " 23:59:59'";
-                        break;
+                case 27: //รายงานรถยนต์เข้าออก ตามวันที่
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report27.rpt");
 
-                    case 26: //รายงานรถยนต์เข้าออก ตามช่วงเวลา
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report26.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        DataTable dataTable26 = DataTableManager.สรุปรถยนต์เข้าออกตามชั่วโมง(dataFromQuery);
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    DateTime dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                    reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
+                    break;
 
-                        TrySetReportData(reportDocument, dataTable26);
+                case 28: //รายงานตราประทับ
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report28.rpt");
 
-                        CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่ " + startDateTime + " 00:00:00 ถึงวันที่ " + startDateTime + " 23:59:59'";
-                        break;
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                    reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
+                    break;
 
-                    case 27: //รายงานรถยนต์เข้าออก ตามวันที่
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report27.rpt");
+                case 29: //รายงานรถเข้าออก แสดงช่องทาง
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report29.rpt");
 
-                        TrySetReportData(reportDocument, dataFromQuery);
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        DateTime dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                        break;
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                    reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
+                    break;
 
-                    case 28: //รายงานตราประทับ
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report28.rpt");
+                case 30:
+                    DataTable dataTable30 = DataTableManager.สรุปรถยนต์เข้าออกตามวันที่(dataFromQuery);
 
-                        TrySetReportData(reportDocument, dataFromQuery);
+                    ResultGridView.DataSource = dataTable30;
 
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                        break;
+                    SetColumnWidthIfExists("วันที่", 180);
+                    SetColumnWidthIfExists("ไม่ได้ประทับตรา", 120);
 
-                    case 29: //รายงานรถเข้าออก แสดงช่องทาง
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report29.rpt");
+                    CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
+                    return;
 
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 31:
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report31_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report31.rpt");
 
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                        break;
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                    case 30:
-                        DataTable dataTable30 = DataTableManager.สรุปรถยนต์เข้าออกตามวันที่(dataFromQuery);
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
 
-                        ResultGridView.DataSource = dataTable30;
-
-                        SetColumnWidthIfExists("วันที่", 180);
-                        SetColumnWidthIfExists("ไม่ได้ประทับตรา", 120);
-
-                        CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
-                        return;
-
-                    case 31:
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report31_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report31.rpt");
-
-                        TrySetReportData(reportDocument, dataFromQuery);
-
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-
-                        try
-                        {
-                            reportDocument.DataDefinition.FormulaFields["Header"].Text =
-                            $"'รายงาน{reportName} จากวันที่ {startDateTime} เวลา {startTime} ถึงวันที่ {endDateTime} เวลา {endTime}'";
-                        }
-                        catch { }
-
-                        break;
-
-                    case 32:
-                        DataTable dataTable32 = DataTableManager.คงค้างแสดงรูปภาพ(dataFromQuery);
-
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report32_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report32.rpt");
-
-                        TrySetReportData(reportDocument, dataTable32);
-
-                        SetDisplayImageUI();
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-                        reportDocument.DataDefinition.FormulaFields["ReportName"].Text =
+                    try
+                    {
+                        reportDocument.DataDefinition.FormulaFields["Header"].Text =
                         $"'รายงาน{reportName} จากวันที่ {startDateTime} เวลา {startTime} ถึงวันที่ {endDateTime} เวลา {endTime}'";
-                        break;
+                    }
+                    catch { }
 
-                    case 33:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report33.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานยกเลิกใบกำกับภาษีอย่างย่อประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.ToString("yyyy") + " ถึงวันที่ " + EndDatePicker.Value.ToString("d MMMM ") + EndDatePicker.Value.ToString("yyyy") + "'";
-                        break;
+                    break;
 
-                    case 34:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report34.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
+                case 32:
+                    DataTable dataTable32 = DataTableManager.คงค้างแสดงรูปภาพ(dataFromQuery);
 
-                        #region cal sum 34
-                        double sumVat = 0;
-                        double sumBefore = 0;
-                        double sumTotal = 0;
-                        double sumCntSlip = 0;
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report32_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report32.rpt");
 
-                        for (int j = 0; j < dataFromQuery.Rows.Count; j++)
+                    TrySetReportData(reportDocument, dataTable32);
+
+                    SetDisplayImageUI();
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                    reportDocument.DataDefinition.FormulaFields["ReportName"].Text =
+                    $"'รายงาน{reportName} จากวันที่ {startDateTime} เวลา {startTime} ถึงวันที่ {endDateTime} เวลา {endTime}'";
+                    break;
+
+                case 33:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report33.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานยกเลิกใบกำกับภาษีอย่างย่อประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.ToString("yyyy") + " ถึงวันที่ " + EndDatePicker.Value.ToString("d MMMM ") + EndDatePicker.Value.ToString("yyyy") + "'";
+                    break;
+
+                case 34:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report34.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
+
+                    #region cal sum 34
+                    double sumVat = 0;
+                    double sumBefore = 0;
+                    double sumTotal = 0;
+                    double sumCntSlip = 0;
+
+                    for (int j = 0; j < dataFromQuery.Rows.Count; j++)
+                    {
+                        sumVat += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
+                        sumBefore += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
+                        sumTotal += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
+                        sumCntSlip += Convert.ToDouble(dataFromQuery.Rows[j]["จำนวนใบ"]);
+                    }
+
+                    if (Configs.UseCalVatFromTotal)
+                    {
+                        reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotal - (sumTotal * 7 / 107)).ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotal * 7 / 107).ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal.ToString("#,###,##0.00") + "'";
+                    }
+                    else
+                    {
+                        reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBefore.ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVat.ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal.ToString("#,###,##0.00") + "'";
+                    }
+                    reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumCntSlip.ToString("#,###,##0") + "'";
+                    #endregion
+
+                    break;
+
+                case 35:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report35.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถประจำเดือน " + StartDatePicker.Value.ToString("MMMM") + " " + StartDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
+
+                    #region cal sum
+                    double sumVatM = 0;
+                    double sumBeforeM = 0;
+                    double sumTotalM = 0;
+                    double sumCountSlip = 0;
+
+                    for (int j = 0; j < dataFromQuery.Rows.Count; j++)
+                    {
+                        sumVatM += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
+                        sumBeforeM += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
+                        sumTotalM += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
+                        sumCountSlip += Convert.ToDouble(dataFromQuery.Rows[j]["จำนวนใบ"]);
+                    }
+
+                    if (Configs.UseCalVatFromTotal)
+                    {
+                        reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotalM - (sumTotalM * 7 / 107)).ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotalM * 7 / 107).ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalM.ToString("#,###,##0.00") + "'";
+                    }
+                    else
+                    {
+                        reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBeforeM.ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVatM.ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalM.ToString("#,###,##0.00") + "'";
+                    }
+                    reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumCountSlip.ToString("#,###,##0") + "'";
+                    #endregion
+
+                    break;
+
+                case 36:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report36.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปรายได้ประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.AddYears(543).ToString("yyyy") + " ถึงวันที่ " + EndDatePicker.Value.ToString("d MMMM ") + EndDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
+
+                    #region cal sum 36
+                    double sumVatT = 0;
+                    double sumBeforeT = 0;
+                    double sumTotalT = 0;
+                    double sumPriceT = 0;
+                    double sumLossCardT = 0;
+                    double sumOverdateT = 0;
+
+                    for (int j = 0; j < dataFromQuery.Rows.Count; j++)
+                    {
+                        sumVatT += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
+                        sumBeforeT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
+                        sumTotalT += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
+                        sumPriceT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าจอดรถ"]);
+                        sumLossCardT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าปรับบัตรหาย"]);
+                        sumOverdateT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าปรับค้างคืน"]);
+                    }
+
+                    if (Configs.UseCalVatFromTotal)
+                    {
+                        reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotalT - (sumTotalT * 7 / 107)).ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotalT * 7 / 107).ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalT.ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + (sumTotalT - (sumTotalT * 7 / 107)).ToString("#,###,##0.00") + "'";
+                    }
+                    else
+                    {
+                        reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBeforeT.ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVatT.ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalT.ToString("#,###,##0.00") + "'";
+                        reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumPriceT.ToString("#,###,##0.00") + "'";
+                    }
+
+                    reportDocument.DataDefinition.FormulaFields["Pa4"].Text = "'" + sumLossCardT.ToString("#,###,##0.00") + "'";
+                    reportDocument.DataDefinition.FormulaFields["Pa5"].Text = "'" + sumOverdateT.ToString("#,###,##0.00") + "'";
+                    #endregion
+
+                    break;
+
+                case 37:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report37.rpt");
+
+                    TrySetReportData(reportDocument, dataFromQuery);
+
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                    reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
+                    break;
+
+                case 38:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report38.rpt");
+
+                    TrySetReportData(reportDocument, dataFromQuery);
+
+                    #region cal sum 38
+                    int sumCoupon = 0;
+                    int sumPrice = 0;
+
+                    for (int j = 0; j < dataFromQuery.Rows.Count; j++)
+                    {
+                        sumCoupon += Convert.ToInt32(dataFromQuery.Rows[j]["No of Coupon"]);
+                        sumPrice += Convert.ToInt32(dataFromQuery.Rows[j]["Actual Payment"]);
+                    }
+
+                    reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumCoupon + "'";
+                    reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumPrice + "'";
+                    #endregion
+
+                    break;
+
+                case 41:
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report41_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report41.rpt");
+
+                    TrySetReportData(reportDocument, dataFromQuery);
+
+                    ResultGridView.Columns[3].Visible = false;
+                    ResultGridView.Columns[4].Visible = false;
+
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                    reportDocument.DataDefinition.FormulaFields["ReportName"].Text =
+                    $"'รายงาน{reportName} จากวันที่ {startDateTime} เวลา {startTime} ถึงวันที่ {endDateTime} เวลา {endTime}'";
+                    break;
+
+                //การเข้าออกMember แสดงรูปภาพ
+                case 42:
+                    DataTable dataTable42 = DataTableManager.การเข้าออกMemberแสดงรูปภาพ(dataFromQuery);
+
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report42_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report42.rpt");
+
+                    TrySetReportData(reportDocument, dataTable42);
+
+                    SetDisplayImageUI();
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                    reportDocument.DataDefinition.FormulaFields["ReportName"].Text =
+                    $"'รายงาน{reportName} จากวันที่ {startDateTime} เวลา {startTime} ถึงวันที่ {endDateTime} เวลา {endTime}'";
+                    break;
+
+                case 47:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report47.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery, true);
+
+                    break;
+
+                case 48:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report48.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    SetColumnWidthIfExists("บริษัท", 450);
+
+                    PrimaryTabControl.SelectTab(1);
+                    break;
+
+                case 49:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report49.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery, true);
+
+                    PrimaryTabControl.SelectTab(1);
+                    break;
+
+                case 50:
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report50_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report50.rpt");
+
+                    TrySetReportData(reportDocument, dataFromQuery, true);
+                    PrimaryTabControl.SelectTab(1);
+                    break;
+                case 51:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report51.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    if (selectedReportId == 51) //Mac 2020/10/26
+                    {
+                        if (this.ResultGridView.RowCount > 0)
                         {
-                            sumVat += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
-                            sumBefore += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
-                            sumTotal += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
-                            sumCntSlip += Convert.ToDouble(dataFromQuery.Rows[j]["จำนวนใบ"]);
-                        }
-
-                        if (Configs.UseCalVatFromTotal)
-                        {
-                            reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotal - (sumTotal * 7 / 107)).ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotal * 7 / 107).ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal.ToString("#,###,##0.00") + "'";
-                        }
-                        else
-                        {
-                            reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBefore.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVat.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotal.ToString("#,###,##0.00") + "'";
-                        }
-                        reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumCntSlip.ToString("#,###,##0") + "'";
-                        #endregion
-
-                        break;
-
-                    case 35:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report35.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานภาษีขายค่าบริการที่จอดรถประจำเดือน " + StartDatePicker.Value.ToString("MMMM") + " " + StartDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
-
-                        #region cal sum
-                        double sumVatM = 0;
-                        double sumBeforeM = 0;
-                        double sumTotalM = 0;
-                        double sumCountSlip = 0;
-
-                        for (int j = 0; j < dataFromQuery.Rows.Count; j++)
-                        {
-                            sumVatM += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
-                            sumBeforeM += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
-                            sumTotalM += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
-                            sumCountSlip += Convert.ToDouble(dataFromQuery.Rows[j]["จำนวนใบ"]);
-                        }
-
-                        if (Configs.UseCalVatFromTotal)
-                        {
-                            reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotalM - (sumTotalM * 7 / 107)).ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotalM * 7 / 107).ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalM.ToString("#,###,##0.00") + "'";
-                        }
-                        else
-                        {
-                            reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBeforeM.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVatM.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalM.ToString("#,###,##0.00") + "'";
-                        }
-                        reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumCountSlip.ToString("#,###,##0") + "'";
-                        #endregion
-
-                        break;
-
-                    case 36:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report36.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        reportDocument.DataDefinition.FormulaFields["ReportName"].Text = "'รายงานสรุปรายได้ประจำวันที่ " + StartDatePicker.Value.ToString("d MMMM ") + StartDatePicker.Value.AddYears(543).ToString("yyyy") + " ถึงวันที่ " + EndDatePicker.Value.ToString("d MMMM ") + EndDatePicker.Value.AddYears(543).ToString("yyyy") + "'";
-
-                        #region cal sum 36
-                        double sumVatT = 0;
-                        double sumBeforeT = 0;
-                        double sumTotalT = 0;
-                        double sumPriceT = 0;
-                        double sumLossCardT = 0;
-                        double sumOverdateT = 0;
-
-                        for (int j = 0; j < dataFromQuery.Rows.Count; j++)
-                        {
-                            sumVatT += Convert.ToDouble(dataFromQuery.Rows[j]["VAT"]);
-                            sumBeforeT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าบริการ"]);
-                            sumTotalT += Convert.ToDouble(dataFromQuery.Rows[j]["รวมเงิน"]);
-                            sumPriceT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าจอดรถ"]);
-                            sumLossCardT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าปรับบัตรหาย"]);
-                            sumOverdateT += Convert.ToDouble(dataFromQuery.Rows[j]["ค่าปรับค้างคืน"]);
-                        }
-
-                        if (Configs.UseCalVatFromTotal)
-                        {
-                            reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + (sumTotalT - (sumTotalT * 7 / 107)).ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + (sumTotalT * 7 / 107).ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalT.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + (sumTotalT - (sumTotalT * 7 / 107)).ToString("#,###,##0.00") + "'";
-                        }
-                        else
-                        {
-                            reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumBeforeT.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumVatT.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa2"].Text = "'" + sumTotalT.ToString("#,###,##0.00") + "'";
-                            reportDocument.DataDefinition.FormulaFields["Pa3"].Text = "'" + sumPriceT.ToString("#,###,##0.00") + "'";
-                        }
-
-                        reportDocument.DataDefinition.FormulaFields["Pa4"].Text = "'" + sumLossCardT.ToString("#,###,##0.00") + "'";
-                        reportDocument.DataDefinition.FormulaFields["Pa5"].Text = "'" + sumOverdateT.ToString("#,###,##0.00") + "'";
-                        #endregion
-
-                        break;
-
-                    case 37:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report37.rpt");
-
-                        TrySetReportData(reportDocument, dataFromQuery);
-
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                        break;
-
-                    case 38:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report38.rpt");
-
-                        TrySetReportData(reportDocument, dataFromQuery);
-
-                        #region cal sum 38
-                        int sumCoupon = 0;
-                        int sumPrice = 0;
-
-                        for (int j = 0; j < dataFromQuery.Rows.Count; j++)
-                        {
-                            sumCoupon += Convert.ToInt32(dataFromQuery.Rows[j]["No of Coupon"]);
-                            sumPrice += Convert.ToInt32(dataFromQuery.Rows[j]["Actual Payment"]);
-                        }
-
-                        reportDocument.DataDefinition.FormulaFields["Pa0"].Text = "'" + sumCoupon + "'";
-                        reportDocument.DataDefinition.FormulaFields["Pa1"].Text = "'" + sumPrice + "'";
-                        #endregion
-
-                        break;
-
-                    case 41:
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report41_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report41.rpt");
-
-                        TrySetReportData(reportDocument, dataFromQuery);
-
-                        ResultGridView.Columns[3].Visible = false;
-                        ResultGridView.Columns[4].Visible = false;
-
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-                        reportDocument.DataDefinition.FormulaFields["ReportName"].Text =
-                        $"'รายงาน{reportName} จากวันที่ {startDateTime} เวลา {startTime} ถึงวันที่ {endDateTime} เวลา {endTime}'";
-                        break;
-
-                    //การเข้าออกMember แสดงรูปภาพ
-                    case 42:
-                        DataTable dataTable42 = DataTableManager.การเข้าออกMemberแสดงรูปภาพ(dataFromQuery);
-
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report42_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report42.rpt");
-
-                        TrySetReportData(reportDocument, dataTable42);
-
-                        SetDisplayImageUI();
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-                        reportDocument.DataDefinition.FormulaFields["ReportName"].Text =
-                        $"'รายงาน{reportName} จากวันที่ {startDateTime} เวลา {startTime} ถึงวันที่ {endDateTime} เวลา {endTime}'";
-                        break;
-
-                    case 47:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report47.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery, true);
-
-                        break;
-
-                    case 48:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report48.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        SetColumnWidthIfExists("บริษัท", 450);
-
-                        PrimaryTabControl.SelectTab(1);
-                        break;
-
-                    case 49:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report49.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery, true);
-
-                        PrimaryTabControl.SelectTab(1);
-                        break;
-
-                    case 50:
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report50_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report50.rpt");
-
-                        TrySetReportData(reportDocument, dataFromQuery, true);
-                        PrimaryTabControl.SelectTab(1);
-                        break;
-                    case 51:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report51.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        if (selectedReportId == 51) //Mac 2020/10/26
-                        {
-                            if (this.ResultGridView.RowCount > 0)
+                            foreach (DataGridViewRow r in this.ResultGridView.Rows)
                             {
-                                foreach (DataGridViewRow r in this.ResultGridView.Rows)
-                                {
-                                    if (r.Index < ResultGridView.RowCount - 1)
-                                        this.ResultGridView.Rows[r.Index].HeaderCell.Value = (r.Index + 1).ToString();
-                                }
-                                this.ResultGridView.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
-                                this.ResultGridView.TopLeftHeaderCell.Value = "ลำดับ";
-                                this.ResultGridView.Columns[0].Visible = false;
+                                if (r.Index < ResultGridView.RowCount - 1)
+                                    this.ResultGridView.Rows[r.Index].HeaderCell.Value = (r.Index + 1).ToString();
                             }
+                            this.ResultGridView.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
+                            this.ResultGridView.TopLeftHeaderCell.Value = "ลำดับ";
+                            this.ResultGridView.Columns[0].Visible = false;
                         }
-                        else
-                        {
-                            this.ResultGridView.TopLeftHeaderCell.Value = "";
-                        }
-                        break;
-                    case 52:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report52.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                    }
+                    else
+                    {
+                        this.ResultGridView.TopLeftHeaderCell.Value = "";
+                    }
+                    break;
+                case 52:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report52.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 53:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report53.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 53:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report53.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 54:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report54.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 54:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report54.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 55:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report55.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 55:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report55.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 56:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report56.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 56:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report56.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 57:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report57.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 57:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report57.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 58:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report58.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 58:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report58.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 59:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report59.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 59:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report59.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 60:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report60.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 60:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report60.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 61:
-                        PrimaryTabControl.SelectTab(1);
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report61.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 61:
+                    PrimaryTabControl.SelectTab(1);
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report61.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 62:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report62.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 62:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report62.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 63:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report63.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 63:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report63.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 64:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report64.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 64:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report64.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 65:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report65.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 65:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report65.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 66:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report66.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 66:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report66.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 67:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report67.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 67:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report67.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 68:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report68.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 68:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report68.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 69:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report69.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 69:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report69.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 70:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report70.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 70:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report70.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 71:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report71.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 71:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report71.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 72:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report72.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 72:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report72.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 73:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report73.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 73:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report73.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 74:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report74.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 74:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report74.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 75:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report75.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 75:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report75.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 76:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report76.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 76:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report76.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 77:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report77.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 77:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report77.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        reportDocument.DataDefinition.FormulaFields["SumCar"].Text = "'" + (ResultGridView.Rows.Count - 1).ToString("#,###,##0") + "'";
+                    reportDocument.DataDefinition.FormulaFields["SumCar"].Text = "'" + (ResultGridView.Rows.Count - 1).ToString("#,###,##0") + "'";
 
-                        ResultGridView.Columns[2].Visible = false;
-                        ResultGridView.Columns[3].Visible = false;
+                    ResultGridView.Columns[2].Visible = false;
+                    ResultGridView.Columns[3].Visible = false;
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                    case 79:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report79.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 79:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report79.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
 
+                    reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
+                    break;
+
+                case 80:
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report80_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report80.rpt");
+
+                    ResultGridView.Columns[2].Visible = false;
+                    ResultGridView.Columns[3].Visible = false;
+                    break;
+
+                case 81:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report81.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
+
+                case 82:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report82.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    PrimaryTabControl.SelectTab(1);
+                    break;
+
+                case 83:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report83.rpt");
+
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+
+                    reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
+
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
+                case 84:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report84.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+
+                    PrimaryTabControl.SelectTab(1);
+                    break;
+
+                case 85:
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                    if (GuardhouseComboBox.SelectedIndex > 0)
+                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
+                    else
                         reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
-                        break;
 
-                    case 80:
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report80_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report80.rpt");
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report85.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                        ResultGridView.Columns[2].Visible = false;
-                        ResultGridView.Columns[3].Visible = false;
-                        break;
+                case 86:
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
 
-                    case 81:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report81.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
-
-                    case 82:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report82.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        PrimaryTabControl.SelectTab(1);
-                        break;
-
-                    case 83:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report83.rpt");
-
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-
+                    if (GuardhouseComboBox.SelectedIndex > 0)
+                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
+                    else
                         reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
-                    case 84:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report84.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report86.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                case 87:
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
 
-                    case 85:
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
-                        if (GuardhouseComboBox.SelectedIndex > 0)
-                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
-                        else
-                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
+                    if (GuardhouseComboBox.SelectedIndex > 0)
+                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
+                    else
+                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
 
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report85.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report87.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 86:
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                case 88:
+                    dst = StartDatePicker.Value;
+                    startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
+                    dfn = EndDatePicker.Value;
+                    endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
 
-                        if (GuardhouseComboBox.SelectedIndex > 0)
-                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
-                        else
-                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
+                    if (GuardhouseComboBox.SelectedIndex > 0)
+                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
+                    else
+                        reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
 
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report86.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report88.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 87:
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                case 89:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report89.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                        if (GuardhouseComboBox.SelectedIndex > 0)
-                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
-                        else
-                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
+                case 90:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report90.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report87.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                case 94:
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report94_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report94.rpt");
 
-                    case 88:
-                        dst = StartDatePicker.Value;
-                        startDateTime = dst.ToString("dd MMMM") + " " + dst.Year.ToString();
-                        dfn = EndDatePicker.Value;
-                        endDateTime = dfn.ToString("dd MMMM") + " " + dfn.Year.ToString();
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                        if (GuardhouseComboBox.SelectedIndex > 0)
-                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "        ป้อม : " + GuardhouseComboBox.Text + "'";
-                        else
-                            reportDocument.DataDefinition.FormulaFields["head"].Text = "'ตั้งแต่วันที่  " + startDateTime + "  ถึงวันที่  " + endDateTime + "'";
+                case 95:
+                    if (Configs.Reports.ReportNoRunning)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report95_NoRunning.rpt");
+                    else
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report95.rpt");
 
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report88.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 89:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report89.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                case 96:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report96.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                    case 94:
-                        if (Configs.Reports.ReportNoRunning)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report95_NoRunning.rpt");
-                        else
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report95.rpt");
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                case 97:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report97.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                    case 96:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report96.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                case 100:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report100.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
 
-                    case 97:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report97.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                case 101:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report101.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 100:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report100.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
+                case 102:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report102.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                case 103:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report103.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 101:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report101.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                case 104:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report104.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 102:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report102.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                case 105: //Mac 2020/03/09
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report105.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 103:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report103.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                case 106:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report106.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 104:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report104.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                case 107:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report107.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 105: //Mac 2020/03/09
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report105.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                case 108:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report108.rpt");
 
-                    case 106:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report106.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    if (MemberGroupMonthComboBox.Text.Trim() == Constants.TextBased.All)
+                        reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : ทั้งหมด'";
+                    else
+                        reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : " + AppGlobalVariables.MemberGroupMonthsToId[MemberGroupMonthComboBox.Text] + " " + MemberGroupMonthComboBox.Text + "'";
 
-                    case 107:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report107.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 108:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report108.rpt");
+                case 109:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report109.rpt");
 
-                        if (MemberGroupMonthComboBox.Text.Trim() == Constants.TextBased.All)
-                            reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : ทั้งหมด'";
-                        else
-                            reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : " + AppGlobalVariables.MemberGroupMonthsToId[MemberGroupMonthComboBox.Text] + " " + MemberGroupMonthComboBox.Text + "'";
+                    if (MemberGroupMonthComboBox.Text.Trim() == Constants.TextBased.All)
+                        reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : ทั้งหมด'";
+                    else
+                        reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : " + AppGlobalVariables.MemberGroupMonthsToId[MemberGroupMonthComboBox.Text] + " " + MemberGroupMonthComboBox.Text + "'";
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 109:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report109.rpt");
+                case 161:
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report161.rpt");
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                        if (MemberGroupMonthComboBox.Text.Trim() == Constants.TextBased.All)
-                            reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : ทั้งหมด'";
-                        else
-                            reportDocument.DataDefinition.FormulaFields["Condition2"].Text = "'รหัส/บริษัท : " + AppGlobalVariables.MemberGroupMonthsToId[MemberGroupMonthComboBox.Text] + " " + MemberGroupMonthComboBox.Text + "'";
+                case 164: // การเข้าออกของรถยนต์แสดงช่องทางการชำระเงิน
+                    if (Configs.UsePaymentBeam)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Beam.rpt");
+                    else if (Configs.UsePaymentKsher)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Ksher.rpt");
+                    else if (Configs.UsePaymentRabbit)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Rabbit.rpt");
+                    else if (Configs.UsePaymentScb)
+                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_SCB.rpt");
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                    TrySetReportData(reportDocument, dataFromQuery);
+                    break;
 
-                    case 161:
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report161.rpt");
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                case 165: // รายงานสรุปจำนวนรถและรายได้
+                    DataTable dataTable = CRUDManager.GetVehicleEarningSummary(sql, StartDatePicker.Value, EndDatePicker.Value);
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\VehicleEarningSummary.rpt");
+                    reportDocument.SetDataSource(dataTable);
 
-                    case 164: // การเข้าออกของรถยนต์แสดงช่องทางการชำระเงิน
-                        if (Configs.UsePaymentBeam)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Beam.rpt");
-                        else if (Configs.UsePaymentKsher)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Ksher.rpt");
-                        else if (Configs.UsePaymentRabbit)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_Rabbit.rpt");
-                        else if (Configs.UsePaymentScb)
-                            reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report164_SCB.rpt");
+                    reportDocument.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
+                    PrimaryTabControl.SelectTab(1);
+                    break;
 
-                        TrySetReportData(reportDocument, dataFromQuery);
-                        break;
+                case 166: // สรุปจำนวนบัตรทั้งหมดตามบริษัท
+                    ResultGridView.DataSource = null;
 
-                    case 165: // รายงานสรุปจำนวนรถและรายได้
-                        DataTable dataTable = CRUDManager.GetVehicleEarningSummary(sql, StartDatePicker.Value, EndDatePicker.Value);
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\VehicleEarningSummary.rpt");
-                        reportDocument.SetDataSource(dataTable);
+                    DataTable dataTable166 = CRUDManager.GetCardSortByCompanySummary(sql);
+                    reportDocument.Load($"{FolderDirectories.CrystalReport}\\CardSortedCompanySummary.rpt");
+                    reportDocument.SetDataSource(dataTable166);
+                    TrySetCrystalReportHeaders(reportDocument);
+                    PrimaryCrystalReportViewer.ReportSource = reportDocument;
+                    PrimaryCrystalReportViewer.Refresh();
 
-                        reportDocument.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
-                        PrimaryTabControl.SelectTab(1);
-                        break;
+                    PrimaryTabControl.SelectTab(1);
 
-                    case 166: // สรุปจำนวนบัตรทั้งหมดตามบริษัท
-                        ResultGridView.DataSource = null;
-
-                        DataTable dataTable166 = CRUDManager.GetCardSortByCompanySummary(sql);
-                        reportDocument.Load($"{FolderDirectories.CrystalReport}\\CardSortedCompanySummary.rpt");
-                        reportDocument.SetDataSource(dataTable166);
-                        TrySetCrystalReportHeaders(reportDocument);
-                        PrimaryCrystalReportViewer.ReportSource = reportDocument;
-                        PrimaryCrystalReportViewer.Refresh();
-
-                        PrimaryTabControl.SelectTab(1);
-
-                        break;
-                }
-
-                CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
+                    break;
             }
+
+            CalculationsManager.AddTotalToGridView(selectedReportId, ResultGridView);
         }
 
         public void ExportToExcel(DataGridView Tbl, string ExcelFilePath = null)
@@ -2815,6 +2825,9 @@ namespace ParkingManagementReport
             );
 
             ReportHeaderLabel.Text = AppGlobalVariables.Printings.Header = SetReportHeader().Replace("รายงานรายงาน", "รายงาน");
+            startDateTime = StartDatePicker.Value.Year + "-" + StartDatePicker.Value.ToString("MM'-'dd") + " " + StartTimePicker.Value.ToLongTimeString();
+            endDateTime = EndDatePicker.Value.Year + "-" + EndDatePicker.Value.ToString("MM'-'dd") + " " + EndTimePicker.Value.ToLongTimeString();
+
             Display(sql);
 
             ResultGridView.Visible = true;
@@ -3193,7 +3206,7 @@ namespace ParkingManagementReport
             catch { }
             try
             {
-                reportDocument.SetParameterValue("ComAddress1", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
+                reportDocument.SetParameterValue("ComAddress2", AppGlobalVariables.Printings.Address1.Trim() + "\r\n" + AppGlobalVariables.Printings.Address2.Trim());
             }
             catch { }
             try
@@ -3507,9 +3520,9 @@ namespace ParkingManagementReport
                 sql += " where id = " + AppGlobalVariables.PromotionNamesById.First(kvp => kvp.Value == PromotionComboBox.Text).Key;
 
             PrimaryTabControl.SelectTab(1);
+
             try
             {
-
                 DataTable dt = DbController.LoadData(sql);
                 DataTable dt2;
                 DataTable estampSumMap = new DataTable("myMember");  //*** DataTable Map DataSet.xsd ***//
@@ -3522,6 +3535,7 @@ namespace ParkingManagementReport
                 estampSumMap.Columns.Add(new DataColumn("Data1", typeof(string)));
                 estampSumMap.Columns.Add(new DataColumn("SumData0", typeof(string)));
                 estampSumMap.Columns.Add(new DataColumn("SumData1", typeof(string)));
+
                 if (dt.Rows.Count > 0)
                 {
                     for (int i = 0; i < dt.Rows.Count; i++)
@@ -3569,7 +3583,7 @@ namespace ParkingManagementReport
                                     AppGlobalVariables.IntExpense2 = new int[0];
                                     AppGlobalVariables.IntOver2 = new int[0];
 
-                                    if (Configs.Reports.ReportProsetPriceDayWeek) //Mac 2019/05/27
+                                    if (Configs.Reports.ReportProsetPriceDayWeek)
                                     {
                                         SumData0 = 0;
                                         var CalPriceZone = (dynamic)null;
@@ -3944,9 +3958,6 @@ namespace ParkingManagementReport
                         estampSumMap.Rows.Add(dr);
                     }
                 }
-
-                TrySetCrystalReportHeaders(reportDocument);
-
                 if (MemberGroupMonthComboBox.SelectedIndex > 0)
                 {
                     TextObject txtReportHeader = reportDocument.ReportDefinition.ReportObjects["text7"] as TextObject;
@@ -3954,6 +3965,8 @@ namespace ParkingManagementReport
                 }
 
                 reportDocument.SetDataSource(estampSumMap);
+
+                TrySetCrystalReportHeaders(reportDocument);
 
                 PrimaryCrystalReportViewer.ReportSource = reportDocument;
                 PrimaryCrystalReportViewer.Refresh();

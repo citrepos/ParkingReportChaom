@@ -77,7 +77,28 @@ namespace ParkingManagementReport.Utilities.Database
             {
                 MessageBox.Show("[SaveOfflineRecordSuccess] failed, sql : " + sql);
             }
+        }
 
+        public static bool ColumnExists(string tableName, string columnName, bool isLocal = false)
+        {
+            string sql = @"
+        SELECT COUNT(*) 
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+        AND TABLE_NAME = @table
+        AND COLUMN_NAME = @column";
+
+            var connection = isLocal ? localConnection : remoteConnection;
+
+            using (var cmd = new MySqlCommand(sql, connection))
+            {
+                connection.Open();
+
+                cmd.Parameters.AddWithValue("@table", tableName);
+                cmd.Parameters.AddWithValue("@column", columnName);
+
+                return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+            }
         }
 
         public static int LoadNO()
@@ -134,7 +155,6 @@ namespace ParkingManagementReport.Utilities.Database
             }
             return booConnect;
         }
-
 
         #region HELPERS
         private static void Open(MySqlConnection connection)
