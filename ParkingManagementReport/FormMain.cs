@@ -1557,6 +1557,7 @@ namespace ParkingManagementReport
 
                     TrySetReportData(reportDocument, dataFromQuery);
                     break;
+
                 case 84:
                     reportDocument.Load($"{FolderDirectories.CrystalReport}\\Report84.rpt");
                     TrySetReportData(reportDocument, dataFromQuery);
@@ -2311,30 +2312,11 @@ namespace ParkingManagementReport
 
                     if (Configs.Use2Camera)
                     {
-                        /* Old
-                        pic3 = ResultGridView.Rows[e.RowIndex].Cells[12 + iVil].Value.ToString();
-                        pic4 = ResultGridView.Rows[e.RowIndex].Cells[10 + iVil].Value.ToString();
-                        */
                         // รูปคนขับออก
                         LoadImageToPictureBox(ResultGridView, e.RowIndex, "ov", pictureBox3);
 
                         // รูปทะเบียนออก
                         LoadImageToPictureBox(ResultGridView, e.RowIndex, "ol", pictureBox4);
-
-                        //pic3 = ResultGridView.Rows[e.RowIndex].Cells["ov"].Value.ToString();
-                        //pic4 = ResultGridView.Rows[e.RowIndex].Cells["ol"].Value.ToString();
-
-                        //if (pic3.Trim() != "" || pic3 != null)
-                        //{
-                        //    Image im = GetCopyImage(pic3);
-                        //    pictureBox3.Image = im;
-                        //}
-
-                        //if (pic4.Trim() != "" || pic4 != null)
-                        //{
-                        //    Image im = GetCopyImage(pic4);
-                        //    pictureBox4.Image = im;
-                        //}
                     }
 
                 }
@@ -2591,7 +2573,7 @@ namespace ParkingManagementReport
             {
                 try
                 {
-                    if (selectedReportId == 12) //Mac 2016/04/26
+                    if (selectedReportId == 12)
                     {
                         if (double.TryParse(ResultGridView.Rows[i].Cells[15].Value.ToString(), out num))
                         {
