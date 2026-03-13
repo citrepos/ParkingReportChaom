@@ -2174,8 +2174,8 @@ namespace ParkingManagementReport
                 case 47:
                     return $"รายงาน{reportName}";
 
-                case 48 when !Configs.IsSwitch:  // Note: 'when' clause is available in C# 7.0+
-                    return $"รายงานภาษีขายค่าปรับประจำวัน จากวันที่ {startDateLong} เวลา {startTimeLong} ถึงวันที่ {endDateLong} เวลา {endTimeLong}";
+                case 49:
+                    return $"รายงานภาษีขายค่าบริการที่จอดรถประจำวันที่ {startDateLong}";
 
                 case 163:
                     string paymentChannelText = PaymentChannelComboBox.Text == Constants.TextBased.All ? "ทั้งหมด" : PaymentChannelComboBox.Text;
@@ -2208,6 +2208,8 @@ namespace ParkingManagementReport
             PrimaryTabControl.SelectTab(tabPage1);
             ExcelExportButton.Enabled = false;
             PdfExportButton.Enabled = false;
+
+            ReportHeaderLabel.Text = string.Empty;
         }
         #endregion PROCESS_END
 
@@ -2964,7 +2966,7 @@ namespace ParkingManagementReport
             string reportName = ReportComboBox.Text;
             string conditionText = AppGlobalVariables.ConditionText;
 
-            ReportHeaderLabel.Text = $"{reportName} {conditionText}";
+            if(String.IsNullOrEmpty(ReportHeaderLabel.Text)) ReportHeaderLabel.Text = $"{reportName} {conditionText}";
 
             string nTel = "";
             string nFax = "";
@@ -3024,22 +3026,17 @@ namespace ParkingManagementReport
             #region set headers
             try
             {
-                reportDocument.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company1}'";
+                reportDocument.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company1.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["CompanyName"].Text = $"'{AppGlobalVariables.Printings.Company1}'";
+                reportDocument.DataDefinition.FormulaFields["Condition"].Text = $"'{conditionText.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["Condition"].Text = $"'{conditionText}'";
-            }
-            catch { }
-            try
-            {
-                reportDocument.DataDefinition.FormulaFields["ReportName"].Text = $"'{reportName}'";
+                reportDocument.DataDefinition.FormulaFields["ReportName"].Text = $"'{ReportHeaderLabel.Text.Trim()}'";
             }
             catch { }
             try
@@ -3053,7 +3050,7 @@ namespace ParkingManagementReport
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh}'";
+                reportDocument.DataDefinition.FormulaFields["VehicleType"].Text = $"'{AppGlobalVariables.Database.VehicleTypeTh.Trim()}'";
             }
             catch { }
             try
@@ -3071,22 +3068,22 @@ namespace ParkingManagementReport
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["Address"].Text = $"'{AppGlobalVariables.Printings.Company2}'";
+                reportDocument.DataDefinition.FormulaFields["Address"].Text = $"'{AppGlobalVariables.Printings.Company2.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["Address1"].Text = $"'{AppGlobalVariables.Printings.Address1}'";
+                reportDocument.DataDefinition.FormulaFields["Address1"].Text = $"'{AppGlobalVariables.Printings.Address1.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["Address2"].Text = $"'{AppGlobalVariables.Printings.Address2}'";
+                reportDocument.DataDefinition.FormulaFields["Address2"].Text = $"'{AppGlobalVariables.Printings.Address2.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["TaxID"].Text = $"'{AppGlobalVariables.Printings.Tax1}'";
+                reportDocument.DataDefinition.FormulaFields["TaxID"].Text = $"'{AppGlobalVariables.Printings.Tax1.Trim()}'";
             }
             catch { }
             try
@@ -3096,17 +3093,17 @@ namespace ParkingManagementReport
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["Branch"].Text = $"'{AppGlobalVariables.Printings.Branch}'";
+                reportDocument.DataDefinition.FormulaFields["Branch"].Text = $"'{AppGlobalVariables.Printings.Branch.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["Building"].Text = $"'{AppGlobalVariables.Printings.Building}'";
+                reportDocument.DataDefinition.FormulaFields["Building"].Text = $"'{AppGlobalVariables.Printings.Building.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["Office"].Text = $"'{AppGlobalVariables.Printings.Office}'";
+                reportDocument.DataDefinition.FormulaFields["Office"].Text = $"'{AppGlobalVariables.Printings.Office.Trim()}'";
             }
             catch { }
             try
@@ -3126,22 +3123,22 @@ namespace ParkingManagementReport
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(endDate)}'";
+                reportDocument.DataDefinition.FormulaFields["ReportMonth"].Text = $"'ประจำเดือน {TextFormatters.ExtractThaiMonthFromDate(endDate).Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["PrintedPersonnel"].Text = $"'Printed By: {AppGlobalVariables.OperatingUser.Name}'";
+                reportDocument.DataDefinition.FormulaFields["PrintedPersonnel"].Text = $"'Printed By: {AppGlobalVariables.OperatingUser.Name.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["Sender"].Text = "'" + AppGlobalVariables.OperatingUser.Name + "'";
+                reportDocument.DataDefinition.FormulaFields["Sender"].Text = "'" + AppGlobalVariables.OperatingUser.Name.Trim() + "'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["PrintedByUser"].Text = $"'{AppGlobalVariables.OperatingUser.Name}'";
+                reportDocument.DataDefinition.FormulaFields["PrintedByUser"].Text = $"'{AppGlobalVariables.OperatingUser.Name.Trim()}'";
             }
             catch { }
             try
@@ -3151,27 +3148,27 @@ namespace ParkingManagementReport
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["FooterName1"].Text = $"'{AppGlobalVariables.Printings.ReportFooter1}'";
+                reportDocument.DataDefinition.FormulaFields["FooterName1"].Text = $"'{AppGlobalVariables.Printings.ReportFooter1.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["FooterName2"].Text = $"'{AppGlobalVariables.Printings.ReportFooter2}'";
+                reportDocument.DataDefinition.FormulaFields["FooterName2"].Text = $"'{AppGlobalVariables.Printings.ReportFooter2.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["FooterName3"].Text = $"'{AppGlobalVariables.Printings.ReportFooter3}'";
+                reportDocument.DataDefinition.FormulaFields["FooterName3"].Text = $"'{AppGlobalVariables.Printings.ReportFooter3.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["FooterName4"].Text = $"'{AppGlobalVariables.Printings.ReportFooter4}'";
+                reportDocument.DataDefinition.FormulaFields["FooterName4"].Text = $"'{AppGlobalVariables.Printings.ReportFooter4.Trim()}'";
             }
             catch { }
             try
             {
-                reportDocument.DataDefinition.FormulaFields["FooterName5"].Text = $"'{AppGlobalVariables.Printings.ReportFooter5}'";
+                reportDocument.DataDefinition.FormulaFields["FooterName5"].Text = $"'{AppGlobalVariables.Printings.ReportFooter5.Trim()}'";
             }
             catch { }
             #endregion
@@ -3193,22 +3190,22 @@ namespace ParkingManagementReport
             catch { }
             try
             {
-                reportDocument.SetParameterValue("ComTel", nTel);
+                reportDocument.SetParameterValue("ComTel", nTel.Trim());
             }
             catch { }
             try
             {
-                reportDocument.SetParameterValue("compTax", nTax);
+                reportDocument.SetParameterValue("compTax", nTax.Trim());
             }
             catch { }
             try
             {
-                reportDocument.SetParameterValue("comFax", nFax);
+                reportDocument.SetParameterValue("comFax", nFax.Trim());
             }
             catch { }
             try
             {
-                reportDocument.SetParameterValue("DateSearch", startDateTime);
+                reportDocument.SetParameterValue("DateSearch", startDateTime.Trim());
             }
             catch { }
             try
